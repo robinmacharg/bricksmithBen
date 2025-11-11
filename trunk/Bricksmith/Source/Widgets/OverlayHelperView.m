@@ -129,9 +129,7 @@
 //==============================================================================
 - (void) dealloc
 {
-	[helperWindow release];
 
-	[super dealloc];
 
 }//end dealloc
 

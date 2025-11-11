@@ -91,10 +91,6 @@ MovePanel *sharedMovePanel = nil;
 //==============================================================================
 - (void) dealloc
 {
-	[formatterPoints release];
-	
-	[super dealloc];
-	
 }//end dealloc
 
 

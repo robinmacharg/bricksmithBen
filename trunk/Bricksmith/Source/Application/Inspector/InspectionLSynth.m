@@ -380,8 +380,6 @@
 //
 //==============================================================================
 - (void)dealloc {
-   // [typePopup release];
-    [super dealloc];
 }//end dealloc
 
 @end

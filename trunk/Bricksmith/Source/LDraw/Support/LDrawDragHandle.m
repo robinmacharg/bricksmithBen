@@ -401,7 +401,7 @@ static const float HandleDiameter	= 7.0;
 //==============================================================================
 - (void) dealloc
 {
-	[super dealloc];
+	
 }
 
 
