@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -574,6 +574,10 @@
 		D6FC72121604EBB8005A404E /* LDrawFastSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawFastSet.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		95B26F142EC3325A00C227CE /* Tools */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tools; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		8D15AC330486D014006FF6A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -905,6 +909,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* Mac LDraw */ = {
 			isa = PBXGroup;
 			children = (
+				95B26F142EC3325A00C227CE /* Tools */,
 				2A37F4AFFDCFA73011CA2CEA /* Other */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				0B6F38FD07C84E79007B1075 /* Categories */,
