@@ -20,67 +20,6 @@ header() {
 }
 
 # -------- ANALYZE --------
-# analyze() {
-#     header "Analyzing Objective-C files for non-ARC patterns"
-
-#     >"$REPORT_FILE"
-#     >"$ARC_SAFE_LIST"
-#     >"$NON_ARC_LIST"
-
-#     FILE_COUNTS_TMP=$(mktemp)
-#     TMP_DIR=$(mktemp -d)
-
-#     FILES=$(find . -type f -name "*.m")
-
-#     for f in $FILES; do
-#         # Count non-ARC lines ignoring fully commented lines
-#         LINE_COUNT=$(grep -cE '^\s*[^/].*\b(retain|release|autorelease|dealloc|NSAutoreleasePool)\b' "$f" || true)
-
-#         if [ "$LINE_COUNT" -eq 0 ]; then
-#             echo "$f" >>"$ARC_SAFE_LIST"
-#         else
-#             echo -e "$LINE_COUNT\t$f" >>"$FILE_COUNTS_TMP"
-#             echo "$f" >>"$NON_ARC_LIST"
-#             # Save the actual lines
-#             grep -nE '^\s*[^/].*\b(retain|release|autorelease|dealloc|NSAutoreleasePool)\b' "$f" > "$TMP_DIR/$(echo "$f" | sed 's|/|_|g')"
-#         fi
-#     done
-
-#     # Sort non-ARC files by line count ascending
-#     sort -n "$FILE_COUNTS_TMP" > sorted_non_arc_files.txt
-
-#     # Generate report
-#     {
-#         echo "Non-ARC Files Ordered by Number of Non-ARC Lines"
-#         echo "-----------------------------------------------"
-#         while read -r LINE; do
-#             COUNT=$(echo "$LINE" | awk '{print $1}')
-#             FILE=$(echo "$LINE" | awk '{$1=""; print $0}' | sed 's/^[[:space:]]*//')
-#             echo
-#             printf "%-6s  %s\n" "$COUNT" "$FILE"
-#             echo "------  ----"
-#             TMP_FILE="$TMP_DIR/$(echo "$FILE" | sed 's|/|_|g')"
-#             if [ -f "$TMP_FILE" ]; then
-#                 sed 's/^/        /' "$TMP_FILE"
-#             fi
-#         done < sorted_non_arc_files.txt
-#     } >"$REPORT_FILE"
-
-#     rm -f "$FILE_COUNTS_TMP"
-#     rm -rf "$TMP_DIR"
-
-#     SAFE_COUNT=$(wc -l <"$ARC_SAFE_LIST" | tr -d ' ')
-#     NON_SAFE_COUNT=$(wc -l <"$NON_ARC_LIST" | tr -d ' ')
-
-#     echo
-#     echo "✅ ARC-ready files:   $SAFE_COUNT"
-#     echo "⚠️  Non-ARC files:     $NON_SAFE_COUNT"
-#     echo
-#     echo "🗂️  Report saved: $REPORT_FILE (sorted by line count with non-ARC lines)"
-#     echo "🗂️  ARC-safe files: $ARC_SAFE_LIST"
-#     echo "🗂️  Non-ARC files: $NON_ARC_LIST"
-# }
-
 analyze() {
     header "Analyzing Objective-C files for non-ARC patterns"
 
@@ -154,9 +93,6 @@ analyze() {
     echo "🗂️  ARC-safe files: $ARC_SAFE_LIST"
     echo "🗂️  Non-ARC files: $NON_ARC_LIST"
 }
-
-
-
 
 # -------- UPDATE --------
 update() {
