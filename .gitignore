@@ -64,3 +64,9 @@ xcuserdata
 ## gradle files
 gradlew.bat
 .gradle/
+
+# Ignore ARC-removal tool interim files
+arc_analysis_report.txt
+arc_safe_files.txt
+non_arc_files.txt
+sorted_non_arc_files.txt
