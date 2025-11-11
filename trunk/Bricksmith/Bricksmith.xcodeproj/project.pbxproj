@@ -58,7 +58,7 @@
 		0B2FADD310196C2E007BA948 /* DonationDialogController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2FADD110196C2E007BA948 /* DonationDialogController.h */; };
 		0B2FADD410196C2E007BA948 /* DonationDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B2FADD210196C2E007BA948 /* DonationDialogController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B2FAE2F10196F8C007BA948 /* BackgroundColorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2FAE2D10196F8C007BA948 /* BackgroundColorView.h */; };
-		0B2FAE3010196F8C007BA948 /* BackgroundColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B2FAE2E10196F8C007BA948 /* BackgroundColorView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B2FAE3010196F8C007BA948 /* BackgroundColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B2FAE2E10196F8C007BA948 /* BackgroundColorView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B2FAE60101972DF007BA948 /* Bum.ldr in Resources */ = {isa = PBXBuildFile; fileRef = 0B2FAE5F101972DF007BA948 /* Bum.ldr */; };
 		0B30C6BF16DC61000023B3A6 /* InspectorLSynth.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B30C6BD16DC61000023B3A6 /* InspectorLSynth.xib */; };
 		0B34306708B2E93D00A06A40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0B34306508B2E93D00A06A40 /* Localizable.strings */; };
@@ -71,7 +71,7 @@
 		0B491DA507F5555B00AC0C10 /* MatrixMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 0B491DA307F5555B00AC0C10 /* MatrixMath.c */; };
 		0B491FF707F64B5800AC0C10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B491FF607F64B5800AC0C10 /* OpenGL.framework */; };
 		0B4F5E110F31632C00355631 /* PartLibraryController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B4F5E0F0F31632C00355631 /* PartLibraryController.h */; };
-		0B4F5E120F31632C00355631 /* PartLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5E100F31632C00355631 /* PartLibraryController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B4F5E120F31632C00355631 /* PartLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B4F5E100F31632C00355631 /* PartLibraryController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B6122ED153516600085F944 /* LDrawTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6122EB153516600085F944 /* LDrawTexture.h */; };
 		0B6122EE153516600085F944 /* LDrawTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6122EC153516600085F944 /* LDrawTexture.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B65543A081367E800EA7F4F /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B655439081367E800EA7F4F /* GLUT.framework */; };
@@ -79,7 +79,7 @@
 		0B6771AA081764E60044A0E0 /* LDrawDrawableElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6771A8081764E60044A0E0 /* LDrawDrawableElement.h */; };
 		0B6771AB081764E60044A0E0 /* LDrawDrawableElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6771A9081764E60044A0E0 /* LDrawDrawableElement.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B6F384007C81FEF007B1075 /* LDrawFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F383E07C81FEF007B1075 /* LDrawFile.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		0B6F384407C82025007B1075 /* LDrawMPDModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384207C82025007B1075 /* LDrawMPDModel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B6F384407C82025007B1075 /* LDrawMPDModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384207C82025007B1075 /* LDrawMPDModel.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B6F384807C8207B007B1075 /* LDrawModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384607C8207B007B1075 /* LDrawModel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B6F3A8F07C9934E007B1075 /* LDrawStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3A8D07C9934E007B1075 /* LDrawStep.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B6F3FB807CB0253007B1075 /* LDrawConditionalLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -123,7 +123,7 @@
 		0B8EBE7D093C100100D87E0C /* DialogPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE6B093C100100D87E0C /* DialogPanel.h */; };
 		0B8EBE7E093C100100D87E0C /* DialogPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE6C093C100100D87E0C /* DialogPanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B8EBE7F093C100100D87E0C /* ExtendedSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE6D093C100100D87E0C /* ExtendedSplitView.h */; };
-		0B8EBE80093C100100D87E0C /* ExtendedSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE6E093C100100D87E0C /* ExtendedSplitView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B8EBE80093C100100D87E0C /* ExtendedSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE6E093C100100D87E0C /* ExtendedSplitView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B8EBE81093C100100D87E0C /* IconTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE6F093C100100D87E0C /* IconTextCell.h */; };
 		0B8EBE82093C100100D87E0C /* IconTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE70093C100100D87E0C /* IconTextCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B8EBE83093C100100D87E0C /* LDrawColorBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE71093C100100D87E0C /* LDrawColorBar.h */; };
@@ -193,7 +193,7 @@
 		0BF729BC08AD849300E3DA53 /* LDrawApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729AC08AD849300E3DA53 /* LDrawApplication.h */; };
 		0BF729BD08AD849300E3DA53 /* LDrawApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729AD08AD849300E3DA53 /* LDrawApplication.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0BF729BE08AD849300E3DA53 /* LDrawColorPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729AE08AD849300E3DA53 /* LDrawColorPanelController.h */; };
-		0BF729BF08AD849300E3DA53 /* LDrawColorPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729AF08AD849300E3DA53 /* LDrawColorPanelController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0BF729BF08AD849300E3DA53 /* LDrawColorPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729AF08AD849300E3DA53 /* LDrawColorPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BF729C008AD849300E3DA53 /* PartBrowserDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729B008AD849300E3DA53 /* PartBrowserDataSource.h */; };
 		0BF729C108AD849300E3DA53 /* PartBrowserDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729B108AD849300E3DA53 /* PartBrowserDataSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0BF729C608AD849300E3DA53 /* PreferencesDialogController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729B608AD849300E3DA53 /* PreferencesDialogController.h */; };
@@ -209,7 +209,7 @@
 		2BF2E30F0AB0FC840026D5DB /* MinifigureDialogController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E30D0AB0FC840026D5DB /* MinifigureDialogController.h */; };
 		2BF2E3100AB0FC840026D5DB /* MinifigureDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E30E0AB0FC840026D5DB /* MinifigureDialogController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2BF2E3150AB0FCAB0026D5DB /* MLCadIni.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3110AB0FCAB0026D5DB /* MLCadIni.h */; };
-		2BF2E3160AB0FCAB0026D5DB /* MLCadIni.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2BF2E3160AB0FCAB0026D5DB /* MLCadIni.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
 		2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };

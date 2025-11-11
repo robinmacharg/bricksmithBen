@@ -41,9 +41,6 @@
 //==============================================================================
 - (void) setBackgroundColor:(NSColor *)colorIn
 {
-	[colorIn retain];
-	[self->backgroundColor release];
-	
 	self->backgroundColor = colorIn;
 	
 }//end setBackgroundColor:
@@ -73,10 +70,6 @@
 //==============================================================================
 - (void) dealloc
 {
-	[self->backgroundColor release];
-
-	[super dealloc];
-	
 }//end dealloc
 
 @end

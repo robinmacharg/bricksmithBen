@@ -165,7 +165,6 @@ RotationPanelController *sharedRotationPanel = nil;
 	// cycle in order to fully deallocate.
 	[objectController setContent:nil];
 	
-	[self autorelease];
 	sharedRotationPanel = nil;
 }
 
@@ -199,8 +198,6 @@ RotationPanelController *sharedRotationPanel = nil;
 //==============================================================================
 - (void) dealloc
 {
-	[super dealloc];
-
 }//end dealloc
 
 

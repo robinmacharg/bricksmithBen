@@ -62,7 +62,7 @@
 //==============================================================================
 - (id) init
 {
-	[super init];
+	self = [super init];
 	
 	modelName = @"";
 	
@@ -120,7 +120,7 @@
 	}
 
 	// Create a basic model.
-	[super initWithLines:lines inRange:nonMPDRange parentGroup:parentGroup]; //parses model into header and steps.
+	self = [super initWithLines:lines inRange:nonMPDRange parentGroup:parentGroup]; //parses model into header and steps.
 	
 	// If it wasn't MPD, we still need a model name. We can get that via the 
 	// parsed model.
@@ -148,7 +148,7 @@
 {
 	self = [super initWithCoder:decoder];
 	
-	modelName = [[decoder decodeObjectForKey:@"modelName"] retain];
+	modelName = [decoder decodeObjectForKey:@"modelName"];
 	
 	return self;
 	
@@ -367,9 +367,6 @@
 //==============================================================================
 - (void) setModelName:(NSString *)newModelName
 {
-	[newModelName retain];
-	[modelName release];
-	
 	modelName = newModelName;
 	
 	[self sendMessageToObservers:MessageNameChanged];
@@ -534,10 +531,6 @@
 //==============================================================================
 - (void) dealloc
 {
-	[modelName	release];
-
-	[super dealloc];
-	
 }//end dealloc
 
 

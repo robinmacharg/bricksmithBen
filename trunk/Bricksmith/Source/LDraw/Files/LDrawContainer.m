@@ -95,7 +95,6 @@
 	{
 		copiedObject = [currentObject copy];
 		[copiedContainer insertDirective:copiedObject atIndex:counter];
-		[copiedObject release];
 	}
 	
 	return copiedContainer;
@@ -476,12 +475,6 @@
 	//the children must not be allowed to remember us. Crashes could result otherwise.
 	[self->containedObjects makeObjectsPerformSelector:@selector(setEnclosingDirective:)
 											withObject:nil ];
-
-	//release instance variables
-	[containedObjects release];
-	
-	[super dealloc];
-	
 }//end dealloc
 
 

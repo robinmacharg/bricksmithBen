@@ -110,7 +110,6 @@ static PartBrowserPanelController *sharedPartBrowserPanel = nil;
 {
 	//Make sure our memory is all released.
 	sharedPartBrowserPanel = nil;
-	[self autorelease];
 	
 }//end windowWillClose:
 
@@ -156,8 +155,6 @@ static PartBrowserPanelController *sharedPartBrowserPanel = nil;
 {
 	// no need to release top-level nib objects, as this is an NSWindowController
 
-	[super dealloc];
-	
 }//end dealloc
 
 

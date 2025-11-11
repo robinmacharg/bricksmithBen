@@ -80,7 +80,7 @@
 //==============================================================================
 - (void) reloadPartCatalog:(void (^)(BOOL success))completionHandler
 {
-	AMSProgressPanel* progressPanel	= [[AMSProgressPanel progressPanel] retain];
+	AMSProgressPanel* progressPanel	= [AMSProgressPanel progressPanel];
 	
 	[progressPanel setMessage:@"Loading Parts"];
 	[progressPanel showProgressPanel];
@@ -145,7 +145,6 @@
 		
 		[error runModal];
 		
-		[error release];
 	}
 	
 	return folderIsValid;
@@ -181,7 +180,6 @@
 //==============================================================================
 - (void) dealloc
 {
-	[super dealloc];
 	
 }//end dealloc
 

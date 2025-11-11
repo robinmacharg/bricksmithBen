@@ -54,9 +54,6 @@
 	   [super setAutosaveName:newName];
 	else
 	{
-		[newName retain];
-		[self->autosaveName release];
-		
 		autosaveName = newName;
 		
 		// Automatically restore. This is what Apple is doing in Leopard.
@@ -258,9 +255,6 @@
 - (void) dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[super dealloc];
-	
 }//end dealloc
 
 @end

@@ -56,7 +56,7 @@ static ColorLibrary	*sharedColorLibrary	= nil;
 		// "Draw" it so that all the colors are recorded in the library
 		[ldconfigFile draw:DRAW_NO_OPTIONS viewScale:1.0 parentColor:nil];
 		
-		sharedColorLibrary	= [[[ldconfigFile activeModel] colorLibrary] retain];
+		sharedColorLibrary	= [[ldconfigFile activeModel] colorLibrary];
 		
 		
 		//---------- Special Colors --------------------------------------------
@@ -64,8 +64,8 @@ static ColorLibrary	*sharedColorLibrary	= nil;
 		// context. But we still need to create entries for them in the library 
 		// so that they can be selected in the color palette. 
 		
-		LDrawColor	*currentColor			= [[[LDrawColor alloc] init] autorelease];
-		LDrawColor	*edgeColor				= [[[LDrawColor alloc] init] autorelease];
+		LDrawColor	*currentColor			= [[LDrawColor alloc] init];
+		LDrawColor	*edgeColor				= [[LDrawColor alloc] init];
 		GLfloat		 currentColorRGBA[4]	= {1.0, 1.0, 0.81, 1.0};
 		GLfloat		 edgeColorRGBA[4]		= {0.75, 0.75, 0.75, 1.0};
 		
@@ -314,9 +314,6 @@ void complimentColor(const GLfloat *originalColor, GLfloat *complimentColor)
 //==============================================================================
 - (void) dealloc
 {
-	[colors release];
-	
-	[super dealloc];
 }
 
 
