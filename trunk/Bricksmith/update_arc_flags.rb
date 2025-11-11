@@ -18,28 +18,6 @@ def normalize_path(path)
   path.sub(%r{^\./}, '') # remove leading ./
 end
 
-# def add_flag_to_files(project, file_list, flag)
-#   return unless File.exist?(file_list)
-#   File.readlines(file_list).each do |line|
-#     file_path = normalize_path(line.strip)
-#     next if file_path.empty?
-
-#     file_ref = project.files.find { |f| normalize_path(f.path || '') == file_path }
-#     unless file_ref
-#       puts "⚠️  File not found in project: #{file_path}"
-#       next
-#     end
-
-#     # Add or update compiler_flags
-#     build_files = project.targets.flat_map(&:source_build_phase).flat_map(&:files).select { |bf| bf.file_ref == file_ref }
-#     build_files.each do |bf|
-#       bf.settings ||= {}
-#       bf.settings['COMPILER_FLAGS'] = flag
-#       puts "✅ Set #{flag} for #{file_path}"
-#     end
-#   end
-# end
-
 def add_flag_to_files(project, file_list, flag)
   return unless File.exist?(file_list)
   File.readlines(file_list).each do |line|
