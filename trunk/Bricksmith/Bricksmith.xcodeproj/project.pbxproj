@@ -66,7 +66,7 @@
 		0B356AF008D385B900695EEB /* PieceCountPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B356AEE08D385B900695EEB /* PieceCountPanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B356AF108D385B900695EEB /* PieceCountPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B356AEF08D385B900695EEB /* PieceCountPanel.h */; };
 		0B3B76AC13DB86AE007CCC5D /* LDrawGLRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B3B76AA13DB86AE007CCC5D /* LDrawGLRenderer.h */; };
-		0B3E7BA010AF9E5A00AFBCF4 /* OverlayViewCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B3E7B9F10AF9E5A00AFBCF4 /* OverlayViewCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B3E7BA010AF9E5A00AFBCF4 /* OverlayViewCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B3E7B9F10AF9E5A00AFBCF4 /* OverlayViewCategory.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B491DA407F5555B00AC0C10 /* MatrixMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B491DA207F5555B00AC0C10 /* MatrixMath.h */; };
 		0B491DA507F5555B00AC0C10 /* MatrixMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 0B491DA307F5555B00AC0C10 /* MatrixMath.c */; };
 		0B491FF707F64B5800AC0C10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B491FF607F64B5800AC0C10 /* OpenGL.framework */; };
@@ -82,7 +82,7 @@
 		0B6F384407C82025007B1075 /* LDrawMPDModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384207C82025007B1075 /* LDrawMPDModel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B6F384807C8207B007B1075 /* LDrawModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384607C8207B007B1075 /* LDrawModel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B6F3A8F07C9934E007B1075 /* LDrawStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3A8D07C9934E007B1075 /* LDrawStep.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		0B6F3FB807CB0253007B1075 /* LDrawConditionalLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B6F3FB807CB0253007B1075 /* LDrawConditionalLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B6F3FBC07CB0253007B1075 /* LDrawLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FAE07CB0253007B1075 /* LDrawLine.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B6F3FBE07CB0253007B1075 /* LDrawMetaCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FB007CB0253007B1075 /* LDrawMetaCommand.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B6F3FC007CB0253007B1075 /* LDrawPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FB207CB0253007B1075 /* LDrawPart.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -107,7 +107,7 @@
 		0B8EBE55093C0FAD00D87E0C /* InspectionLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE41093C0FAC00D87E0C /* InspectionLine.h */; };
 		0B8EBE56093C0FAD00D87E0C /* InspectionLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE42093C0FAC00D87E0C /* InspectionLine.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B8EBE57093C0FAD00D87E0C /* InspectionMPDModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE43093C0FAC00D87E0C /* InspectionMPDModel.h */; };
-		0B8EBE58093C0FAD00D87E0C /* InspectionMPDModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE44093C0FAD00D87E0C /* InspectionMPDModel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B8EBE58093C0FAD00D87E0C /* InspectionMPDModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE44093C0FAD00D87E0C /* InspectionMPDModel.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B8EBE59093C0FAD00D87E0C /* InspectionPart.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE45093C0FAD00D87E0C /* InspectionPart.h */; };
 		0B8EBE5A093C0FAD00D87E0C /* InspectionPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE46093C0FAD00D87E0C /* InspectionPart.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0B8EBE5B093C0FAD00D87E0C /* InspectionQuadrilateral.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE47093C0FAD00D87E0C /* InspectionQuadrilateral.h */; };

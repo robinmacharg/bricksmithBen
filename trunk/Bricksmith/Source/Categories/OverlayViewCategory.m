@@ -65,9 +65,7 @@
 	helperView  = [[OverlayHelperView alloc] initWithOverlayView:overlayView];
 	
 	[self addSubview:helperView];
-	
-	[helperView release];
-	
+
 }//end addOverlayView:ordered:
 
 
