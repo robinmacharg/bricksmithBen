@@ -71,3 +71,9 @@ section. Each entry says what happened and what to do instead.
   `NS_ENUM(int, …)` keeps exactly that (verified), whereas `NS_ENUM(NSInteger, …)` changes it to 8 bytes `"q"`,
   which breaks struct layout, `encodeBytes:`, NSValue archives and KVC. → Always use `NS_ENUM(int, …)` or
   `NS_OPTIONS(int, …)` when converting.
+- **L24. Converting `#define` string constants: verify mechanically, and watch for composed macros.**
+  - Method: compile a dump program that prints every name and value against the old headers, then compile it
+    against the new `extern` constants plus their `.m`, and `diff` the outputs. 175 constants came out identical.
+  - Composed macros such as `LDCONFIG @"." LDCONFIG_EXTENSION` aren't simple literals, so a regex converter skips
+    them, and the build then fails wherever they're used. → Convert them by hand and verify them against the old
+    header recovered with `git show HEAD:<path>`.
