@@ -105,6 +105,21 @@ static ColorLibrary	*sharedColorLibrary	= nil;
 }//end sharedColorLibrary
 
 
+//---------- resetForTesting -----------------------------------------[static]--
+//
+// Purpose:		TEST SUPPORT ONLY. Discards the shared instance so the next
+//				access rebuilds it (e.g. from a test fixture library).
+//
+//------------------------------------------------------------------------------
++ (void) resetForTesting
+{
+#if !__has_feature(objc_arc)
+	[sharedColorLibrary release];
+#endif
+	sharedColorLibrary = nil;
+}//end resetForTesting
+
+
 //========== init ==============================================================
 //
 // Purpose:		Initialize the object.

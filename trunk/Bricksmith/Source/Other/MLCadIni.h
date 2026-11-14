@@ -59,4 +59,7 @@
 //Parsing
 - (void) parseFromPath:(NSString *) path;
 
+// Test support (do not call from app code)
++ (void) resetForTesting;
+
 @end

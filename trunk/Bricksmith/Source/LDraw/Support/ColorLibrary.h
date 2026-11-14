@@ -60,4 +60,7 @@
 
 void complimentColor(const GLfloat *originalColor, GLfloat *complimentColor);
 
+// Test support (do not call from app code)
++ (void) resetForTesting;
+
 @end

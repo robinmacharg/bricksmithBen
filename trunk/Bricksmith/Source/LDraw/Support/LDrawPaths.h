@@ -45,4 +45,7 @@ typedef NS_ENUM(int, LDrawDomain)
 - (NSString *) pathForTextureName:(NSString *)imageName;
 - (BOOL) validateLDrawFolder:(NSString *)folderPath;
 
+// Test support (do not call from app code)
++ (void) resetForTesting;
+
 @end

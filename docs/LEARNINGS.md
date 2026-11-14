@@ -81,3 +81,9 @@ section. Each entry says what happened and what to do instead.
   process that relaunches the test host in test mode. App ObjC code is reachable there, and a crash fails only
   that expectation. Each exit test costs about 1–1.5 s, so use them sparingly. The body can't capture local
   state: pass data via files or the environment.
+- **L26. "Insert before the last `@end`" can land inside a protocol.** Some headers declare a `@protocol` after the
+  class (`PartLibrary.h` → `PartLibraryDelegate`), so a new method silently became a required protocol method. The
+  warning gate caught it as `-Wprotocol`. → When inserting declarations, find the `@end` that closes
+  `@interface ClassName`, not the last `@end` in the file.
+- **L27. `-[LDrawPaths setPreferredLDrawPath:]` already lets tests redirect the LDraw folder.** It only sets an
+  ivar; the real preference is read only in `init`. So no new override API was needed.

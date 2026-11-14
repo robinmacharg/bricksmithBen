@@ -113,6 +113,9 @@ extern NSString	*Category_Subparts;
 				  asynchronously:(BOOL)asynchronous
 			   completionHandler:(void (^)(LDrawModel *))completionBlock;
 
+
+// Test support (do not call from app code)
++ (void) resetForTesting;
 @end
 
 

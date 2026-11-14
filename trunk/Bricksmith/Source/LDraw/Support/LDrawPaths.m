@@ -13,6 +13,8 @@
 #import "MacLDraw.h"
 
 
+static LDrawPaths *sharedObject = nil;
+
 @implementation LDrawPaths
 
 //---------- sharedPaths ---------------------------------------------[static]--
@@ -22,8 +24,6 @@
 //------------------------------------------------------------------------------
 + (LDrawPaths *) sharedPaths
 {
-	static LDrawPaths *sharedObject = nil;
-	
 	if(sharedObject == nil)
 	{
 		sharedObject = [[LDrawPaths alloc] init];
@@ -31,6 +31,21 @@
 	
 	return sharedObject;
 }
+
+
+//---------- resetForTesting -----------------------------------------[static]--
+//
+// Purpose:		TEST SUPPORT ONLY. Discards the shared instance so the next
+//				access rebuilds it (e.g. from a test fixture library).
+//
+//------------------------------------------------------------------------------
++ (void) resetForTesting
+{
+#if !__has_feature(objc_arc)
+	[sharedObject release];
+#endif
+	sharedObject = nil;
+}//end resetForTesting
 
 
 //========== init ==============================================================

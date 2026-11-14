@@ -76,4 +76,7 @@ typedef NS_ENUM(int, ViewOrientationT)
 + (ViewOrientationT) viewOrientationForAngle:(Tuple3)rotationAngle;
 + (void) unresolveLibraryParts:(LDrawDirective *)directive;
 
+// Test support (do not call from app code)
++ (void) resetForTesting;
+
 @end

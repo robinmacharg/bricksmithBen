@@ -88,6 +88,21 @@ static MLCadIni *sharedIniFile = nil;
 	
 }//end iniFile
 
+
+//---------- resetForTesting -----------------------------------------[static]--
+//
+// Purpose:		TEST SUPPORT ONLY. Discards the shared instance so the next
+//				access rebuilds it (e.g. from a test fixture library).
+//
+//------------------------------------------------------------------------------
++ (void) resetForTesting
+{
+#if !__has_feature(objc_arc)
+	[sharedIniFile release];
+#endif
+	sharedIniFile = nil;
+}//end resetForTesting
+
 //========== init ==============================================================
 //
 // Purpose:		Creates an empty, unparsed MLCad.ini database.
