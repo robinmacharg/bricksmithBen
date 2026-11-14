@@ -2,6 +2,7 @@
 
 Bricksmith is a macOS LEGO CAD app (LDraw editor), written in Objective-C and C. It is being ported to Swift.
 Read these first:
+- **[docs/LEARNINGS.md](docs/LEARNINGS.md): read this first.** It lists mistakes already made and gotchas already hit. Add an entry whenever something bites.
 - [docs/swift-port-plan.md](docs/swift-port-plan.md): the plan. It covers phases, interop rules, the per-class recipe and exit gates.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the code is organised.
 - [docs/TESTING.md](docs/TESTING.md): how to test, plus the manual smoke checklist.
