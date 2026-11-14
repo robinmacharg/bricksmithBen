@@ -1,0 +1,4 @@
+./Source/Application/Document/RotationPanelController.m
+./Source/Application/General/PartBrowserPanelController.m
+./Source/Widgets/IconTextCell.m
+./Source/Widgets/DialogPanel.m

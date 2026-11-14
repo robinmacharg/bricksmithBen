@@ -50,7 +50,7 @@
 {
 	self = [super initWithCoder:decoder];
 	
-	containedObjects = [[decoder decodeObjectForKey:@"containedObjects"] retain];
+	containedObjects = [decoder decodeObjectForKey:@"containedObjects"];
 	
 	for(id<LDrawObservable> i in containedObjects)
 		[i addObserver:self];

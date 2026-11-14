@@ -106,7 +106,6 @@
 	
 	if([lines count] == 0)
 	{
-		[self autorelease];
 		self = nil;
 	}
 	
@@ -682,8 +681,6 @@
 //==============================================================================
 - (void) setIconName:(NSString *)icon
 {
-    [icon retain];
-    [self->iconName release];
     self->iconName = icon;
 }//end setIconName:
 
@@ -921,14 +918,10 @@
 				[oo observableSaysGoodbyeCruelWorld:self];
 			}
 		}
-		[observers release];
 		observers = (id) 0xDEADBEEF;
 	#endif
 
-
-
-	[super dealloc];
-	//printf(" %p is clear.\n",self);
+    //printf(" %p is clear.\n",self);
 }
 
 

@@ -2,8 +2,8 @@
 //
 // File:		LDrawUtilities.m
 //
-// Purpose:		Convenience routines for managing LDraw directives: their 
-//				syntax, manipulation, or display. 
+// Purpose:		Convenience routines for managing LDraw directives: their
+//				syntax, manipulation, or display.
 //
 //  Created by Allen Smith on 2/28/06.
 //  Copyright 2006. All rights reserved.
@@ -44,25 +44,25 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- setColumnizesOutput: ------------------------------------[static]--
 //
-// Purpose:		Sets whether certain variable-width fields will be padded to 
-//				make them all the same size in outputted files. 
+// Purpose:		Sets whether certain variable-width fields will be padded to
+//				make them all the same size in outputted files.
 //
-// Notes:		Historically, LDraw programs truncate numbers as much as 
-//				possible and insert exactly one space in between: 
+// Notes:		Historically, LDraw programs truncate numbers as much as
+//				possible and insert exactly one space in between:
 //					4 16 -40 0 -20 -40 24 -20 40 24 -20 40 0 -20
 //					4 16 40 0 20 40 24 20 -40 24 20 -40 0 20
 //
-//				Bricksmith 1.0 - 2.3 instead formatted the output into columns 
-//				for easy readability, like so: 
+//				Bricksmith 1.0 - 2.3 instead formatted the output into columns
+//				for easy readability, like so:
 //					4  16   -40.000000     0.000000   -20.000000   -40.000000    24.000000   -20.000000    40.000000    24.000000   -20.000000    40.000000     0.000000   -20.000000
 //					4  16    40.000000     0.000000    20.000000    40.000000    24.000000    20.000000   -40.000000    24.000000    20.000000   -40.000000     0.000000    20.000000
 //
 //				But LDraw traditionalists hated that.
 //
-//				This method checks preferences to see which format is specified 
-//				and outputs the chosen format. The result may be concatenated 
-//				together with exactly one space; the columnizable string will 
-//				already contain the necessary padding spaces. 
+//				This method checks preferences to see which format is specified
+//				and outputs the chosen format. The result may be concatenated
+//				together with exactly one space; the columnizable string will
+//				already contain the necessary padding spaces.
 //
 //------------------------------------------------------------------------------
 + (void) setColumnizesOutput:(BOOL)flag
@@ -81,8 +81,6 @@ static NSString				*defaultAuthor		= @"anonymous";
     // LLW: If the incoming nameIn is nil, leave this alone.
     if (nameIn != nil)
     {
-        [nameIn retain];
-        [defaultAuthor release];
         defaultAuthor = nameIn;
     }
 }
@@ -94,7 +92,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- classForDirectiveBeginningWithLine: ---------------------[static]--
 //
-// Purpose:		Allows initializing the right kind of class based on the code 
+// Purpose:		Allows initializing the right kind of class based on the code
 //				found at the beginning of an LDraw line.
 //
 //------------------------------------------------------------------------------
@@ -108,8 +106,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 	//We may need to check for nil here someday.
 	lineType            = [commandCodeString integerValue];
 	
-	// The linecode (0, 1, 2, 3, 4, 5) identifies the type of command, and is 
-	// always the first character in the line. 
+	// The linecode (0, 1, 2, 3, 4, 5) identifies the type of command, and is
+	// always the first character in the line.
 	switch(lineType)
 	{
         case 0:
@@ -151,10 +149,10 @@ static NSString				*defaultAuthor		= @"anonymous";
 //
 // Purpose:		Returns the color code which is represented by the field.
 //
-// Notes:		This supports a nonstandard but fairly widely-supported 
-//				extension which allows arbitrary RGB values to be specified in 
-//				place of color codes. (MLCad, L3P, LDView, and others support 
-//				this.) 
+// Notes:		This supports a nonstandard but fairly widely-supported
+//				extension which allows arbitrary RGB values to be specified in
+//				place of color codes. (MLCad, L3P, LDView, and others support
+//				this.)
 //
 //------------------------------------------------------------------------------
 + (LDrawColor *) parseColorFromField:(NSString *)colorField
@@ -216,7 +214,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 				break;
 		}
 		
-		color = [[[LDrawColor alloc] init] autorelease];
+		color = [[LDrawColor alloc] init];
 		[color setColorCode:LDrawColorCustomRGB];
 		[color setEdgeColorCode:LDrawBlack];
 		[color setColorRGBA:components];
@@ -230,7 +228,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 		if(color == nil)
 		{
 			// This is probably a file-local color. Or a file from the future.
-			color = [[[LDrawColor alloc] init] autorelease];
+			color = [[LDrawColor alloc] init];
 			[color setColorCode:colorCode];
 			[color setEdgeColorCode:LDrawBlack];
 		}
@@ -243,11 +241,11 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- readNextField:remainder: --------------------------------[static]--
 //
-// Purpose:		Given the portion of the LDraw line, read the first available 
+// Purpose:		Given the portion of the LDraw line, read the first available
 //				field. Fields are separated by whitespace of any length.
 //
-//				If remainder is not NULL, return by indirection the remainder of 
-//				partialDirective after the first field has been removed. If 
+//				If remainder is not NULL, return by indirection the remainder of
+//				partialDirective after the first field has been removed. If
 //				there is no remainder, an empty string will be returned.
 //
 //				So, given the line
@@ -256,12 +254,12 @@ static NSString				*defaultAuthor		= @"anonymous";
 //				remainder will be set to:
 //				 8 -150 -8 20 0 0 -1 0 1 0 1 0 0 3710.DAT
 //
-// Notes:		This method is incapable of reading field strings with spaces 
+// Notes:		This method is incapable of reading field strings with spaces
 //				in them!
 //
 //				A case could be made to replace this method with an NSScanner!
-//				They don't seem to be as adept at scanning in unknown string 
-//				tags though, which would make them difficult to use to 
+//				They don't seem to be as adept at scanning in unknown string
+//				tags though, which would make them difficult to use to
 //				distinguish between "0 WRITE blah" and "0 COMMENT blah".
 //
 //------------------------------------------------------------------------------
@@ -277,7 +275,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 	//Find the beginning of the next field separation
 	rangeOfNextWhiteSpace	= [partialDirective rangeOfCharacterFromSet:whitespaceCharacterSet];
 	
-	//The text between the beginning and the next field separator is the first 
+	//The text between the beginning and the next field separator is the first
 	// field (what we are after).
 	if(rangeOfNextWhiteSpace.location != NSNotFound)
 	{
@@ -300,9 +298,9 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- scanQuotableToken: --------------------------------------[static]--
 //
-// Purpose:		Scans a field which allows embedded whitespace if the field is 
-//				wrappend in double-quotes. Otherwise, leading whitespace is 
-//				trimmed and the field ends at the first whitespace character. 
+// Purpose:		Scans a field which allows embedded whitespace if the field is
+//				wrappend in double-quotes. Otherwise, leading whitespace is
+//				trimmed and the field ends at the first whitespace character.
 //
 //------------------------------------------------------------------------------
 + (NSString *) scanQuotableToken:(NSScanner *)scanner
@@ -348,7 +346,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- stringFromFile: -----------------------------------------[static]--
 //
-// Purpose:		Reads the contents of the file at the given path into a string. 
+// Purpose:		Reads the contents of the file at the given path into a string.
 //
 //------------------------------------------------------------------------------
 + (NSString *) stringFromFile:(NSString *)path
@@ -363,8 +361,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- stringFromFileData: -------------------------------------[static]--
 //
-// Purpose:		Reads the contents of the file with the given data into a 
-//				string. We try a few different encodings. 
+// Purpose:		Reads the contents of the file with the given data into a
+//				string. We try a few different encodings.
 //
 //------------------------------------------------------------------------------
 + (NSString *) stringFromFileData:(NSData *)fileData
@@ -382,14 +380,14 @@ static NSString				*defaultAuthor		= @"anonymous";
 			fileString = [[NSString alloc] initWithData:fileData
 											   encoding:NSISOLatin1StringEncoding ];
 		
-		// Yikes. Not even Windows. MacRoman will do it, even if it doesn't look 
-		// right. 
-		if(fileString == nil) 
+		// Yikes. Not even Windows. MacRoman will do it, even if it doesn't look
+		// right.
+		if(fileString == nil)
 			fileString = [[NSString alloc] initWithData:fileData
 											   encoding:NSMacOSRomanStringEncoding ];
 	}
 
-	return [fileString autorelease];
+	return fileString;
 	
 }//end stringFromFileData:
 
@@ -400,8 +398,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- outputStringForColorCode:RGB: ---------------------------[static]--
 //
-// Purpose:		Returns the string representing the color code which should be 
-//				written out in a file. 
+// Purpose:		Returns the string representing the color code which should be
+//				written out in a file.
 //
 // Notes:		This supports the non-standard custom RGB extension.
 //
@@ -453,8 +451,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- outputStringForFloat: -----------------------------------[static]--
 //
-// Purpose:		Returns a formatted float appropriate for inserting into an 
-//				LDraw file. 
+// Purpose:		Returns a formatted float appropriate for inserting into an
+//				LDraw file.
 //
 //------------------------------------------------------------------------------
 + (NSString *) outputStringForFloat:(float)number
@@ -463,8 +461,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 	
 	if(ColumnizesOutput == YES)
 	{
-		// Make a nice wide fixed-width string which will force the numbers into 
-		// columns. 
+		// Make a nice wide fixed-width string which will force the numbers into
+		// columns.
 		outputString = [NSString stringWithFormat:@"%12f", number];
 	}
 	else
@@ -475,7 +473,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 		char    *endOfString        = NULL;
 		size_t  fullLength          = 0;
 		
-		// First format the number into a string. We could wind up with 
+		// First format the number into a string. We could wind up with
 		// something like "50.090000".
 		snprintf(formattedFloat, sizeof(formattedFloat), "%f", number);
 		fullLength  = strlen(formattedFloat);
@@ -488,8 +486,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 		}
 		if(*endOfString != '.')
 		{
-			// We must be pointing at a non-zero digit, so lop off the 
-			// subsequent character that is a zero. 
+			// We must be pointing at a non-zero digit, so lop off the
+			// subsequent character that is a zero.
 			endOfString++;
 		}
 		
@@ -508,13 +506,13 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- registerHitForObject:depth:creditObject:hits: -----------[static]--
 //
-// Purpose:		Adds a hit record to the hits dictionary such that only the 
-//				nearest hits per credit object survive. 
+// Purpose:		Adds a hit record to the hits dictionary such that only the
+//				nearest hits per credit object survive.
 //
 // Parameters:	hitObject - the exact object whose geometry was hit
 //				depth - the distance in the depth of field
-//				creditObject - an object to which the hit should be attributed 
-//						(instead of the hitObject itself) 
+//				creditObject - an object to which the hit should be attributed
+//						(instead of the hitObject itself)
 //				hits - the list of hit records to modify
 //
 //------------------------------------------------------------------------------
@@ -528,11 +526,11 @@ static NSString				*defaultAuthor		= @"anonymous";
 	// wrap the pointers. 
 	if(creditObject == nil)
 	{
-		key = [NSValue valueWithPointer:hitObject];
+        key = [NSValue valueWithPointer:CFBridgingRetain(hitObject)];
 	}
 	else
 	{
-		key = [NSValue valueWithPointer:creditObject];
+        key = [NSValue valueWithPointer:CFBridgingRetain(creditObject)];
 	}
 
 	existingRecord = [hits objectForKey:key];
@@ -554,12 +552,12 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- registerHitForObject:creditObject:hits: -----------------[static]--
 //
-// Purpose:		Same as above, but it adds its objects to a mutable set, 
+// Purpose:		Same as above, but it adds its objects to a mutable set,
 //				and ignores depth.
 //
 // Parameters:	hitObject - the exact object whose geometry was hit
-//				creditObject - an object to which the hit should be attributed 
-//						(instead of the hitObject itself) 
+//				creditObject - an object to which the hit should be attributed
+//						(instead of the hitObject itself)
 //				hits - the hit set
 //
 //------------------------------------------------------------------------------
@@ -571,11 +569,11 @@ static NSString				*defaultAuthor		= @"anonymous";
 	// wrap the pointers. 
 	if(creditObject == nil)
 	{
-		key = [NSValue valueWithPointer:hitObject];
+        key = [NSValue valueWithPointer:CFBridgingRetain(hitObject)];
 	}
 	else
 	{
-		key = [NSValue valueWithPointer:creditObject];
+        key = [NSValue valueWithPointer:CFBridgingRetain(creditObject)];
 	}
 
 	[hits addObject:key];
@@ -611,7 +609,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 	
 	if(imageSource) CFRelease(imageSource);
 	
-	return (CGImageRef)[(id)image autorelease];
+    return (__bridge CGImageRef)(id)CFBridgingRelease(image);
 }
 
 
@@ -636,8 +634,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 			break;
 	
 		case ViewOrientation3D:
-			// This is MLCad's default 3-D viewing angle, which is arrived at by 
-			// applying these rotations in order: z=0, y=45, x=23. 
+			// This is MLCad's default 3-D viewing angle, which is arrived at by
+			// applying these rotations in order: z=0, y=45, x=23.
 			angle = V3Make(30.976, 40.609, 21.342);
 			break;
 			
@@ -673,12 +671,12 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- boundingBox3ForDirectives: ------------------------------[static]--
 //
-// Purpose:		Returns the minimum and maximum points of the box which 
-//				perfectly contains all the given objects. (Only objects which 
+// Purpose:		Returns the minimum and maximum points of the box which
+//				perfectly contains all the given objects. (Only objects which
 //				respond to -boundingBox3 will be tested.)
 //
-// Notes:		This method used to live in LDrawContainer, which was a very 
-//				nice place. But I moved it here so that other interested parties 
+// Notes:		This method used to live in LDrawContainer, which was a very
+//				nice place. But I moved it here so that other interested parties
 //				could do bounds testing on ad-hoc collections of directives.
 //
 //------------------------------------------------------------------------------
@@ -707,15 +705,15 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- isLDrawFilenameValid: -----------------------------------[static]--
 //
-// Purpose:		The LDraw File Specification defines what makes a valid LDraw 
-//				file name: http://www.ldraw.org/Article218.html#files 
+// Purpose:		The LDraw File Specification defines what makes a valid LDraw
+//				file name: http://www.ldraw.org/Article218.html#files
 //
-//				Alas, these rules suck in MPD names too, thanks to the wording 
-//				on Linetype 1 in the spec. 
+//				Alas, these rules suck in MPD names too, thanks to the wording
+//				on Linetype 1 in the spec.
 //
-// Notes:		The spec also has disparaging things to say about whitespace and 
-//				special characters in filenames. To the spec I say: join the 
-//				1990s. 
+// Notes:		The spec also has disparaging things to say about whitespace and
+//				special characters in filenames. To the spec I say: join the
+//				1990s.
 //
 //------------------------------------------------------------------------------
 + (BOOL) isLDrawFilenameValid:(NSString *)fileName
@@ -741,8 +739,8 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- updateNameForMovedPart: ---------------------------------[static]--
 //
-// Purpose:		If the specified part has been moved to a new number/name by 
-//				LDraw.org, this method will update the part name to point to the 
+// Purpose:		If the specified part has been moved to a new number/name by
+//				LDraw.org, this method will update the part name to point to the
 //				new location.
 //
 //				Example:
@@ -763,9 +761,9 @@ static NSString				*defaultAuthor		= @"anonymous";
 
 //---------- viewOrientationForAngle: --------------------------------[static]--
 //
-// Purpose:		Returns the viewing orientation for the given angle. If the 
-//				angle is not a recognized head-on view, ViewOrientation3D will 
-//				be returned. 
+// Purpose:		Returns the viewing orientation for the given angle. If the
+//				angle is not a recognized head-on view, ViewOrientation3D will
+//				be returned.
 //
 //------------------------------------------------------------------------------
 + (ViewOrientationT) viewOrientationForAngle:(Tuple3)rotationAngle
@@ -812,7 +810,7 @@ static NSString				*defaultAuthor		= @"anonymous";
 {
 	if ([directive respondsToSelector:@selector(allEnclosedElements)])
 	{
-		NSArray * subs = [(LDrawContainer*)directive allEnclosedElements];		
+		NSArray * subs = [(LDrawContainer*)directive allEnclosedElements];
 		for (LDrawDirective * d in subs)
 		{
 			[self unresolveLibraryParts:d];

@@ -19,6 +19,10 @@ def normalize_path(path)
 end
 
 def add_flag_to_files(project, file_list, flag)
+
+
+
+  
   return unless File.exist?(file_list)
   File.readlines(file_list).each do |line|
     file_path = File.expand_path(line.strip)

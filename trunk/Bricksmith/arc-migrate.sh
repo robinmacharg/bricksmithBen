@@ -33,6 +33,14 @@ analyze() {
     FILES=$(find . -type f -name "*.m")
 
     for f in $FILES; do
+
+        if [ -f "ignored.txt" ]; then
+            if grep -q -x -F "$f" "ignored.txt"; then
+            continue
+            fi
+        fi
+
+
         TMP_FILE="$TMP_DIR/$(echo "$f" | sed 's|/|_|g')"
 
         # Use awk to process file in one pass

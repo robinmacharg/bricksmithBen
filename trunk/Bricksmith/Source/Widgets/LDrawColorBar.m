@@ -74,18 +74,15 @@
 	GLfloat     components[4];
 	
 	// assign ivar
-	[newColor retain];
-	[self->color release];
 	self->color = newColor;
 	
 	// Set cached NSColor too
 	[newColor getColorRGBA:components];
 	
-	[self->nsColor release];
-	self->nsColor = [[NSColor colorWithCalibratedRed:components[0]
+	self->nsColor = [NSColor colorWithCalibratedRed:components[0]
 											   green:components[1]
 												blue:components[2]
-											   alpha:1.0 ] retain];
+											   alpha:1.0 ];
 	
 	//Create a tool tip to identify the LDraw color code.
 	description	= [newColor localizedName];
@@ -107,9 +104,6 @@
 //==============================================================================
 - (void) dealloc
 {
-	[self->nsColor	release];
-	
-	[super dealloc];
 	
 }//end dealloc
 

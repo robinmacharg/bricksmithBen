@@ -66,8 +66,8 @@
 					   progressIncrementHandler:(void (^)())progressIncrementHandler
 							  completionHandler:(void (^)(NSDictionary<NSString*, id> *newCatalog))completionHandler
 {
-	NSFileManager	*fileManager			= [[[NSFileManager alloc] init] autorelease];
-	LDrawPaths		*paths					= [[[LDrawPaths alloc] init] autorelease];
+	NSFileManager	*fileManager			= [[NSFileManager alloc] init];
+	LDrawPaths		*paths					= [[LDrawPaths alloc] init];
 	NSString		*ldrawPath				= [paths preferredLDrawPath];
 	NSMutableArray	*searchPaths			= [NSMutableArray array];
 	
@@ -237,7 +237,7 @@
 			   namePrefix:(NSString *)namePrefix
  progressIncrementHandler:(void (^)())progressIncrementHandler
 {
-	NSFileManager		*fileManager			= [[[NSFileManager alloc] init] autorelease];
+	NSFileManager		*fileManager			= [[NSFileManager alloc] init];
 // Not working for some reason. Why?
 //	NSArray 			*readableFileTypes = [NSDocument readableTypes];
 //	NSLog(@"readable types: %@", readableFileTypes);
@@ -498,10 +498,9 @@
 		NSLog(@"%@ is not a valid file", filepath);
 	}
 	
-	[catalogInfo retain];
 	[pool drain];
 	
-	return [catalogInfo autorelease];
+	return catalogInfo;
 	
 }//end catalogInfoForFileAtPath
 
