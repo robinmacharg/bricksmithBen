@@ -251,8 +251,7 @@
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PREBINDING = NO;
 				PRODUCT_NAME = AMSProgressBar;
 				SKIP_INSTALL = YES;
@@ -276,8 +275,7 @@
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PREBINDING = NO;
 				PRODUCT_NAME = AMSProgressBar;
 				SKIP_INSTALL = YES;
@@ -288,7 +286,7 @@
 		2BB596FE09FEFCD00077A885 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -297,7 +295,7 @@
 		2BB596FF09FEFCD00077A885 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				SDKROOT = macosx;
 			};
 			name = Release;
