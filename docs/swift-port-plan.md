@@ -99,9 +99,10 @@ master
 2. `scripts/test.sh` is green, and no known-issue test passes unexpectedly.
 3. The perf check (`scripts/perf-compare.sh`) passes in phases that touch the hot classes (§4.6). **A skipped perf test
    fails the gate.**
-4. **🧑 HUMAN GATE:** someone runs the manual smoke checklist ([TESTING.md](TESTING.md#manual-smoke-checklist)) with
+4. The version's patch number is bumped (§8.6) in the merge commit to `master`.
+5. **🧑 HUMAN GATE:** someone runs the manual smoke checklist ([TESTING.md](TESTING.md#manual-smoke-checklist)) with
    the full LDraw library, then records the sign-off (date and initials) in port-status.md.
-5. [port-status.md](port-status.md) and [KNOWN-BUGS.md](KNOWN-BUGS.md) are up to date.
+6. [port-status.md](port-status.md) and [KNOWN-BUGS.md](KNOWN-BUGS.md) are up to date.
 
 ## 4. Key technical decisions
 
@@ -126,8 +127,8 @@ LSynth goldens, render snapshots) are written so they'll also guard that later w
   - `LSMinimumSystemVersion` changes to `$(MACOSX_DEPLOYMENT_TARGET)`.
 - **Test bundles: macOS 14.0.** This is a choice, not a hard requirement: the shipped `Testing` binary has `minos 14.0`.
 - **Signing:** "Sign to Run Locally", with hardened runtime off for Debug and test hosting.
-- **Sparkle:** off in Debug. The `SPUStandardUpdaterController` doesn't start automatically in Debug. A build-setting
-  substitution in Info.plist sets `SUEnableAutomaticChecks` to NO for Debug only, and Release is unchanged.
+- **Sparkle:** off in Debug. The app delegate implements `updater:mayPerformUpdateCheck:error:` and returns NO under
+  `#if DEBUG`, and in test mode. This writes no defaults, and Release behaviour is unchanged.
   - In tests, the delegate also returns NO from `updater:mayPerformUpdateCheck:error:`. That's the exact Sparkle 2.0.0
     selector; a wrong name fails silently, because the method is optional.
 
@@ -169,6 +170,10 @@ LSynth goldens, render snapshots) are written so they'll also guard that later w
 Sizes are relative (S < M < L < XL).
 
 ### P0: build hygiene (S)
+- Set the version to **4.0.0** (§8.6).
+- **Drop 3Dconnexion** (§8.2): its code, the framework, the link flags, and the pch's Carbon import if nothing else
+  needs it.
+- **Delete `LDrawDataStream.{h,m}`** (§8.7).
 - Deployment target 13.0, `LSMinimumSystemVersion = $(MACOSX_DEPLOYMENT_TARGET)`, signing, and Sparkle off in Debug (§4.3).
 - Add `.gitattributes` **before any fixture or golden exists**:
   - `*.ldr *.mpd *.dat -text`
@@ -205,7 +210,6 @@ against the final Swift spellings.
 *Skip:*
 - `findLDrawPath` and the defaults write
 - the catalog load
-- 3Dconnexion (`awakeFromNib`)
 - the part browser and LSynth menu work in `applicationDidFinishLaunching:`
 - every defaults write in `applicationWillTerminate:`
 
@@ -224,8 +228,8 @@ against the final Swift spellings.
 
 **Fixtures**
 - `trunk/Fixtures/ldraw-mini/`: `LDConfig.ldr`, about 20 small parts and primitives, `parts.lst`, plus an
-  `ATTRIBUTION.md`. **🧑 HUMAN GATE:** confirm that the LDraw library licence permits redistributing this subset
-  (it also affects the bundled `Resources/LDConfig.ldr`).
+  `ATTRIBUTION.md`. This is allowed by maintainer decision §8.5 (the repo won't be released), and replacing the
+  subset is a follow-on (§9).
 - `scripts/fetch-ldraw.sh` downloads the full library into `~/Library/Caches`. It's gitignored, and tests that use it
   are tagged `.requiresFullLibrary`.
 
@@ -331,8 +335,7 @@ Goldens and known issues **must not change**.
     for P10).
   - Check draw-loop cost against the perf gate.
 - **Dead code:** remove the `USE_BLOCKS` hack and the 49 dead `#if USE_BLOCKS` branches (parsing stays serial).
-- **Launch code:** move `+initialize`'s transformer registration there. Remove the pch's Carbon import (it's only needed
-  by 3Dconnexion).
+- **Launch code:** move `+initialize`'s transformer registration there.
 - **Modernise calls:**
   - Replace RegexKitLite with `NSRegularExpression`, then delete it.
   - Replace old enum names.
@@ -392,7 +395,7 @@ UI tests must pass **unchanged**.
 
 ### P9b: UI modernisation (L), one control per commit
 - `NSMatrix` (19 in 8 xibs) → radio `NSButton` groups or `NSSegmentedControl`
-- `NSDrawer` → split-view sidebar (*maintainer decision*)
+- Remove the `NSDrawer` part-browser mode. The existing floating panel becomes the only mode (§8.3). Migrate the `PART_BROWSER_STYLE_KEY` preference: a stored "drawer" value becomes "panel".
 - `LDrawColorCell` and `IconTextCell` → view-based cells
 - `AMSProgressBar` → an `NSProgressIndicator` sheet; delete the framework
 - Declare UTIs for ldr, mpd and dat (`public.plain-text`)
@@ -405,7 +408,6 @@ locators. Keep the xibs and bindings; there is no SwiftUI rewrite.
   are already properties (P4).
 - Port `LDrawApplication` and `BricksmithApplication`, and replace `main.m` with `@main`.
 - Undo **keeps** `prepare(withInvocationTarget:)` semantics. The closure rewrite is P11.
-- 3Dconnexion goes behind a tiny C/ObjC shim (*maintainer decision*: keep it, drop it, or replace it).
 - The pasteboard keeps its current (non-secure) unarchiving. S7 is for P12.
 
 ### P11: hardening (M)
@@ -463,20 +465,24 @@ locators. Keep the xibs and bindings; there is no SwiftUI rewrite.
 | A dev build auto-updates to the release | Sparkle off in Debug (P0) |
 | GL snapshots differ between machines | Per-machine references, not a CI gate |
 
-## 8. Decisions for the maintainer
-1. Deployment target: **13.0** (recommended) or 11.0.
-2. 3Dconnexion: keep it behind a shim (default), drop it, or replace it.
-3. Part browser `NSDrawer` → **split-view sidebar** (default) or a floating panel.
-4. Whether to fast-forward `master` to `20251111-ARC-conversion` before the stack starts.
-5. LDraw licence: may the `ldraw-mini` fixture subset be redistributed in this repo?
-6. Version and appcast policy for the Swift build, e.g. 4.0 and a new appcast file.
-7. Delete the unused `LDrawDataStream.{h,m}`?
+## 8. Maintainer decisions (recorded 2026-11-14)
+
+| # | Question | Decision | Where it lands |
+|---|---|---|---|
+| 1 | Deployment target | **macOS 13.0** | P0 |
+| 2 | 3Dconnexion | **Drop it.** The old SDK, the weak-linked framework, and the Carbon dependency all go | P0 (a deliberate feature removal, recorded in its commit) |
+| 3 | Part browser | **Floating panel.** The app already has one (`PartBrowserPanelController`, chosen by the `PART_BROWSER_STYLE_KEY` preference), so the `NSDrawer` mode is removed rather than replaced | P9b |
+| 4 | `master` | Fast-forwarded to `20251111-ARC-conversion` (`af3483f`), so the ARC work done so far is kept and not redone | Done 2026-11-14 |
+| 5 | LDraw fixture subset | **Allowed** in this repo, which won't be released. Replacing it with synthetic parts is a follow-on (§9) | P1 |
+| 6 | Versioning | **New major version, 4.0.0.** Each phase merged to `master` bumps the **patch** number (P0 → 4.0.0, P1 → 4.0.1, …). A significant follow-on such as Metal bumps the **minor** number (4.1.0). Releases and the appcast stay manual | P0 sets 4.0.0; every phase gate bumps the patch |
+| 7 | `LDrawDataStream.{h,m}` | **Delete.** It was a 2012 experiment by bsupnik (Rob Barris-style windowed VBO streaming), never compiled and never referenced. Its idea is the standard Metal ring buffer, so it's worth remembering for that work | P0 |
 
 ## 9. Follow-on goals (recorded, not planned here)
 
 | Goal | What this plan leaves in place for it |
 |---|---|
 | **OpenGL → Metal** | `RenderBackend` / `Camera` Swift protocols with no GL types (P8); per-machine render snapshots (row 15); GL removed from the model (P4) |
+| **Synthetic test parts.** Replace the `ldraw-mini` subset taken from the LDraw library with generated parts, so the repo could be published | The fixture layout and `ATTRIBUTION.md` (P1) |
 | **C → Swift.** Covers `MatrixMath.c`, `GLMatrixMath.c`, `OpenGLUtilities.c`, `MeshSmooth.c` and possibly LSynth (≈11k lines). Likely to move to `simd` types, and best done alongside or after Metal, since `GLMatrixMath` and `MeshSmooth` are renderer-side | Tier-A coverage of `MatrixMath`, seeded geometry property tests (row 5), `lsynthcp` and `LDrawLSynth` goldens (row 13), and Release perf baselines (row 16), all reusable as-is |
 
 ## Appendix A: adversarial review log

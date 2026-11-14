@@ -52,7 +52,7 @@ isn't present.
 - **Never touch real user preferences or libraries.**
   - Tests run hosted in the app. When `XCTestConfigurationFilePath` is set, the app launches in test mode:
     - **It keeps** the shared GL context and the Inspector, because documents need them.
-    - **It skips** LDraw-path discovery, the catalog load, 3Dconnexion, the part browser and LSynth menu setup,
+    - **It skips** LDraw-path discovery, the catalog load, the part browser and LSynth menu setup,
       Sparkle, and every defaults write at quit.
   - The fixture library is injected with `+[LDrawPaths setOverrideLDrawPath:]`. Launch arguments aren't used,
     because the real defaults key is `"LDraw Path"`, which contains a space.
@@ -90,7 +90,6 @@ confirm the list is complete.
 |---|---|---|
 | Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | (add) |
 | 3D-view mouse, trackpad and marquee interaction | GL view interaction | 3, 8 |
-| 3Dconnexion | Needs the hardware | 13 |
 
 *(There is no printing feature in the app, so there's nothing to test.)*
 
@@ -110,5 +109,4 @@ things automation covers poorly. Record the sign-off in port-status.md.
 10. Open Preferences and change the grid spacing. Restart the app; the setting is kept.
 11. Use the Minifigure generator and add a minifig to the model.
 12. Add an LSynth hose and regenerate it.
-13. *(If you have the hardware)* Move the view with a 3Dconnexion mouse.
-14. Close every document while it has unsaved changes. Each save prompt works, and nothing crashes.
+13. Close every document while it has unsaved changes. Each save prompt works, and nothing crashes.

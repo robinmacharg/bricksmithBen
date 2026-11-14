@@ -15,6 +15,11 @@ Read these first:
   The `scripts/build.sh` and `scripts/test.sh` wrappers will replace this once P0 and P1 land.
 - The shell is zsh, so quote globs and paths that contain spaces (`"trunk/Test Data"`).
 
+## Versioning
+- The Swift port is version **4.0.x**. Each phase merged to `master` bumps the patch number.
+- Major follow-ons, such as Metal, bump the minor number (4.1.0).
+- Releases and the appcast are manual.
+
 ## Git conventions
 - Branches are stacked and dated: `YYYYMMDD-topic`, where the date is the day the branch was cut. Each phase
   branch starts from the previous phase's tip. Restack with `git rebase --update-refs`.
