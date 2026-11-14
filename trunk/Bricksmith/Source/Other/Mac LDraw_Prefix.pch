@@ -24,8 +24,11 @@
 	#endif
 #endif
 
-// Carbon should be used very, *very* little, but it may be handy.
-#import <Carbon/Carbon.h>
+// C (and ObjC) sources rely on the prefix header for the standard C library and CoreServices.
+// This used to come via <Carbon/Carbon.h>; Carbon was removed with 3Dconnexion support (P0).
+// P1 makes headers self-contained so this implicit dependency can go.
+#import <ApplicationServices/ApplicationServices.h>
+
 
 //#define USE_BLOCKS				NS_BLOCKS_AVAILABLE
 #define USE_BLOCKS				0

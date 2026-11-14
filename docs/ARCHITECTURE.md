@@ -17,7 +17,7 @@ This document describes the code **as it is**. For where it is going, see
 | `trunk/AMSProgressBar/` | Small framework sub-project (progress sheet). It uses a legacy `.nib` bundle. |
 | `trunk/ThirdParty/LSynth/` | About 5.7k lines of C. Builds the `lsynthcp` CLI, which is copied into the app bundle and run with `NSTask`. |
 | `trunk/ThirdParty/Sparkle/` | Prebuilt Sparkle **2.0.0**. Uses the modern `SPUStandardUpdaterController` API. |
-| `trunk/ThirdParty/3DconnexionClient.framework` | Old Carbon-era 3D-mouse SDK, weak-linked. **Being removed in P0** (maintainer decision). |
+| ~~`trunk/ThirdParty/3DconnexionClient.framework`~~ | Removed in P0, along with Carbon (maintainer decision: 3D-mouse support dropped). |
 | `trunk/Test Data/` | Regression fixtures. `Good/` and `Bad/` hold the same BrickLink Studio export; the Bad copy uses a non-standard line type `11` and crashes the app. |
 | `trunk/Bricksmith/arc-migrate.sh`, `update_arc_flags.rb`, `Tools/ARCMigration/` | Tooling for the in-progress MRC → ARC migration. |
 
@@ -118,5 +118,5 @@ These singletons matter for tests and for the port:
 - The deployment target is set to 10.11, but the macOS 26 SDK's minimum is 10.13.
 - ARC is per-file and mid-migration. About 52 files use `-fobjc-arc` and about 41 use `-fno-objc-arc`.
   See [port-status.md](port-status.md).
-- The prefix header imports Cocoa **and Carbon** into every file.
+- The prefix header imports Cocoa (ObjC) and ApplicationServices (all files). Carbon was removed in P0.
 - Code signing is not configured (no team, no entitlements, no hardened runtime).
