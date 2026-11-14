@@ -73,3 +73,6 @@ sorted_non_arc_files.txt
 
 # Local backup archive, deliberately untracked
 trunk/Bricksmith/Source/LDraw.zip
+
+# LLVM coverage output from running instrumented Debug builds outside the test runner
+*.profraw

@@ -94,11 +94,12 @@ confirm the list is complete.
 *(There is no printing feature in the app, so there's nothing to test.)*
 
 ## Manual smoke checklist
-**🧑 HUMAN GATE.** Run this at every phase exit gate, using a Debug build and the **full LDraw library**, for the
+**🧑 HUMAN GATE.** Debug builds use their own preferences domain (`com.AllenSmith.Bricksmith.debug`), so this never touches the installed
+Bricksmith's settings. Run this at every phase exit gate, using a Debug build and the **full LDraw library**, for the
 things automation covers poorly. Record the sign-off in port-status.md.
 
 1. Launch the app. There are no error dialogs, and the LDraw folder is found (or the folder prompt works).
-2. Open `trunk/Test Data/Good/spider gearbox v2 opens.ldr`. The model renders.
+2. Open a **temporary copy** of `trunk/Test Data/Good/spider gearbox v2 opens.ldr` (never the fixture itself, because saving rewrites it). The model renders.
 3. Rotate, pan and zoom the 3D view with the mouse and trackpad. Switch through the viewport layouts.
 4. Select a part in the 3D view, then in the outline. The inspector shows its values. Change its colour and position from the inspector.
 5. Drag a part from the part browser into the model. Move it with the arrow keys, rotate it with the rotation panel, then undo and redo all of it.

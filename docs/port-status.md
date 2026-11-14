@@ -25,7 +25,7 @@ their own port phase.
 | Phase | Gate | Date | Initials | Notes |
 |---|---|---|---|---|
 | P0 | Automated: Debug and Release build, no new warnings, `codesign --verify --deep` | 2026-11-14 | agent | Branch `20261114-p0-build-hygiene` |
-| P0 | 🧑 Manual smoke checklist (full LDraw library) | **pending** | | Pay particular attention to launch, opening `Test Data/Good`, and LSynth (items 1, 2 and 12). 3Dconnexion has been removed |
+| P0 | 🧑 Manual smoke checklist (full LDraw library) | 2026-11-14 | maintainer | Passed, apart from Settings, which never opens: BUG-002 is pre-existing, caused by colour preferences written by the installed 3.1.0. Debug builds now use their own preferences domain |
 
 ## Accepted risks and coverage exceptions
 
