@@ -8,8 +8,9 @@
   behaviour, so investigate before going further.
 - All fixes happen in phase **P12 (post-port bug fixing)**: one bug per commit, with `withKnownIssue` removed and
   goldens updated in that same commit.
-- Exception: a bug that **blocks** the port or its tests (for example a crash that kills the test host) may get the
-  smallest possible guard. The real fix still waits for P12, and the entry here is marked `guarded`.
+- **Crashing bugs** can't use `withKnownIssue`. Assert the root cause directly, then record the crash with a Swift
+  Testing exit test (`#expect(processExitsWith:)`) or a child-process test. A minimal guard in app code is a
+  documented **last resort**, and an entry that uses one is marked `guarded`.
 
 **Status values:**
 - `open`: recorded, test marked expected-failing

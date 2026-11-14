@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **v2**: adversarial review incorporated (see [Appendix A](#appendix-a-adversarial-review-log)) |
+| Status | **v2.1**: adversarial review incorporated (see [Appendix A](#appendix-a-adversarial-review-log)) |
 | Date | 2026-11-14 |
 | Toolchain | Xcode 26.3 (17C529), built-in Swift 6.2.4. No external toolchains |
 | Out of scope | OpenGL → Metal (a later project; this plan prepares the seam) |
@@ -99,7 +99,8 @@ compute job.
 - Use **Swift 5 language mode** with `SWIFT_STRICT_CONCURRENCY = minimal` for the whole port. Switch to Swift 6
   mode with complete checking in P11, once everything is Swift. Doing both at once would mean two hard migrations
   in one change.
-- The app and the tests each get a bridging header. Every header they import must be **self-contained** (P1).
+- There is **one** bridging header, the app's. Tests reach everything through `@testable import Bricksmith`.
+  Every header the bridging header imports must be **self-contained** (P1).
 
 ### 4.3 Deployment target and signing
 - **App: macOS 13.0.** The current 10.11 is below the SDK's 10.13 floor. 13 gives `UTType`, modern sheets and
@@ -155,11 +156,19 @@ Branch `…-p1-test-harness`
 
 **Header hygiene** (so Swift can import the model):
 - Every header the tests need imports what it uses (`<Cocoa/Cocoa.h>`, `<OpenGL/gl.h>`, …) and doesn't rely on the pch.
-- Delete the `USE_BLOCKS` / `dispatch_group_t` macro hack. Parsing already runs serially, and signatures switch to
-  the real `dispatch_group_t` with `NULL` passed in. Behaviour doesn't change.
+- Move the `USE_BLOCKS 0` / `dispatch_queue_t`/`dispatch_group_t` → `void *` hack out of the pch into a small
+  self-contained header (`LDrawDispatchCompat.h`), and import it from every header that uses those types. That way
+  Swift sees exactly the types the ObjC was compiled with.
+  - **Don't delete the hack in P1.** It guards 49 `#if USE_BLOCKS` sites, so removing it isn't a no-op. P4 removes it.
+
+**One import route for tests**
+- P1 creates the **app's** bridging header and one placeholder Swift file.
+- Tests use `@testable import Bricksmith` and see ObjC types *only* through the app's bridging header. There is no
+  separate test bridging header.
+- When a class is ported, its header comes out of that single place, and the tests don't change.
 
 **Test bundle**
-- Add `BricksmithTests`: Swift, hosted by the app (`TEST_HOST`), macOS 14, code coverage on, with its own bridging header.
+- Add `BricksmithTests`: Swift, hosted by the app (`TEST_HOST`), macOS 14, code coverage on, with `@testable import Bricksmith`.
 - Hosted, because the model needs AppKit, `NSBundle mainBundle` (LSynth and resources) and app singletons.
 
 **Launch isolation.** When the test-mode guard detects that `XCTestConfigurationFilePath` is set in the environment:
@@ -181,7 +190,20 @@ Branch `…-p1-test-harness`
 - `scripts/test.sh` writes an xcresult bundle and a coverage summary. A `Bricksmith-Perf` scheme runs the perf tests
   in **Release** with testability enabled.
 - Add a `BricksmithUITests` target with one launch-and-open test.
-- **Exit:** a trivial parse test passes; repeated runs leave the user's defaults and the fixture folder unchanged.
+- **Crash-safe expected failures:** run a spike to see whether Swift Testing **exit tests**
+  (`#expect(processExitsWith: .failure)`) work from the app-hosted bundle.
+  - If they do, crashing bugs such as BUG-001 are recorded as "crashes today" without touching app code.
+  - If they don't, add a tiny helper that runs the case in a child process. Examples: an `XCTest` that launches the
+    built app with a `--parse-file` test hook, or `lsynthcp`-style CLI parsing.
+- **Exit:**
+  - A trivial parse test passes.
+  - Repeated runs leave the user's defaults and the fixture folder unchanged.
+  - **Swap spike** (on a throwaway branch):
+    1. Write a test against `TransformerIntMinus1`.
+    2. Port the class to Swift.
+    3. Confirm the *same* test file compiles and passes with no edits.
+
+    This proves the "tests run unchanged across the port" claim before anything relies on it.
 
 ### P2: characterisation tests (L), the core of the plan
 Branch `…-p2-characterisation-tests`. Sub-branches are allowed.
@@ -194,13 +216,20 @@ Goldens come from the ObjC build and are reviewed by a person before they're com
 2. Write a test that asserts the **correct** behaviour, wrapped in `withKnownIssue("BUG-nnn …")` (or `XCTExpectFailure`).
 3. Don't fix it.
 
-If a known issue starts passing unexpectedly, the port changed behaviour: stop and investigate. The only exception is
-a bug that kills the test host. It may get a minimal guard, and its register entry is marked `guarded`.
+If a known issue starts passing unexpectedly, the port changed behaviour: stop and investigate.
+
+**Crashing bugs** can't be wrapped in `withKnownIssue`. Record them in two ways:
+- Characterise the root cause directly. For BUG-001, assert that `+classForDirectiveBeginningWithLine:` returns
+  `Nil` for a `11 …` line; that call doesn't crash.
+- Record the whole-file crash with an exit test or a child-process test (P1).
+
+A minimal guard in app code is a **last resort**, used only if neither approach works. A guarded entry is marked
+`guarded` in the register.
 
 | # | Area | What's tested | How |
 |---|---|---|---|
 | 1 | **Parse → write round trip** | Every directive type: part, line, triangle, quad, conditional line, comment, `!COLOUR`, `STEP`, `ROTSTEP`, MPD `0 FILE`/`NOFILE`, `!TEXMAP`, LSynth blocks, `0x2RRGGBB` colours, header metadata | Parameterised over `Fixtures/ldr/`. `write(parse(x)) == golden`, plus idempotence. Run both columnized and not. Goldens are byte-exact, which pins the float formatting. |
-| 2 | **Parser robustness** | Blank lines, CRLF, tabs, trailing whitespace, unknown meta, unknown line code (BUG-001), truncated lines (suspected S2), malformed `!COLOUR` (S1), non-UTF-8 | Record current output; wrap the bugs in `withKnownIssue`. BUG-001 crashes the host, so it may need a guard. |
+| 2 | **Parser robustness** | Blank lines, CRLF, tabs, trailing whitespace, unknown meta, unknown line code (BUG-001), truncated lines (suspected S2), malformed `!COLOUR` (S1), non-UTF-8 | Record current output; wrap the bugs in `withKnownIssue`. BUG-001: the root cause is asserted directly, and the crash is recorded with an exit or child-process test. |
 | 3 | **Object model** | Tree shape, `NSCopying` deep copy, keyed NSCoding round trip (the pasteboard format), observer notifications | Structural assertions. Also decode archives produced by the ObjC build and committed as fixtures. |
 | 4 | **MatrixMath and geometry** | Compose ∘ decompose ≈ identity; invert; multiply; ray–triangle and ray–box intersection; bounds; polygon containment; `ComputationalGeometry` hull and tangents | Table tests and seeded property tests. |
 | 5 | **Snapping and transforms** | Grid and angle snapping, move and rotate, view-orientation mapping | Table tests. |
@@ -249,6 +278,8 @@ Branch `…-p4-prep`. Goldens and known issues **must not change** in this phase
 
 **Types and declarations**
 - Convert macros and `typedef enum`s to typed constants and `NS_ENUM` (§4.4.7).
+- Remove the `USE_BLOCKS` / `LDrawDispatchCompat.h` hack. Delete the 49 dead `#if USE_BLOCKS` branches (parsing
+  stays serial) and use the real `dispatch_*_t` types.
 - Remove the pch's Carbon import and import Carbon only in the 3Dconnexion code.
 - Add nullability (`NS_ASSUME_NONNULL`) and lightweight generics to public headers.
 - Turn informal protocols (`NSObject (LDrawGLViewDelegate)`) into formal `@protocol`s.
@@ -417,3 +448,4 @@ being accepted.
 | 14d | `rebase -x` to check every restacked commit | Low | **Accepted.** §3 |
 | 15 | GL snapshots are machine-specific | Low | **Accepted.** Row 12 |
 | — | Six suspected app bugs (S1–S6) | — | **Added** to KNOWN-BUGS.md "Suspected", to be confirmed by P2 tests |
+| v2.1 | Final review: a separate test bridging header plus deleted `.h` files would break "tests unchanged"; a crash guard is a partial fix; deleting `USE_BLOCKS` in P1 isn't a no-op (it also redefines `dispatch_queue_t`, with 49 `#if` sites) | — | **Accepted.** One bridging header and a swap spike (P1); exit or child-process tests for crashes; hack made self-contained in P1 and removed in P4 |
