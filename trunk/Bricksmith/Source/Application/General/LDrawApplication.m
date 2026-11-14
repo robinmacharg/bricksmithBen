@@ -51,6 +51,36 @@
 #pragma mark ACCESSORS
 #pragma mark -
 
+//---------- isRunningTests ------------------------------------------[static]--
+//
+// Purpose:		YES when the app is hosting unit tests (XCTest sets
+//				XCTestConfigurationFilePath) or was launched by a UI test
+//				(which sets BRICKSMITH_TEST_MODE=1 in its launch environment).
+//
+// Notes:		Test mode keeps what documents need (shared GL context,
+//				Inspector, LSynth configuration) but skips every side effect
+//				outside the process: LDraw folder discovery and the defaults
+//				write it makes, the part catalog load (tests inject their own
+//				library), Sparkle, the donation prompt, untitled documents,
+//				autosave and the defaults written at quit.
+//
+//------------------------------------------------------------------------------
++ (BOOL) isRunningTests
+{
+	static BOOL				testing	= NO;
+	static dispatch_once_t	once;
+
+	dispatch_once(&once, ^{
+		NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+		testing =	[environment objectForKey:@"XCTestConfigurationFilePath"] != nil
+				||	[[environment objectForKey:@"BRICKSMITH_TEST_MODE"] isEqualToString:@"1"];
+	});
+
+	return testing;
+
+}//end isRunningTests
+
+
 //---------- openGLPixelFormat ---------------------------------------[static]--
 //
 // Purpose:		Returns the pixel format used in Bricksmith OpenGL views.
@@ -393,22 +423,26 @@
 	self->sharedGLContext			= [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
 	
 	[sharedGLContext makeCurrentContext];
-	
-	//Try to define an LDraw path before the application even finishes starting.
-	[self findLDrawPath];
 
-	//Load the parts into the library; see if they loaded properly.
-	[partLibraryController loadPartCatalog:^(BOOL success) {
-		if(success == NO)
-		{
-			//No path has been chosen yet.
-			// We must choose one now.
-			[self doPreferences:self];
-			//When the preferences dialog opens, it will automatically search for
-			// the prefs path. Failing to find it, it will force the user to choose
-			// a new one.
-		}
-	}];
+	// Tests inject their own LDraw library; never touch the user's.
+	if([LDrawApplication isRunningTests] == NO)
+	{
+		//Try to define an LDraw path before the application even finishes starting.
+		[self findLDrawPath];
+
+		//Load the parts into the library; see if they loaded properly.
+		[partLibraryController loadPartCatalog:^(BOOL success) {
+			if(success == NO)
+			{
+				//No path has been chosen yet.
+				// We must choose one now.
+				[self doPreferences:self];
+				//When the preferences dialog opens, it will automatically search for
+				// the prefs path. Failing to find it, it will force the user to choose
+				// a new one.
+			}
+		}];
+	}
 	
     // Parse the LSynth config file, using the bundled lsynth.mpd or a custom config file
     NSString *lsynthConfigPath;
@@ -440,7 +474,14 @@
 {
 	NSUserDefaults		*userDefaults		= [NSUserDefaults standardUserDefaults];
 	BOOL				 showPartBrowser	= [userDefaults boolForKey:PART_BROWSER_PANEL_SHOW_AT_LAUNCH];
-	
+
+	if([LDrawApplication isRunningTests] == YES)
+	{
+		// No windows of our own, and no autosaved files from test documents.
+		[[NSDocumentController sharedDocumentController] setAutosavingDelay:0];
+		return;
+	}
+
 	[self populateLSynthModelMenus];
 	
 	if(		showPartBrowser == YES
@@ -459,6 +500,19 @@
 
 
 //**** NSApplication ****
+//========== applicationShouldOpenUntitledFile: ================================
+//
+// Purpose:		Test runs start with no documents; tests open their own.
+//
+//==============================================================================
+- (BOOL) applicationShouldOpenUntitledFile:(NSApplication *)sender
+{
+	return ([LDrawApplication isRunningTests] == NO);
+
+}//end applicationShouldOpenUntitledFile:
+
+
+//**** NSApplication ****
 //========== applicationWillTerminate: =========================================
 //
 // Purpose:		Bricksmith is quitting. Do any necessary pre-quit work, such as 
@@ -467,9 +521,12 @@
 //==============================================================================
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	if([LDrawApplication isRunningTests] == YES)
+		return; // never write the user's defaults from a test run
+
 	NSUserDefaults		*userDefaults		= [NSUserDefaults standardUserDefaults];
 	PartBrowserPanelController	*partBrowserPanel	= [PartBrowserPanelController sharedPartBrowserPanel];
-	
+
 	[userDefaults setBool:[[partBrowserPanel window] isVisible]
 				   forKey:PART_BROWSER_PANEL_SHOW_AT_LAUNCH ];
 				   
@@ -486,8 +543,11 @@
 //==============================================================================
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
+	if([LDrawApplication isRunningTests] == YES)
+		return NSTerminateNow; // a modal prompt would hang the test run
+
 	DonationDialogController	*donation = [[DonationDialogController alloc] init];
-	
+
 	if([donation shouldShowDialog] == YES && suppressDonationPrompt == NO)
 	{
 		[donation runModal];
@@ -559,18 +619,18 @@
 mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
 		   error:(NSError * __autoreleasing *)error
 {
-#if DEBUG
+#if !DEBUG
+	if([LDrawApplication isRunningTests] == NO)
+		return YES;
+#endif
 	if(error != NULL)
 	{
 		*error = [NSError errorWithDomain:SUSparkleErrorDomain
 									 code:SUNoUpdateError
 								 userInfo:@{NSLocalizedDescriptionKey:
-											@"Update checks are disabled in Debug builds."}];
+											@"Update checks are disabled in Debug builds and test runs."}];
 	}
 	return NO;
-#else
-	return YES;
-#endif
 }//end updater:mayPerformUpdateCheck:error:
 
 
