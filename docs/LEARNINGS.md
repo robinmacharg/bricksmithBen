@@ -87,3 +87,13 @@ section. Each entry says what happened and what to do instead.
   `@interface ClassName`, not the last `@end` in the file.
 - **L27. `-[LDrawPaths setPreferredLDrawPath:]` already lets tests redirect the LDraw folder.** It only sets an
   ivar; the real preference is read only in `init`. So no new override API was needed.
+- **L28. Debug builds share preferences with the installed Bricksmith** (both use `com.AllenSmith.Bricksmith`).
+  The installed 3.1.0 is newer upstream code than this source and stores colours in a format this code can't read
+  (BUG-002). → Debug builds should have their own preferences domain. Never let a dev build write the user's
+  real preferences.
+- **L29. AppKit silently swallows exceptions raised in action methods**, so the only symptom is that nothing
+  happens, and `NSLog` output from a GUI launch doesn't reach the unified log. → Launch the binary from a
+  terminal with stderr captured. Attach `lldb` (Debug builds aren't hardened) and inspect `[NSApp windows]`, then
+  confirm suspicions with a tiny standalone program.
+- **L30. `lldb --batch` stops at the first command that errors**, including an `expr` interrupted by a breakpoint,
+  even with `stop-command-source-on-error false`. → Use separate lldb runs, or reproduce outside lldb.
