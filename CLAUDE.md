@@ -6,6 +6,7 @@ Read these first:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the code is organised.
 - [docs/TESTING.md](docs/TESTING.md): how to test, plus the manual smoke checklist.
 - [docs/port-status.md](docs/port-status.md): per-file phase and status ledger. Keep it current.
+- [docs/KNOWN-BUGS.md](docs/KNOWN-BUGS.md): bugs found along the way. They are recorded, not fixed, until P12.
 
 ## Toolchain
 - Use only the Xcode 26.3 built-in Swift (6.2.4). No external toolchains or swiftly.
@@ -23,8 +24,14 @@ Read these first:
 
 ## Porting rules (summary; the plan is authoritative)
 - Ported classes keep their ObjC runtime names: `@objc(OriginalName)`. Xibs, Info.plist and NSCoding archives depend on them.
-- ObjC can't subclass Swift, so port **leaves before roots** in any class hierarchy.
+- ObjC can't subclass Swift, so port **leaves before roots** in any class hierarchy, UI classes included.
+- No NSException may unwind through Swift. No `init` may return a substitute object. Swift can't see ObjC ivars.
+  P4 removes all three patterns before any model class is ported. The plan's §6 recipe has a grep checklist for them.
+- Tests must never touch real user defaults or the developer's LDraw library. Use the test-mode launch guard,
+  `-LDrawPath` launch arguments, and a fixture library copied to a temp directory.
 - C stays C: `MatrixMath.c`, `GLMatrixMath.c`, `MeshSmooth.c` and LSynth.
 - Don't change preference key strings, NSCoding keys, or `write` output. The golden tests enforce this.
-- A port commit never edits goldens. Behaviour fixes go in separate commits, and those commits explain why the goldens changed.
+- A port commit never edits goldens.
+- **Don't fix bugs during the port.** Log them in [docs/KNOWN-BUGS.md](docs/KNOWN-BUGS.md) and add a test that asserts
+  the correct behaviour, wrapped in `withKnownIssue("BUG-nnn: …")`. Fixes happen after the port, in phase P12.
 - OpenGL stays. Metal is a later project. Keep GL behind the `LDrawRenderer` / `RenderBackend` seam.

@@ -2,281 +2,418 @@
 
 | | |
 |---|---|
-| Status | Draft v1 (pre-review) |
+| Status | **v2**: adversarial review incorporated (see [Appendix A](#appendix-a-adversarial-review-log)) |
 | Date | 2026-11-14 |
-| Toolchain | Xcode 26.3 (17C529), built-in Swift 6.2.4. No external toolchains, no SwiftPM-only builds of the app |
+| Toolchain | Xcode 26.3 (17C529), built-in Swift 6.2.4. No external toolchains |
 | Out of scope | OpenGL → Metal (a later project; this plan prepares the seam) |
-| Related | [ARCHITECTURE.md](ARCHITECTURE.md) · [TESTING.md](TESTING.md) · [port-status.md](port-status.md) |
+| Related | [ARCHITECTURE.md](ARCHITECTURE.md) · [TESTING.md](TESTING.md) · [port-status.md](port-status.md) · [KNOWN-BUGS.md](KNOWN-BUGS.md) |
 
 ## 1. Goals and non-goals
 
 **Goals**
-1. Every Objective-C class in the app is ported to Swift, and the app keeps its current behaviour.
-2. A characterisation test suite is written **before** any code is ported, so regressions show
-   up the moment they happen.
-3. The UI is modernised where it's cheap and safe: deprecated controls are replaced and the
-   look stays recognisable.
+1. Every Objective-C class in the app is ported to Swift, with today's behaviour preserved.
+2. A characterisation test suite is written **before** any risky change (including finishing ARC), so
+   regressions show up the moment they appear.
+3. The UI is modernised where that is cheap and safe: deprecated controls are replaced and the look stays recognisable.
 4. The renderer sits behind a Swift protocol so a Metal backend can drop in later.
 
 **Non-goals**
 - Metal rendering. OpenGL stays, deprecation warnings and all.
-- Rewriting the C libraries (see §4.1).
-- New features. File-format behaviour changes only through explicit, test-recorded bug fixes.
+- Rewriting the C libraries (§4.1).
+- New features, and **bug fixes during the port**. Bugs go in [KNOWN-BUGS.md](KNOWN-BUGS.md) with
+  expected-failing tests and are fixed after the port, in P12.
 
 ## 2. Starting point
 
-- Git history goes back 370 commits. The current work branch is `20251111-ARC-conversion`, with an MRC → ARC
-  migration about 55% done.
-- **The state is preserved.** Commit `af3483f` snapshots the uncommitted ARC work and adds `Test Data/`.
-  It is tagged `snapshot-20261114-pre-swift-plan`, and it builds cleanly in Debug with Xcode 26.3.
-  `Source/LDraw.zip` (a local backup) is deliberately left untracked.
+- Git history goes back 370 commits. The work branch is `20251111-ARC-conversion`, with an MRC → ARC migration
+  about 55% done (≈52 files ARC, 41 files `-fno-objc-arc`).
+- **State preserved.** Commit `af3483f` snapshots the uncommitted ARC work and adds `Test Data/`. It is tagged
+  `snapshot-20261114-pre-swift-plan` and builds cleanly in Debug with Xcode 26.3. `Source/LDraw.zip`
+  (a local backup) is deliberately left untracked.
 - There are no tests and no test target.
-- Size: roughly 70k lines. The bulk is the model (≈16k), UI and widgets (≈18k), renderer (≈6k), and
-  `LDrawDocument` plus the app delegate (≈7.7k). [port-status.md](port-status.md) has the per-file breakdown.
+- Size is about 70k lines: model ≈16k, UI and widgets ≈18k, renderer ≈6k, `LDrawDocument` plus app ≈7.7k, and
+  C 5.5k (plus LSynth 5.7k). The per-file breakdown is in [port-status.md](port-status.md).
+
+### Things in the code that shape the plan (verified)
+
+| Fact | Evidence | Consequence |
+|---|---|---|
+| Headers depend on the prefix header's macros (`OPEN_GL_HEADER`, `dispatch_group_t` → `void *`) | `Mac LDraw_Prefix.pch:31-40`, `LDrawPart.h:12`, `LDrawDirective.h:195` | A Swift bridging header can't import them as they are, so the headers must be fixed **before** tests are written (P1) |
+| Parse errors use `@throw` and are caught in *another* class (45 `@throw`/`@try` sites) | `LDrawColor.m:205-217` → caught in `LDrawMetaCommand.m:~146` | NSExceptions must not unwind through Swift frames, so parsing has to be converted to error returns while still in ObjC (P4) |
+| `-[LDrawMetaCommand initWithLines:…]` returns a *different* object (LDrawComment/LDrawColor) | `LDrawMetaCommand.m:107-153` | A Swift `init` can't do that, so a factory is introduced first (P4) |
+| Subclasses read superclass ivars directly (`self->hidden`, `self->color`, `@protected postsNotifications`) | `LDrawLine.m:213,240,248`, `LDrawContainer.h:25` | Swift subclasses can't see ObjC ivars, so these become properties first (P4) |
+| App launch writes real user defaults, loads the user's part library, may show a modal, and starts Sparkle from the nib | `LDrawApplication.m:53-84,421-475,712-735`, `MainMenu.xib:716` | Hosted tests need a launch guard and injected paths from P1, not P7 |
+| Singletons initialise lazily, can't be reset, and aren't thread-safe | `ColorLibrary.m:44-103`, `PartLibrary.m:84-90`, `LDrawPaths.m:23-33` | Tests need `+resetForTesting` hooks (P1) |
+| `PartCatalogBuilder` writes `parts.plist` into the LDraw folder | `PartCatalogBuilder.m:209` | Fixture libraries are copied to a temp dir for each run |
+| Document edit operations read their selection from the outline view | `LDrawDocument.m:6050-6065`, `:858-875` | Document tests must load the nib (no window shown), so "headless" in the strict sense isn't possible |
+| `+initialize` registers value transformers | `LDrawApplication.m:53` | Swift can't override `+initialize`, so this moves to launch code |
+| Preferences hold colours archived with non-keyed `NSArchiver` | `UserDefaultsCategory.m:22,41` | Existing user data must still be readable, so a test uses a real archived blob |
 
 ## 3. Branching and workflow
 
-**Stacked, dated branches.** Branch names follow the existing `YYYYMMDD-topic` convention. The date is
-the day the branch was cut. Each phase branch starts from the tip of the one before it:
+**Branches are stacked and dated.** Names follow the existing `YYYYMMDD-topic` convention, where the date is the
+day the branch was cut. Each phase branch is based on the tip of the previous one:
 
 ```
 master
  └─ 20251111-ARC-conversion          (existing; tip = snapshot tag)
      └─ 20261114-swift-port-plan     (this plan, docs/, CLAUDE.md)
-         └─ YYYYMMDD-p0-arc-complete
+         └─ YYYYMMDD-p0-build-hygiene
              └─ YYYYMMDD-p1-test-harness
                  └─ YYYYMMDD-p2-characterisation-tests
-                     └─ … one branch per phase (or per sub-phase for the big ones)
+                     └─ YYYYMMDD-p3-arc-complete
+                         └─ … one branch per phase or sub-phase
 ```
 
-Rules:
-- One phase per branch. A big phase (P6, P9) gets sub-branches such as `…-p6a-model-leaves` and `…-p6b-model-containers`.
-- When a lower branch changes, restack with `git rebase --update-refs` from the top branch.
-- Merging to `master` goes bottom-up and only when a branch passes its exit gate. Nothing is pushed to `origin`
-  unless the maintainer asks.
-- **Every commit builds, and every test passes** (apart from recorded known issues). This keeps `git bisect` usable.
-- One class per commit during porting phases. The commit message names the class and lists any behaviour notes.
+**Rules**
+- One phase per branch. Big phases get sub-branches (`…-p6a-model-leaves`, `…-p6b-…`).
+- When a lower branch changes, restack from the top with
+  `git rebase --update-refs -x scripts/test.sh <base>`. The `-x` re-checks every commit along the way.
+- Merge to `master` bottom-up, and only once a branch passes its exit gate. Nothing is pushed to `origin` unless
+  the maintainer asks.
+- **Every commit builds and every test passes.** Expected failures from known issues count as passing. This keeps
+  `git bisect` usable.
+- During porting phases, one class (or one category or extension) per commit. The commit message names the class
+  and includes any behaviour notes.
 
 **Exit gate for every phase:**
-1. `scripts/build.sh` succeeds with no **new** warnings. The warning count is tracked in `docs/warnings-baseline.txt`.
-2. `scripts/test.sh` is green. Any `withKnownIssue` entries are listed in [TESTING.md](TESTING.md).
-3. Someone runs the manual smoke checklist in [TESTING.md](TESTING.md) on the built app.
-4. [port-status.md](port-status.md) is updated.
+1. `scripts/build.sh` succeeds with no **new** warnings, measured against `docs/warnings-baseline.txt`.
+2. `scripts/test.sh` is green, and no known-issue test passes unexpectedly.
+3. The manual smoke checklist ([TESTING.md](TESTING.md#manual-smoke-checklist)) is run on the built app.
+4. [port-status.md](port-status.md) and [KNOWN-BUGS.md](KNOWN-BUGS.md) are up to date.
 
 ## 4. Key technical decisions
 
 ### 4.1 C stays C
-`MatrixMath.c`, `GLMatrixMath.c`, `OpenGLUtilities.c`, `MeshSmooth.c` and LSynth (5.5k + 5.7k lines) remain C.
-- They are hot-path geometry and mesh code, and they already import cleanly into Swift as C structs and functions.
-- The task is Objective-C → Swift, and rewriting the C would add risk without moving us toward the goal.
-- When the Metal work starts, we revisit them: `simd` types would replace `Matrix4`/`Point3`, and `MeshSmooth` might move to compute shaders.
+These stay in C for this plan:
+- `MatrixMath.c`, `GLMatrixMath.c`, `OpenGLUtilities.c` and `MeshSmooth.c`
+- LSynth (a separate CLI)
+
+They are hot-path geometry and mesh code, and they already import cleanly into Swift as C structs and functions.
+The goal is ObjC → Swift. Rewriting the C would add risk without moving us toward it.
+
+The Metal project should revisit them: `simd` would replace `Matrix4`/`Point3`, and `MeshSmooth` could become a
+compute job.
 
 ### 4.2 Swift mode and settings
-- **Swift 5 language mode** with `SWIFT_STRICT_CONCURRENCY = minimal` for the duration of the port.
-- Swift 6 mode and complete concurrency checking come in P11, once all the code is Swift. Turning them on earlier
-  would mix two difficult migrations in one change.
-- `SWIFT_OBJC_INTEROP_MODE` stays at the default (objc).
-- The app and test targets get a bridging header, `Bricksmith-Bridging-Header.h`.
+- Use **Swift 5 language mode** with `SWIFT_STRICT_CONCURRENCY = minimal` for the whole port. Switch to Swift 6
+  mode with complete checking in P11, once everything is Swift. Doing both at once would mean two hard migrations
+  in one change.
+- The app and the tests each get a bridging header. Every header they import must be **self-contained** (P1).
 
-### 4.3 Deployment target
-Raise it from 10.11, which is below the SDK's 10.13 floor, to **macOS 13.0**.
-- The test bundle targets **macOS 14.0**, because that is what the shipped Swift Testing module requires. It can run
-  on a higher target than the app because tests only run on developer machines.
-- Why 13: it is old enough to cover most users of a hobbyist app that was last released years ago, and it gives us
-  `NSHostingView`, `UTType`, modern `NSAlert` and sheet APIs, and Swift concurrency with no back-deploy shims.
-- *Decision for the maintainer:* 11.0 is Apple's "recommended" floor if you need wider reach.
-  The plan works the same with either.
+### 4.3 Deployment target and signing
+- **App: macOS 13.0.** The current 10.11 is below the SDK's 10.13 floor. 13 gives `UTType`, modern sheets and
+  alerts, and Swift concurrency without back-deployment shims.
+  - *Maintainer decision:* 11.0 (Apple's "recommended" floor) is fine if reach matters more. The plan works the
+    same either way.
+- **Test bundles: macOS 14.0.** The shipped Swift Testing module's interface targets `macos14.0`. Tests run only on
+  developer machines.
+- **Signing:** "Sign to Run Locally", with hardened runtime off for Debug and test hosting. Distribution signing is
+  out of scope.
 
 ### 4.4 Interop rules
-1. **Keep the ObjC runtime names.** Every ported class is declared `@objc(OriginalName)`, for these reasons:
-   - Xib `customClass` entries, `NSDocumentClass` in Info.plist, and `NSCoding` archives (pasteboard data, saved
-     part-browser state) all look classes up by name.
-   - Selectors that ObjC call sites use stay the same through explicit `@objc(selector:)` annotations.
-2. **ObjC cannot subclass a Swift class.** Inside a class hierarchy, port **leaves first and roots last**. For example,
-   `LDrawConditionalLine` comes before `LDrawLine`, and every drawable comes before `LDrawDrawableElement` and `LDrawDirective`.
-3. **Use `@objc dynamic`** on every property that is reached through KVC, KVO or Cocoa bindings (221 xib bindings,
-   about 33 KVC sites).
-4. **Macros don't import.** P4 converts `MacLDraw.h`, `LDrawKeywords.h` and `LDrawPathNames.h` to
-   `extern NSString * const` and `NS_ENUM` / `NS_TYPED_EXTENSIBLE_ENUM` declarations.
-   **Preference key string values must not change**, or users lose their settings. A test asserts this.
-5. **Headers:** ObjC `.h` files must not import `Bricksmith-Swift.h`. Use `@class` forward declarations in headers and
-   import the generated header in `.m` files.
-6. **C fixed arrays become tuples in Swift** (e.g. `GLfloat glTransformation[16]`). Wrap them in accessors that take
-   or return `Matrix4`, rather than spreading tuple code around.
+1. **Keep the ObjC runtime names.** Declare every ported class as `@objc(OriginalName)` and keep its selectors with
+   `@objc(sel:)`. The names matter because of xib `customClass`, `NSDocumentClass`, NSCoding archives and the pasteboard.
+2. **ObjC can't subclass a Swift class.** Port leaves first and roots last in every hierarchy, UI included (§5 P6 and P9 list the orders).
+   - Swift extensions on ObjC classes are fine.
+   - ObjC categories on `@objc` Swift classes are fine.
+   - Swift **cannot** see ObjC ivars (P4 removes cross-class ivar access).
+3. **No NSException may cross into Swift.** Parse errors become `BOOL` + `NSError **` (P4). Any `@try` that remains
+   has to sit entirely inside ObjC.
+4. **No init that returns a substitute object.** Use factories (P4).
+5. **Swift needs `required` inits** for `[[self class] alloc] init]` in `copyWithZone:` (`LDrawDirective.m:172`) and
+   for `init?(coder:)` along the decode chain.
+6. **Use `@objc dynamic`** on anything accessed through KVC, KVO or bindings (221 xib bindings, ≈33 KVC sites).
+7. **Macros and plain enums don't import well.** Convert `MacLDraw.h`, `LDrawKeywords.h` and `LDrawPathNames.h` to
+   `extern NSString * const` / `NS_TYPED_EXTENSIBLE_ENUM`, and plain `typedef enum` (`PartTypeT`, `MessageT`, …) to
+   `NS_ENUM`. **The string values of preference keys must stay the same.** A test enforces this.
+8. **Headers:** ObjC `.h` files never import `Bricksmith-Swift.h`. Use `@class` and `@protocol` forward declarations
+   instead, and import the generated header in `.m` files only.
+9. **C fixed arrays** (`GLfloat glTransformation[16]`) become tuples in Swift. Hide them behind `Matrix4` accessors.
+10. **Struct layout:** `encodeBytes:` of `Point3` (`LDrawQuadrilateral.m:189-193`) depends on the C layout. Keep
+    the C struct type; don't redefine it in Swift.
 
 ### 4.5 Testing frameworks
-- **Swift Testing** (`import Testing`) for unit and characterisation tests: parameterised tests suit the
-  fixture-driven goldens, and `withKnownIssue` records known bugs.
-- **XCTest** for `measure {}` performance baselines and XCUITest UI smoke tests.
-- Tests are written **in Swift against the ObjC API** through the bridging header. Then the same tests run unchanged as
-  each class switches to Swift, which is the point of writing them first.
+- **Swift Testing** for unit and characterisation tests: parameterised fixtures, plus `withKnownIssue` for known bugs.
+- **XCTest** for `measure {}` performance baselines (with `XCTExpectFailure` where needed) and for XCUITest.
+- Tests are written **in Swift against the ObjC API**. When a class switches to Swift, the same tests run unchanged.
 
 ## 5. Phases
 
 Sizes are relative (S < M < L < XL), not calendar estimates.
 
-### P0: finish ARC and get a green baseline (M)
-Branch `…-p0-arc-complete`
-- Finish converting the 41 `-fno-objc-arc` files with the existing tooling (`arc-migrate.sh`,
-  `update_arc_flags.rb`). Then set `CLANG_ENABLE_OBJC_ARC = YES` project-wide and remove the per-file flags.
-  Mixing MRC code with Swift ownership is a source of subtle over-releases, so this is a prerequisite.
-- RegexKitLite (MRC, OSAtomic) stays `-fno-objc-arc` for now; P4 deletes it.
-- Raise the deployment target (§4.3). Fix any build fallout, but don't fix deprecation warnings yet.
-- Share the `LSynth` scheme, which currently lives only in `xcuserdata`.
-- Add `scripts/build.sh`: an `xcodebuild` wrapper that uses a local derived-data dir and prints a warning count.
+### P0: build hygiene (S)
+Branch `…-p0-build-hygiene`
+- Set deployment target 13.0 and signing (§4.3). Fix build fallout, but **leave deprecation warnings alone** for now.
+- Move the `LSynth` scheme from the committed `xcuserdata` into `xcshareddata`, i.e. move it rather than copy it.
+- Add `scripts/build.sh`: an `xcodebuild` wrapper with a scratch derived-data dir that prints a warning count.
   Record `docs/warnings-baseline.txt`.
-- **Exit:** clean build, the app launches and opens `Test Data/Good/*.ldr`, and the manual smoke checklist passes.
-  (There are no automated tests yet. Watch for ARC regressions by hand, particularly in undo, copy/paste and closing documents.)
+- **Exit:** clean build; the app opens `trunk/Test Data/Good/spider gearbox v2 opens.ldr`; manual smoke checklist passes.
 
-### P1: test harness (M)
+### P1: header hygiene and test harness (M)
 Branch `…-p1-test-harness`
-- Add a `BricksmithTests` unit-test bundle hosted by the app (`TEST_HOST`). It uses Swift, has its own bridging header,
-  targets macOS 14, and has code coverage turned on.
-  - Hosted, because the model depends on AppKit, `NSBundle mainBundle` (LSynth, resources) and app singletons.
-- **Test-mode launch guard:** when `XCTestConfigurationFilePath` is set in the environment, `LDrawApplication` skips
-  first-run UI such as the LDraw-folder prompt, Sparkle and 3Dconnexion. Keep this ObjC change small and covered by a test.
-- **Fixture LDraw library:** `trunk/Fixtures/ldraw-mini/` holds a hand-made minimal library that is checked in:
-  - `LDConfig.ldr`
-  - about 20 small `.dat` parts plus a few `p/` primitives
-  - a `parts.lst`
-  Tests point `LDrawPaths` at it through a test-only defaults domain (`NSArgumentDomain`, or `UserDefaults(suiteName:)`
-  plus a swizzle-free injection hook). They never touch the developer's real preferences.
-- **Full library (optional):** `scripts/fetch-ldraw.sh` downloads ldraw.org `complete.zip` to `~/Library/Caches/…`.
-  It is gitignored and never vendored, because of LDraw library licence terms. Tests that need it are tagged
-  `.requiresFullLibrary` and skip when it is absent.
-- Add `scripts/test.sh`, which runs `xcodebuild test` and writes an xcresult bundle plus a coverage summary.
-- Add a `BricksmithUITests` target (XCUITest) containing a single "launch and open fixture" test.
-- **Exit:** a trivial test passes, the coverage report is produced, and the scripts are documented in [TESTING.md](TESTING.md).
+
+**Header hygiene** (so Swift can import the model):
+- Every header the tests need imports what it uses (`<Cocoa/Cocoa.h>`, `<OpenGL/gl.h>`, …) and doesn't rely on the pch.
+- Delete the `USE_BLOCKS` / `dispatch_group_t` macro hack. Parsing already runs serially, and signatures switch to
+  the real `dispatch_group_t` with `NULL` passed in. Behaviour doesn't change.
+
+**Test bundle**
+- Add `BricksmithTests`: Swift, hosted by the app (`TEST_HOST`), macOS 14, code coverage on, with its own bridging header.
+- Hosted, because the model needs AppKit, `NSBundle mainBundle` (LSynth and resources) and app singletons.
+
+**Launch isolation.** When the test-mode guard detects that `XCTestConfigurationFilePath` is set in the environment:
+- `-awakeFromNib` and `-applicationWillFinishLaunching:` return early, so there is no 3Dconnexion, no `findLDrawPath`,
+  no catalog load and no modal.
+- Sparkle is disabled through the updater delegate (`updater:mayPerformUpdateCheck:` → NO) and `SUEnableAutomaticChecks=NO`.
+- The test scheme passes the fixture LDraw path as a launch argument (`-LDrawPath …` → `NSArgumentDomain`), so it
+  takes effect before any singleton is built. The real `com.AllenSmith.Bricksmith` defaults are never written.
+
+**Other harness pieces**
+- **Resettable singletons:** add small ObjC `+resetForTesting` hooks to `ColorLibrary`, `PartLibrary`, `LDrawPaths`,
+  `ModelManager` and `MLCadIni`. Suites that use them are `.serialized`.
+- **Fixture library:** `trunk/Fixtures/ldraw-mini/` is hand-built and checked in. It holds `LDConfig.ldr`, about 20
+  small parts and some primitives, and `parts.lst`. It's **copied to a temp dir for each run**, because the catalog
+  builder writes into the folder.
+- **Full library (optional):** `scripts/fetch-ldraw.sh` downloads ldraw.org `complete.zip` into `~/Library/Caches`.
+  It's gitignored and never vendored, because of the library's licence terms. Tests that need it are tagged
+  `.requiresFullLibrary` and skip when it's missing.
+- `scripts/test.sh` writes an xcresult bundle and a coverage summary. A `Bricksmith-Perf` scheme runs the perf tests
+  in **Release** with testability enabled.
+- Add a `BricksmithUITests` target with one launch-and-open test.
+- **Exit:** a trivial parse test passes; repeated runs leave the user's defaults and the fixture folder unchanged.
 
 ### P2: characterisation tests (L), the core of the plan
-Branch `…-p2-characterisation-tests` (sub-branches allowed).
+Branch `…-p2-characterisation-tests`. Sub-branches are allowed.
 
-These tests record **current behaviour**, bugs included, as the baseline. Goldens are generated by running the ObjC
-build, then reviewed by a person before they're committed.
+These tests are written against **today's mixed MRC/ARC build** and record its behaviour, bugs included.
+Goldens come from the ObjC build and are reviewed by a person before they're committed.
+
+**Bug policy (applies from here to the end of the port).** For every bug found:
+1. Log it in [KNOWN-BUGS.md](KNOWN-BUGS.md).
+2. Write a test that asserts the **correct** behaviour, wrapped in `withKnownIssue("BUG-nnn …")` (or `XCTExpectFailure`).
+3. Don't fix it.
+
+If a known issue starts passing unexpectedly, the port changed behaviour: stop and investigate. The only exception is
+a bug that kills the test host. It may get a minimal guard, and its register entry is marked `guarded`.
 
 | # | Area | What's tested | How |
 |---|---|---|---|
-| 1 | **Parse → write round-trip** | Every directive type: part, line, triangle, quad, conditional line, comment, `!COLOUR`, `STEP`, `ROTSTEP`, MPD `0 FILE`/`0 NOFILE`, `!TEXMAP`, LSynth blocks, custom `0x2RRGGBB` colours, header metadata | Parameterised over `Fixtures/ldr/*.ldr`. Assert `write(parse(x)) == golden`, plus idempotence: `write(parse(write(parse(x)))) == write(parse(x))`. Run columnized and non-columnized. |
-| 2 | **Parser robustness** | Blank lines, CRLF, tabs, trailing whitespace, unknown meta commands, unknown line codes (`Test Data/Bad`), truncated lines, non-UTF-8 input | Today's crash is recorded with `withKnownIssue` until it is fixed on purpose, in a separate tagged commit. |
-| 3 | **Object model** | Tree shape after parse (counts per type, step and model structure), `NSCopying` deep copy, `NSCoding` archive round trip (this is the pasteboard format), observer notifications | Structural assertions on the fixtures. |
-| 4 | **MatrixMath / geometry** | Compose ∘ decompose ≈ identity for `TransformComponents`; invert; multiply; ray–triangle and ray–box intersection; bounds; `V2PolygonContains`; `ComputationalGeometry` hull and tangents | Table tests plus seeded randomised property tests (fixed seed for reproducibility). |
-| 5 | **Snapping and transforms** | `componentsSnappedToGrid:minimumAngle:`, `position:snappedToGrid:`, rotate and move about centres, view-orientation angle mapping | Table tests. |
-| 6 | **Colours** | `ColorLibrary` lookup, blended and custom colours, `!COLOUR` parsing, edge colours | Against the fixture `LDConfig.ldr`. |
-| 7 | **Paths, library, catalog** | `LDrawPaths` resolution, case-insensitive names, `PartCatalogBuilder` output on the mini library, part descriptions and categories, `MLCadIni` parsing | Fixture library. |
-| 8 | **MPD and ModelManager** | Submodel lookup, renaming a submodel updates references, active model, cross-document references | Fixtures. |
-| 9 | **Document operations and undo** | Open, then: add part, delete, move, rotate, change colour, add or move step, rename submodel, paste. Each followed by undo and redo | Drive `LDrawDocument` headlessly (no window). Assert that the written text after op, undo and redo matches goldens. Where an operation needs view state, record the gap in TESTING.md; P4 extracts an op layer to close it. |
-| 10 | **Preferences contract** | Every defaults key string and default value | Snapshot test, so renamed keys are caught. |
-| 11 | **LSynth** | `lsynthcp` on sample hose and band input produces the expected output | Run the bundled binary directly, black box. |
-| 12 | **Render snapshots** | Fixed-camera offscreen renders of 5–10 fixtures, both wireframe and shaded | Offscreen `NSOpenGLContext`/CGL into an FBO, compared with a tolerance (per-pixel delta plus a % threshold). These become **the reference images for the later Metal port**. |
-| 13 | **Performance** | Parse a large model, collect/draw it, build the part catalog | XCTest `measure` baselines. The Swift port must stay within +20%. Large models come from the optional full library (`.requiresFullLibrary`). |
-| 14 | **UI smoke** | Launch; open a fixture; select a part in the outline; inspector shows its values; edit a field; undo; save-as; reopen and compare; open each panel (Preferences, Part Browser, Rotation, Move…) | XCUITest. Kept deliberately thin, because UI tests are slow and flaky. |
+| 1 | **Parse → write round trip** | Every directive type: part, line, triangle, quad, conditional line, comment, `!COLOUR`, `STEP`, `ROTSTEP`, MPD `0 FILE`/`NOFILE`, `!TEXMAP`, LSynth blocks, `0x2RRGGBB` colours, header metadata | Parameterised over `Fixtures/ldr/`. `write(parse(x)) == golden`, plus idempotence. Run both columnized and not. Goldens are byte-exact, which pins the float formatting. |
+| 2 | **Parser robustness** | Blank lines, CRLF, tabs, trailing whitespace, unknown meta, unknown line code (BUG-001), truncated lines (suspected S2), malformed `!COLOUR` (S1), non-UTF-8 | Record current output; wrap the bugs in `withKnownIssue`. BUG-001 crashes the host, so it may need a guard. |
+| 3 | **Object model** | Tree shape, `NSCopying` deep copy, keyed NSCoding round trip (the pasteboard format), observer notifications | Structural assertions. Also decode archives produced by the ObjC build and committed as fixtures. |
+| 4 | **MatrixMath and geometry** | Compose ∘ decompose ≈ identity; invert; multiply; ray–triangle and ray–box intersection; bounds; polygon containment; `ComputationalGeometry` hull and tangents | Table tests and seeded property tests. |
+| 5 | **Snapping and transforms** | Grid and angle snapping, move and rotate, view-orientation mapping | Table tests. |
+| 6 | **Colours** | `ColorLibrary` lookup, blended and custom colours, `!COLOUR`, edge colours; **`NSArchiver` colour blobs from preferences** | Fixture `LDConfig.ldr`, plus a real archived blob. |
+| 7 | **Paths, library, catalog** | `LDrawPaths`, case-insensitive names, `PartCatalogBuilder` on the mini library, descriptions and categories, `MLCadIni` | Temp copy of the fixture library. |
+| 8 | **MPD and ModelManager** | Submodel lookup, renaming updates references, active model, cross-document references | Fixtures. |
+| 9 | **Document operations and undo** | Add, delete, move, nudge, rotate, change colour, add or move step, rename submodel, copy and paste; each followed by undo and redo | Open the doc, call `makeWindowControllers` (nib loaded, window not ordered front), select rows in the outline view, call the action, then compare the written text after op, undo and redo with goldens. |
+| 10 | **Preferences contract** | Every defaults key string and its registered default | Snapshot test. |
+| 11 | **LSynth** | `lsynthcp` on sample hose and band input | Run the bundled binary as a black box. |
+| 12 | **Render snapshots** | Fixed-camera offscreen renders of 5–10 fixtures, wireframe and shaded | Offscreen CGL → FBO, compared with a tolerance. **They are tied to the machine** (GL-on-Metal output differs between GPUs and OS versions): references are recorded per machine and are not a CI gate. They are kept as a loose reference for the Metal port. |
+| 13 | **Performance** | Parse a large model, collect and draw, build the catalog | XCTest `measure` in the **Release** perf scheme, on a recorded machine, with fixed iterations. The Swift port must stay within +20%. Large inputs are tagged `.requiresFullLibrary`. |
+| 14 | **UI smoke** | Launch, open, select in outline, inspector shows values, edit, undo, save-as and reopen, open each panel | XCUITest, kept deliberately thin. |
 
-- **Coverage target before porting begins:** ≥ 70% line coverage on `Source/LDraw/{Commands,Files,Support}` and ≥ 50%
-  on `LDrawDocument`.
-- A class whose coverage is below target can't be ported until the gap is closed or written down as an accepted risk in port-status.md.
-- **Exit:** every row above has tests, the coverage targets are met or exceptions recorded, and the suite runs in under 3 minutes
-  without the full-library tests.
+**Coverage targets** (line coverage, **per class**, measured on the model/logic classes):
+- ≥ 70% for each class in `LDraw/Commands`, `LDraw/Files` and the non-GL `LDraw/Support` classes
+  (`LDrawUtilities`, `ColorLibrary`, `LDrawPaths`, `PartLibrary` logic, `ModelManager`, `PartCatalogBuilder`).
+- Excluded from that target: `LDrawGLRenderer`, `LDrawGLCamera`, `LDrawDragHandle` and the `.c` GL helpers. Render
+  snapshots and UI smoke tests cover them.
+- `LDrawDocument`: target set **after** row 9 proves out. The initial aim is that every menu action reachable through
+  the outline view is exercised.
+- A class below target can't be ported until the gap is closed, or until it's recorded as an accepted risk in port-status.md.
 
-### P3: manual test script and docs (S)
-Can be folded into P2. Write the manual smoke checklist (TESTING.md §Manual) for the things automation can't reach well:
-- 3D view interaction: rotate, zoom, marquee selection, drag-and-drop from the part browser
-- printing and export
-- the 3Dconnexion mouse
+**Exit:** every row has tests, the targets are met or their exceptions recorded, and the default suite runs in under
+3 minutes. Write the manual smoke checklist in TESTING.md for what automation can't reach: 3D-view interaction,
+drag and drop, printing and export, 3Dconnexion.
 
-### P4: ObjC prep refactors, no behaviour change (M)
-Branch `…-p4-prep`
-- Turn the macros into typed constants (§4.4.4) and remove `USE_BLOCKS` and the `dispatch_group_t` macro hack.
-  Parsing either becomes truly concurrent (only if P2 tests stay green and a TSan run is clean) or explicitly serial.
-  **Default: explicitly serial.** Concurrency comes back after the port, under Swift concurrency checking.
-- Remove `Carbon/Carbon.h` from the prefix header and import it only in the 3Dconnexion shim. Shrink the `.pch` so
-  that no Swift-visible header depends on it.
-- Add nullability annotations (`NS_ASSUME_NONNULL_BEGIN`) and lightweight generics (`NSArray<LDrawDirective *> *`) to
-  every public header, so Swift sees honest types.
-- Replace RegexKitLite with `NSRegularExpression` and delete the 2.6k-line file.
-- Split `LDrawDocument.m` (6.4k lines) into categories by concern (file I/O, edit ops, selection, undo, menus,
-  viewers). Where it's practical, extract a **view-independent edit-operation layer** that the P2 #9 tests can drive.
-  Back-fill the test gaps recorded in P2.
-- Replace old enum names (`NSOnState` and similar, 38 sites) and `loadNibNamed:owner:` (17 sites) with modern API.
-- **Exit:** the gate in §3. Tests and goldens are unchanged.
+### P3: finish ARC (M)
+Branch `…-p3-arc-complete`. **This comes after the tests:** the remaining MRC files are the riskiest ones
+(`LDrawDirective`, `LDrawMetaCommand`'s object swap, `LDrawDocument`, `PartLibrary`, `LDrawGLView`).
+- Convert the 41 `-fno-objc-arc` files with the existing tooling (`arc-migrate.sh`, `update_arc_flags.rb`). Then set
+  `CLANG_ENABLE_OBJC_ARC = YES` project-wide and remove the per-file flags.
+- `RegexKitLite` stays `-fno-objc-arc` until P4 deletes it.
+- Run the full suite and the manual checklist after each batch of files. Run the Address Sanitizer and the Leaks
+  instrument on the smoke flows once at the end.
+- **Exit:** gate (§3) passes; no goldens changed.
+
+### P4: ObjC prep refactors, no behaviour change (L)
+Branch `…-p4-prep`. Goldens and known issues **must not change** in this phase.
+
+**Parser interop (P6 depends on these)**
+- Replace parse-path `@throw`/`@catch` with `BOOL` + `NSError **` returns, **keeping every current outcome**,
+  including the half-parsed `!COLOUR` (S1). A test pins each outcome.
+- Add the factory `+[LDrawDirective directiveWithLines:inRange:parentGroup:]`. It replaces
+  `LDrawMetaCommand`'s substitute-`self` init, and all callers move to it.
+- Replace cross-class ivar access with properties. Check the draw-loop cost against perf baselines.
+
+**Types and declarations**
+- Convert macros and `typedef enum`s to typed constants and `NS_ENUM` (§4.4.7).
+- Remove the pch's Carbon import and import Carbon only in the 3Dconnexion code.
+- Add nullability (`NS_ASSUME_NONNULL`) and lightweight generics to public headers.
+- Turn informal protocols (`NSObject (LDrawGLViewDelegate)`) into formal `@protocol`s.
+- Move `+[LDrawApplication initialize]`'s transformer registration into launch code.
+
+**Code removal and modernisation**
+- Replace RegexKitLite with `NSRegularExpression` and delete it (2.6k lines).
+- Replace old enum names (≈38 sites) and `loadNibNamed:owner:` (17 sites).
+
+**Rendering seam.** Remove the remaining GL calls from model classes and route them through the **existing**
+`LDrawRenderer` / `LDrawCollector` protocols (`LDrawRenderer.h`). Affected files:
+- `LDrawPart.m` (8 calls)
+- `LDrawDirective.m` (2)
+- `LDrawModel.m` and `LDrawStep.m` (1 each)
+- `LDrawDragHandle.m` (24)
+- `PartLibrary`, for texture creation
+
+**Document split.** Split `LDrawDocument.m` (6.4k lines) into categories by concern: file I/O, edit operations,
+selection, undo, menus, viewers. Where it's practical, extract a view-independent edit-operation layer and widen the
+row 9 tests to cover it.
 
 ### P5: leaf utilities and categories → Swift (S)
-Categories (as Swift extensions), `StringUtilities`, `BricksmithUtilities`, `MLCadIni`, `TransformerIntMinus1`.
-This first, low-risk phase proves out the interop rules, the bridging header and the per-class recipe (§6).
+Covers `StringUtilities`, `BricksmithUtilities`, `MLCadIni` and `TransformerIntMinus1`, and the categories as Swift
+extensions.
+- **Exception:** `UserDefaultsCategory` keeps reading old `NSArchiver` blobs (row 6 test). Bridge to `NSUnarchiver`
+  if necessary.
+- This phase proves the bridging header, the interop rules and the recipe (§6).
 
 ### P6: LDraw model → Swift (XL)
-Sub-branches:
-- **p6a:** leaf directives (`LDrawConditionalLine`, `LDrawTriangle`, `LDrawQuadrilateral`, `LDrawComment`, `LDrawColor`, `LDrawLSynthDirective`, `LDrawDragHandle`)
-- **p6b:** mid-level (`LDrawLine`, `LDrawPart`, `LDrawMetaCommand`, `LDrawTexture`, `LDrawLSynth`, `LDrawStep`, `LDrawMPDModel`)
-- **p6c:** roots (`LDrawModel`, `LDrawFile`, `LDrawContainer`, `LDrawDrawableElement`, `LDrawDirective`)
+Port leaves before roots. Names, selectors, NSCoding keys and `write` output stay identical.
+- **p6a leaves:** `LDrawConditionalLine`, `LDrawTriangle`, `LDrawQuadrilateral`, `LDrawComment`, `LDrawColor`,
+  `LDrawLSynthDirective`, `LDrawDragHandle`, `LDrawMPDModel`
+- **p6b middle:** `LDrawLine`, `LDrawPart`, `LDrawMetaCommand`, `LDrawTexture`, `LDrawLSynth`, `LDrawStep`, `LDrawModel`
+- **p6c roots:** `LDrawFile`, `LDrawContainer`, `LDrawDrawableElement`, `LDrawDirective`
+  - Check the order against the real `@interface` lines before starting. A class can only move once all its
+    subclasses are Swift.
 
-Rules for this phase:
-- Port in the order the leaves-first rule dictates. Class names, selectors, NSCoding keys and `write` output stay identical.
-- The GL calls inside the model (`LDrawPart` immediate-mode drawing, `glDrawArrays` in `LDrawDirective`) move behind
-  the `LDrawRenderer` protocol **in ObjC first** (in P4 or at the start of P6), so that the Swift model has no GL calls.
-- Watch the performance baselines (P2 #13) after each class. ARC traffic in Swift parse and draw loops is the most
-  likely regression.
+Check the Release perf baselines after each class. ARC traffic in parse and draw loops is the most likely regression.
 
 ### P7: libraries and managers → Swift (L)
-`ColorLibrary`, `LDrawPaths`, `LDrawUtilities`, `ModelManager`, `PartLibrary`, `PartCatalogBuilder`, `PartReport`, `ComputationalGeometry`.
-- Introduce dependency injection here: the singletons keep their `shared` accessors but take their paths and defaults
-  from an injectable environment. Test-only hacks from P1 go away.
-- GL texture creation in `PartLibrary` moves behind the renderer seam.
+`ColorLibrary`, `LDrawPaths`, `LDrawUtilities`, `ModelManager`, `PartLibrary`, `PartCatalogBuilder`, `PartReport`,
+`ComputationalGeometry`.
+- Proper dependency injection: the `shared` accessors stay, and paths and defaults come from an injectable
+  environment. The P1 `+resetForTesting` hooks are replaced and then deleted.
+- `dispatch_once`-style (`static let`) initialisation fixes the lazy-init race as a side effect. S3 is only latent
+  while parsing is serial, so record it as fixed-by-port in the register.
 
 ### P8: renderer (still OpenGL) → Swift (L)
-`LDrawGLRenderer`, `LDrawGLCamera`, `LDrawShaderRenderer`, `LDrawDisplayList`, `LDrawDataStream`, `LDrawShaderLoader`, `LDrawBDPAllocator`.
-- Define Swift protocols `RenderBackend` and `Camera`: protocols with no GL types in their signatures (use `Matrix4`/`simd`).
-  The GL classes become one implementation of them, which is where Metal plugs in later.
-- Render snapshots (P2 #12) must stay within tolerance.
-- Silence OpenGL deprecation warnings centrally with `GL_SILENCE_DEPRECATION`. They are not port regressions.
+`LDrawGLRenderer`, `LDrawGLCamera`, `LDrawShaderRenderer`, `LDrawDisplayList`, `LDrawDataStream`, `LDrawShaderLoader`,
+`LDrawBDPAllocator`.
+- Evolve the existing `LDrawRenderer` / `LDrawCollector` protocols into Swift `RenderBackend` / `Camera` protocols
+  **without GL types** (`Matrix4`/`simd` and Swift closures in place of `GLfloat *` and C function pointers). GL is the
+  first implementation, and Metal plugs in later.
+- Render snapshots (row 12) stay within tolerance. Use `GL_SILENCE_DEPRECATION` centrally.
 
-### P9: widgets, panels, inspectors, and UI modernisation (XL)
-Sub-branches by area: widgets and views, inspectors, panels, preferences, part browser, minifig generator.
+### P9: widgets, panels, inspectors, UI modernisation (XL)
+Port leaves first within each UI hierarchy:
+- 9 `Inspection*` classes → `ObjectInspectionController` → `Inspector`
+- `MovePanel`, `DimensionsPanel`, `PieceCountPanel` → `DialogPanel`
+- `PartBrowserTableView` → `ExtendedTableView`; `ViewportArranger` → `ExtendedSplitView`
+- `LDrawGLView` last among the widgets, because it is GL-heavy and the biggest (3.2k lines)
 
-Replace deprecated UI, preserving layout and behaviour:
-- `NSMatrix` → `NSButton` radio groups / `NSSegmentedControl`
-- `NSDrawer` (part browser) → split-view sidebar or a panel
+Replace deprecated UI, keeping layout and behaviour:
+- `NSMatrix` (19 instances) → radio `NSButton` groups or `NSSegmentedControl`
+- `NSDrawer` (part browser) → a split-view sidebar or a panel
 - `LDrawColorCell` and `IconTextCell` → view-based table cells
-- `AMSProgressBar` framework with its legacy nib → in-app sheet using `NSProgressIndicator`; delete the framework
+- The `AMSProgressBar` framework (legacy nib) → an `NSProgressIndicator` sheet; delete the framework
 
-Other changes:
-- Declare UTIs (`UTExportedTypeDeclarations` for ldr/mpd/dat, conforming to `public.plain-text`).
-- Keep xibs; there is **no SwiftUI rewrite** in this plan. New small views may use SwiftUI through `NSHostingView` if that's simpler.
-- Keep Cocoa bindings (marked `@objc dynamic`) where they work, notably the minifig generator.
-- Update the XCUITest smoke tests as controls change. A changed control needs its test updated in the same commit.
+Also:
+- Declare UTIs (`UTExportedTypeDeclarations` for ldr/mpd/dat conforming to `public.plain-text`).
+- Keep the xibs; **no SwiftUI rewrite**. `NSHostingView` is allowed for small new views.
+- Keep Cocoa bindings as `@objc dynamic`.
+- When a control changes, update its UI test in the same commit.
 
 ### P10: document and application → Swift (L)
-`LDrawDocument` (already split in P4), `LDrawApplication`, `BricksmithApplication`, `main.m` → `@main`.
-- Keep the 3Dconnexion C/Carbon API in a tiny ObjC or C shim. *Decision for the maintainer:* keep the old SDK or
-  drop or replace 3D-mouse support.
-- Use the undo `registerUndo(withTarget:)` closures in place of `prepareWithInvocationTarget:`.
+- Port `LDrawDocument` **one category at a time**, as a Swift extension per P4 category, with the core
+  `@implementation` last. Nothing subclasses it, and ObjC categories on an `@objc` Swift class still work in the meantime.
+- Port `LDrawApplication` and `BricksmithApplication`, and replace `main.m` with `@main`.
+- Undo moves to `registerUndo(withTarget:)` closures.
+- 3Dconnexion: keep the Carbon-era SDK behind a tiny C/ObjC shim.
+  - *Maintainer decision:* keep it, drop it, or replace it with the current 3Dconnexion SDK.
+- Pasteboard `unarchiveObjectWithData:` (non-secure, `LDrawDocument.m:3763,6334`) keeps working through the
+  equivalent Swift API. Moving to secure coding is logged in KNOWN-BUGS for P12, not done during the port.
 
 ### P11: hardening (M)
-- Remove all remaining `.m` files and reduce the bridging header to C headers only.
-- Switch to **Swift 6 language mode** with complete concurrency checking. Mark UI code `@MainActor` and revisit
-  parallel parsing (with TSan).
-- Remove Swift-side `@objc` where the ObjC runtime no longer needs it. Keep `@objc(Name)` on anything referenced by
-  xibs or archives.
-- Rebaseline warnings and update ARCHITECTURE.md to the Swift structure.
+- Remove the last `.m` files, leaving C headers only in the bridging header.
+- Switch to Swift 6 language mode with complete concurrency checking and `@MainActor` UI.
+- Revisit parallel parsing, with TSan.
+- Remove `@objc` where it's no longer needed. Keep `@objc(Name)` on anything referenced by xibs or archives.
+- Rebaseline warnings, and update ARCHITECTURE.md to the Swift structure.
+
+### P12: post-port bug fixing (size depends on the register)
+Work through [KNOWN-BUGS.md](KNOWN-BUGS.md): crash and data-loss bugs first, then confirm and triage the suspected
+entries. Fixes are Swift-only. Each fix is one commit containing:
+- the fix
+- the `withKnownIssue` removed
+- any golden updates, explained in the commit message
+- the register row set to `fixed`
 
 ## 6. Per-class porting recipe (for humans and agents)
 
-1. Check port-status.md: are the class's dependencies and subclasses ported, and is its coverage at target?
-2. If tests are missing, add them **against the ObjC class first**, then commit.
-3. Write `Foo.swift` with `@objc(Foo) final class Foo` (not `final` if anything subclasses it), keeping selectors.
-   Keep the original algorithms. Idiomatic rewrites wait until after the port.
-4. Remove `Foo.m` from the target and delete it. Change ObjC importers from `#import "Foo.h"` to
-   `#import "Bricksmith-Swift.h"`. Keep `Foo.h` only while other ObjC headers need an `@class`.
-5. Run build, test and the relevant manual checks. Update port-status.md, and make one commit.
+1. **Check port-status.md:** are all the class's subclasses already Swift, and is its coverage at target?
+2. **Grep the class** for the following. Each one has a P4 fix that must already be done.
+   - `@throw` / `@try`
+   - an `init` that returns something other than `self`
+   - `self->` ivar access from subclasses
+   - `+initialize` / `+load`
+   - `respondsToSelector:` / `performSelector`
+   - `NSArchiver`
+   - varargs
+3. **Add tests first** if any are missing, against the ObjC class, and commit them separately.
+4. **Write `Foo.swift`:**
+   - `@objc(Foo) class Foo` (add `final` only if nothing subclasses it), with selectors kept.
+   - `required` inits as needed (§4.4.5), and `@objc dynamic` for KVC, KVO or bindings.
+   - Keep the original algorithms. Idiomatic rewrites come after the port.
+5. **Remove `Foo.m` from the target** and delete it.
+   - ObjC importers switch to `#import "Bricksmith-Swift.h"` in `.m` files and `@class Foo;` in headers.
+   - Keep `Foo.h` only while an ObjC header still needs it.
+6. **Build and test.** Goldens and known issues are unchanged, and the Release perf check passes in hot classes.
+7. **Update port-status.md** and make one commit.
 
 ## 7. Risks
 
 | Risk | Mitigation |
 |---|---|
-| Performance regressions in parse and draw loops (ARC retain/release, bridging `NSArray`) | Perf baselines with a +20% budget; keep C structs; use `ContiguousArray`; profile with Instruments before optimising |
-| Behaviour drift in the `write` output (float formatting) | Golden round-trip tests; keep `outputStringForFloat:` semantics byte-identical |
-| Archive and pasteboard incompatibility | `@objc(Name)` names; NSCoding round-trip tests using archives produced by the ObjC build |
-| Hidden dynamic dispatch (`respondsToSelector:` ×74, `performSelector` ×12, informal protocols) | Convert informal protocols to formal `@objc protocol`s in P4; grep check during each port |
-| Hosted tests fighting app startup | P1 test-mode guard |
-| Headless document tests infeasible for some ops | P4 op-layer extraction; record remaining gaps explicitly |
-| OpenGL rendering differs between machines | Tolerance-based snapshots; record the reference machine |
-| LSynth `NSTask` under a future sandbox | Out of scope; noted for the hardening and distribution work |
+| ARC completion breaks memory semantics | P3 comes after P2 tests; ASan and Leaks runs at the end |
+| Perf regressions (ARC traffic, `NSArray` bridging) | Release-mode baselines with a +20% budget; keep C structs; `ContiguousArray`; profile before optimising |
+| Behaviour drift in `write` output | Byte-exact goldens; port commits never change goldens |
+| NSException unwinding through Swift | P4 converts parsing to error returns; recipe grep step |
+| Archive, pasteboard or preferences incompatibility | `@objc(Name)`; decode tests on committed archives from the ObjC build; `NSArchiver` colour test |
+| Hosted tests polluted by app launch or singletons | P1 launch guard, `NSArgumentDomain` paths, reset hooks, temp-dir fixtures |
+| Document tests can't reach some operations | Nib-loaded window controller in row 9; P4 operation-layer extraction; gaps recorded |
+| Hidden dynamic dispatch (`respondsToSelector:` ×74, `performSelector` ×12) | Formal protocols in P4; recipe grep step |
+| GL snapshots differ between machines | Per-machine references, not a CI gate |
+| LSynth `NSTask` under a future sandbox | Out of scope; noted for distribution work |
+
+## 8. Decisions for the maintainer
+1. Deployment target: **13.0** (recommended) or 11.0.
+2. 3Dconnexion: keep the old SDK behind a shim (default), drop it, or replace it.
+3. Part browser: replace `NSDrawer` with a **split-view sidebar** (default) or a floating panel.
+4. Whether `master` should be fast-forwarded to `20251111-ARC-conversion` before the stack begins.
+
+## Appendix A: adversarial review log
+
+A fresh agent reviewed draft v1 against the code on 2026-11-14. Claims were spot-checked with grep before
+being accepted.
+
+| # | Finding | Severity | Decision |
+|---|---|---|---|
+| 1 | Headers depend on pch macros, so the bridging header fails in P1 | High | **Accepted.** Header hygiene moved into P1 |
+| 2 | NSExceptions thrown across class boundaries would unwind through Swift | High | **Accepted.** P4 conversion, §4.4.3, recipe step |
+| 3 | `LDrawMetaCommand` init returns a substitute; `required` inits | High | **Accepted.** P4 factory, §4.4.4–5 |
+| 4 | Swift subclasses can't read ObjC ivars | High | **Accepted.** P4 ivars → properties |
+| 5 | Hosted tests polluted by launch, Sparkle and singletons; DI too late | High | **Accepted.** P1 guard placement, `NSArgumentDomain`, reset hooks, temp fixtures |
+| 6 | "Headless" document tests would cover almost nothing | High | **Accepted.** Row 9 uses the nib-loaded window controller; the `LDrawDocument` target is deferred |
+| 7 | The renderer protocol seam already exists; serial parsing is already the default | Med | **Accepted.** P4 and P8 reworded to build on the existing protocols |
+| 8 | Coverage target swept in GL code | Med | **Accepted.** Per-class targets with GL exclusions |
+| 9 | +20% perf budget meaningless in Debug | Med | **Accepted.** Release perf scheme |
+| 10 | ARC completion had no safety net | Med | **Accepted.** ARC moved to P3, after the tests; build hygiene stays in P0 |
+| 11 | `+initialize`, `NSArchiver` prefs, `Point3` byte encoding, plain enums, insecure unarchiving | Med | **Accepted.** §4.4, P4, P5, P10 |
+| 12 | Port `LDrawDocument` category by category | Med | **Accepted.** P10 |
+| 13 | Leaves-first ordering for UI hierarchies | Med | **Accepted.** P9 ordering |
+| 14a | Signing for the test host; LSynth scheme lives in `xcuserdata` | Low | **Accepted.** §4.3, P0 |
+| 14b | `docs/` untracked on the plan branch | Low | **Rejected.** Factually wrong: committed in `e7415c1` |
+| 14c | Verify that Swift Testing needs macOS 14 | Low | **Checked and kept.** The shipped `Testing.swiftmodule` interface targets `arm64-apple-macos14.0` |
+| 14d | `rebase -x` to check every restacked commit | Low | **Accepted.** §3 |
+| 15 | GL snapshots are machine-specific | Low | **Accepted.** Row 12 |
+| — | Six suspected app bugs (S1–S6) | — | **Added** to KNOWN-BUGS.md "Suspected", to be confirmed by P2 tests |

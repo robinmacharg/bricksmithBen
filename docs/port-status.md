@@ -12,6 +12,9 @@ file's status. Phase codes refer to [swift-port-plan.md](swift-port-plan.md) §5
 **Memory column:** the file's memory management at the 2026-11-14 snapshot (`ARC`, `MRC`, or `C`). For
 `AMSProgressBar` the column is unreliable, because that is a separate project.
 
+**MRC files** are all converted to ARC in **P3**, which comes after the characterisation tests, and before
+their own port phase.
+
 **Coverage column:** fill in from `scripts/test.sh` once P1 lands.
 
 ## Totals at the 2026-11-14 snapshot

@@ -38,15 +38,27 @@ isn't present.
 - **Goldens are a contract.** Regenerate them only on purpose, through a script flag (`RECORD_GOLDENS=1`).
   The commit that changes them must explain why. A port commit must never change goldens.
 - **Known bugs** are recorded with `withKnownIssue`, not deleted or skipped. They are listed below.
-- **Never touch real user preferences.** Tests point `LDrawPaths` at `Fixtures/ldraw-mini` through a test
-  defaults domain.
+- **Never touch real user preferences or libraries.**
+  - Tests run hosted in the app. A test-mode guard (`XCTestConfigurationFilePath`) skips launch side effects:
+    LDraw-path discovery, catalog load, 3Dconnexion and Sparkle.
+  - The fixture library path is passed as a launch argument (`-LDrawPath …`).
+  - `Fixtures/ldraw-mini` is copied to a temp directory for each run, because the catalog builder writes `parts.plist` into it.
+- **Singletons:** suites that touch `ColorLibrary`, `PartLibrary`, `LDrawPaths`, `ModelManager` or `MLCadIni` call
+  `+resetForTesting` and are marked `.serialized`.
+- **Document tests** load the document's nib through `makeWindowControllers` without showing the window, then
+  drive edits by selecting rows in the outline view. Edit actions read their selection from there.
+- **Performance tests** run only in the Release `Bricksmith-Perf` scheme. Debug timings are meaningless for
+  comparing Swift with ObjC.
 - **Randomised tests** use a fixed seed, and they print it when they fail.
 - **Render snapshot comparisons** use a tolerance. The reference machine is recorded with the images.
 
 ## Known issues
-| Issue | Test | Notes |
-|---|---|---|
-| Unknown line type (e.g. `11`) crashes the parser | *(planned)* `ParserRobustnessTests.unknownLineType` | `Test Data/Bad/…`. `classForDirectiveBeginningWithLine:` returns `Nil`. |
+Bugs live in **[KNOWN-BUGS.md](KNOWN-BUGS.md)**. Don't fix them during the port. For each bug:
+1. Log it in KNOWN-BUGS.md.
+2. Write a test that asserts the *correct* behaviour, wrapped in `withKnownIssue` (or `XCTExpectFailure`).
+3. Reference the bug ID in the test, e.g. `withKnownIssue("BUG-001: …")`.
+
+Fixes happen after the port, in P12.
 
 ## Manual smoke checklist
 Run this at every phase exit gate, using a Debug build, for the things automation covers poorly.
