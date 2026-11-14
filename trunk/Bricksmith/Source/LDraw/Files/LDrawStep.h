@@ -27,7 +27,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum
+typedef NS_ENUM(int, LDrawStepRotationT)
 {
 	LDrawStepRotationNone		= 0,	// inherit previous step rotation (or default view)
 	LDrawStepRotationRelative	= 1,	// rotate relative to default 3D viewing angle
@@ -35,11 +35,11 @@ typedef enum
 	LDrawStepRotationAdditive	= 3,	// rotate relative to the previous step's rotation
 	LDrawStepRotationEnd		= 4		// cancel the effect of the previous rotation
 
-} LDrawStepRotationT;
+};
 
 
 //Describes the contents of this step.
-typedef enum
+typedef NS_ENUM(int, LDrawStepFlavorT)
 {
 	LDrawStepAnyDirectives,		//step can hold any type of subdirectives.
 	LDrawStepLines,				//step can hold *only* LDrawLines.
@@ -47,7 +47,7 @@ typedef enum
 	LDrawStepQuadrilaterals,	// etc.
 	LDrawStepConditionalLines	// etc.
 	
-} LDrawStepFlavorT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////

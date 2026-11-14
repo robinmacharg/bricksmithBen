@@ -9,13 +9,13 @@
 //==============================================================================
 #import <Foundation/Foundation.h>
 
-typedef enum
+typedef NS_ENUM(int, LDrawDomain)
 {
 	LDrawUserOfficial		= 0,
 	LDrawUserUnofficial		= 1,
 	LDrawInternalOfficial	= 2,
 	LDrawInternalUnofficial	= 3,
-} LDrawDomain;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////

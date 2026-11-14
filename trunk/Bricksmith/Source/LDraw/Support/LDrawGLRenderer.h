@@ -31,12 +31,12 @@
 
 
 // Draw Mode
-typedef enum
+typedef NS_ENUM(int, RotationDrawModeT)
 {
 	LDrawGLDrawNormal			= 0,	//full draw
 	LDrawGLDrawExtremelyFast	= 1		//bounds only
 	
-} RotationDrawModeT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////

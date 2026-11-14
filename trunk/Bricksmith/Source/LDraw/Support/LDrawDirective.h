@@ -98,7 +98,7 @@
 // now since it is just used for directives, maintain all directive-related
 // enums and flags here...
 
-typedef enum CacheFlags {
+typedef NS_OPTIONS(int, CacheFlagsT) {
 
 	// The bounding box of the directive has changed and is no longer valid.
 	CacheFlagBounds      = 1,
@@ -110,9 +110,9 @@ typedef enum CacheFlags {
 	// The flag "works" because the class maps the MessageObservedChanged message to inval itself, and 
 	// MessageObservedChanged has been specifically put into LDrawPart, which is the only thing an LSynth 
 	// actually cares about.
-} CacheFlagsT;
+};
 
-typedef enum Message {
+typedef NS_ENUM(int, MessageT) {
 
 	// The reference name of the MPD model has changed and observers should 
 	// update their string references.
@@ -126,7 +126,7 @@ typedef enum Message {
     // requires resynthesis)
 	// Ben says: this is really LSynth specific, e.g. part -> parent synth
     MessageObservedChanged = 2
-} MessageT;
+};
 
 @protocol LDrawObserver
 @required

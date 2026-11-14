@@ -15,21 +15,21 @@
 #import "MatrixMath.h"
 
 // How much parts move when you nudge them in the viewer. 
-typedef enum gridSpacingMode
+typedef NS_ENUM(int, gridSpacingModeT)
 {
 	gridModeFine	= 0,
 	gridModeMedium	= 1,
 	gridModeCoarse	= 2
 	
-} gridSpacingModeT;
+};
 
 // Are movements aligned to the overall model or the individual selected part.
-typedef enum gridOrientationMode
+typedef NS_ENUM(int, gridOrientationModeT)
 {
 	gridOrientationModel = 0,
 	gridOrientationPart = 1
 	
-} gridOrientationModeT;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 //

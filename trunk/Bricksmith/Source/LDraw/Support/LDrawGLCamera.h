@@ -10,18 +10,18 @@
 #import "MatrixMath.h"
 
 // Projection Mode
-typedef enum
+typedef NS_ENUM(int, ProjectionModeT)
 {
 	ProjectionModePerspective	= 0,
 	ProjectionModeOrthographic	= 1
 	
-} ProjectionModeT;
+};
 
-typedef enum
+typedef NS_ENUM(int, LocationModeT)
 {
 	LocationModeModel = 0,
 	LocationModeWalkthrough = 1
-} LocationModeT;
+};
 
 @protocol LDrawGLCameraScroller;
 

@@ -12,13 +12,13 @@
 @class LDrawLSynth;
 
 // The class of a synthesis object
-typedef enum
+typedef NS_ENUM(int, LSynthClassT)
 {
     LSYNTH_PART = 1,
     LSYNTH_HOSE = 2,
     LSYNTH_BAND = 3,
     LSYNTH_CLASSES_COUNT
-} LSynthClassT;
+};
 
 @interface LSynthConfiguration : NSObject
 {

@@ -65,3 +65,9 @@ section. Each entry says what happened and what to do instead.
 - **L21. Adding a header to the bridging header can surface its deprecations again** (Swift's Clang importer
   compiles it in a new context). An example is `NSDrawer` in `LDrawDocument.h`. → Expected. Re-record the baseline
   deliberately and say so in the commit.
+- **L22. BSD `sed` has no `\s`.** It matches a literal `s`, which silently ate every letter "s" from the output.
+  → Use `[[:space:]]` (or Python for anything non-trivial).
+- **L23. A plain C `typedef enum` is 4 bytes with `@encode` `"i"`, even when every value is non-negative.**
+  `NS_ENUM(int, …)` keeps exactly that (verified), whereas `NS_ENUM(NSInteger, …)` changes it to 8 bytes `"q"`,
+  which breaks struct layout, `encodeBytes:`, NSValue archives and KVC. → Always use `NS_ENUM(int, …)` or
+  `NS_OPTIONS(int, …)` when converting.

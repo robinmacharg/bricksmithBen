@@ -297,7 +297,7 @@ typedef enum MenuTags
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum MouseDragBehavior
+typedef NS_ENUM(int, MouseDragBehaviorT)
 {
 	MouseDraggingOff									= 0,
 	MouseDraggingBeginImmediately						= 1,
@@ -305,51 +305,51 @@ typedef enum MouseDragBehavior
 	MouseDraggingImmediatelyInOrthoNeverInPerspective	= 3
 	
 
-} MouseDragBehaviorT;
+};
 
-typedef enum RightButtonBehavior
+typedef NS_ENUM(int, RightButtonBehaviorT)
 {
 	RightButtonContextual								= 0,
 	RightButtonRotates									= 1
 
-} RightButtonBehaviorT;
+};
 
-typedef enum RotateMode {
+typedef NS_ENUM(int, RotateModeT) {
 	RotateModeTrackball									= 0,
 	RotateModeTurntable									= 1
 
-} RotateModeT;
+};
 
-typedef enum MouseWheelBeahvior {
+typedef NS_ENUM(int, MouseWheelBeahviorT) {
 	MouseWheelScrolls									= 0,
 	MouseWheelZooms										= 1
 
-} MouseWheelBeahviorT;
+};
 
-typedef enum PartBrowserStyle
+typedef NS_ENUM(int, PartBrowserStyleT)
 {
 	PartBrowserShowAsDrawer	= 0,
 	PartBrowserShowAsPanel	= 1
 
-} PartBrowserStyleT;
+};
 
 
-typedef enum SearchMode
+typedef NS_ENUM(int, SearchModeT)
 {
 	SearchModeAllCategories	= 0,
 	SearchModeSelectedCategory = 1
 
-} SearchModeT;
+};
 
 
-typedef enum SelectionMode {
+typedef NS_ENUM(int, SelectionModeT) {
 	
 	SelectionReplace		= 0,			// Normal drag - take new
 	SelectionExtend			= 1,			// Shift drag - take old | new
 	SelectionSubtract		= 2,			// Option drag - take old - new
 	SelectionIntersection	= 3				// Option-shift drag - take old & new
 	
-} SelectionModeT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
