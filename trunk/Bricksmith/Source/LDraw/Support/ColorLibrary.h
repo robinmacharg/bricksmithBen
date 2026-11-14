@@ -24,11 +24,13 @@
 // Notes:		This protocol is adopted by classes that accept colors, such as 
 //				LDrawPart and LDrawQuadrilateral. 
 //
+NS_ASSUME_NONNULL_BEGIN
+
 ////////////////////////////////////////////////////////////////////////////////
 @protocol LDrawColorable
 
--(LDrawColor *) LDrawColor;
-- (void) setLDrawColor:(LDrawColor *)newColor;
+-(null_unspecified LDrawColor *) LDrawColor;						// unverified (P1 rule): see port-status.md
+- (void) setLDrawColor:(null_unspecified LDrawColor *)newColor;
 
 @end
 
@@ -45,11 +47,11 @@
 }
 
 // Initialization
-+ (ColorLibrary *) sharedColorLibrary;
++ (nullable ColorLibrary *) sharedColorLibrary;			// nil if LDConfig.ldr cannot be loaded (S4)
 
 // Accessors
-- (NSArray *) colors;
-- (LDrawColor *) colorForCode:(LDrawColorT)colorCode;
+- (NSArray<LDrawColor *> *) colors;
+- (nullable LDrawColor *) colorForCode:(LDrawColorT)colorCode;	// falls back to LDrawCurrentColor; nil only without a shared library
 - (void) getComplimentRGBA:(GLfloat *)complimentRGBA forCode:(LDrawColorT)colorCode;
 
 // Registering Colors
@@ -64,3 +66,5 @@ void complimentColor(const GLfloat *originalColor, GLfloat *complimentColor);
 + (void) resetForTesting;
 
 @end
+
+NS_ASSUME_NONNULL_END

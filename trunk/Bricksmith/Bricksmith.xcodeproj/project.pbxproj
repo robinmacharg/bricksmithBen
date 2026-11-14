@@ -257,7 +257,9 @@
 		D6EDBC261650B9E200B4062B /* LDrawDisplayList.m in Sources */ = {isa = PBXBuildFile; fileRef = D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D6FC72131604EBB8005A404E /* LDrawFastSet.h in Headers */ = {isa = PBXBuildFile; fileRef = D6FC72121604EBB8005A404E /* LDrawFastSet.h */; };
 		DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */; };
+		E5FCCD3318DC0660E5479B46 /* HarnessFixtureLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */; };
 		EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
+		ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -515,6 +517,7 @@
 		0BFC4CFC1076F61900293B60 /* ViewportArranger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewportArranger.m; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawKeywords.m; sourceTree = "<group>"; };
+		234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessFixtureLibraryTests.swift; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -549,6 +552,7 @@
 		73772F01F06AC293E3F650C4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		8D15AC370486D014006FF6A4 /* Bricksmith.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricksmith.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FixtureLibrary.swift; sourceTree = "<group>"; };
 		9506E0EE18A3F4130006CE9C /* SearchPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPanelController.h; sourceTree = "<group>"; };
 		9506E0EF18A3F4130006CE9C /* SearchPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPanelController.m; sourceTree = "<group>"; };
 		9506E0FD18AA74BE0006CE9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SearchPanel.xib; sourceTree = "<group>"; };
@@ -849,6 +853,7 @@
 			children = (
 				63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */,
 				E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */,
+				234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1030,6 +1035,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		7890E7BBA98A177A0B370C11 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */,
+			);
+			name = Support;
+			path = Support;
+			sourceTree = "<group>";
+		};
 		7D443C30ABD0BCD468D01020 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -1094,6 +1108,7 @@
 			isa = PBXGroup;
 			children = (
 				0B7D7DD7F5AABF51BA5EBBA4 /* Unit */,
+				7890E7BBA98A177A0B370C11 /* Support */,
 			);
 			name = Tests;
 			path = Tests;
@@ -1389,6 +1404,8 @@
 			files = (
 				7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */,
 				6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */,
+				ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */,
+				E5FCCD3318DC0660E5479B46 /* HarnessFixtureLibraryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

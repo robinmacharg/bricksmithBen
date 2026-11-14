@@ -14,6 +14,7 @@
 
 
 static LDrawPaths *sharedObject = nil;
+static NSArray    *PartSearchPaths = nil;	// cache for -pathForPartName: (see KNOWN-BUGS S12)
 
 @implementation LDrawPaths
 
@@ -45,6 +46,7 @@ static LDrawPaths *sharedObject = nil;
 	[sharedObject release];
 #endif
 	sharedObject = nil;
+	PartSearchPaths = nil;
 }//end resetForTesting
 
 
@@ -397,13 +399,12 @@ static LDrawPaths *sharedObject = nil;
 - (NSString *) pathForPartName:(NSString *)partName
 {
 	NSFileManager	*fileManager	= [[NSFileManager alloc] init];
-	static NSArray	*searchPaths	= nil;
 	NSMutableString *fixedPartName	= [NSMutableString stringWithString:partName];
 	NSString		*partPath		= nil;
 	
-	if(searchPaths == nil)
+	if(PartSearchPaths == nil)
 	{
-		searchPaths = [[NSArray alloc] initWithObjects:
+		PartSearchPaths = [[NSArray alloc] initWithObjects:
 							[self partsPathForDomain:LDrawUserOfficial],
 							[self primitivesPathForDomain:LDrawUserOfficial],
 							[self partsPathForDomain:LDrawUserUnofficial],
@@ -432,7 +433,7 @@ static LDrawPaths *sharedObject = nil;
 	{
 		//We have a file path name; try each directory.
 		
-		for(NSString *basePath in searchPaths)
+		for(NSString *basePath in PartSearchPaths)
 		{
 			NSString *testPath = [basePath stringByAppendingPathComponent:fixedPartName];
 			

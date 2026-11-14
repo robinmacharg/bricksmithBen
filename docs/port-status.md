@@ -33,6 +33,13 @@ their own port phase.
 |---|---|---|---|---|
 | | | | | |
 
+## Nullability annotations (plan §5 P1, v3.1 rule)
+
+| Header | Annotated | Unverified (`null_unspecified`) | First test |
+|---|---|---|---|
+| `LDrawPaths.h` | 2026-11-14 | — | `HarnessFixtureLibraryTests` |
+| `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
+
 ## Uncovered-line ledger (tiers A and B)
 
 | File:lines | Why it's uncovered (GL error path, dead code, can't-happen…) |

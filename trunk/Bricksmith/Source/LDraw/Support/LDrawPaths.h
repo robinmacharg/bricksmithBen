@@ -19,6 +19,8 @@ typedef NS_ENUM(int, LDrawDomain)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawPaths : NSObject
 {
 	NSString	*preferredLDrawPath;
@@ -27,25 +29,27 @@ typedef NS_ENUM(int, LDrawDomain)
 + (LDrawPaths *) sharedPaths;
 
 // Accessors
-- (NSString *) preferredLDrawPath;
-- (void) setPreferredLDrawPath:(NSString *)pathIn;
+- (nullable NSString *) preferredLDrawPath;					// nil until a folder is chosen
+- (void) setPreferredLDrawPath:(nullable NSString *)pathIn;
 
 // Standard paths
-- (NSString *) partsPathForDomain:(LDrawDomain)domain;
-- (NSString *) primitivesPathForDomain:(LDrawDomain)domain;
-- (NSString *) primitives48PathForDomain:(LDrawDomain)domain;
-- (NSString *) ldconfigPath;
-- (NSString *) MLCadIniPath;
-- (NSString *) partCatalogPath;
-- (NSString *) subpartsPathForDomain:(LDrawDomain)domain;
+- (nullable NSString *) partsPathForDomain:(LDrawDomain)domain;		// nil for User domains when no folder is set
+- (nullable NSString *) primitivesPathForDomain:(LDrawDomain)domain;
+- (nullable NSString *) primitives48PathForDomain:(LDrawDomain)domain;
+- (nullable NSString *) ldconfigPath;
+- (nullable NSString *) MLCadIniPath;
+- (nullable NSString *) partCatalogPath;
+- (nullable NSString *) subpartsPathForDomain:(LDrawDomain)domain;
 
 // Utilities
-- (NSString *) findLDrawPath;
-- (NSString *) pathForPartName:(NSString *)partName;
-- (NSString *) pathForTextureName:(NSString *)imageName;
-- (BOOL) validateLDrawFolder:(NSString *)folderPath;
+- (nullable NSString *) findLDrawPath;
+- (nullable NSString *) pathForPartName:(NSString *)partName;		// nil if not found
+- (nullable NSString *) pathForTextureName:(NSString *)imageName;	// nil if not found
+- (BOOL) validateLDrawFolder:(nullable NSString *)folderPath;
 
 // Test support (do not call from app code)
 + (void) resetForTesting;
 
 @end
+
+NS_ASSUME_NONNULL_END
