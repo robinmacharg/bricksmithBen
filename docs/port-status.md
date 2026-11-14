@@ -27,7 +27,7 @@ their own port phase.
 | P0 | Automated: Debug and Release build, no new warnings, `codesign --verify --deep` | 2026-11-14 | agent | Branch `20261114-p0-build-hygiene` |
 | P0 | 🧑 Manual smoke checklist (full LDraw library) | 2026-11-14 | maintainer | Passed, apart from Settings, which never opens: BUG-002 is pre-existing, caused by colour preferences written by the installed 3.1.0. Debug builds now use their own preferences domain |
 | P1 | Automated: build (Debug/Release), unit tests, defaults unchanged ×3+, swap spike passed, exit-test spike passed, mutation pipeline verified | 2026-11-14 | agent | Branch `20261114-p1-test-harness` |
-| P1 | 🧑 First UI-test run (macOS permission prompts) | **pending** | | `scripts/test.sh --ui` |
+| P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
 
