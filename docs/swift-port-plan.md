@@ -395,7 +395,7 @@ UI tests must pass **unchanged**.
 
 ### P9b: UI modernisation (L), one control per commit
 - `NSMatrix` (19 in 8 xibs) → radio `NSButton` groups or `NSSegmentedControl`
-- Remove the `NSDrawer` part-browser mode. The existing floating panel becomes the only mode (§8.3). Migrate the `PART_BROWSER_STYLE_KEY` preference: a stored "drawer" value becomes "panel".
+- **Keep** the `NSDrawer` part-browser mode (§8.3). It is deprecated but still functional, and is not modernised in this plan.
 - `LDrawColorCell` and `IconTextCell` → view-based cells
 - `AMSProgressBar` → an `NSProgressIndicator` sheet; delete the framework
 - Declare UTIs for ldr, mpd and dat (`public.plain-text`)
@@ -471,7 +471,7 @@ locators. Keep the xibs and bindings; there is no SwiftUI rewrite.
 |---|---|---|---|
 | 1 | Deployment target | **macOS 13.0** | P0 |
 | 2 | 3Dconnexion | **Drop it.** The old SDK, the weak-linked framework, and the Carbon dependency all go | P0 (a deliberate feature removal, recorded in its commit) |
-| 3 | Part browser | **Floating panel.** The app already has one (`PartBrowserPanelController`, chosen by the `PART_BROWSER_STYLE_KEY` preference), so the `NSDrawer` mode is removed rather than replaced | P9b |
+| 3 | Part browser | **Keep the `NSDrawer`.** Both existing modes stay: the drawer, and the floating panel (`PartBrowserPanelController`, chosen by `PART_BROWSER_STYLE_KEY`). `NSDrawer` is deprecated but still works; revisit only if a future SDK removes it | P9a ports it as-is; no P9b change |
 | 4 | `master` | Fast-forwarded to `20251111-ARC-conversion` (`af3483f`), so the ARC work done so far is kept and not redone | Done 2026-11-14 |
 | 5 | LDraw fixture subset | **Allowed** in this repo, which won't be released. Replacing it with synthetic parts is a follow-on (§9) | P1 |
 | 6 | Versioning | **New major version, 4.0.0.** Each phase merged to `master` bumps the **patch** number (P0 → 4.0.0, P1 → 4.0.1, …). A significant follow-on such as Metal bumps the **minor** number (4.1.0). Releases and the appcast stay manual | P0 sets 4.0.0; every phase gate bumps the patch |
