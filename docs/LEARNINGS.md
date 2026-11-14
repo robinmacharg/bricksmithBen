@@ -77,3 +77,7 @@ section. Each entry says what happened and what to do instead.
   - Composed macros such as `LDCONFIG @"." LDCONFIG_EXTENSION` aren't simple literals, so a regex converter skips
     them, and the build then fails wherever they're used. → Convert them by hand and verify them against the old
     header recovered with `git show HEAD:<path>`.
+- **L25. Exit tests work hosted.** `await #expect(processExitsWith: .failure) { … }` runs the body in a child
+  process that relaunches the test host in test mode. App ObjC code is reachable there, and a crash fails only
+  that expectation. Each exit test costs about 1–1.5 s, so use them sparingly. The body can't capture local
+  state: pass data via files or the environment.

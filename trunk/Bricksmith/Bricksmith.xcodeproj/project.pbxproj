@@ -211,6 +211,7 @@
 		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
 		2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
+		6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */; };
 		737726E8FC931A7828531671 /* ComputationalGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 73772C8BCC3A6435E0AE9103 /* ComputationalGeometry.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7377276DD2BFF116BEE36F0A /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 73772F01F06AC293E3F650C4 /* libicucore.dylib */; };
 		73772B77F842475786994924 /* InspectionLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 737728C3A3DF6166BE9183ED /* InspectionLSynth.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -585,6 +586,7 @@
 		D6FC72121604EBB8005A404E /* LDrawFastSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawFastSet.h; sourceTree = "<group>"; };
 		DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MacLDraw.m; sourceTree = "<group>"; };
 		E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawPathNames.m; sourceTree = "<group>"; };
+		E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessExitTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -846,6 +848,7 @@
 			isa = PBXGroup;
 			children = (
 				63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */,
+				E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1385,6 +1388,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */,
+				6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

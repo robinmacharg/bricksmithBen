@@ -246,8 +246,9 @@ against the final Swift spellings.
 - `scripts/fetch-ldraw.sh` downloads the full library into `~/Library/Caches`. It's gitignored, and tests that use it
   are tagged `.requiresFullLibrary`.
 
-**Crash-safe expected failures.** Spike Swift Testing exit tests (`#expect(processExitsWith:)`) from the hosted
-bundle. If they don't work there, add a helper that runs the case in a child process.
+**Crash-safe expected failures.** Swift Testing exit tests (`#expect(processExitsWith:)`) **work from the hosted
+bundle** (spike passed 2026-11-14, L25; kept as `HarnessExitTests`). The child process relaunches the app in test
+mode, and app code is reachable from it.
 
 **Scripts**
 - `scripts/test.sh` (also writes per-class coverage and checks the tier targets in §5 P2)
