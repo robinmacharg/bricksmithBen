@@ -9,8 +9,8 @@
 //==============================================================================
 #import "LDrawDragHandle.h"
 
-#import OPEN_GL_HEADER
-#import OPEN_GL_EXT_HEADER
+#import <OpenGL/gl.h>
+#import <OpenGL/glext.h>
 #import <stdlib.h>
 
 #import "LDrawUtilities.h"

@@ -12,7 +12,7 @@
 #ifndef _MatrixMath_
 #define _MatrixMath_
 
-#include OPEN_GL_HEADER
+#include <OpenGL/gl.h>
 #include <stdbool.h>
 
 #pragma mark Data Types

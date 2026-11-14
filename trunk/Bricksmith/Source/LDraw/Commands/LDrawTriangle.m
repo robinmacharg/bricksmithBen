@@ -20,7 +20,7 @@
 //==============================================================================
 #import "LDrawTriangle.h"
 
-#import OPEN_GL_HEADER
+#import <OpenGL/gl.h>
 #import <string.h>
 
 #import "LDrawColor.h"

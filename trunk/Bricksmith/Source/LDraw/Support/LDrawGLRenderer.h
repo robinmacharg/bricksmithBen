@@ -8,7 +8,7 @@
 //
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import OPEN_GL_HEADER
+#import <OpenGL/gl.h>
 
 #import "MacLDraw.h"
 #import "ColorLibrary.h"

@@ -9,7 +9,8 @@
 //  Copyright (c) 2005. All rights reserved.
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import OPEN_GL_HEADER
+#import "BricksmithBuildConfig.h"   // dispatch_group_t (see USE_BLOCKS)
+#import <OpenGL/gl.h>
 
 #import "ColorLibrary.h"
 #import "LDrawDirective.h"
