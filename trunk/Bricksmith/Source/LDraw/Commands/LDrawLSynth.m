@@ -910,6 +910,13 @@
     NSString       *lsynthPath;
     if ([executablePath length] == 0 || [executablePath isMatchedByRegex:@"^\\s+$"]) {
         lsynthPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"lsynthcp"];
+
+        // The built-in lsynthcp looks for lsynth.mpd beside its executable unless
+        // told otherwise. Data files can't live in Contents/MacOS of a signed app,
+        // so point it explicitly at the identical copy in Resources.
+        if ([configPath length] == 0 || [configPath isMatchedByRegex:@"^\\s+$"]) {
+            configPath = [[NSBundle mainBundle] pathForResource:@"lsynth" ofType:@"mpd"];
+        }
     }
     else {
         lsynthPath = executablePath;
