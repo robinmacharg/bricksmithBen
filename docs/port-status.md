@@ -112,7 +112,7 @@ their own port phase.
 | `Bricksmith/Source/LDraw/Files/LDrawModel.m` | 1608 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Files/LDrawStep.m` | 1168 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawBDPAllocator.m` | 150 | ARC | P8 | todo |
-| `Bricksmith/Source/LDraw/Renderer/LDrawDataStream.m` | 196 | (not compiled) | — | n/a (decision 7) |
+| `Bricksmith/Source/LDraw/Renderer/LDrawDataStream.m` | 196 | (not compiled) | — | deleted in P0 (decision 7) |
 | `Bricksmith/Source/LDraw/Renderer/LDrawDisplayList.m` | 1443 | ARC | P8 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawShaderLoader.m` | 112 | ARC | P8 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawShaderRenderer.m` | 713 | ARC | P8 | todo |
