@@ -53,3 +53,9 @@ section. Each entry says what happened and what to do instead.
   counts and class hierarchies in documents that had already been reviewed once.
 - **L18. If a file was changed with shell tools, `Read` it before using the `Edit` tool on it.** Otherwise the
   edit is refused.
+- **L19. Swap spike PASSED (2026-11-14, branch `spike/20261114-swap-transformer`).**
+  - What was ported: `TransformerIntMinus1` → Swift `@objc(TransformerIntMinus1)`, with its `.h`/`.m` deleted and the
+    ObjC caller (an MRC file) switched to `#import "Bricksmith-Swift.h"`.
+  - Result: the unchanged test file compiled and passed.
+  - Takeaways: the single bridging header plus `@testable import` works. ValueTransformers registered by name
+    keep working from xibs.
