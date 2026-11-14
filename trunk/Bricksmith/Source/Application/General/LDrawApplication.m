@@ -547,6 +547,33 @@
 
 // MARK: - SPUUpdaterDelegate (Sparkle)
 
+//========== updater:mayPerformUpdateCheck:error: ==============================
+//
+// Purpose:		Debug builds must never update themselves from the live
+//				appcast (which would replace a development build with the
+//				released app). Refusing here writes no user defaults, so
+//				Release builds on the same machine are unaffected.
+//
+//==============================================================================
+- (BOOL) updater:(SPUUpdater *)updater
+mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
+		   error:(NSError * __autoreleasing *)error
+{
+#if DEBUG
+	if(error != NULL)
+	{
+		*error = [NSError errorWithDomain:SUSparkleErrorDomain
+									 code:SUNoUpdateError
+								 userInfo:@{NSLocalizedDescriptionKey:
+											@"Update checks are disabled in Debug builds."}];
+	}
+	return NO;
+#else
+	return YES;
+#endif
+}//end updater:mayPerformUpdateCheck:error:
+
+
 //========== updaterWillRelaunchApplication: ===================================
 //
 // Purpose:		Sparkle is about to install an update and relaunch.

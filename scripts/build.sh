@@ -4,7 +4,8 @@
 # Usage:
 #   scripts/build.sh                      # Debug build; fail if any warning is not in the baseline
 #   scripts/build.sh --release            # Release configuration
-#   scripts/build.sh --update-baseline    # build, then overwrite docs/warnings-baseline.txt
+#   scripts/build.sh --update-baseline    # build, then overwrite the baseline
+#                                         # (docs/warnings-baseline.txt; Release: docs/warnings-baseline-release.txt)
 #
 # Warnings are compared as de-duplicated text with repo-relative paths and with line/column numbers removed,
 # so that edits which only move code don't count as new warnings.
@@ -19,7 +20,6 @@ SCHEME=Bricksmith
 CONFIGURATION=Debug
 UPDATE_BASELINE=0
 BUILD_DIR="$REPO_ROOT/build"
-BASELINE="$REPO_ROOT/docs/warnings-baseline.txt"
 
 for arg in "$@"; do
 	case $arg in
@@ -28,6 +28,13 @@ for arg in "$@"; do
 		*) print -u2 "unknown argument: $arg"; exit 2 ;;
 	esac
 done
+
+# Each configuration has its own baseline: optimised builds report extra diagnostics (e.g. -Wuninitialized).
+if [[ $CONFIGURATION == Debug ]]; then
+	BASELINE="$REPO_ROOT/docs/warnings-baseline.txt"
+else
+	BASELINE="$REPO_ROOT/docs/warnings-baseline-${(L)CONFIGURATION}.txt"
+fi
 
 mkdir -p "$BUILD_DIR"
 LOG="$BUILD_DIR/build.log"
