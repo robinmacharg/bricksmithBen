@@ -207,8 +207,6 @@
 		2BF2E3100AB0FC840026D5DB /* MinifigureDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E30E0AB0FC840026D5DB /* MinifigureDialogController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2BF2E3150AB0FCAB0026D5DB /* MLCadIni.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3110AB0FCAB0026D5DB /* MLCadIni.h */; };
 		2BF2E3160AB0FCAB0026D5DB /* MLCadIni.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
-		2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
 		737726E8FC931A7828531671 /* ComputationalGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 73772C8BCC3A6435E0AE9103 /* ComputationalGeometry.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7377276DD2BFF116BEE36F0A /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 73772F01F06AC293E3F650C4 /* libicucore.dylib */; };
@@ -218,6 +216,7 @@
 		7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		92F5CB502FA01A486214EF3F /* TransformerIntMinus1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316558DA0E582EB8E70BFB12 /* TransformerIntMinus1.swift */; };
 		9506E0E0189BD6480006CE9C /* lsynth.mpd in Resources */ = {isa = PBXBuildFile; fileRef = 95D893AD1655334500AA055B /* lsynth.mpd */; };
 		9506E0F018A3F4130006CE9C /* SearchPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9506E0EE18A3F4130006CE9C /* SearchPanelController.h */; };
 		9506E0F118A3F4130006CE9C /* SearchPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9506E0EF18A3F4130006CE9C /* SearchPanelController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -524,8 +523,7 @@
 		2BF2E30E0AB0FC840026D5DB /* MinifigureDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MinifigureDialogController.m; sourceTree = "<group>"; };
 		2BF2E3110AB0FCAB0026D5DB /* MLCadIni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCadIni.h; sourceTree = "<group>"; };
 		2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCadIni.m; sourceTree = "<group>"; };
-		2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerIntMinus1.h; sourceTree = "<group>"; };
-		2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerIntMinus1.m; sourceTree = "<group>"; };
+		316558DA0E582EB8E70BFB12 /* TransformerIntMinus1.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TransformerIntMinus1.swift; sourceTree = "<group>"; };
 		32DBCF750370BD2300C91783 /* Mac LDraw_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mac LDraw_Prefix.pch"; sourceTree = "<group>"; };
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -964,8 +962,6 @@
 				2A37F4B0FDCFA73011CA2CEA /* main.m */,
 				0BA24BE80EFF2A6500BF9915 /* StringUtilities.h */,
 				0BA24BE90EFF2A6500BF9915 /* StringUtilities.m */,
-				2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */,
-				2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */,
 				7377248D1A5C278143C65104 /* RegexKitLite.h */,
 				737725695C55F263D18C33B9 /* RegexKitLite.m */,
 			);
@@ -1090,6 +1086,7 @@
 			children = (
 				9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */,
 				652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */,
+				316558DA0E582EB8E70BFB12 /* TransformerIntMinus1.swift */,
 			);
 			name = Swift;
 			path = Source/Swift;
@@ -1164,7 +1161,6 @@
 				2BF2E3050AB0FC5E0026D5DB /* RotationPanelController.h in Headers */,
 				2BF2E30F0AB0FC840026D5DB /* MinifigureDialogController.h in Headers */,
 				2BF2E3150AB0FCAB0026D5DB /* MLCadIni.h in Headers */,
-				2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */,
 				0BDC146F0B9D0502001D1FF1 /* PartBrowserPanelController.h in Headers */,
 				0B2DD14A0CD810DC0093E8E5 /* PartBrowserTableView.h in Headers */,
 				0B0B6CCD2787D87800F6E225 /* PartCatalogBuilder.h in Headers */,
@@ -1433,7 +1429,6 @@
 				2BF2E3060AB0FC5E0026D5DB /* RotationPanelController.m in Sources */,
 				2BF2E3100AB0FC840026D5DB /* MinifigureDialogController.m in Sources */,
 				2BF2E3160AB0FCAB0026D5DB /* MLCadIni.m in Sources */,
-				2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */,
 				0BDC14700B9D0502001D1FF1 /* PartBrowserPanelController.m in Sources */,
 				0B2DD14B0CD810DC0093E8E5 /* PartBrowserTableView.m in Sources */,
 				0B2DD14F0CD810F20093E8E5 /* BezierPathCategory.m in Sources */,
@@ -1479,6 +1474,7 @@
 				D6191B9E17F277B600B5DF44 /* GLMatrixMath.c in Sources */,
 				0B0B6CCE2787D87800F6E225 /* PartCatalogBuilder.m in Sources */,
 				DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */,
+				92F5CB502FA01A486214EF3F /* TransformerIntMinus1.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,7 +28,7 @@
 #import "LSynthConfiguration.h"
 #import "PreferencesDialogController.h"
 #import "ToolPalette.h"
-#import "TransformerIntMinus1.h"
+#import "Bricksmith-Swift.h"
 #import "MLCadIni.h"
 
 @implementation LDrawApplication
