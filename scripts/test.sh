@@ -26,8 +26,10 @@ LOG="$BUILD_DIR/test.log"
 DOMAIN=com.AllenSmith.Bricksmith
 
 ONLY=()
+UI=0
 while (( $# )); do
 	case $1 in
+		--ui)   UI=1; shift ;;
 		--only) ONLY+=("-only-testing:$2"); shift 2 ;;
 		*) print -u2 "unknown argument: $1"; exit 2 ;;
 	esac
@@ -57,6 +59,16 @@ xcodebuild test -project "$PROJECT" -scheme Bricksmith -configuration Debug \
 	-derivedDataPath "$BUILD_DIR/DerivedData" -resultBundlePath "$RESULT" \
 	"${ONLY[@]}" >"$LOG" 2>&1
 STATUS=$?
+if (( UI && STATUS == 0 )); then
+	# UI tests drive the real app in a separate process (first run triggers macOS automation /
+	# accessibility permission prompts). Separate scheme so the default run stays prompt-free.
+	print "UI testing…"
+	rm -rf "$BUILD_DIR/UITestResults.xcresult"
+	xcodebuild test -project "$PROJECT" -scheme Bricksmith-UITests -configuration Debug \
+		-derivedDataPath "$BUILD_DIR/DerivedData" -resultBundlePath "$BUILD_DIR/UITestResults.xcresult" \
+		>>"$LOG" 2>&1
+	STATUS=$?
+fi
 set -e
 
 snapshot_defaults "$BUILD_DIR/defaults-after.plist"

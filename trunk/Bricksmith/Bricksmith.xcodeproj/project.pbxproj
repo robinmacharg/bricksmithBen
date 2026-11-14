@@ -211,6 +211,7 @@
 		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
 		2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
+		5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */; };
 		737726E8FC931A7828531671 /* ComputationalGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 73772C8BCC3A6435E0AE9103 /* ComputationalGeometry.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7377276DD2BFF116BEE36F0A /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 73772F01F06AC293E3F650C4 /* libicucore.dylib */; };
@@ -260,6 +261,7 @@
 		E5FCCD3318DC0660E5479B46 /* HarnessFixtureLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */; };
 		EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */; };
+		F40CAC2930A7FE9230E2FC7D /* LaunchSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -276,6 +278,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AMSProgressBar;
+		};
+		6AFF5A9AD129844AF6F2ED07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = Bricksmith;
 		};
 		7DC1F46DF5EF14164015FB1C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -537,6 +546,7 @@
 		2F5BCDB29827F846AE619974 /* BricksmithBuildConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BricksmithBuildConfig.h; sourceTree = "<group>"; };
 		32DBCF750370BD2300C91783 /* Mac LDraw_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mac LDraw_Prefix.pch"; sourceTree = "<group>"; };
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSmokeUITests.swift; sourceTree = "<group>"; };
 		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessSmokeTests.swift; sourceTree = "<group>"; };
 		652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Bricksmith-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -550,6 +560,7 @@
 		73772D9444E1E3B92321011F /* InspectionLSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectionLSynth.h; sourceTree = "<group>"; };
 		73772E30A6856B15E73A951A /* ComputationalGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComputationalGeometry.h; sourceTree = "<group>"; };
 		73772F01F06AC293E3F650C4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		8D15AC370486D014006FF6A4 /* Bricksmith.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricksmith.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FixtureLibrary.swift; sourceTree = "<group>"; };
@@ -594,6 +605,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		46D422FFBC4B335598F8AA46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		539C5283BDE2602FDFD2AB90 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -936,6 +955,7 @@
 			children = (
 				8D15AC370486D014006FF6A4 /* Bricksmith.app */,
 				09E3A83323C43757A3923438 /* BricksmithTests.xctest */,
+				81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1078,6 +1098,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CDC3495388581A874FAF32BA /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */,
+			);
+			name = UI;
+			path = UI;
+			sourceTree = "<group>";
+		};
 		D6EDB97F164DEB0000B4062B /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1109,6 +1138,7 @@
 			children = (
 				0B7D7DD7F5AABF51BA5EBBA4 /* Unit */,
 				7890E7BBA98A177A0B370C11 /* Support */,
+				CDC3495388581A874FAF32BA /* UI */,
 			);
 			name = Tests;
 			path = Tests;
@@ -1284,6 +1314,24 @@
 			productReference = 8D15AC370486D014006FF6A4 /* Bricksmith.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FB6FF4844B23E9E4B7442EB0 /* BricksmithUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 59EDA9FDD37AC00DB70E8120 /* Build configuration list for PBXNativeTarget "BricksmithUITests" */;
+			buildPhases = (
+				C7395F41C607619F10766E6E /* Sources */,
+				46D422FFBC4B335598F8AA46 /* Frameworks */,
+				F4637C16F0F3E890357241D6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1DEC21942CB4374717E028A1 /* PBXTargetDependency */,
+			);
+			name = BricksmithUITests;
+			productName = BricksmithUITests;
+			productReference = 81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1319,6 +1367,7 @@
 			targets = (
 				8D15AC270486D014006FF6A4 /* Bricksmith */,
 				2AEE1AF7413CD10EFC03AD83 /* BricksmithTests */,
+				FB6FF4844B23E9E4B7442EB0 /* BricksmithUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1389,6 +1438,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E9C9FFC9E7631D8E8A2F7EE8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4637C16F0F3E890357241D6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1517,9 +1573,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C7395F41C607619F10766E6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F40CAC2930A7FE9230E2FC7D /* LaunchSmokeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1DEC21942CB4374717E028A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Bricksmith;
+			target = 8D15AC270486D014006FF6A4 /* Bricksmith */;
+			targetProxy = 6AFF5A9AD129844AF6F2ED07 /* PBXContainerItemProxy */;
+		};
 		2BB5976009FEFD2E0077A885 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AMSProgressBar;
@@ -1887,6 +1957,40 @@
 			};
 			name = Release;
 		};
+		60609AF2A9A511D9BBBE3385 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Bricksmith;
+			};
+			name = Release;
+		};
+		B79D08A3546883FB5866829F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Bricksmith;
+			};
+			name = Debug;
+		};
 		D0C4D934D079D146A70B156C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1943,6 +2047,15 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		59EDA9FDD37AC00DB70E8120 /* Build configuration list for PBXNativeTarget "BricksmithUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60609AF2A9A511D9BBBE3385 /* Release */,
+				B79D08A3546883FB5866829F /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D1934F15560CA825FEFE65E3 /* Build configuration list for PBXNativeTarget "BricksmithTests" */ = {
 			isa = XCConfigurationList;

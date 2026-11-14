@@ -425,7 +425,15 @@
 	[sharedGLContext makeCurrentContext];
 
 	// Tests inject their own LDraw library; never touch the user's.
-	if([LDrawApplication isRunningTests] == NO)
+	// Unit tests set it in-process; UI tests (separate process) pass it in
+	// the environment as BRICKSMITH_TEST_LDRAW_PATH.
+	if([LDrawApplication isRunningTests] == YES)
+	{
+		NSString *testLibrary = [[[NSProcessInfo processInfo] environment] objectForKey:@"BRICKSMITH_TEST_LDRAW_PATH"];
+		if(testLibrary != nil)
+			[[LDrawPaths sharedPaths] setPreferredLDrawPath:testLibrary];
+	}
+	else
 	{
 		//Try to define an LDraw path before the application even finishes starting.
 		[self findLDrawPath];
