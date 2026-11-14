@@ -28,10 +28,15 @@ Read these first:
 - No NSException may unwind through Swift. No `init` may return a substitute object. Swift can't see ObjC ivars.
   P4 removes all three patterns before any model class is ported. The plan's §6 recipe has a grep checklist for them.
 - Tests must never touch real user defaults or the developer's LDraw library. Use the test-mode launch guard,
-  `-LDrawPath` launch arguments, and a fixture library copied to a temp directory.
-- C stays C: `MatrixMath.c`, `GLMatrixMath.c`, `MeshSmooth.c` and LSynth.
+  `+[LDrawPaths setOverrideLDrawPath:]` (the defaults key is `"LDraw Path"`, with a space), and a fixture library
+  copied to a temp directory. `scripts/test.sh` fails if the real defaults change.
+- C stays C in this plan: `MatrixMath.c`, `GLMatrixMath.c`, `MeshSmooth.c` and LSynth. C → Swift is a **recorded
+  follow-on goal** (plan §9), and so is Metal.
+- Steps marked **🧑 HUMAN GATE** in the plan need a person's sign-off. Stop and ask; don't sign off yourself.
+- Coverage before porting: tier A (model and format) ≥ 90%, tier B (libraries and app logic) ≥ 80%, plus the
+  mutation smoke test (plan §5 P2).
 - Don't change preference key strings, NSCoding keys, or `write` output. The golden tests enforce this.
 - A port commit never edits goldens.
 - **Don't fix bugs during the port.** Log them in [docs/KNOWN-BUGS.md](docs/KNOWN-BUGS.md) and add a test that asserts
   the correct behaviour, wrapped in `withKnownIssue("BUG-nnn: …")`. Fixes happen after the port, in phase P12.
-- OpenGL stays. Metal is a later project. Keep GL behind the `LDrawRenderer` / `RenderBackend` seam.
+- OpenGL stays. Keep GL behind the `LDrawRenderer` / `RenderBackend` seam.

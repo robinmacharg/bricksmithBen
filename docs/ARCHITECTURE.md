@@ -13,7 +13,7 @@ This document describes the code **as it is**. For where it is going, see
 |---|---|
 | `trunk/Bricksmith/Bricksmith.xcodeproj` | The only app project. It has one native target, `Bricksmith`, and no test target. |
 | `trunk/Bricksmith/Source/` | All app source (see below). |
-| `trunk/Bricksmith/Resources/` | Xibs (`Interface/English.lproj`, 26 files), `LDConfig.ldr` (colours), `MLCad.ini` (minifig and LSynth lists), `Shaders/test.glsl`, and a few unofficial LSynth parts under `LDraw/Unofficial/parts`. |
+| `trunk/Bricksmith/Resources/` | Xibs (`Interface/English.lproj`, 25 files, plus `en.lproj/SearchPanel.xib`), `LDConfig.ldr` (colours), `MLCad.ini` (minifig and LSynth lists), `Shaders/test.glsl`, and a few unofficial LSynth parts under `LDraw/Unofficial/parts`. |
 | `trunk/AMSProgressBar/` | Small framework sub-project (progress sheet). It uses a legacy `.nib` bundle. |
 | `trunk/ThirdParty/LSynth/` | About 5.7k lines of C. Builds the `lsynthcp` CLI, which is copied into the app bundle and run with `NSTask`. |
 | `trunk/ThirdParty/Sparkle/` | Prebuilt Sparkle **2.0.0**. Uses the modern `SPUStandardUpdaterController` API. |
@@ -26,7 +26,7 @@ This document describes the code **as it is**. For where it is going, see
 ```
 Source/
   Other/          prefix header (.pch), MacLDraw.h (≈120 #define constants), RegexKitLite, main.m, MLCadIni
-  Categories/     NSString, NSUserDefaults, NSView, NSWindow, NSTableView, NSBezierPath, NSEvent categories
+  Categories/     NSString, NSUserDefaults, NSView, NSWindow, NSTableView, NSBezierPath categories (the NSEvent category lives in `Widgets/LDrawGLView.h`)
   LDraw/
     Support/      LDrawDirective (root class), LDrawUtilities, ColorLibrary, PartLibrary, PartCatalogBuilder,
                   LDrawPaths, ModelManager, MatrixMath.c, GLMatrixMath.c, LDrawGLRenderer, LDrawGLCamera …
@@ -49,7 +49,8 @@ Each line of an LDraw file becomes an `LDrawDirective`. Line type codes are: 0 m
 ```
 LDrawDirective (NSObject; NSCoding, NSCopying, LDrawObservable)
 ├─ LDrawContainer
-│  ├─ LDrawFile ── LDrawModel ── LDrawMPDModel     (a file holds one or more models)
+│  ├─ LDrawFile                                     (holds one or more models)
+│  ├─ LDrawModel ── LDrawMPDModel                   (MPD submodel; ── = "is subclassed by")
 │  ├─ LDrawStep                                     (a model holds steps; a step holds directives)
 │  ├─ LDrawTexture                                  (!TEXMAP block)
 │  └─ LDrawLSynth                                   (LSynth hose/band block)

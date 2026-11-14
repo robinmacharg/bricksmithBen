@@ -13,11 +13,22 @@ unchanged against the new code.
 ## Running *(planned)*
 
 ```zsh
-scripts/build.sh               # build the app; prints the warning count and compares it with docs/warnings-baseline.txt
-scripts/test.sh                # unit and characterisation tests, with a coverage summary
+scripts/build.sh               # build; diff de-duplicated warning text against docs/warnings-baseline.txt
+scripts/test.sh                # unit + characterisation tests; per-class coverage vs tier targets; defaults diff
 scripts/test.sh --ui           # also run the XCUITest smoke tests
-scripts/fetch-ldraw.sh         # optional: download the full LDraw library to ~/Library/Caches (never committed)
+scripts/perf-compare.sh        # Release perf scheme vs docs/perf-baseline.json (≤ +20%; a skipped test fails)
+scripts/mutation-smoke.sh      # apply each seeded mutation in turn; every one must make a test fail
+scripts/fetch-ldraw.sh         # optional: full LDraw library into ~/Library/Caches (never committed)
+RECORD_GOLDENS=1 scripts/test.sh   # regenerate goldens (deliberate only; a person reviews the diff)
 ```
+
+## Coverage targets
+- **Tier A ≥ 90%:** model and format classes.
+- **Tier B ≥ 80%:** libraries and app logic.
+- **Tier C:** every model-changing document action is automated or on the manual-only list.
+
+Tiers are defined in plan §5 P2. Any code left uncovered in tiers A and B is listed, with a reason, in the
+uncovered-line ledger in [port-status.md](port-status.md).
 
 Tests that need the full LDraw library are tagged `.requiresFullLibrary`, and they skip themselves when it
 isn't present.
@@ -39,12 +50,23 @@ isn't present.
   The commit that changes them must explain why. A port commit must never change goldens.
 - **Known bugs** are recorded with `withKnownIssue`, not deleted or skipped. They are listed below.
 - **Never touch real user preferences or libraries.**
-  - Tests run hosted in the app. A test-mode guard (`XCTestConfigurationFilePath`) skips launch side effects:
-    LDraw-path discovery, catalog load, 3Dconnexion and Sparkle.
-  - The fixture library path is passed as a launch argument (`-LDrawPath …`).
-  - `Fixtures/ldraw-mini` is copied to a temp directory for each run, because the catalog builder writes `parts.plist` into it.
-- **Singletons:** suites that touch `ColorLibrary`, `PartLibrary`, `LDrawPaths`, `ModelManager` or `MLCadIni` call
-  `+resetForTesting` and are marked `.serialized`.
+  - Tests run hosted in the app. When `XCTestConfigurationFilePath` is set, the app launches in test mode:
+    - **It keeps** the shared GL context and the Inspector, because documents need them.
+    - **It skips** LDraw-path discovery, the catalog load, 3Dconnexion, the part browser and LSynth menu setup,
+      Sparkle, and every defaults write at quit.
+  - The fixture library is injected with `+[LDrawPaths setOverrideLDrawPath:]`. Launch arguments aren't used,
+    because the real defaults key is `"LDraw Path"`, which contains a space.
+  - `Fixtures/ldraw-mini` is copied to a temp directory for each run, because the catalog builder writes
+    `parts.plist` into it.
+  - `scripts/test.sh` diffs the app's real defaults before and after the run, and fails on any change.
+- **Singletons and statics:**
+  - Suites that touch `ColorLibrary`, `PartLibrary`, `LDrawPaths`, `ModelManager`, `MLCadIni` or the
+    `LDrawUtilities` statics call `+resetForTesting` and are marked `.serialized`.
+  - The column setting and `defaultAuthor` are **pinned** per test. In the real app the author comes from
+    `NSFullUserName()`; in tests it's fixed.
+- **Goldens compare bytes** of `dataOfType:` (CRLF, UTF-8). `.gitattributes` stops git rewriting line endings.
+  `Localizable.strings` is part of the output contract, so a port commit must not change it.
+- **Accessibility identifiers** may be added to xibs for XCUITest. That doesn't count as a behaviour change.
 - **Document tests** load the document's nib through `makeWindowControllers` without showing the window, then
   drive edits by selecting rows in the outline view. Edit actions read their selection from there.
 - **Performance tests** run only in the Release `Bricksmith-Perf` scheme. Debug timings are meaningless for
@@ -60,8 +82,21 @@ Bugs live in **[KNOWN-BUGS.md](KNOWN-BUGS.md)**. Don't fix them during the port.
 
 Fixes happen after the port, in P12.
 
+## Manual-only list *(fill in during P2)*
+These are behaviours that can't reasonably be automated, each with a reason. **🧑 HUMAN GATE** at the end of P2:
+confirm the list is complete.
+
+| Feature or action | Why it's manual | Covered by checklist step |
+|---|---|---|
+| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | (add) |
+| 3D-view mouse, trackpad and marquee interaction | GL view interaction | 3, 8 |
+| 3Dconnexion | Needs the hardware | 13 |
+
+*(There is no printing feature in the app, so there's nothing to test.)*
+
 ## Manual smoke checklist
-Run this at every phase exit gate, using a Debug build, for the things automation covers poorly.
+**🧑 HUMAN GATE.** Run this at every phase exit gate, using a Debug build and the **full LDraw library**, for the
+things automation covers poorly. Record the sign-off in port-status.md.
 
 1. Launch the app. There are no error dialogs, and the LDraw folder is found (or the folder prompt works).
 2. Open `trunk/Test Data/Good/spider gearbox v2 opens.ldr`. The model renders.

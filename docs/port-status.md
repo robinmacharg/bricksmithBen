@@ -8,6 +8,8 @@ file's status. Phase codes refer to [swift-port-plan.md](swift-port-plan.md) §5
 - `tests` (characterisation tests exist and meet target)
 - `ported` (Swift, `.m` deleted)
 - `n/a` (stays C, or is deleted)
+- `stays-objc (accepted)`: porting stalled. Record the reason and the sign-off, and remember that its ancestors are
+  blocked too.
 
 **Memory column:** the file's memory management at the 2026-11-14 snapshot (`ARC`, `MRC`, or `C`). For
 `AMSProgressBar` the column is unreliable, because that is a separate project.
@@ -15,7 +17,26 @@ file's status. Phase codes refer to [swift-port-plan.md](swift-port-plan.md) §5
 **MRC files** are all converted to ARC in **P3**, which comes after the characterisation tests, and before
 their own port phase.
 
-**Coverage column:** fill in from `scripts/test.sh` once P1 lands.
+**Coverage:** once P1 lands, add a coverage column populated from `scripts/test.sh`. The tier targets are in plan
+§5 P2: A ≥ 90%, B ≥ 80%.
+
+## Gate sign-offs (🧑 human gates)
+
+| Phase | Gate | Date | Initials | Notes |
+|---|---|---|---|---|
+| | | | | |
+
+## Accepted risks and coverage exceptions
+
+| Class | Tier | Coverage | Reason | Signed off |
+|---|---|---|---|---|
+| | | | | |
+
+## Uncovered-line ledger (tiers A and B)
+
+| File:lines | Why it's uncovered (GL error path, dead code, can't-happen…) |
+|---|---|
+| | |
 
 ## Totals at the 2026-11-14 snapshot
 
@@ -25,10 +46,10 @@ their own port phase.
 | P5 utilities and categories | 10 | 1,459 |
 | P6 model | 19 | 15,887 |
 | P7 libraries and managers | 8 | 4,748 |
-| P8 renderer (GL) | 7 | 6,219 |
+| P8 renderer (GL) | 6 | 6,023 |
 | P9 UI (incl. AMSProgressBar) | 46 | 18,364 |
 | P10 document and app | 4 | 7,754 |
-| stays C | 5 | 5,515 |
+| stays C (C → Swift is a follow-on goal) | 5 | 5,515 |
 
 ## Files
 
@@ -91,7 +112,7 @@ their own port phase.
 | `Bricksmith/Source/LDraw/Files/LDrawModel.m` | 1608 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Files/LDrawStep.m` | 1168 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawBDPAllocator.m` | 150 | ARC | P8 | todo |
-| `Bricksmith/Source/LDraw/Renderer/LDrawDataStream.m` | 196 | ARC | P8 | todo |
+| `Bricksmith/Source/LDraw/Renderer/LDrawDataStream.m` | 196 | (not compiled) | — | n/a (decision 7) |
 | `Bricksmith/Source/LDraw/Renderer/LDrawDisplayList.m` | 1443 | ARC | P8 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawShaderLoader.m` | 112 | ARC | P8 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawShaderRenderer.m` | 713 | ARC | P8 | todo |
