@@ -1,0 +1,9 @@
+# LDraw files and test goldens must be stored byte-for-byte: Bricksmith writes CRLF line
+# endings, and inputs may carry a UTF-8 BOM or legacy encodings. Never let git normalise them.
+*.ldr   -text
+*.mpd   -text
+*.dat   -text
+*.LDR   -text
+*.MPD   -text
+*.DAT   -text
+trunk/Fixtures/golden/** binary
