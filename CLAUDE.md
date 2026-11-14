@@ -11,8 +11,10 @@ Read these first:
 ## Toolchain
 - Use only the Xcode 26.3 built-in Swift (6.2.4). No external toolchains or swiftly.
 - Project: `trunk/Bricksmith/Bricksmith.xcodeproj`, scheme `Bricksmith`.
-- Build: `xcodebuild -project trunk/Bricksmith/Bricksmith.xcodeproj -scheme Bricksmith -configuration Debug -derivedDataPath <scratch> build`.
-  The `scripts/build.sh` and `scripts/test.sh` wrappers will replace this once P0 and P1 land.
+- Build: `scripts/build.sh` (Debug) or `scripts/build.sh --release`. These always do a clean build into
+  `build/DerivedData`, and fail on any compiler warning that isn't in `docs/warnings-baseline*.txt`.
+  - Re-record a baseline with `--update-baseline`, but only deliberately, and explain why in the commit.
+  - Tests: `scripts/test.sh` (arrives in P1).
 - The shell is zsh, so quote globs and paths that contain spaces (`"trunk/Test Data"`).
 
 ## Versioning
