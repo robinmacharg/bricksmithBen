@@ -51,3 +51,25 @@
 #import "PartCatalogBuilder.h"
 #import "PartLibrary.h"
 #import "PartReport.h"
+
+// --- Constants, categories and utilities (group 2) ---
+#import "MacLDraw.h"
+#import "BezierPathCategory.h"
+#import "StringCategory.h"
+#import "TableViewCategory.h"
+#import "UserDefaultsCategory.h"
+#import "WindowCategory.h"
+#import "BricksmithUtilities.h"
+#import "MLCadIni.h"
+#import "StringUtilities.h"
+
+// --- Application classes driven by characterisation tests (group 2) ---
+#import "LDrawApplication.h"
+#import "LDrawDocument.h"
+#import "PartLibraryController.h"
+#import "LSynthConfiguration.h"
+#import "MinifigureDialogController.h"
+#import "PartBrowserDataSource.h"
+#import "RelatedParts.h"
+#import "SearchPanelController.h"
+#import "PieceCountPanel.h"

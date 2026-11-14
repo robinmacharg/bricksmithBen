@@ -59,3 +59,9 @@ section. Each entry says what happened and what to do instead.
   - Result: the unchanged test file compiled and passed.
   - Takeaways: the single bridging header plus `@testable import` works. ValueTransformers registered by name
     keep working from xibs.
+- **L20. Gate on `scripts/build.sh`'s exit status. Don't hand-roll a check.** I once printed a `comm` count and
+  committed anyway, even though there was one new warning. → Use `scripts/build.sh && git commit …` (with
+  `pipefail`).
+- **L21. Adding a header to the bridging header can surface its deprecations again** (Swift's Clang importer
+  compiles it in a new context). An example is `NSDrawer` in `LDrawDocument.h`. → Expected. Re-record the baseline
+  deliberately and say so in the commit.
