@@ -215,6 +215,7 @@
 		73772B77F842475786994924 /* InspectionLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 737728C3A3DF6166BE9183ED /* InspectionLSynth.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		73772E2FDEFC3AB2B54D58D3 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 737725695C55F263D18C33B9 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		73772F8E91836860E4330407 /* LDrawLSynthDirective.m in Sources */ = {isa = PBXBuildFile; fileRef = 737720E867742FB944EB62C7 /* LDrawLSynthDirective.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		9506E0E0189BD6480006CE9C /* lsynth.mpd in Resources */ = {isa = PBXBuildFile; fileRef = 95D893AD1655334500AA055B /* lsynth.mpd */; };
@@ -251,6 +252,8 @@
 		D6EDBC251650B9E200B4062B /* LDrawDisplayList.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EDBC231650B9E200B4062B /* LDrawDisplayList.h */; };
 		D6EDBC261650B9E200B4062B /* LDrawDisplayList.m in Sources */ = {isa = PBXBuildFile; fileRef = D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D6FC72131604EBB8005A404E /* LDrawFastSet.h in Headers */ = {isa = PBXBuildFile; fileRef = D6FC72121604EBB8005A404E /* LDrawFastSet.h */; };
+		DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */; };
+		EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -267,6 +270,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AMSProgressBar;
+		};
+		7DC1F46DF5EF14164015FB1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = Bricksmith;
 		};
 		95D893A61655325100AA055B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -311,6 +321,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09E3A83323C43757A3923438 /* BricksmithTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B040CBD164F526D000CA89A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../ThirdParty/Sparkle/Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		0B040CD6164F5511000CA89A /* Bricksmith_Sparkle_signature_public.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bricksmith_Sparkle_signature_public.pem; sourceTree = "<group>"; };
 		0B04E9481093BB4200E201EE /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ColorPanel.xib; sourceTree = "<group>"; };
@@ -517,6 +528,9 @@
 		2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerIntMinus1.m; sourceTree = "<group>"; };
 		32DBCF750370BD2300C91783 /* Mac LDraw_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mac LDraw_Prefix.pch"; sourceTree = "<group>"; };
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessSmokeTests.swift; sourceTree = "<group>"; };
+		652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Bricksmith-Bridging-Header.h"; sourceTree = "<group>"; };
 		737720E867742FB944EB62C7 /* LDrawLSynthDirective.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawLSynthDirective.m; sourceTree = "<group>"; };
 		73772480B291C29D1B0D13B4 /* LDrawMovableDirective.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawMovableDirective.h; sourceTree = "<group>"; };
 		7377248D1A5C278143C65104 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
@@ -539,6 +553,7 @@
 		95D893B716555F3E00AA055B /* LSynthConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSynthConfiguration.m; sourceTree = "<group>"; };
 		95D893C816569CFD00AA055B /* LDrawLSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawLSynth.h; sourceTree = "<group>"; };
 		95D893C916569CFD00AA055B /* LDrawLSynth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawLSynth.m; sourceTree = "<group>"; };
+		9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		D608724616ED61F500828B4E /* MeshSmooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshSmooth.h; sourceTree = "<group>"; };
 		D608724716ED61F500828B4E /* MeshSmooth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MeshSmooth.c; sourceTree = "<group>"; };
 		D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawGLCamera.h; sourceTree = "<group>"; };
@@ -566,6 +581,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		539C5283BDE2602FDFD2AB90 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D15AC330486D014006FF6A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -810,6 +833,15 @@
 			path = Source/Widgets;
 			sourceTree = "<group>";
 		};
+		0B7D7DD7F5AABF51BA5EBBA4 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */,
+			);
+			name = Unit;
+			path = Unit;
+			sourceTree = "<group>";
+		};
 		0BF729A608AD849300E3DA53 /* Document */ = {
 			isa = PBXGroup;
 			children = (
@@ -886,6 +918,7 @@
 			isa = PBXGroup;
 			children = (
 				8D15AC370486D014006FF6A4 /* Bricksmith.app */,
+				09E3A83323C43757A3923438 /* BricksmithTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -901,6 +934,8 @@
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				2BB5975809FEFD250077A885 /* AMSProgressBar.xcodeproj */,
 				95D8939E1655325000AA055B /* LSynth.xcodeproj */,
+				7D443C30ABD0BCD468D01020 /* Source */,
+				EC487B98C7B1F6099CEC4E73 /* Tests */,
 			);
 			name = "Mac LDraw";
 			sourceTree = "<group>";
@@ -968,6 +1003,7 @@
 				0B040CBD164F526D000CA89A /* Sparkle.framework */,
 				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+				FE3077E9720EEC4AE82133EB /* OS X */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -978,6 +1014,14 @@
 				2BB5975E09FEFD250077A885 /* AMSProgressBar.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7D443C30ABD0BCD468D01020 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				EE6EA2E4E672C68A7BAE46B6 /* Swift */,
+			);
+			name = Source;
 			sourceTree = "<group>";
 		};
 		952AA8F5169D552E0087919E /* Inspectors */ = {
@@ -1030,6 +1074,33 @@
 				D6EDBA0C164DF86F00B4062B /* test.glsl */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		EC487B98C7B1F6099CEC4E73 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				0B7D7DD7F5AABF51BA5EBBA4 /* Unit */,
+			);
+			name = Tests;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		EE6EA2E4E672C68A7BAE46B6 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */,
+				652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */,
+			);
+			name = Swift;
+			path = Source/Swift;
+			sourceTree = "<group>";
+		};
+		FE3077E9720EEC4AE82133EB /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1143,6 +1214,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		2AEE1AF7413CD10EFC03AD83 /* BricksmithTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1934F15560CA825FEFE65E3 /* Build configuration list for PBXNativeTarget "BricksmithTests" */;
+			buildPhases = (
+				029E0597AD009BE221486E2E /* Sources */,
+				539C5283BDE2602FDFD2AB90 /* Frameworks */,
+				E9C9FFC9E7631D8E8A2F7EE8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9F51D7FC01523032C7B33564 /* PBXTargetDependency */,
+			);
+			name = BricksmithTests;
+			productName = BricksmithTests;
+			productReference = 09E3A83323C43757A3923438 /* BricksmithTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		8D15AC270486D014006FF6A4 /* Bricksmith */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2BB5974D09FEFD180077A885 /* Build configuration list for PBXNativeTarget "Bricksmith" */;
@@ -1200,6 +1289,7 @@
 			projectRoot = ..;
 			targets = (
 				8D15AC270486D014006FF6A4 /* Bricksmith */,
+				2AEE1AF7413CD10EFC03AD83 /* BricksmithTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1269,9 +1359,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E9C9FFC9E7631D8E8A2F7EE8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		029E0597AD009BE221486E2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D15AC300486D014006FF6A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1373,6 +1478,7 @@
 				D619130217F004A300B5DF44 /* LDrawGLCamera.m in Sources */,
 				D6191B9E17F277B600B5DF44 /* GLMatrixMath.c in Sources */,
 				0B0B6CCE2787D87800F6E225 /* PartCatalogBuilder.m in Sources */,
+				DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1388,6 +1494,12 @@
 			isa = PBXTargetDependency;
 			name = LSynth;
 			targetProxy = 95D893A91655328300AA055B /* PBXContainerItemProxy */;
+		};
+		9F51D7FC01523032C7B33564 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Bricksmith;
+			target = 8D15AC270486D014006FF6A4 /* Bricksmith */;
+			targetProxy = 7DC1F46DF5EF14164015FB1C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1639,9 +1751,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../ThirdParty\"",
 					"\"$(SRCROOT)/../ThirdParty/Sparkle\"",
@@ -1663,6 +1777,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.Bricksmith.debug;
 				PRODUCT_NAME = Bricksmith;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Swift/Bricksmith-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1672,6 +1790,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -1694,6 +1813,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.Bricksmith;
 				PRODUCT_NAME = Bricksmith;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Swift/Bricksmith-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1729,6 +1852,42 @@
 			};
 			name = Release;
 		};
+		D0C4D934D079D146A70B156C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bricksmith.app/Contents/MacOS/Bricksmith";
+			};
+			name = Debug;
+		};
+		FEEC6A83905732A6EB60CF19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bricksmith.app/Contents/MacOS/Bricksmith";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1749,6 +1908,15 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		D1934F15560CA825FEFE65E3 /* Build configuration list for PBXNativeTarget "BricksmithTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEEC6A83905732A6EB60CF19 /* Release */,
+				D0C4D934D079D146A70B156C /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
