@@ -1,8 +1,7 @@
 # Testing Bricksmith
 
-> **Status (2026-11-14):** there is no automated test suite yet. Phases P1 and P2 of
-> [swift-port-plan.md](swift-port-plan.md) build it. The sections marked *(planned)* describe how it
-> will be laid out, so that everyone builds to the same shape. Update this file as each piece lands.
+> **Status (2026-11-14):** the test **harness** exists (P1): hosted Swift Testing bundle, isolation, fixture
+> library, scripts. The characterisation tests themselves are P2. Items still marked *(planned)* arrive in P2.
 
 ## Why tests come first
 The Swift port rewrites the code class by class, and the tests are what show whether behaviour changed.
@@ -10,17 +9,37 @@ They are **characterisation tests**: they record what the Objective-C app does t
 they are written in Swift against the ObjC API. When a class is later ported to Swift, its tests run
 unchanged against the new code.
 
-## Running *(planned)*
+## Running
 
 ```zsh
-scripts/build.sh               # build; diff de-duplicated warning text against docs/warnings-baseline.txt
-scripts/test.sh                # unit + characterisation tests; per-class coverage vs tier targets; defaults diff
-scripts/test.sh --ui           # also run the XCUITest smoke tests
-scripts/perf-compare.sh        # Release perf scheme vs docs/perf-baseline.json (≤ +20%; a skipped test fails)
-scripts/mutation-smoke.sh      # apply each seeded mutation in turn; every one must make a test fail
-scripts/fetch-ldraw.sh         # optional: full LDraw library into ~/Library/Caches (never committed)
-RECORD_GOLDENS=1 scripts/test.sh   # regenerate goldens (deliberate only; a person reviews the diff)
+scripts/build.sh                   # clean build; fails on any warning not in docs/warnings-baseline.txt
+scripts/build.sh --release         # same for Release (docs/warnings-baseline-release.txt)
+scripts/test.sh                    # hosted unit/characterisation tests + coverage (build/coverage.txt);
+                                   #   fails if the user's com.AllenSmith.Bricksmith defaults changed
+scripts/test.sh --only BricksmithTests/HarnessFixtureLibraryTests   # a subset
+scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests)
+scripts/mutation-smoke.sh          # each scripts/mutations/*.patch must make a test fail
+scripts/perf-compare.sh            # build/perf-results.json vs docs/perf-baseline.json (≤ +20%; missing metric fails)
+scripts/make-ldraw-mini.py         # regenerate trunk/Fixtures/ldraw-mini from a full library (read-only source)
+RECORD_GOLDENS=1 scripts/test.sh   # (planned, P2) regenerate goldens - deliberate only; review the diff
 ```
+
+The tests run inside the app (`TEST_HOST`). In Xcode, use the `Bricksmith` scheme's Test action (⌘U).
+
+## Writing a test (harness conventions)
+
+- Put the file in `trunk/Bricksmith/Tests/Unit/`, and add it to the `BricksmithTests` target (with the `xcodeproj`
+  gem, see LEARNINGS L11–L12). Start it with `import Testing` and `@testable import Bricksmith`. ObjC classes are
+  visible through the app's bridging header.
+- **Anything that touches the LDraw library or global state** must use `@Suite(.fixtureLibrary, .serialized)`.
+  Each test then gets a temporary copy of `ldraw-mini` (`FixtureLibrary.current`), with singletons reset and output
+  settings pinned. See `Tests/Support/FixtureLibrary.swift`.
+- **Before the first test of a header,** annotate that header for nullability and generics in the same commit
+  (plan v3.1 rule), and log any `null_unspecified` in port-status.md.
+- **Crashing behaviour** goes in an exit test: `await #expect(processExitsWith: .failure) { … }`. It runs in a child
+  process (L25). Use exit tests sparingly, because each costs about 1.5 s.
+- **Known bugs** use `withKnownIssue("BUG-nnn: …") { … }` around an assertion of the *correct* behaviour.
+- Fixture paths: `FixturePaths.trunk`, `.fixtures`, `.ldrawMini` and `.testData` are derived from `#filePath`.
 
 ## Coverage targets
 - **Tier A ≥ 90%:** model and format classes.
@@ -33,14 +52,15 @@ uncovered-line ledger in [port-status.md](port-status.md).
 Tests that need the full LDraw library are tagged `.requiresFullLibrary`, and they skip themselves when it
 isn't present.
 
-## Layout *(planned)*
+## Layout
 
 | Path | Contents |
 |---|---|
-| `trunk/Bricksmith/Tests/Unit/` | Swift Testing suites, one file per area. Areas follow plan §5 P2 (`RoundTripTests`, `MatrixMathTests`, `ColorLibraryTests`, …). |
-| `trunk/Bricksmith/Tests/Perf/` | XCTest `measure` baselines. |
-| `trunk/Bricksmith/Tests/UI/` | XCUITest smoke tests. |
-| `trunk/Fixtures/ldraw-mini/` | A minimal, hand-built LDraw library: `LDConfig.ldr`, a few parts and primitives, `parts.lst`. |
+| `trunk/Bricksmith/Tests/Unit/` | Swift Testing suites, one file per area. Areas follow plan §5 P2 (`RoundTripTests`, `MatrixMathTests`, `ColorLibraryTests`, …). The `Harness*Tests` suites prove the harness itself. |
+| `trunk/Bricksmith/Tests/Support/` | Shared test helpers (`FixtureLibrary.swift`). |
+| `trunk/Bricksmith/Tests/Perf/` | *(P2)* Self-timed perf tests (medians to `build/perf-results.json`), run in Release. |
+| `trunk/Bricksmith/Tests/UI/` | XCUITest smoke tests (target `BricksmithUITests`). |
+| `trunk/Fixtures/ldraw-mini/` | 12 official parts plus their full reference closure and `LDConfig.ldr` (58 files), with CCAL attribution. Generated by `scripts/make-ldraw-mini.py`. |
 | `trunk/Fixtures/ldr/` | Input models for round-trip tests. Each file targets one feature, plus a few realistic models. |
 | `trunk/Fixtures/golden/` | Expected `write` output and render images. They are generated by the ObjC build and reviewed by a person. |
 | `trunk/Test Data/` | Original regression fixtures (`Good/` opens; `Bad/` crashes because of line type `11`). |

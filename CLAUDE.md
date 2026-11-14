@@ -15,7 +15,8 @@ Read these first:
 - Build: `scripts/build.sh` (Debug) or `scripts/build.sh --release`. These always do a clean build into
   `build/DerivedData`, and fail on any compiler warning that isn't in `docs/warnings-baseline*.txt`.
   - Re-record a baseline with `--update-baseline`, but only deliberately, and explain why in the commit.
-  - Tests: `scripts/test.sh` (arrives in P1).
+  - Tests: `scripts/test.sh` (`--ui` for UI tests, `--only Target/Suite`). Conventions for writing tests are in
+    docs/TESTING.md ("Writing a test").
 - The shell is zsh, so quote globs and paths that contain spaces (`"trunk/Test Data"`).
 
 ## Versioning
