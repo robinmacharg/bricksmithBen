@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **v3**: two rounds of adversarial review incorporated (see [Appendix A](#appendix-a-adversarial-review-log)) |
+| Status | **v3.1**: two rounds of adversarial review incorporated (see [Appendix A](#appendix-a-adversarial-review-log)) |
 | Date | 2026-11-14 |
 | Toolchain | Xcode 26.3 (17C529), built-in Swift 6.2.4. No external toolchains |
 | Out of scope | OpenGL → Metal (a later project; this plan prepares the seam) |
@@ -186,18 +186,31 @@ Sizes are relative (S < M < L < XL).
 ### P1: header hygiene, Swift-facing API and test harness (L)
 **Header hygiene**
 - Make every header self-contained (import Cocoa and GL explicitly).
-- Move the `USE_BLOCKS` / `dispatch_*_t` hack from the pch into `LDrawDispatchCompat.h` and import it where it's used.
-  Don't delete it yet; P4 does that.
+- Move the `USE_BLOCKS` / `dispatch_*_t` hack, the build flags and the C imports from the pch into a self-contained
+  `BricksmithBuildConfig.h`, imported where needed. *(Done: the file was named `BricksmithBuildConfig.h` rather
+  than `LDrawDispatchCompat.h`.)* Don't delete the hack yet; P4 does that.
 
 **Swift-facing API shaping.** This is compile-time only, with no behaviour change. It comes first so tests are written
 against the final Swift spellings.
-- `NS_ASSUME_NONNULL` / `nullable` and lightweight generics on all public headers.
-- The 33 `typedef enum`s become `NS_ENUM`.
-- The `MacLDraw.h`, `LDrawKeywords.h` and `LDrawPathNames.h` `#define`s become `extern NSString * const` /
-  `NS_TYPED_EXTENSIBLE_ENUM` with **identical string values**.
+- The `typedef enum`s in bridged headers become `NS_ENUM(int, …)` / `NS_OPTIONS(int, …)`. The base type is `int` to
+  keep size and `@encode` (L23). Open sets (`LDrawColorT`, `menuTagsT`) stay plain C enums. *(Done: 25 enums.)*
+- The `MacLDraw.h`, `LDrawKeywords.h` and `LDrawPathNames.h` `#define`s become `FOUNDATION_EXPORT NSString * const`
+  (notifications: `NSNotificationName`) with **identical string values**, verified mechanically (L24).
+  *(Done: 175 constants.)*
 - Informal protocols (`NSObject (LDrawGLViewDelegate)`) become formal `@protocol`s.
-- Nullability has to be honest. Where a method can return nil, mark it `nullable`. If unsure, use `null_unspecified`
-  and log it in port-status.md.
+
+**Nullability and generics: added per header, alongside its first test** *(amended in v3.1)*
+- A header gets `NS_ASSUME_NONNULL_BEGIN/END`, `nullable`, explicit `null_unspecified` for anything not verified,
+  and lightweight generics **before, or in the same commit as, the first test that uses it.**
+  - Annotations are claims, and the tests are the evidence. A wrong `nonnull` or generic traps at runtime in Swift
+    instead of failing to compile.
+  - Annotating every header with no tests to check against would create unverified claims. Leaving headers
+    unannotated until P4 would break "tests unchanged", because Swift spellings would change under existing tests.
+- Annotate a whole header at a time: clang's `-Wnullability-completeness` warns about every unannotated pointer once
+  any pointer in the header is annotated (confirmed).
+- Generics only where a test iterates the collection over real fixtures and asserts the element class.
+- Unverified (`null_unspecified`) entries are logged in port-status.md.
+- Once a header has tests, changing its annotations is a `[test-spelling]` commit (the P4 rule).
 
 **Test bundle**
 - `BricksmithTests`: Swift, hosted by the app, macOS 14, coverage on, `@testable import Bricksmith`.
@@ -538,6 +551,13 @@ Every finding was spot-checked against the code before it was accepted.
 | S13 | `readFromData:` writes `*outError` without a NULL check | **Accepted.** Logged as S9 |
 | S14 | Preference-writer format | **Accepted.** Row 7 covers read and write |
 | — | "One class per commit" with mutually dependent classes | **Accepted.** Coupled-pairs note in P6 |
+
+### v3.1 (during P1, 2026-11-14)
+| Change | Reason |
+|---|---|
+| Nullability and generics move from "all public headers in P1" to "per header, with its first test" | Annotations without tests would be unverified claims, and a wrong one traps at runtime in Swift. Deferring them to P4 would break "tests unchanged". Tying each one to its first test makes it checked. `-Wnullability-completeness` forces whole-header annotation |
+| `NS_ENUM(int, …)`, not `NSInteger` | Keeps size and `@encode` identical (L23) |
+| Swap spike passed early (L19) | Confirms §4.2/§4.5 |
 
 ### Maintainer input during round 2
 - Coverage target raised from a flat ≥ 70% to tiered targets: ≥ 90% (model and format) and ≥ 80% (libraries and app
