@@ -37,7 +37,7 @@ their own port phase.
 
 | Class | Tier | Coverage | Reason | Signed off |
 |---|---|---|---|---|
-| | | | | |
+| | | | `Source/LDraw/Support/MatrixMath.c` `V3Print`, `Matrix4Print` | Debug printing only (stdout); no behaviour to characterise |
 
 ## Nullability annotations (plan §5 P1, v3.1 rule)
 

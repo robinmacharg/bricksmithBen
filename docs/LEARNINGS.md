@@ -155,3 +155,7 @@ section. Each entry says what happened and what to do instead.
   happens", which isn't what the app sees.
 - **L47. Put a readable diff in every equality assertion** (`Golden.firstDifference`, or `before -> after`). The
   first BUG-011/BUG-012 failures said only "Expectation failed"; the diagnostics found both bugs in one rerun.
+- **L48. Read a C helper's units before testing it.** `V3AntiEuler` takes and returns degrees because it calls
+  `Matrix4Rotate`, but I tested it with radians. And `FloatsApproximatelyEqual` allows about 5 ULPs, not a
+  decimal tolerance. Two of three "failures" in row 5 were mistakes in my tests; the third (BUG-014) was
+  confirmed with a standalone C program before being logged.
