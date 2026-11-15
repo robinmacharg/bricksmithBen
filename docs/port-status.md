@@ -29,6 +29,7 @@ their own port phase.
 | P1 | Automated: build (Debug/Release), unit tests, defaults unchanged ×3+, swap spike passed, exit-test spike passed, mutation pipeline verified | 2026-11-14 | agent | Branch `20261114-p1-test-harness` |
 | P2 | 🧑 Golden review: `Fixtures/golden/roundtrip/*` (row 1) | 2026-11-15 | maintainer | Diffs vs inputs summarised in the P2 row-1 commit message; BUG-003/004 and S14/S15 found |
 | P2 | 🧑 Golden review: row 2 (`golden/format/*`, `golden/roundtrip/1[0-4]*`) | **pending** | | Found BUG-005, BUG-006, S16; disproved suspected RGB truncation (768 values checked) |
+| P2 | 🧑 Golden review: row 3 (`golden/robustness/cases.txt`) | **pending** | | Found BUG-007, BUG-008, S17, S18 |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions

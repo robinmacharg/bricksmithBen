@@ -234,6 +234,7 @@
 		95D893CB16569CFD00AA055B /* LDrawLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D893C916569CFD00AA055B /* LDrawLSynth.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */ = {isa = PBXBuildFile; fileRef = 145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */; };
 		B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */; };
+		BBE9FA5F68E37B0B8CC00EB0 /* ParserRobustnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */; };
 		D54BC338573F5A29CE163ABC /* Golden.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741501FF6219F19D814635AC /* Golden.swift */; };
 		D608724816ED61F500828B4E /* MeshSmooth.h in Headers */ = {isa = PBXBuildFile; fileRef = D608724616ED61F500828B4E /* MeshSmooth.h */; };
 		D608724916ED61F500828B4E /* MeshSmooth.c in Sources */ = {isa = PBXBuildFile; fileRef = D608724716ED61F500828B4E /* MeshSmooth.c */; };
@@ -609,6 +610,7 @@
 		DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MacLDraw.m; sourceTree = "<group>"; };
 		E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawPathNames.m; sourceTree = "<group>"; };
 		E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessExitTests.swift; sourceTree = "<group>"; };
+		F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ParserRobustnessTests.swift; sourceTree = "<group>"; };
 		F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoundTripTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -884,6 +886,7 @@
 				F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */,
 				37B9F1A1B51FCAFFB2D6E51B /* KnownIssueTests.swift */,
 				855E62A9683786D2025D0557 /* FormatTests.swift */,
+				F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1478,6 +1481,7 @@
 				60669DDCCFC8E5EFBE510A87 /* RoundTripTests.swift in Sources */,
 				F9B36DA0A7993C7FBB241D83 /* KnownIssueTests.swift in Sources */,
 				F477FA6F72E134A874EA93C1 /* FormatTests.swift in Sources */,
+				BBE9FA5F68E37B0B8CC00EB0 /* ParserRobustnessTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
