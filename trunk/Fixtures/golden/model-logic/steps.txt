@@ -8,6 +8,7 @@ type 3 angle (10,20,30): 0 ROTSTEP -1.116 22.242 28.452 ADD | ZYX (-1.116, 22.24
   after setRotationAngleZYX (30,20,10): angle (33.754, 11.822, 19.008) | 0 ROTSTEP 30.000 20.000 10.000 ADD
 type 4 angle (10,20,30): 0 ROTSTEP END | ZYX (-1.116, 22.242, 28.452)
   after setRotationAngleZYX (30,20,10): angle (33.754, 11.822, 19.008) | 0 ROTSTEP END
+untyped ROTSTEP 10 20 30: type 1 | 1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat / 0 ROTSTEP 10.000 20.000 30.000 REL
 flavor set 1 -> 1
 flavor set 2 -> 2
 flavor set 3 -> 3

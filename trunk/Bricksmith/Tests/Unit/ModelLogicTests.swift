@@ -126,6 +126,10 @@ struct ModelLogicTests {
 			step.setRotationAngleZYX(V3Make(30, 20, 10))
 			out.append("  after setRotationAngleZYX (30,20,10): angle \(ModelLogic.t(step.rotationAngle())) | \(ModelLogic.oneLine(step.write()))")
 		}
+		// A ROTSTEP with no type keyword is relative (LDrawStep parseRotationStepFromLine:).
+		let untyped = try #require(ModelLogic.load("0 Untyped\n0 Name: u.ldr\n0 Author: Fixture Author\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP 10 20 30\n").activeModel())
+		let first = untyped.steps()[0] as! LDrawStep
+		out.append("untyped ROTSTEP 10 20 30: type \(first.stepRotationType().rawValue) | \(ModelLogic.oneLine(first.write()))")
 		let step = LDrawStep.empty() as! LDrawStep
 		for flavor: LDrawStepFlavorT in [.lines, .triangles, .quadrilaterals, .conditionalLines, .anyDirectives] {
 			step.setStepFlavor(flavor)

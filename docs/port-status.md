@@ -42,6 +42,8 @@ their own port phase.
 | P2 | 🧑 Golden review: row 15 (`golden/render/Mac15,7/*.png`, 8 images) | 2026-11-15 | maintainer | References for this machine only; other machines skip (not a CI gate) |
 | P2 | Perf baseline recorded (Mac15,7; `docs/perf-baseline.json`) | 2026-11-15 | agent | Two verification runs within budget (max 116%) |
 | P2 | UI smoke (row 17): `scripts/test.sh --ui`, 5 UI tests | 2026-11-15 | agent | No new goldens (reuses approved round-trip goldens). S26 noted. Test-mode focus-ring fix (L67) |
+| P2 | 🧑 Manual-only list complete (TESTING.md; checklist steps 14-17 added) | 2026-11-15 | maintainer | Signed off in conversation |
+| P2 | 🧑 Golden review: re-recorded render references (`golden/render/Mac15,7/*`, harness now fixes 1x and 625x691, L73) | **pending** | | Same renders, offset a few pixels |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions

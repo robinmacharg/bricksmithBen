@@ -135,21 +135,27 @@ Bugs live in **[KNOWN-BUGS.md](KNOWN-BUGS.md)**. Don't fix them during the port.
 
 Fixes happen after the port, in P12.
 
-## Manual-only list *(fill in during P2)*
+## Manual-only list
 These are behaviours that can't reasonably be automated, each with a reason. **🧑 HUMAN GATE** at the end of P2:
 confirm the list is complete.
 
 | Feature or action | Why it's manual | Covered by checklist step |
 |---|---|---|
-| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | (add) |
+| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | 14 |
 | Split Model, Add Part (from browser), Add Submodel Reference, Insert Part, Add Minifigure | Present panels, alerts or menus (`canDeleteDirective`, part browser, minifig dialog) | 5, 7, 11 |
-| Export Steps | Save panel; the export logic itself is covered by row 11 | (add) |
-| Search panel (Find) | Its matching logic is bound to the panel's controls (scope/colour/part popups) | (add) |
+| Export Steps | Save panel; the export logic itself is covered by row 11 (note BUG-011: files come out in reverse order) | 15 |
+| Search panel (Find) | Its matching logic is bound to the panel's controls (scope/colour/part popups) | 16 |
 | Missing/moved pieces checks on open | Alerts | 2 |
 | Move and Rotation panels, Find, Dimensions, Piece Count | Panels; the underlying edits (`moveSelectionBy`, `rotateSelection`) are automated in row 10 | 5 |
 | View-only actions (zoom, view angle, step navigation, step display) | Don't change the model; the render snapshots (row 15) cover views | 3, 7 |
 | Focus-ring overlay on 3D views | Skipped in test mode (separate child window, L58) | 3 |
 | 3D-view mouse, trackpad and marquee interaction | GL view interaction | 3, 8 |
+| Add Related Part (`addRelatedPartClicked:`) | Driven by a generated menu item's represented object; the related-part lookup is covered by row 12 and `AppLogicCoverageTests` | 17 |
+| Hide / Show parts (`hideParts:`, `showParts:`) | Hiding is temporary by design (not saved, S23); picking and drawing of hidden objects are covered by `HitTestingTests` and `DrawingTests` | 17 |
+| Quick-rotate toolbar buttons (`quickRotateClicked:`) | Thin wrapper reading the sender's tag; the rotation itself (`rotateSelectionAround:`) is automated in row 10 | 5 |
+| Rotation centre (`useSelectionForRotationCenter:`, `clearRotationCenter:`), grid granularity/orientation menus, zoom, view-all | Camera, view or preference state only; nothing in the model changes | 3, 10 |
+| Reveal in Finder, Show Inspector / Dimensions / Piece Count, file-contents drawer, Go to Model | Open panels, windows or Finder; the reports behind Dimensions and Piece Count are covered by row 11 | 4, 5 |
+| Minifigure dialog's modal loop (`runModal`) | A real modal session; everything it calls is covered by `AppLogicCoverageTests` | 11 |
 
 *(There is no printing feature in the app, so there's nothing to test.)*
 
@@ -171,3 +177,7 @@ things automation covers poorly. Record the sign-off in port-status.md.
 11. Use the Minifigure generator and add a minifig to the model.
 12. Add an LSynth hose and regenerate it.
 13. Close every document while it has unsaved changes. Each save prompt works, and nothing crashes.
+14. Select a few parts and use Randomize Colors. The colours change; Undo restores them.
+15. Export Steps to a temporary folder. One file per step is written (they come out in reverse order: BUG-011).
+16. Open Find, search by part and by colour; matching parts are selected.
+17. Hide a part, then Show All. Use Add Related Part from a part's context menu; the related part is added and Undo removes it.

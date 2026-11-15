@@ -13,7 +13,7 @@ M = [
  ("utilities-float-keep-point", "LDraw/Support/LDrawUtilities.m", "if(*endOfString != '.')", "if(*endOfString == '.')", 1),
  ("utilities-columnized-width", "LDraw/Support/LDrawUtilities.m", '@"%12f", number', '@"%11f", number', 1),
  ("utilities-direct-colour-alpha", "LDraw/Support/LDrawUtilities.m", "components[3] = (GLfloat) 1.0; // alpha", "components[3] = (GLfloat) 0.9; // alpha", 1),
- ("utilities-hit-depth", "LDraw/Support/LDrawUtilities.m", "if(hitDepth < existingDepth)", "if(hitDepth > existingDepth)", 1),
+ ("triangle-depth-pick", "LDraw/Commands/LDrawTriangle.m", "if(probe.z <= *bestDepth)", "if(probe.z >= *bestDepth)", 1),
  ("line-write-vertex", "LDraw/Commands/LDrawLine.m", "[LDrawUtilities outputStringForFloat:vertex2.z]", "[LDrawUtilities outputStringForFloat:vertex2.y]", 1),
  ("line-undo-vertex1", "LDraw/Commands/LDrawLine.m", "[[undoManager prepareWithInvocationTarget:self] setVertex1:[self vertex1]];", "", 1),
  ("triangle-parse-z", "LDraw/Commands/LDrawTriangle.m", "workingVertex.z = [parsedField floatValue];", "workingVertex.z = -[parsedField floatValue];", 2),
