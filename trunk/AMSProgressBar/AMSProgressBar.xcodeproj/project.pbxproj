@@ -51,7 +51,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0867D691FE84028FC02AAC07 /* AMSProgressBar */ = {
+		0867D691FE84028FC02AAC07 = {
 			isa = PBXGroup;
 			children = (
 				0B2AACA307C4444B00085145 /* AMSProgressBar.h */,
@@ -169,7 +169,7 @@
 				French,
 				German,
 			);
-			mainGroup = 0867D691FE84028FC02AAC07 /* AMSProgressBar */;
+			mainGroup = 0867D691FE84028FC02AAC07;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
 			projectRoot = ..;
@@ -231,6 +231,30 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2615F6A0C3A37B74A416AF0D /* Perf */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = AMSProgressBar_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@rpath";
+				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PREBINDING = NO;
+				PRODUCT_NAME = AMSProgressBar;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Perf;
+		};
 		2BB596FA09FEFCD00077A885 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -300,6 +324,14 @@
 			};
 			name = Release;
 		};
+		6BC1C2E72FFD1E1565210619 /* Perf */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+			};
+			name = Perf;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -308,6 +340,7 @@
 			buildConfigurations = (
 				2BB596FA09FEFCD00077A885 /* Debug */,
 				2BB596FB09FEFCD00077A885 /* Release */,
+				2615F6A0C3A37B74A416AF0D /* Perf */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -317,6 +350,7 @@
 			buildConfigurations = (
 				2BB596FE09FEFCD00077A885 /* Debug */,
 				2BB596FF09FEFCD00077A885 /* Release */,
+				6BC1C2E72FFD1E1565210619 /* Perf */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

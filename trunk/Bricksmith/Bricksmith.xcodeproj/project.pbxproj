@@ -244,6 +244,7 @@
 		95D893CA16569CFD00AA055B /* LDrawLSynth.h in Headers */ = {isa = PBXBuildFile; fileRef = 95D893C816569CFD00AA055B /* LDrawLSynth.h */; };
 		95D893CB16569CFD00AA055B /* LDrawLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D893C916569CFD00AA055B /* LDrawLSynth.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */ = {isa = PBXBuildFile; fileRef = 145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */; };
+		AF95CB7016D813469C14BB98 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB8369002EE06CEE9EA9CB5 /* PerformanceTests.swift */; };
 		B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */; };
 		BBE9FA5F68E37B0B8CC00EB0 /* ParserRobustnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */; };
 		CB7E8E47D480EBCFD16FC5EF /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E03718E631C7CE4B1F41F0 /* ObjC.swift */; };
@@ -573,6 +574,7 @@
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSmokeUITests.swift; sourceTree = "<group>"; };
 		4119F21A77A4B2343C726CE1 /* LSynthTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LSynthTests.swift; sourceTree = "<group>"; };
+		4AB8369002EE06CEE9EA9CB5 /* PerformanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = BricksmithTestSupport.m; sourceTree = "<group>"; };
 		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		5D19A96774CDADD19C441D18 /* ColourTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColourTests.swift; sourceTree = "<group>"; };
@@ -933,6 +935,7 @@
 				4119F21A77A4B2343C726CE1 /* LSynthTests.swift */,
 				BF9043BD5BF5FF3A6F720BC4 /* PreferencesContractTests.swift */,
 				D1F3C4E1C0A9996641E16DF5 /* RenderSnapshotTests.swift */,
+				4AB8369002EE06CEE9EA9CB5 /* PerformanceTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1547,6 +1550,7 @@
 				4FF35DF1C56BF625E1D2D98D /* PreferencesContractTests.swift in Sources */,
 				38700D566FC45CE272CAD839 /* StringConstants.generated.swift in Sources */,
 				74FCFA34A515C03A42F28C36 /* RenderSnapshotTests.swift in Sources */,
+				AF95CB7016D813469C14BB98 /* PerformanceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1938,6 +1942,43 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1F1310F73C6E61229D9EE61F /* Perf */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../ThirdParty\"",
+					"\"$(SRCROOT)/../ThirdParty/Sparkle\"",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Source/Other/Mac LDraw_Prefix.pch";
+				IBC_NOTICES = NO;
+				IBC_WARNINGS = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PREBINDING = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.Bricksmith.debug;
+				PRODUCT_NAME = Bricksmith;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Swift/Bricksmith-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				WARNING_CFLAGS = "-Wall";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Perf;
+		};
 		2BB5974E09FEFD180077A885 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2043,6 +2084,42 @@
 			};
 			name = Release;
 		};
+		2CCE0321FEF2B780B3ED5160 /* Perf */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					GL_SILENCE_DEPRECATION,
+					"BRICKSMITH_PERF=1",
+				);
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = BRICKSMITH_PERF;
+			};
+			name = Perf;
+		};
+		34EE115AC42FBC6DBF4296C6 /* Perf */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bricksmith.app/Contents/MacOS/Bricksmith";
+			};
+			name = Perf;
+		};
 		60609AF2A9A511D9BBBE3385 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2076,6 +2153,24 @@
 				TEST_TARGET_NAME = Bricksmith;
 			};
 			name = Debug;
+		};
+		C42F692FBBD4532E8FDAF3EA /* Perf */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Bricksmith;
+			};
+			name = Perf;
 		};
 		D0C4D934D079D146A70B156C /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2121,6 +2216,7 @@
 			buildConfigurations = (
 				2BB5974E09FEFD180077A885 /* Debug */,
 				2BB5974F09FEFD180077A885 /* Release */,
+				1F1310F73C6E61229D9EE61F /* Perf */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2130,6 +2226,7 @@
 			buildConfigurations = (
 				2BB5975209FEFD180077A885 /* Debug */,
 				2BB5975309FEFD180077A885 /* Release */,
+				2CCE0321FEF2B780B3ED5160 /* Perf */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2139,6 +2236,7 @@
 			buildConfigurations = (
 				60609AF2A9A511D9BBBE3385 /* Release */,
 				B79D08A3546883FB5866829F /* Debug */,
+				C42F692FBBD4532E8FDAF3EA /* Perf */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2148,6 +2246,7 @@
 			buildConfigurations = (
 				FEEC6A83905732A6EB60CF19 /* Release */,
 				D0C4D934D079D146A70B156C /* Debug */,
+				34EE115AC42FBC6DBF4296C6 /* Perf */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

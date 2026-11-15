@@ -643,7 +643,7 @@ mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
 }//end updater:mayPerformUpdateCheck:error:
 
 
-#if DEBUG
+#if DEBUG || BRICKSMITH_PERF	// Perf = Release-optimised test configuration (row 16)
 //========== updaterShouldPromptForPermissionToCheckForUpdates: ================
 //
 // Purpose:		Debug builds never check for updates, so never ask the user

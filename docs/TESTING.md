@@ -19,7 +19,9 @@ scripts/test.sh                    # hosted unit/characterisation tests + covera
 scripts/test.sh --only BricksmithTests/HarnessFixtureLibraryTests   # a subset
 scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests)
 scripts/mutation-smoke.sh          # each scripts/mutations/*.patch must make a test fail
-scripts/perf-compare.sh            # build/perf-results.json vs docs/perf-baseline.json (≤ +20%; missing metric fails)
+scripts/perf-compare.sh --run      # build+run perf tests in the Perf configuration, compare with docs/perf-baseline.json
+scripts/perf-compare.sh            # compare existing build/perf-results.json (≤ +20%; a missing metric fails)
+scripts/perf-compare.sh --update-baseline   # deliberate only; explain in the commit
 scripts/make-ldraw-mini.py         # regenerate trunk/Fixtures/ldraw-mini from a full library (read-only source)
 RECORD_GOLDENS=1 scripts/test.sh   # (planned, P2) regenerate goldens - deliberate only; review the diff
 ```
@@ -100,8 +102,11 @@ isn't present.
   - Selection goes through `selectDirectives:`, i.e. the outline view.
 - **Call ObjC that might throw through `ObjC.run { … }`.** An uncaught NSException on a test thread is swallowed by
   AppKit and the test hangs (L57). Document suites also carry `.timeLimit(.minutes(1))`.
-- **Performance tests** run only in the Release `Bricksmith-Perf` scheme. Debug timings are meaningless for
-  comparing Swift with ObjC.
+- **Performance tests** (`PerformanceTests`) run only through `scripts/perf-compare.sh --run`.
+  - They use the **Perf** build configuration: a Release clone with testability enabled, which defines
+    `BRICKSMITH_PERF`. Debug timings are meaningless for comparing Swift with ObjC.
+  - Each metric is the best of 15 runs after 2 warm-ups, on a 20,000-part synthetic model (L65).
+  - The baseline belongs to the machine recorded in it; comparisons on other machines fail with a message.
 - **Randomised tests** use a fixed seed, and they print it when they fail.
 - **Render snapshots** (`RenderSnapshotTests`) render fixtures in the real `LDrawGLView` from a fixed orthographic camera
   (zoom 400%, centred), capture with `-saveImageToPath:` after an explicit `-draw` (L64), and flip the image upright.

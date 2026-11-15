@@ -15,7 +15,10 @@ import Testing
 
 @MainActor
 enum RenderHarness {
-	static var machine: String {
+	nonisolated static var machineName: String { machineModel() }
+	static var machine: String { machineModel() }
+
+	nonisolated static func machineModel() -> String {
 		var size = 0
 		sysctlbyname("hw.model", nil, &size, nil, 0)
 		var model = [CChar](repeating: 0, count: size)

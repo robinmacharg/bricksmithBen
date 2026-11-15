@@ -8,7 +8,8 @@
 # .xcbaselines and xcresult parsing.
 #
 # Usage:
-#   scripts/perf-compare.sh                    # compare; fail if any metric is > +20% or missing
+#   scripts/perf-compare.sh --run              # build+run the perf tests (Perf configuration), then compare
+#   scripts/perf-compare.sh                    # compare existing results; fail if any metric is > +20% or missing
 #   scripts/perf-compare.sh --update-baseline  # deliberate: copy results to the baseline (explain in commit)
 #
 # A metric present in the baseline but missing from the results FAILS the gate (a skipped perf test must
@@ -21,6 +22,21 @@ REPO_ROOT=${0:A:h:h}
 RESULTS="$REPO_ROOT/build/perf-results.json"
 BASELINE="$REPO_ROOT/docs/perf-baseline.json"
 BUDGET=1.20
+
+if [[ "${1:-}" == --run ]]; then
+	shift
+	rm -f "$RESULTS"
+	DEBUG_DOMAIN=com.AllenSmith.Bricksmith.debug
+	SNAP="$REPO_ROOT/build/perf-defaults-before.plist"
+	defaults export "$DEBUG_DOMAIN" "$SNAP" 2>/dev/null || print -n >"$SNAP"
+	print "Running perf tests (Perf configuration: Release-optimised, testable)…"
+	TEST_RUNNER_BRICKSMITH_PERF=1 TEST_RUNNER_BRICKSMITH_REPO_ROOT="$REPO_ROOT" \
+	xcodebuild test -project "$REPO_ROOT/trunk/Bricksmith/Bricksmith.xcodeproj" -scheme Bricksmith -configuration Perf \
+		-derivedDataPath "$REPO_ROOT/build/DerivedData-perf" -only-testing:BricksmithTests/PerformanceTests \
+		>"$REPO_ROOT/build/perf.log" 2>&1 || { print -u2 "perf tests failed (build/perf.log)"; exit 1; }
+	# The perf host is a test host too: restore the dev domain it wrote to (L33).
+	if [[ -s "$SNAP" ]]; then defaults import "$DEBUG_DOMAIN" "$SNAP"; else defaults delete "$DEBUG_DOMAIN" 2>/dev/null || true; fi
+fi
 
 if [[ "${1:-}" == --update-baseline ]]; then
 	[[ -f "$RESULTS" ]] || { print -u2 "no results at ${RESULTS#$REPO_ROOT/}; run the perf tests first"; exit 1; }

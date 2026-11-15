@@ -210,3 +210,11 @@ section. Each entry says what happened and what to do instead.
   view's `-draw` with its context current, then `glReadPixels` from the back buffer (the window can stay fully
   transparent). `glReadPixels` is bottom-up, so flip the image for humans. `zoomToFit:` misbehaves before layout
   settles; a fixed zoom plus `scrollCenterToModelPoint:` (the model's bounding-box centre) gives stable framing.
+- **L65. Benchmarking on a working desktop:** medians of millisecond timings varied from 44% to 121% between
+  identical runs, which made a +20% gate useless. → Make the workload large enough for timings in the 10–250 ms
+  range, warm up first, and take the **minimum** of N runs (interference only adds time). After that, re-runs were
+  within ±16%. Remember `glFinish()` when timing GL, or you only measure command submission.
+- **L66. A new build configuration must exist in every sub-project** (AMSProgressBar, LSynth). Otherwise they
+  build under their default configuration into a different products folder, and the app can't find their
+  headers. The `xcodeproj` gem's `add_build_configuration` fails when targets differ in deployment target; create
+  `XCBuildConfiguration` objects by hand.
