@@ -67,7 +67,7 @@
 	//Need to create a blank step.
 	[newModel addStep];
 
-	return [newModel autorelease];
+	return newModel;
 	
 }//end model
 
@@ -121,13 +121,13 @@
 	NSRange			stepRange			= range;
 	NSUInteger		maxLineIndex		= 0;
 	NSUInteger      insertIndex			= 0;
-	id *			substeps			= NULL;
+	__strong id *	substeps			= NULL;	// ARC: nil each slot before free
 	
 	//Start with a nice blank model.
 	self = [super initWithLines:lines inRange:range parentGroup:parentGroup];
 	self->cachedBounds = InvalidBox;
 
-	substeps = calloc(range.length, sizeof(LDrawDirective*));
+	substeps = (__strong id *)calloc(range.length, sizeof(LDrawDirective*));
 	
 	//Try and get the header out of the file. If it's there, the lines returned 
 	// will not contain it.
@@ -172,7 +172,7 @@
 			LDrawStep * step = substeps[counter];
 			
 			[self addStep:step];
-			[step release];
+			substeps[counter] = nil;
 		}
 
 		free(substeps);
@@ -207,9 +207,9 @@
 	self->cachedBounds = InvalidBox;
 	[self invalCache:CacheFlagBounds];	
 	
-	modelDescription	= [[decoder decodeObjectForKey:@"modelDescription"] retain];
-	fileName			= [[decoder decodeObjectForKey:@"fileName"] retain];
-	author				= [[decoder decodeObjectForKey:@"author"] retain];
+	modelDescription	= [decoder decodeObjectForKey:@"modelDescription"];
+	fileName			= [decoder decodeObjectForKey:@"fileName"];
+	author				= [decoder decodeObjectForKey:@"author"];
 	
 	return self;
 	
@@ -1045,8 +1045,6 @@
 						 recursive:NO];
 	}
 	
-	[dragStep retain];
-	[self->draggingDirectives release];
 	
 	self->draggingDirectives = dragStep;
 	
@@ -1060,8 +1058,6 @@
 //==============================================================================
 - (void) setModelDescription:(NSString *)newDescription
 {
-	[newDescription retain];
-	[modelDescription release];
 	
 	modelDescription = newDescription;
 	
@@ -1078,8 +1074,6 @@
 //==============================================================================
 - (void) setFileName:(NSString *)newName
 {
-	[newName retain];
-	[fileName release];
 	
 	fileName = newName;
 	
@@ -1097,8 +1091,6 @@
     // behavior in the inspector
     if (newAuthor == nil)
         newAuthor = @"";
-	[newAuthor retain];
-	[author release];
 	
 	author = newAuthor;
 	
@@ -1585,17 +1577,7 @@
 //				Weird.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[modelDescription	release];
-	[fileName			release];
-	[author				release];
-	
-	[colorLibrary		release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 //- (void) invalCache:(CacheFlagsT) flags
 //{

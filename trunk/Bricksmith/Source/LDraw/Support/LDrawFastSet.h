@@ -30,8 +30,10 @@
 	
 */
 
+// P3 (ARC): every pointer in the struct is a plain void *. Observers are deliberately NOT retained (as under
+// MRC); the overflow NSMutableSet is owned through CFBridgingRetain/CFBridgingRelease. Only LDrawDirective.m
+// expands these macros.
 typedef struct {
-
 	union {
 		struct {			
 			void *			p1;
@@ -39,34 +41,32 @@ typedef struct {
 		} ptr;
 		struct {
 			void *			flag;
-			NSMutableSet *	mutable_set;
+			void *			mutable_set;	// owned: NSMutableSet *, +1 via CFBridgingRetain
 		} obj;
 	};
-	
 } LDrawFastSet;
 
-
-
+#define LDrawFastSetMutableSet(this) ((__bridge NSMutableSet *)this.obj.mutable_set)
 
 #define MESSAGE_FOR_SET(this,ns_type,__msg) \
 	do {																					\
 		if(this.ptr.p1)																		\
 		{																					\
-			id<ns_type> p1 = this.ptr.p1;													\
-			id<ns_type> p2 = this.ptr.p2;													\
+			id<ns_type> p1 = (__bridge id<ns_type>)this.ptr.p1;								\
+			id<ns_type> p2 = (__bridge id<ns_type>)this.ptr.p2;								\
 			if(p1)	[p1 __msg];																\
-			if(p2 && LDrawFastSetContains(this, p2))										\
+			if(p2 && LDrawFastSetContains(this, (__bridge void *)p2))						\
 				[p2 __msg];																	\
 		}																					\
 		else																				\
 		{																					\
 			if(this.ptr.p2)																	\
 			{																				\
-				NSSet * orig = [NSSet setWithSet:this.obj.mutable_set];						\
+				NSSet * orig = [NSSet setWithSet:LDrawFastSetMutableSet(this)];				\
 				for (NSValue * o in orig)													\
 				{																			\
-					id<ns_type> oo = [o pointerValue];										\
-					if(LDrawFastSetContains(this,oo))										\
+					id<ns_type> oo = (__bridge id<ns_type>)[o pointerValue];				\
+					if(LDrawFastSetContains(this,(__bridge void *)oo))						\
 					{																		\
 						[oo __msg];															\
 					}																		\
@@ -76,86 +76,88 @@ typedef struct {
 	} while(0)
 
 #define LDrawFastSetContains(this, p) \
-	((this.obj.flag == NULL && this.obj.mutable_set != nil) ?								\
-		([this.obj.mutable_set containsObject:[NSValue valueWithPointer:p]] ? 1 : 0) :		\
-		((this.ptr.p1 == p || this.ptr.p2 == p) ? 1 : 0))
+	((this.obj.flag == NULL && this.obj.mutable_set != NULL) ?								\
+		([LDrawFastSetMutableSet(this) containsObject:[NSValue valueWithPointer:(p)]] ? 1 : 0) :	\
+		((this.ptr.p1 == (p) || this.ptr.p2 == (p)) ? 1 : 0))
 
 #define LDrawFastSetInit(this) \
 	do {																					\
 		this.ptr.p1 = this.ptr.p2 = NULL;													\
 	} while(0)
-	
 
 #define LDrawFastSetDealloc(this) \
 	do {\
-		if(this.obj.flag == NULL && this.obj.mutable_set != nil)							\
-		[this.obj.mutable_set release];														\
+		if(this.obj.flag == NULL && this.obj.mutable_set != NULL)							\
+		{																					\
+			CFBridgingRelease(this.obj.mutable_set);										\
+			this.obj.mutable_set = NULL;													\
+		}																					\
 	} while(0) 
 
+// p is a void * (bridge an object with (__bridge void *)).
 #define LDrawFastSetInsert(this,p) \
 	do {\
 		if(this.ptr.p1)																		\
 		{																					\
 			if(this.ptr.p2)																	\
 			{																				\
-				if(p != this.ptr.p1 && p != this.ptr.p2)									\
+				if((p) != this.ptr.p1 && (p) != this.ptr.p2)								\
 				{																			\
 					NSMutableSet * new_set = [[NSMutableSet alloc] initWithCapacity:3];		\
 					[new_set addObject:[NSValue valueWithPointer:this.ptr.p1]];				\
 					[new_set addObject:[NSValue valueWithPointer:this.ptr.p2]];				\
-					[new_set addObject:[NSValue valueWithPointer:p]];						\
+					[new_set addObject:[NSValue valueWithPointer:(p)]];						\
 					this.obj.flag = NULL;													\
-					this.obj.mutable_set = new_set;											\
+					this.obj.mutable_set = (void *)CFBridgingRetain(new_set);				\
 				}																			\
 			}																				\
 			else																			\
 			{																				\
-				if(p != this.ptr.p1)														\
-					this.ptr.p2 = p;														\
+				if((p) != this.ptr.p1)														\
+					this.ptr.p2 = (p);														\
 			}																				\
 		}																					\
 		else																				\
 		{																					\
 			if(this.ptr.p2)																	\
 			{																				\
-				[this.obj.mutable_set addObject:[NSValue valueWithPointer:p]];				\
+				[LDrawFastSetMutableSet(this) addObject:[NSValue valueWithPointer:(p)]];	\
 			}																				\
 			else																			\
 			{																				\
-				this.ptr.p1 = p;															\
+				this.ptr.p1 = (p);															\
 			}																				\
 		}																					\
 	} while(0)
 
-
+// p is a void * (bridge an object with (__bridge void *)).
 #define LDrawFastSetRemove(this, p) \
 	do {																					\
-		if(this.obj.flag == NULL && this.obj.mutable_set != nil)							\
+		if(this.obj.flag == NULL && this.obj.mutable_set != NULL)							\
 		{																					\
-			NSValue * me = [NSValue valueWithPointer:p];									\
-			assert([this.obj.mutable_set containsObject:me]);								\
-			[this.obj.mutable_set removeObject:me];											\
-			assert([this.obj.mutable_set count] >= 2);										\
-			if([this.obj.mutable_set count] == 2)											\
+			NSValue * me = [NSValue valueWithPointer:(p)];									\
+			assert([LDrawFastSetMutableSet(this) containsObject:me]);						\
+			[LDrawFastSetMutableSet(this) removeObject:me];									\
+			assert([LDrawFastSetMutableSet(this) count] >= 2);								\
+			if([LDrawFastSetMutableSet(this) count] == 2)									\
 			{																				\
+				NSMutableSet * dead = CFBridgingRelease(this.obj.mutable_set);				\
 				void ** ptr = &this.ptr.p1;													\
-				NSMutableSet * dead = this.obj.mutable_set;									\
 				for(NSValue * o in dead)													\
 				{																			\
 					*ptr = [o pointerValue];												\
 					++ptr;																	\
 				}																			\
-				[dead release];																\
 			}																				\
 		}																					\
 		else																				\
 		{																					\
-			if(this.ptr.p1 == p)															\
+			if(this.ptr.p1 == (p))															\
 			{																				\
 				this.ptr.p1 = this.ptr.p2;													\
 				this.ptr.p2 = NULL;															\
 			}																				\
-			else if(this.ptr.p2 == p)														\
+			else if(this.ptr.p2 == (p))														\
 			{																				\
 				this.ptr.p2 = NULL;															\
 			}																				\

@@ -290,3 +290,9 @@ section. Each entry says what happened and what to do instead.
     `loadNibNamed:owner:topLevelObjects:`.
   - `[self autorelease]` (singletons that drop themselves when their window closes): use an `__autoreleasing`
     local to keep the same lifetime.
+- **L78. A black render snapshot doesn't by itself mean the change broke rendering.** During P3, all-black captures
+  came and went across identical configurations: the same tree failed, then passed minutes later. A bisect chased
+  that noise. The likely cause is the transparent harness window not being visible (another Space, or behind a
+  full-screen app). → The render test now records the window's occlusion state and skips, with a message, when the
+  capture is uniform *and* the window wasn't visible. Before bisecting a render failure, rerun it on the last good
+  commit.

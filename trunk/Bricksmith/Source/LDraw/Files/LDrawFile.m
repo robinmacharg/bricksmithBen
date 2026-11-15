@@ -48,7 +48,7 @@
 	[newFile addSubmodel:firstModel];
 	[newFile setActiveModel:firstModel];
 	
-	return [newFile autorelease];
+	return newFile;
 	
 }//end file
 
@@ -87,7 +87,7 @@
 	newFile = [[LDrawFile alloc] initWithLines:lines
 									   inRange:NSMakeRange(0, [lines count]) ];
 	
-	return [newFile autorelease];
+	return newFile;
 	
 }//end parseFromFileContents:allowThreads:
 
@@ -129,7 +129,6 @@
 		[names addObject:[[model modelName] lowercaseString]];
 	}
 	
-	[self->nameModelDict release];
 	self->nameModelDict = [[NSDictionary alloc] initWithObjects:submodels forKeys:names];
 }
 
@@ -147,13 +146,13 @@
 {
 	NSRange         modelRange      = range;
 	NSUInteger      modelStartIndex = range.location;
-	id              *submodels      = NULL;
+	__strong id     *submodels      = NULL;	// ARC: nil each slot before free
 	NSUInteger      insertIndex     = 0;
 	
 	self = [super initWithLines:lines inRange:range parentGroup:parentGroup];
 	if(self)
 	{
-		submodels = calloc(range.length, sizeof(LDrawDirective*));
+		submodels = (__strong id *)calloc(range.length, sizeof(LDrawDirective*));
 		dispatch_group_t    dispatchGroup = NULL;
 #if USE_BLOCKS		
 		dispatch_queue_t    queue           = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);	
@@ -203,7 +202,7 @@
 				currentModel = submodels[counter];
 				
 				[self addSubmodel:currentModel];
-				[currentModel release];
+				submodels[counter] = nil;
 			}
 			
 			if([[self submodels] count] > 0)
@@ -561,8 +560,6 @@
 		//Don't bother doing anything if we aren't really changing models.
 		if(newModel != activeModel)
 		{
-			[newModel retain];
-			[activeModel release];
 			
 			//Update the active model and note that something happened.
 			activeModel = newModel;
@@ -573,7 +570,7 @@
 	}
 	else if (newModel == nil)
 	{
-		[activeModel release];//why are we retaining?!
+		//why are we retaining?!
 		activeModel = nil;
 	}
 	else
@@ -624,8 +621,6 @@
 //==============================================================================
 - (void) setPath:(NSString *)newPath
 {
-	[newPath		retain];
-	[self->filePath	release];
 	
 	self->filePath = newPath;
 	
@@ -864,16 +859,7 @@
 // Purpose:		Takin' care o' business.
 //
 //==============================================================================
-- (void) dealloc
-{
-	//NSLog(@"File %s going away.\n", [filePath UTF8String]);
-	[nameModelDict	release];
-	[activeModel	release];
-	[filePath		release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

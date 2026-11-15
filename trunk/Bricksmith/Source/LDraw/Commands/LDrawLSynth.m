@@ -162,7 +162,6 @@
                 [[self subdirectives] addObject:directive];
                 [directive setEnclosingDirective:self];
                 [directive addObserver:self];
-                [directive release];
             }
 
             //
@@ -194,7 +193,6 @@
                     [synthesizedParts addObject:newDirective];
                 }
 
-                [newDirective release];
             }
 
             //
@@ -300,7 +298,7 @@
 - (id) initWithCoder:(NSCoder *)decoder
 {
     // Initialize the object.  We'll have somewhere to synthesize into.
-    [self init];
+    if (!(self = [self init])) return nil;
 
     // Container Coder initialization.  This repopulates our contained objects
     self = [super initWithCoder:decoder];
@@ -715,8 +713,6 @@
 //==============================================================================
 - (void) setLsynthType:(NSString *)type
 {
-    [type retain];
-    [self->synthType release];
     self->synthType = type;
 
 }//end setLsynthType:
@@ -815,8 +811,6 @@
 - (void) setLDrawColor:(LDrawColor *)newColor
 {
     // Store the color
-    [newColor retain];
-    [self->color release];
     self->color = newColor;
 
     [self colorSelectedSynthesizedParts:[self isSelected]];
@@ -970,9 +964,6 @@
     outFile = [outPipe fileHandleForReading];
     errorFile = [errorPipe fileHandleForReading];
 
-    [inPipe release];
-    [outPipe release];
-    [errorPipe release];
 
     // Launch the task
     [task launch];
@@ -1013,9 +1004,6 @@
             initWithData: data
                 encoding: NSASCIIStringEncoding];
 
-    [task release];
-    [data release];
-    [lsynthOutput autorelease];
 
     // Split the output into lines
     NSMutableArray *stringsArray = [NSMutableArray arrayWithArray:[lsynthOutput
@@ -1034,7 +1022,6 @@
                                                                        inRange:NSMakeRange(0, 1)
                                                                    parentGroup:nil];
             [synthesizedParts addObject:newDirective];
-            [newDirective release];
         } else if (extract == NO && startRange.length > 0)  {
             extract = YES;
         }
@@ -1071,7 +1058,7 @@
     // Reintegrate our hull-determined data.  We'll likely have multiple
     // points all on the hull, each associated with a single constraint.
     // This boils them down to a set of constraints on the hull.
-    NSMutableSet *hullConstraints = [[[NSMutableSet alloc] init] autorelease];
+    NSMutableSet *hullConstraints = [[NSMutableSet alloc] init];
     for (NSMutableDictionary *point in preparedData) {
         if ([[point objectForKey:@"inHull"] integerValue] == YES) {
             [hullConstraints addObject:[point objectForKey:@"directive"]];
@@ -1083,7 +1070,7 @@
     // INSIDE/OUTSIDE constraints as we iterate over them.
     // We could modify the constraints in-place but recreating the
     // subdirectives array is simpler.
-    NSMutableArray *newConstraints = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *newConstraints = [[NSMutableArray alloc] init];
 
     for (i=0; i<[[self subdirectives] count]; i++) {
         LDrawPart *part = [[self subdirectives] objectAtIndex:i];
@@ -1095,7 +1082,6 @@
             LDrawLSynthDirective *OUTSIDE = [[LDrawLSynthDirective alloc] init];
             [OUTSIDE setStringValue:@"OUTSIDE"];
             [newConstraints addObject:OUTSIDE];
-            [OUTSIDE release];
         }
 
         // This part is on the hull (i.e. INSIDE the band) and the next part is
@@ -1107,7 +1093,6 @@
             [OUTSIDE setStringValue:@"OUTSIDE"];
             [newConstraints addObject:part];
             [newConstraints addObject:OUTSIDE];
-            [OUTSIDE release];
         }
 
         // This part is not on the hull (i.e. OUTSIDE the band) and the next part IS
@@ -1119,7 +1104,6 @@
             [INSIDE setStringValue:@"INSIDE"];
             [newConstraints addObject:part];
             [newConstraints addObject:INSIDE];
-            [INSIDE release];
         }
 
         // The constraint has the same hull membership as the next one so
@@ -1151,7 +1135,7 @@
     // We build up details for each constraint in mappedPoints as we progress.
     // The inverse of the first constraint's transformation moves it back to (0,0,0).
     // The same inverse transform will do similar for the other constraints
-    NSMutableArray *mappedPoints = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *mappedPoints = [[NSMutableArray alloc] init];
     Matrix4 transform = [[[self subdirectives] objectAtIndex:0] transformationMatrix];
     Matrix4 inverseTransform = Matrix4Invert(transform);
     for (LDrawPart *part in [self subdirectives]) {
@@ -1216,7 +1200,7 @@
     // We create a dictionary for each hull point for each mappedPoint
     // We'll reintegrate later to decide which constraints are in or out
     // (in doAutoHullOnBand)
-    NSMutableArray *preparedData = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *preparedData = [[NSMutableArray alloc] init];
     for (NSMutableDictionary *point in mappedPoints) {
         for (NSMutableDictionary *coords in [point objectForKey:@"hullPoints"]) {
             //NSLog(@"Point: %@", coords);
@@ -1280,7 +1264,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     LSynthSelectionModeT selectionMode = [userDefaults integerForKey:LSYNTH_SELECTION_MODE_KEY];
     GLfloat rgba[4]; // a temporary RGBA color we create and manipulate
-    LDrawColor *theColor = [[[LDrawColor alloc] init] autorelease]; // an LDrawColor to set the part's color with
+    LDrawColor *theColor = [[LDrawColor alloc] init]; // an LDrawColor to set the part's color with
 
     // Is the part selected?
     if (yesNo == YES) {
@@ -1481,14 +1465,6 @@
 // Purpose:		Like sleeping.  But, like, for ever.
 //
 //==============================================================================
-- (void) dealloc
-{
-    [color release];
-    [synthesizedParts release];
-    [synthType release];
-
-    [super dealloc];
-
-}//end dealloc
+//end dealloc
 
 @end

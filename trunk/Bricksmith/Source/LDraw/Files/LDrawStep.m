@@ -55,7 +55,7 @@
 {
 	LDrawStep *newStep = [[LDrawStep alloc] init];
 	
-	return [newStep autorelease];
+	return newStep;
 	
 }//end emptyStep
 
@@ -85,7 +85,7 @@
 //==============================================================================
 - (id) init
 {
-	[super init];
+	if (!(self = [super init])) return nil;
 	
 	stepRotationType	= LDrawStepRotationNone;
 	rotationAngle		= ZeroPoint3;
@@ -109,7 +109,7 @@
 	NSString        *currentLine        = nil;
 	Class           CommandClass        = Nil;
 	NSRange         commandRange        = range;
-	id              *directives         = calloc(range.length, sizeof(LDrawDirective*));
+	__strong id     *directives         = (__strong id *)calloc(range.length, sizeof(LDrawDirective*));	// ARC: nil each slot before free
 	NSUInteger      lineIndex           = 0;
 	NSUInteger      insertIndex         = 0;
 		
@@ -209,7 +209,7 @@
 			currentDirective = directives[counter];
 			
 			[self addDirective:currentDirective];
-			[currentDirective release];
+			directives[counter] = nil;
 		}
 		free(directives);
 		
@@ -963,12 +963,13 @@
 - (void) removeDirectiveAtIndex:(NSInteger)index
 {
 	[self invalCache:CacheFlagBounds|DisplayList];
-	LDrawDirective *directive = [[[self subdirectives] objectAtIndex:index] retain];
+	// Keep the directive alive while super removes it (was retain ... release under MRC).
+	LDrawDirective *directive __attribute__((objc_precise_lifetime)) = [[self subdirectives] objectAtIndex:index];
 
 	[super removeDirectiveAtIndex:index];
 	
-	[directive release];
 	
+	(void)directive;
 }//end removeDirectiveAtIndex:
 
 
@@ -1159,10 +1160,6 @@
 // Purpose:		The Fat Lady has sung.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 @end
