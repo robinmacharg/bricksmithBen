@@ -41,6 +41,14 @@ enum RenderHarness {
 			view.setZoomPercentage(zoom)
 			view.scrollCenter(toModelPoint: V3CenterOfBox(doc.documentContents().activeModel().boundingBox3()))
 			view.display()
+			// A fixed viewport: the split-view layout comes from autosaved divider positions in the (shared,
+			// restored-per-run) debug defaults domain, so the view's natural size is not stable (L73).
+			// Set after display() (which re-lays out the split view), then reshape to update GL_VIEWPORT.
+			// The viewport follows the visible rect, which the LDrawViewerContainer clips: size both.
+			view.superview?.setFrameSize(NSSize(width: 625, height: 691))
+			view.setFrameSize(NSSize(width: 625, height: 691))
+			view.reshape()
+			view.scrollCenter(toModelPoint: V3CenterOfBox(doc.documentContents().activeModel().boundingBox3()))
 			view.draw()
 			view.openGLContext?.makeCurrentContext()
 			glReadBuffer(GLenum(GL_BACK))

@@ -1,0 +1,27 @@
+main.ldr contains main.ldr: false
+main.ldr contains sub.ldr: true
+main.ldr contains subsub.ldr: false
+main.ldr contains SUB.LDR: false
+main.ldr contains 3005.dat: true
+main.ldr contains missing.ldr: false
+sub.ldr contains main.ldr: false
+sub.ldr contains sub.ldr: false
+sub.ldr contains subsub.ldr: true
+sub.ldr contains SUB.LDR: false
+sub.ldr contains 3005.dat: true
+sub.ldr contains missing.ldr: false
+subsub.ldr contains main.ldr: false
+subsub.ldr contains sub.ldr: false
+subsub.ldr contains subsub.ldr: false
+subsub.ldr contains SUB.LDR: false
+subsub.ldr contains 3005.dat: false
+subsub.ldr contains missing.ldr: false
+file contains subsub.ldr: true
+part 3001.dat: peer file nil, contains 'sub.ldr' false
+part sub.ldr: peer file nil, contains 'sub.ldr' true
+part 3005.dat: peer file nil, contains 'sub.ldr' false
+part 3005.dat: peer file nil, contains 'sub.ldr' false
+part 3005.dat: peer file nil, contains 'sub.ldr' false
+part 3005.dat: peer file nil, contains 'sub.ldr' false
+part subsub.ldr: peer file nil, contains 'sub.ldr' false
+part 3024.dat: peer file nil, contains 'sub.ldr' false

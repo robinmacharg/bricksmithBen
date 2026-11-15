@@ -250,3 +250,12 @@ section. Each entry says what happened and what to do instead.
   were caught up later. The annotator also mis-handled typedef'd pointers taken by address (`LDrawDLHandle *`
   is `void **`) and function-pointer typedefs. It now handles both. A function-pointer typedef's own
   parameters still need annotating by hand.
+- **L73. Render snapshots must fix their own geometry.** When the main display changed to the built-in Retina
+  screen, captures came out at 2x. Even at 1x, the GL viewport followed the split-view layout, which comes from
+  divider positions autosaved in the debug defaults domain (636x702 against 625x691). → `DocHarness.open` turns off
+  `wantsBestResolutionOpenGLSurface` before the window is first shown. `RenderHarness` sizes the
+  `LDrawViewerContainer` and the view to 625x691 after `display()`, then calls `reshape` and re-centres. References
+  were re-recorded with this harness on 2026-11-15; the renders are the same, offset by a few pixels.
+- **L74. Never chain a commit after a test run with `;`.** Commit `06ba93d` went in while 8 render tests were
+  failing (the L51 mistake again). Use `&&` from the test command to the commit, with `setopt pipefail` and a
+  grep that fails on failure, or check the result first and commit in a separate call.

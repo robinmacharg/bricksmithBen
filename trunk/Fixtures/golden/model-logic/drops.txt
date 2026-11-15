@@ -1,0 +1,12 @@
+container \ dropped: step, part, line, mpd model, model, comment, file
+file: yes, yes, yes, yes, yes, yes, yes
+mpd model: yes, yes, yes, yes, yes, yes, yes
+model: yes, no, yes, yes, yes, yes, yes
+step: yes, yes, yes, yes, yes, yes, yes
+lines step: yes, yes, yes, yes, yes, yes, yes
+main.ldr model accepts part -> main.ldr (itself): no
+main.ldr model accepts part -> sub.ldr: yes
+main.ldr model accepts LSynth directive: no
+main.ldr step 1 accepts part -> main.ldr (itself): no
+main.ldr step 1 accepts part -> sub.ldr: yes
+main.ldr step 1 accepts LSynth directive: no

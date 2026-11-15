@@ -1,0 +1,24 @@
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10
+0 Texmap
+0 Name: t.ldr
+0 Author: Fixture Author
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 (null)
+0 !: 3 16 0 0 0 1 0 0 0 1 0
+0 !TEXMAP END
+
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png GLOSSMAP
+0 Texmap
+0 Name: t.ldr
+0 Author: Fixture Author
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+0 !: 3 16 0 0 0 1 0 0 0 1 0
+0 !TEXMAP END
+
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 ""
+0 Texmap
+0 Name: t.ldr
+0 Author: Fixture Author
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 (null)
+0 !: 3 16 0 0 0 1 0 0 0 1 0
+0 !TEXMAP END
+

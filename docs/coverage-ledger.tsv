@@ -34,3 +34,10 @@ LDraw/Commands/LDrawPart.m	debugDrawboundingBox	Dead: only caller is compiled ou
 LDraw/Support/MatrixMath.c	V3Print	Debug printing only (stdout); no behaviour to characterise
 LDraw/Support/MatrixMath.c	Matrix4Print	Debug printing only (stdout); no behaviour to characterise
 LDraw/Support/LDrawUtilities.m	registerHitForObject:depth:creditObject:hits:	Dead: only callers are the hitTest: methods (see their rows) and LDrawDragHandle hitTest:. Candidate for deletion in P4
+LDraw/Commands/LDrawColor.m	HSVtoRGB	Dead: no callers (static C function; not used by HSVACompare or anything else; checked source, xibs, Swift)
+LDraw/Commands/LDrawColor.m	fullCopyWithZone:	Dead: no callers (copyWithZone: is the live copy)
+LDraw/Support/ColorLibrary.m	getComplimentRGBA:forCode:	Dead: no callers
+LDraw/Files/LDrawModel.m	makeStepVisible:	Dead: no callers
+LDraw/Files/LDrawModel.m	category	Dead: no callers or KVC/binding use (catalog "category" keys are dictionary keys, not this method)
+LDraw/Files/LDrawModel.m	setRotationCenter:	Dead: no callers (LDrawGLCamera has its own setRotationCenter:)
+LDraw/Commands/LDrawPart.m	drawBoundsWithColor:	Dead: only caller is the fixed-function drawElement: path (NEW_RENDERER 1)

@@ -28,6 +28,13 @@ enum DocHarness {
 			// window makes OverlayHelperWindow compute an invalid frame and AppKit asserts (LEARNINGS L58).
 			if let window = doc.windowControllers.first?.window {
 				window.alphaValue = 0
+				// 1x GL surfaces whatever the main screen is, set before the window is first shown: render
+				// snapshots must not depend on whether the main display is Retina (L73).
+				func pin(_ view: NSView) {
+					(view as? NSOpenGLView)?.wantsBestResolutionOpenGLSurface = false
+					view.subviews.forEach(pin)
+				}
+				window.contentView.map(pin)
 				window.setFrame(NSRect(x: 100, y: 100, width: 1200, height: 800), display: false)
 				window.orderFront(nil)
 			}

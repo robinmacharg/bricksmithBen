@@ -1,0 +1,41 @@
+LDrawFile | LDrawFile |  | 
+LDrawMPDModel | main | Document | InspectionMPDModel
+LDrawStep | Step 1 | nil | InspectionStep
+LDrawColor | Test_Colour | ColorDroplet | nil
+LDrawComment | a comment | Comment | InspectionComment
+LDrawMetaCommand | UNKNOWN META | Unknown | InspectionUnknownCommand
+LDrawPart | 3001.dat | Brick | InspectionPart
+LDrawPart | sub | Brick | InspectionPart
+LDrawLine | Line | LinePrimitive | InspectionLine
+LDrawTriangle | Triangle | TrianglePrimitive | InspectionTriangle
+LDrawQuadrilateral | Quadrilateral | QuadPrimitive | InspectionQuadrilateral
+LDrawConditionalLine | Conditional Line | ConditionalLinePrimitive | InspectionConditionalLine
+LDrawStep | Step 2 | RotationStep | InspectionStep
+LDrawPart | 3005.dat | Brick | InspectionPart
+LDrawStep | Step 3 | RotationStep | InspectionStep
+LDrawPart | 3005.dat | Brick | InspectionPart
+LDrawStep | Step 4 | RotationStep | InspectionStep
+LDrawPart | 3005.dat | Brick | InspectionPart
+LDrawStep | Step 5 | RotationStepEnd | InspectionStep
+LDrawTexture | sticker.png | Texture | 
+LDrawTriangle | Triangle | TrianglePrimitive | InspectionTriangle
+LDrawMPDModel | sub | Document | InspectionMPDModel
+LDrawStep | Step 1 | nil | InspectionStep
+LDrawPart | 3005.dat | Brick | InspectionPart
+LDrawPart | subsub | Brick | InspectionPart
+LDrawMPDModel | subsub | Document | InspectionMPDModel
+LDrawStep | Step 1 | nil | InspectionStep
+LDrawPart | 3024.dat | Brick | InspectionPart
+LDrawDirective | LDrawDirective |  | 
+LDrawModel | untitled model | Document | 
+LDrawColor |  | ColorDroplet | nil
+LDrawStep | Step | nil | InspectionStep
+LDrawStep | Step | nil | InspectionStep
+LDrawStep | Step | nil | InspectionStep
+LDrawStep | Step | nil | InspectionStep
+LDrawStep | Step | nil | InspectionStep
+LDrawStep | Step | nil | InspectionStep
+LDrawStep | Step | RotationStep | InspectionStep
+LDrawStep | Step | RotationStep | InspectionStep
+LDrawStep | Step | RotationStep | InspectionStep
+LDrawStep | Step | RotationStepEnd | InspectionStep
