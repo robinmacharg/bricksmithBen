@@ -107,8 +107,7 @@ struct LibraryCatalogTests {
 		return try JSONSerialization.data(withJSONObject: stable, options: [.prettyPrinted, .sortedKeys])
 	}
 
-	@Test("Building the catalog from the fixture library: contents match the golden; parts.plist is written into the library",
-		  .disabled("BUG-015: catalog building crashes (use-after-free from the in-progress ARC edit); re-enable when resolved"))
+	@Test("Building the catalog from the fixture library: contents match the golden; parts.plist is written into the library")
 	func buildCatalog() async throws {
 		let catalog = try #require(await Self.buildCatalog())
 		#expect(catalog.keys.contains("Version"), "catalog lost its version field (VERSION_KEY)")
@@ -117,8 +116,7 @@ struct LibraryCatalogTests {
 		#expect(FileManager.default.fileExists(atPath: written.path) || true, "characterised: see golden notes")
 	}
 
-	@Test("PartLibrary queries over the built catalog",
-		  .disabled("BUG-015: catalog building crashes (use-after-free from the in-progress ARC edit); re-enable when resolved"))
+	@Test("PartLibrary queries over the built catalog")
 	func queries() async throws {
 		let catalog = try #require(await Self.buildCatalog())
 		let library = PartLibrary.shared()
@@ -154,19 +152,10 @@ struct LibraryCatalogTests {
 		return gotCatalog
 	}
 
-	@Test("BUG-015: building the part catalog crashes today (child process)")
-	func bug015CrashesToday() async {
-		await #expect(processExitsWith: .failure) {
+	@Test("Building the part catalog does not crash (regression test for BUG-015, run in a child process)")
+	func catalogBuildDoesNotCrash() async {
+		await #expect(processExitsWith: .success) {
 			exit(LibraryCatalogTests.buildCatalogInThisProcess() ? EXIT_SUCCESS : EXIT_FAILURE)
-		}
-	}
-
-	@Test("BUG-015: building the part catalog should succeed")
-	func bug015ShouldSucceed() async {
-		await withKnownIssue("BUG-015: catalogInfoForFileAtPath: returns an object freed by its own autorelease pool") {
-			await #expect(processExitsWith: .success) {
-				exit(LibraryCatalogTests.buildCatalogInThisProcess() ? EXIT_SUCCESS : EXIT_FAILURE)
-			}
 		}
 	}
 

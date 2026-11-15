@@ -1,0 +1,1193 @@
+{
+  "Part Catalog" : {
+    "Brick" : [
+      {
+        "Part Number" : "3062b.dat"
+      },
+      {
+        "Part Number" : "3005.dat"
+      },
+      {
+        "Part Number" : "3001.dat"
+      },
+      {
+        "Part Number" : "3003.dat"
+      }
+    ],
+    "Hose" : [
+      {
+        "Part Number" : "757.dat"
+      }
+    ],
+    "LSynth" : [
+      {
+        "Part Number" : "ls03.dat"
+      },
+      {
+        "Part Number" : "ls02.dat"
+      },
+      {
+        "Part Number" : "ls01.dat"
+      },
+      {
+        "Part Number" : "ls05.dat"
+      },
+      {
+        "Part Number" : "ls11.dat"
+      },
+      {
+        "Part Number" : "ls10.dat"
+      },
+      {
+        "Part Number" : "ls04.dat"
+      },
+      {
+        "Part Number" : "ls12.dat"
+      },
+      {
+        "Part Number" : "ls06.dat"
+      },
+      {
+        "Part Number" : "ls07.dat"
+      },
+      {
+        "Part Number" : "ls60.dat"
+      },
+      {
+        "Part Number" : "ls61.dat"
+      },
+      {
+        "Part Number" : "ls71.dat"
+      },
+      {
+        "Part Number" : "ls70.dat"
+      },
+      {
+        "Part Number" : "ls41.dat"
+      },
+      {
+        "Part Number" : "ls40.dat"
+      },
+      {
+        "Part Number" : "ls80.dat"
+      },
+      {
+        "Part Number" : "ls90.dat"
+      },
+      {
+        "Part Number" : "ls91.dat"
+      },
+      {
+        "Part Number" : "ls50.dat"
+      },
+      {
+        "Part Number" : "ls51.dat"
+      },
+      {
+        "Part Number" : "ls100.dat"
+      },
+      {
+        "Part Number" : "ls22.dat"
+      },
+      {
+        "Part Number" : "ls23.dat"
+      },
+      {
+        "Part Number" : "ls101.dat"
+      },
+      {
+        "Part Number" : "ls09.dat"
+      },
+      {
+        "Part Number" : "ls21.dat"
+      },
+      {
+        "Part Number" : "ls20.dat"
+      },
+      {
+        "Part Number" : "ls08.dat"
+      },
+      {
+        "Part Number" : "ls102.dat"
+      },
+      {
+        "Part Number" : "ls30.dat"
+      }
+    ],
+    "Moved" : [
+      {
+        "Part Number" : "ls00.dat"
+      }
+    ],
+    "Plate" : [
+      {
+        "Part Number" : "3024.dat"
+      },
+      {
+        "Part Number" : "3020.dat"
+      },
+      {
+        "Part Number" : "3794b.dat"
+      },
+      {
+        "Part Number" : "3023.dat"
+      }
+    ],
+    "Primitives" : [
+      {
+        "Part Number" : "box3u2p.dat"
+      },
+      {
+        "Part Number" : "3-8edge.dat"
+      },
+      {
+        "Part Number" : "box4t.dat"
+      },
+      {
+        "Part Number" : "4-4con8.dat"
+      },
+      {
+        "Part Number" : "box4.dat"
+      },
+      {
+        "Part Number" : "box5.dat"
+      },
+      {
+        "Part Number" : "1-8chrd.dat"
+      },
+      {
+        "Part Number" : "axlehol5.dat"
+      },
+      {
+        "Part Number" : "2-4cyli.dat"
+      },
+      {
+        "Part Number" : "confric8.dat"
+      },
+      {
+        "Part Number" : "rect1.dat"
+      },
+      {
+        "Part Number" : "4-4cyli.dat"
+      },
+      {
+        "Part Number" : "1-4ndis.dat"
+      },
+      {
+        "Part Number" : "4-4ring8.dat"
+      },
+      {
+        "Part Number" : "stug-1x2.dat"
+      },
+      {
+        "Part Number" : "confric9.dat"
+      },
+      {
+        "Part Number" : "1-4edge.dat"
+      },
+      {
+        "Part Number" : "rect3.dat"
+      },
+      {
+        "Part Number" : "1-4cyls.dat"
+      },
+      {
+        "Part Number" : "confric.dat"
+      },
+      {
+        "Part Number" : "1-4cyli.dat"
+      },
+      {
+        "Part Number" : "1-4ring3.dat"
+      },
+      {
+        "Part Number" : "confric6.dat"
+      },
+      {
+        "Part Number" : "4-4edge.dat"
+      },
+      {
+        "Part Number" : "4-4ring4.dat"
+      },
+      {
+        "Part Number" : "stud4.dat"
+      },
+      {
+        "Part Number" : "confric5.dat"
+      },
+      {
+        "Part Number" : "1-4cylo.dat"
+      },
+      {
+        "Part Number" : "stud3.dat"
+      },
+      {
+        "Part Number" : "4-4ring3.dat"
+      },
+      {
+        "Part Number" : "4-4disc.dat"
+      },
+      {
+        "Part Number" : "stud2a.dat"
+      },
+      {
+        "Part Number" : "4-4ring2.dat"
+      },
+      {
+        "Part Number" : "stud2.dat"
+      },
+      {
+        "Part Number" : "2-4edge.dat"
+      },
+      {
+        "Part Number" : "bush0.dat"
+      },
+      {
+        "Part Number" : "stud.dat"
+      },
+      {
+        "Part Number" : "4-4con7.dat"
+      },
+      {
+        "Part Number" : "1-4chrd.dat"
+      },
+      {
+        "Part Number" : "rect2p.dat"
+      },
+      {
+        "Part Number" : "3-8cyli.dat"
+      },
+      {
+        "Part Number" : "stud4a.dat"
+      },
+      {
+        "Part Number" : "1-8ring3.dat"
+      }
+    ],
+    "Slope" : [
+      {
+        "Part Number" : "3039.dat"
+      }
+    ],
+    "String" : [
+      {
+        "Part Number" : "572a.dat"
+      }
+    ],
+    "Subparts" : [
+      {
+        "Part Number" : "s\\3001s01.dat"
+      },
+      {
+        "Part Number" : "s\\3039s01.dat"
+      },
+      {
+        "Part Number" : "s\\3023s01.dat"
+      }
+    ],
+    "Technic" : [
+      {
+        "Part Number" : "6558.dat"
+      },
+      {
+        "Part Number" : "32054.dat"
+      },
+      {
+        "Part Number" : "4459.dat"
+      }
+    ]
+  },
+  "Part List" : {
+    "1-4chrd.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Chord 0.25",
+      "Part Number" : "1-4chrd.dat"
+    },
+    "1-4cyli.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cylinder 0.25",
+      "Part Number" : "1-4cyli.dat"
+    },
+    "1-4cylo.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cylinder Open 0.25",
+      "Part Number" : "1-4cylo.dat"
+    },
+    "1-4cyls.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cylinder Sloped 0.25",
+      "Part Number" : "1-4cyls.dat"
+    },
+    "1-4edge.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Circle 0.25",
+      "Part Number" : "1-4edge.dat"
+    },
+    "1-4ndis.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Disc Negative 0.25",
+      "Part Number" : "1-4ndis.dat"
+    },
+    "1-4ring3.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Ring  3 x 0.25",
+      "Part Number" : "1-4ring3.dat"
+    },
+    "1-8chrd.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Chord 0.125",
+      "Part Number" : "1-8chrd.dat"
+    },
+    "1-8ring3.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Ring  3 x 0.125",
+      "Part Number" : "1-8ring3.dat"
+    },
+    "2-4cyli.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cylinder 0.5",
+      "Part Number" : "2-4cyli.dat"
+    },
+    "2-4edge.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Circle 0.5",
+      "Part Number" : "2-4edge.dat"
+    },
+    "3-8cyli.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cylinder 0.375",
+      "Part Number" : "3-8cyli.dat"
+    },
+    "3-8edge.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Circle 0.375",
+      "Part Number" : "3-8edge.dat"
+    },
+    "4-4con7.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cone  7 x 1.0",
+      "Part Number" : "4-4con7.dat"
+    },
+    "4-4con8.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cone  8 x 1.0",
+      "Part Number" : "4-4con8.dat"
+    },
+    "4-4cyli.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Cylinder 1.0",
+      "Part Number" : "4-4cyli.dat"
+    },
+    "4-4disc.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Disc 1.0",
+      "Part Number" : "4-4disc.dat"
+    },
+    "4-4edge.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Circle 1.0",
+      "Part Number" : "4-4edge.dat"
+    },
+    "4-4ring2.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Ring  2 x 1.0",
+      "Part Number" : "4-4ring2.dat"
+    },
+    "4-4ring3.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Ring  3 x 1.0",
+      "Part Number" : "4-4ring3.dat"
+    },
+    "4-4ring4.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Ring  4 x 1.0",
+      "Part Number" : "4-4ring4.dat"
+    },
+    "4-4ring8.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Ring  8 x 1.0",
+      "Part Number" : "4-4ring8.dat"
+    },
+    "572a.dat" : {
+      "Category" : "String",
+      "Part Name" : "String End Stud",
+      "Part Number" : "572a.dat"
+    },
+    "757.dat" : {
+      "Category" : "Hose",
+      "Keywords" : [
+        "gizmo",
+        "hose",
+        "flexible",
+        "minifig",
+        "space",
+        "tube",
+        "end",
+        "tabs",
+        "cap",
+        "Star Wars",
+        "Studio",
+        "Life on Mars"
+      ],
+      "Part Name" : "Hose Flexible 12L Top  1 x  1 x  2\/3 with Stud",
+      "Part Number" : "757.dat"
+    },
+    "3001.dat" : {
+      "Category" : "Brick",
+      "Part Name" : "Brick  2 x  4",
+      "Part Number" : "3001.dat"
+    },
+    "3003.dat" : {
+      "Category" : "Brick",
+      "Part Name" : "Brick  2 x  2",
+      "Part Number" : "3003.dat"
+    },
+    "3005.dat" : {
+      "Category" : "Brick",
+      "Part Name" : "Brick  1 x  1",
+      "Part Number" : "3005.dat"
+    },
+    "3020.dat" : {
+      "Category" : "Plate",
+      "Part Name" : "Plate  2 x  4",
+      "Part Number" : "3020.dat"
+    },
+    "3023.dat" : {
+      "Category" : "Plate",
+      "Part Name" : "Plate  1 x  2",
+      "Part Number" : "3023.dat"
+    },
+    "3024.dat" : {
+      "Category" : "Plate",
+      "Part Name" : "Plate  1 x  1",
+      "Part Number" : "3024.dat"
+    },
+    "3039.dat" : {
+      "Category" : "Slope",
+      "Part Name" : "Slope Brick 45  2 x  2",
+      "Part Number" : "3039.dat"
+    },
+    "3062b.dat" : {
+      "Category" : "Brick",
+      "Part Name" : "Brick  1 x  1 Round with Hollow Stud",
+      "Part Number" : "3062b.dat"
+    },
+    "3794b.dat" : {
+      "Category" : "Plate",
+      "Keywords" : [
+        "jumper",
+        "offset",
+        "tile",
+        "spacer"
+      ],
+      "Part Name" : "Plate  1 x  2 with Groove with 1 Centre Stud",
+      "Part Number" : "3794b.dat"
+    },
+    "4459.dat" : {
+      "Category" : "Technic",
+      "Part Name" : "Technic Pin with Friction",
+      "Part Number" : "4459.dat"
+    },
+    "6558.dat" : {
+      "Category" : "Technic",
+      "Part Name" : "Technic Pin Long with Friction and Slot",
+      "Part Number" : "6558.dat"
+    },
+    "32054.dat" : {
+      "Category" : "Technic",
+      "Part Name" : "Technic Pin Long with Stop Bush",
+      "Part Number" : "32054.dat"
+    },
+    "axlehol5.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Axle Hole Open Two Opposite Sides",
+      "Part Number" : "axlehol5.dat"
+    },
+    "box3u2p.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Box with 3 Faces without 2 Parallel Edges",
+      "Part Number" : "box3u2p.dat"
+    },
+    "box4.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Box with 4 Faces (2 Parallel Pairs) and All Edges",
+      "Part Number" : "box4.dat"
+    },
+    "box4t.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Box with 4 Adjacent Faces and All Edges",
+      "Part Number" : "box4t.dat"
+    },
+    "box5.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Box with 5 Faces and All Edges",
+      "Part Number" : "box5.dat"
+    },
+    "bush0.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Bush without Collars",
+      "Part Number" : "bush0.dat"
+    },
+    "confric.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Friction Pin 1.0 with Base Collar",
+      "Part Number" : "confric.dat"
+    },
+    "confric5.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Friction Pin 1.0 Slotted with Split Base Collar",
+      "Part Number" : "confric5.dat"
+    },
+    "confric6.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Friction Pin 1.0 Slotted without Base Collar",
+      "Part Number" : "confric6.dat"
+    },
+    "confric8.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Friction Pin Middle Slotted with Split Base Collar",
+      "Part Number" : "confric8.dat"
+    },
+    "confric9.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Technic Friction Pin Middle Slotted with Unsplit Base Collar",
+      "Part Number" : "confric9.dat"
+    },
+    "ls00.dat" : {
+      "Category" : "Moved",
+      "Part Name" : "~Moved to LS01",
+      "Part Number" : "ls00.dat"
+    },
+    "ls01.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 1 - \"Hose\"",
+      "Part Number" : "ls01.dat"
+    },
+    "ls02.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 2 - \"Hose\"",
+      "Part Number" : "ls02.dat"
+    },
+    "ls03.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 3 - \"Hose\"",
+      "Part Number" : "ls03.dat"
+    },
+    "ls04.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 4 - \"String\"",
+      "Part Number" : "ls04.dat"
+    },
+    "ls05.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 5 - \"NXT Cable\"",
+      "Part Number" : "ls05.dat"
+    },
+    "ls06.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 6 - \"Power Functions Cable\"",
+      "Part Number" : "ls06.dat"
+    },
+    "ls07.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 7 - \"RCX Cable\"",
+      "Part Number" : "ls07.dat"
+    },
+    "ls08.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 8 - \"Minifig Chain\"",
+      "Part Number" : "ls08.dat"
+    },
+    "ls09.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 9 - \"String Minifig Grip\"",
+      "Part Number" : "ls09.dat"
+    },
+    "ls10.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Electric Cable Segment",
+      "Part Number" : "ls10.dat"
+    },
+    "ls11.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Electric Cable Segment NXT",
+      "Part Number" : "ls11.dat"
+    },
+    "ls12.dat" : {
+      "Category" : "LSynth",
+      "Part Name" : "~LSynth Electric Mindstorms NXT Cable Segment",
+      "Part Number" : "ls12.dat"
+    },
+    "ls20.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Pneumatic Hose - End Piece",
+      "Part Number" : "ls20.dat"
+    },
+    "ls21.dat" : {
+      "Category" : "LSynth",
+      "Part Name" : "~LSynth Technic Pneumatic Hose - Cross Section",
+      "Part Number" : "ls21.dat"
+    },
+    "ls22.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Pneumatic Hose - Beveled End Piece",
+      "Part Number" : "ls22.dat"
+    },
+    "ls23.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Pneumatic Hose - Beveled Cross Section",
+      "Part Number" : "ls23.dat"
+    },
+    "ls30.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Electric Technic Fiber Optics - End Piece",
+      "Part Number" : "ls30.dat"
+    },
+    "ls40.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Flexible Axle - End Piece",
+      "Part Number" : "ls40.dat"
+    },
+    "ls41.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Flexible Axle - Cross Section",
+      "Part Number" : "ls41.dat"
+    },
+    "ls50.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Flex-System Hose - End Piece",
+      "Part Number" : "ls50.dat"
+    },
+    "ls51.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Technic Flex-System Hose - Cross Section",
+      "Part Number" : "ls51.dat"
+    },
+    "ls60.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Short Straight String Segment",
+      "Part Number" : "ls60.dat"
+    },
+    "ls61.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Straight String Segment for STRING_WITH_GRIPS_21L",
+      "Part Number" : "ls61.dat"
+    },
+    "ls70.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth"
+      ],
+      "Part Name" : "~LSynth Electric Power Functions Cable Segment",
+      "Part Number" : "ls70.dat"
+    },
+    "ls71.dat" : {
+      "Category" : "LSynth",
+      "Part Name" : "~LSynth Electric Power Functions 2-Wires Cable Segment",
+      "Part Number" : "ls71.dat"
+    },
+    "ls80.dat" : {
+      "Category" : "LSynth",
+      "Part Name" : "~LSynth Technic Tread Crawler Segment Straight",
+      "Part Number" : "ls80.dat"
+    },
+    "ls90.dat" : {
+      "Category" : "LSynth",
+      "Part Name" : "~LSynth Hose Flexible 19M End Segment",
+      "Part Number" : "ls90.dat"
+    },
+    "ls91.dat" : {
+      "Category" : "LSynth",
+      "Part Name" : "~LSynth Hose Flexible 19M Segment",
+      "Part Number" : "ls91.dat"
+    },
+    "ls100.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 10 - \"HOSE_FLEXIBLE_8.5L\"",
+      "Part Number" : "ls100.dat"
+    },
+    "ls101.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 11 - \"HOSE_FLEXIBLE_12L\"",
+      "Part Number" : "ls101.dat"
+    },
+    "ls102.dat" : {
+      "Category" : "LSynth",
+      "Keywords" : [
+        "LSynth",
+        "RCX",
+        "ELECTRIC",
+        "CABLE",
+        "NXT",
+        "FIBER",
+        "OPTIC",
+        "FLEX",
+        "SYSTEM",
+        "FLEXIBLE",
+        "AXLE",
+        "MINIFIG",
+        "",
+        "PNEUMATIC",
+        "RIBBED",
+        "RUBBER",
+        "STRING",
+        "CHAIN",
+        "BAND",
+        "BELT",
+        "PLASTIC",
+        "TREAD",
+        "INSIDE",
+        "OUTSIDE",
+        "",
+        "CROSS",
+        "SHOW",
+        "HIDE",
+        "Synthesis"
+      ],
+      "Part Name" : "LSynth Constraint Part - Type 12 - \"HOSE_FLEXIBLE_19L\"",
+      "Part Number" : "ls102.dat"
+    },
+    "rect1.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Rectangle with 1 Edge",
+      "Part Number" : "rect1.dat"
+    },
+    "rect2p.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Rectangle with 2 Parallel Edges",
+      "Part Number" : "rect2p.dat"
+    },
+    "rect3.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Rectangle with 3 Edges",
+      "Part Number" : "rect3.dat"
+    },
+    "s\\3001s01.dat" : {
+      "Category" : "Subparts",
+      "Part Name" : "~Brick  2 x  4 without Front and Back Faces",
+      "Part Number" : "s\\3001s01.dat"
+    },
+    "s\\3023s01.dat" : {
+      "Category" : "Subparts",
+      "Part Name" : "~Plate  1 x  2 without Front Face",
+      "Part Number" : "s\\3023s01.dat"
+    },
+    "s\\3039s01.dat" : {
+      "Category" : "Subparts",
+      "Part Name" : "~Slope Brick 45  2 x  2 without Front Face",
+      "Part Number" : "s\\3039s01.dat"
+    },
+    "stud.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud",
+      "Part Number" : "stud.dat"
+    },
+    "stud2.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud Open",
+      "Part Number" : "stud2.dat"
+    },
+    "stud2a.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud Open without Base Edges",
+      "Part Number" : "stud2a.dat"
+    },
+    "stud3.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud Tube Solid",
+      "Part Number" : "stud3.dat"
+    },
+    "stud4.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud Tube Open",
+      "Part Number" : "stud4.dat"
+    },
+    "stud4a.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud Tube Open without Base Edges",
+      "Part Number" : "stud4a.dat"
+    },
+    "stug-1x2.dat" : {
+      "Category" : "Primitives",
+      "Part Name" : "Stud Group  1 x  2",
+      "Part Number" : "stug-1x2.dat"
+    }
+  }
+}
