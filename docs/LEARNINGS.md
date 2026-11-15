@@ -139,3 +139,12 @@ section. Each entry says what happened and what to do instead.
   -1e14 and 1e20. Likewise, the suspected RGB truncation was disproved by checking all 768 values. Swift Testing
   reports "Known issue was not recorded" when an expected failure passes, so keep each known-issue test to the
   cases that actually fail.
+- **L42. Exit-test capture lists aren't available in this Swift Testing** ("Cannot specify a capture clause").
+  → To find which input crashes, run all cases in one child, write each case name to a progress file first, and
+  have the parent read the file after a crash. Then **confirm each crasher in isolation**: heap corruption can
+  surface in a later case than the one that caused it.
+- **L43. Swift Testing `--only` identifiers need the parentheses** (`Suite/test()`). Without them, zero tests run
+  and the run still "passes". → Prefer suite-level `--only`, and check the "N tests" count.
+- **L44. Ask the spec, not memory.** The local LDraw spec copies (`docs/reference/ldraw-spec`) turned two
+  suspicions into confirmed bugs (BUG-009 TEXMAP, BUG-010 encoding). They also showed `0x4` codes are not in the
+  spec. → Check `AGENT-NOTES.md` before calling LDraw behaviour right or wrong.
