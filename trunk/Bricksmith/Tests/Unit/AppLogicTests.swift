@@ -80,12 +80,17 @@ struct AppLogicTests {
 	@MainActor
 	@Test("Minifigure generator: the default minifigure (as built when the dialog opens)", .timeLimit(.minutes(1)))
 	func minifigureDefault() throws {
-		let controller = try ObjC.run { MinifigureDialogController() }
-		try ObjC.run {
-			_ = controller.perform(NSSelectorFromString("restoreFromPreferences"))
-			_ = controller.perform(NSSelectorFromString("generateMinifigure:"), with: nil)
+		// The dialog restores the last minifigure from the defaults; start from an empty Debug domain so a minifigure
+		// made during manual testing doesn't change the result (the sandbox puts the domain back afterwards).
+		try DefaultsSandbox.run {
+			UserDefaults.standard.removePersistentDomain(forName: DefaultsSandbox.debugDomain)
+			let controller = try ObjC.run { MinifigureDialogController() }
+			try ObjC.run {
+				_ = controller.perform(NSSelectorFromString("restoreFromPreferences"))
+				_ = controller.perform(NSSelectorFromString("generateMinifigure:"), with: nil)
+			}
+			let model = try #require(controller.minifigure())
+			try Golden.check(Data(((model as LDrawDirective).write() ?? "").utf8), against: "app/minifigure-default.ldr")
 		}
-		let model = try #require(controller.minifigure())
-		try Golden.check(Data(((model as LDrawDirective).write() ?? "").utf8), against: "app/minifigure-default.ldr")
 	}
 }

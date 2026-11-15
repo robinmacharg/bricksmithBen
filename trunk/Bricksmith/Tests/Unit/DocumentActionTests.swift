@@ -134,4 +134,39 @@ struct DocumentActionTests {
 			#expect(redone == after, "redo did not reapply: \(Golden.firstDifference(Data(after.utf8), Data(redone.utf8)))")
 		}
 	}
+
+	/// Randomize Colors uses rand(), so it is checked by property rather than golden: every selected part gets one
+	/// of the colours already in the selection, neighbours differ when there is more than one colour, and undo
+	/// restores the text. With a single colour in the selection nothing can change (by design, not a bug).
+	@Test("Randomize Colors: shuffles only the selection's own colours; undo restores")
+	func randomizeColors() throws {
+		let doc = try DocHarness.open("03-colours.ldr")
+		defer { DocHarness.close(doc) }
+		let parts = DocOps.parts(doc)
+		// Colours compared as LDrawColor objects (isEqual/hash), as the action's own NSSet does.
+		let colours = { parts.map { $0.lDrawColor()! as NSObject } }
+		let original = colours()
+		let palette = NSSet(array: original)
+		#expect(palette.count >= 3, "fixture should offer several colours")
+		let before = DocHarness.text(doc)
+
+		try DocOps.select(doc, parts)
+		var changed = false
+		for _ in 0..<5 where !changed {   // a shuffle may land on the identity; try a few times
+			try DocHarness.action(doc) { doc.randomizeLDrawColors(nil) }
+			let now = colours()
+			#expect(now.allSatisfy { palette.contains($0) }, "a colour not in the selection appeared")
+			#expect(zip(now, now.dropFirst()).allSatisfy { !$0.isEqual($1) }, "neighbouring parts share a colour")
+			changed = !zip(now, original).allSatisfy { $0.isEqual($1) }
+		}
+		#expect(changed, "five randomizations never changed a colour")
+
+		while doc.undoManager?.canUndo == true { try ObjC.run { doc.undoManager?.undo() } }
+		#expect(DocHarness.text(doc) == before, "undo did not restore: \(Golden.firstDifference(Data(before.utf8), Data(DocHarness.text(doc).utf8)))")
+
+		// One colour in the selection: nothing to shuffle.
+		try DocOps.select(doc, [parts[0]])
+		try DocHarness.action(doc) { doc.randomizeLDrawColors(nil) }
+		#expect(DocHarness.text(doc) == before)
+	}
 }

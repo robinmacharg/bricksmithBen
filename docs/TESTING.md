@@ -178,7 +178,7 @@ things automation covers poorly. Record the sign-off in port-status.md.
 11. Use the Minifigure generator and add a minifig to the model.
 12. Add an LSynth hose and regenerate it.
 13. Close every document while it has unsaved changes. Each save prompt works, and nothing crashes.
-14. Select a few parts and use Randomize Colors. The colours change; Undo restores them.
+14. Select a few parts **of different colours** and use Randomize Colors. Each part gets one of the colours already in the selection (with one colour selected nothing changes, by design); Undo restores them.
 15. Export Steps to a temporary folder. One file per step is written (they come out in reverse order: BUG-011).
 16. Open Find, search by part and by colour; matching parts are selected.
 17. Hide a part, then Show All. Use Add Related Part from a part's context menu; the related part is added and Undo removes it.
