@@ -1,0 +1,6 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (1)
+      LDrawLSynth (2)
+        LDrawPart: 1 0 0 0 0 1 0 0 0 1 0 0 0 1 3648a.dat
+        LDrawPart: 1 0 80 0 0 1 0 0 0 1 0 0 0 1 3648a.dat

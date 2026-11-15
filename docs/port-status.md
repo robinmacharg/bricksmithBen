@@ -37,6 +37,7 @@ their own port phase.
 | P2 | 🧑 Golden review: row 10 (`golden/document/*`, 25 actions) | 2026-11-15 | maintainer | BUG-016 found; S23, S24 noted |
 | P2 | 🧑 Golden review: row 11 (`golden/export/*`) | **pending** | | BUG-011 user-visible effect confirmed (Export Steps); S25 noted |
 | P2 | 🧑 Golden review: row 12 (`golden/app/*`) | **pending** | | No new bugs |
+| P2 | 🧑 Golden review: row 13 (`golden/lsynth/*`, plus the new `15-lsynth-band` round-trip/tree goldens) | **pending** | | S11 confirmed (CLI only) |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
