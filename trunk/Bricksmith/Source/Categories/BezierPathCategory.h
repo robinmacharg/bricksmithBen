@@ -10,8 +10,12 @@
 #import <Cocoa/Cocoa.h>
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSBezierPath (BezierPathCategory)
 
-+ (NSBezierPath *) bezierPathWithRect:(NSRect)rect radiusPercentage:(CGFloat)radiusPercentage;
++ (null_unspecified NSBezierPath *) bezierPathWithRect:(NSRect)rect radiusPercentage:(CGFloat)radiusPercentage;
 
 @end
+
+NS_ASSUME_NONNULL_END

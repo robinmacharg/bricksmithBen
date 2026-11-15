@@ -18,11 +18,13 @@
 // category OverlayViewCategory
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSView (OverlayViewCategory)
 
 // Add/remove
-- (void)addOverlayView:(NSView *)theView;
-- (void)removeOverlayView:(NSView *)theView;
+- (void)addOverlayView:(null_unspecified NSView *)theView;
+- (void)removeOverlayView:(null_unspecified NSView *)theView;
 
 // Optional "delegate"-style methods
 - (void)viewWillBecomeOverlay;
@@ -31,4 +33,6 @@
 - (void)viewDidResignOverlay;
 
 @end
+
+NS_ASSUME_NONNULL_END
 

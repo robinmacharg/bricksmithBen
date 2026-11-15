@@ -1,0 +1,3 @@
+unselected: nothing
+selected: handle 3
+deselected: nothing

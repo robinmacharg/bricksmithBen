@@ -1,0 +1,5 @@
+row 50: row y 850.0 h 17.0; visible y 773.0 h 170.0; row centre offset 0.5
+row 0: row y 0.0 h 17.0; visible y 0.0 h 170.0; row centre offset -76.5
+row 3: row y 51.0 h 17.0; visible y 0.0 h 170.0; row centre offset -25.5
+row 99: row y 1683.0 h 17.0; visible y 1530.0 h 170.0; row centre offset 76.5
+row -1: row y 0.0 h 0.0; visible y 0.0 h 170.0; row centre offset -85.0
