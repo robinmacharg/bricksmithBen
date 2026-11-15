@@ -28,13 +28,13 @@ their own port phase.
 | P0 | 🧑 Manual smoke checklist (full LDraw library) | 2026-11-14 | maintainer | Passed, apart from Settings, which never opens: BUG-002 is pre-existing, caused by colour preferences written by the installed 3.1.0. Debug builds now use their own preferences domain |
 | P1 | Automated: build (Debug/Release), unit tests, defaults unchanged ×3+, swap spike passed, exit-test spike passed, mutation pipeline verified | 2026-11-14 | agent | Branch `20261114-p1-test-harness` |
 | P2 | 🧑 Golden review: `Fixtures/golden/roundtrip/*` (row 1) | 2026-11-15 | maintainer | Diffs vs inputs summarised in the P2 row-1 commit message; BUG-003/004 and S14/S15 found |
-| P2 | 🧑 Golden review: row 2 (`golden/format/*`, `golden/roundtrip/1[0-4]*`) | **pending** | | Found BUG-005, BUG-006, S16; disproved suspected RGB truncation (768 values checked) |
-| P2 | 🧑 Golden review: row 3 (`golden/robustness/cases.txt`) | **pending** | | Found BUG-007, BUG-008, S17, S18 |
-| P2 | 🧑 Golden review: row 4 (`golden/model/**`; archives in `Fixtures/archives`) | **pending** | | Found BUG-011, BUG-012, S19 |
-| P2 | 🧑 Golden review: row 6 (`golden/transforms/snapping.tsv`) | **pending** | | No bugs found; LDraw-aware vertical grid confirmed as documented design |
-| P2 | 🧑 Golden review: row 8 (`golden/library/mlcad.txt`, `golden/library/catalog.json`) | **pending** | | S12/S13 confirmed; BUG-015 found and fixed (maintainer decision) |
-| P2 | 🧑 Golden review: row 9 (`golden/mpd/*`) | **pending** | | S21, S22 noted; peer-file contract (lower-case names) characterised |
-| P2 | 🧑 Golden review: row 10 (`golden/document/*`, 25 actions) | **pending** | | BUG-016 found; S23, S24 noted |
+| P2 | 🧑 Golden review: row 2 (`golden/format/*`, `golden/roundtrip/1[0-4]*`) | 2026-11-15 | maintainer | Found BUG-005, BUG-006, S16; disproved suspected RGB truncation (768 values checked) |
+| P2 | 🧑 Golden review: row 3 (`golden/robustness/cases.txt`) | 2026-11-15 | maintainer | Found BUG-007, BUG-008, S17, S18 |
+| P2 | 🧑 Golden review: row 4 (`golden/model/**`; archives in `Fixtures/archives`) | 2026-11-15 | maintainer | Found BUG-011, BUG-012, S19 |
+| P2 | 🧑 Golden review: row 6 (`golden/transforms/snapping.tsv`) | 2026-11-15 | maintainer | No bugs found; LDraw-aware vertical grid confirmed as documented design |
+| P2 | 🧑 Golden review: row 8 (`golden/library/mlcad.txt`, `golden/library/catalog.json`) | 2026-11-15 | maintainer | S12/S13 confirmed; BUG-015 found and fixed (maintainer decision) |
+| P2 | 🧑 Golden review: row 9 (`golden/mpd/*`) | 2026-11-15 | maintainer | S21, S22 noted; peer-file contract (lower-case names) characterised |
+| P2 | 🧑 Golden review: row 10 (`golden/document/*`, 25 actions) | 2026-11-15 | maintainer | BUG-016 found; S23, S24 noted |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
