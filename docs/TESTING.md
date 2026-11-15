@@ -96,6 +96,10 @@ isn't present.
 - **Goldens compare bytes** of `dataOfType:` (CRLF, UTF-8). `.gitattributes` stops git rewriting line endings.
   `Localizable.strings` is part of the output contract, so a port commit must not change it.
 - **Accessibility identifiers** may be added to xibs for XCUITest. That doesn't count as a behaviour change.
+- **Drawing** is characterised through `Tests/Support/RecordingRenderer.swift`. It implements the
+  `LDrawRenderer`/`LDrawCollector` protocols and logs every call (`golden/drawing/*.txt`). The Metal renderer
+  should reproduce the same stream. Suites that select primitives or draw textures need
+  `OffscreenGL.makeCurrent()` (L70).
 - **UI smoke tests** (`Tests/UI/SmokeUITests.swift`, row 17) are deliberately thin:
   - Every test opens a **temp copy** of a fixture, with `BRICKSMITH_TEST_MODE=1`, the fixture library, and
     `-"LDraw Path"` in the argument domain.

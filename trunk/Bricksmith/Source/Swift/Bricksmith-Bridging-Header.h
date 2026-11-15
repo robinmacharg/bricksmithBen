@@ -37,6 +37,7 @@
 #import "GLMatrixMath.h"
 #import "LDrawDirective.h"
 #import "LDrawDragHandle.h"
+#import "LDrawRenderer.h"
 #import "LDrawFastSet.h"
 #import "LDrawGLCamera.h"
 #import "LDrawGLRenderer.h"

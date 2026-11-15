@@ -237,3 +237,10 @@ section. Each entry says what happened and what to do instead.
   Check `@selector(`, `NSSelectorFromString`, the xib action names and Swift, not just a source grep (note that
   `grep` here is ugrep, and `--include` works differently: use `command grep`). Dead code goes in
   `docs/coverage-ledger.tsv` with the evidence. It is not deleted in P2.
+- **L70. Some model calls need a current GL context, even in "pure model" tests.** Creating an `LDrawDragHandle`
+  (which `setSelected:YES` does for primitives) builds a sphere mesh with `glGenBuffers`. Drawing an
+  `LDrawTexture` asks PartLibrary for a GL texture name. With no current context, both crash (SIGSEGV in
+  libGL). → Use `OffscreenGL.makeCurrent()` (`Tests/Unit/DrawingTests.swift`) in suites that select or draw.
+- **L71. Parse snippets with a header.** A file whose first line is `0 something` takes that line as the model's
+  title, so a comment or meta-command under test disappears from the steps. `Prim.parse` prepends
+  `0 Primitive` / `0 Name:` / `0 Author:` lines.
