@@ -115,3 +115,18 @@ section. Each entry says what happened and what to do instead.
   `SUEnableAutomaticChecks` is undecided. Test runs relaunch the app all the time (hosts, exit-test children),
   so it could hang a run. → In Debug, `updaterShouldPromptForPermissionToCheckForUpdates:` returns NO; Release is
   unchanged. Any perf scheme built from Release needs the same treatment.
+- **L36. Typedef'd pointers are invisible to a `*`-based scan.** A `dispatch_group_t` parameter (here a macro for
+  `void *`) went unannotated, so `NS_ASSUME_NONNULL` silently made it `nonnull`, and a caller passing `nil` drew a
+  new `-Wnonnull` warning. That's exactly the hazard the explicit `null_unspecified` rule exists for. The warning
+  gate caught it. → `scripts/dev/annotate-unspecified.py` also treats `dispatch_*_t` and `…Ref` as pointers. Treat
+  any new `-Wnonnull` warning as a wrong annotation.
+- **L37. `.serialized` only orders tests within one suite; separate suites run concurrently.** Suites sharing
+  Bricksmith's singletons reset each other mid-test: the fixture path came out nil and the colour marker was
+  missing. → The `.fixtureLibrary` trait takes a process-wide async FIFO lock (`GlobalStateLock`), so every test
+  that touches global state runs alone.
+- **L38. Swift doesn't strip a leading "class" from ObjC selectors.** `+classForDirectiveBeginningWithLine:`
+  imports as `classForDirectiveBeginning(withLine:)`. If unsure of an imported name, let the compiler tell you
+  rather than guessing.
+- **L39. Golden review finds real bugs.** Diffing each fixture against its recorded golden surfaced two data-loss
+  bugs (BUG-003, BUG-004) on the first pass. → Always review golden diffs line by line before the review gate;
+  never just accept a recording.

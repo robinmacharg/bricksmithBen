@@ -7,6 +7,10 @@
 //
 //      @Suite(.fixtureLibrary, .serialized) struct MyTests { ... }
 //
+//  Tests using the trait run ONE AT A TIME across the whole process (a global async lock):
+//  `.serialized` alone only orders tests within a suite, and different suites run concurrently,
+//  resetting each other's singletons (LEARNINGS L37).
+//
 //  For each test case it:
 //    1. copies trunk/Fixtures/ldraw-mini to a fresh temporary directory
 //       (the part catalog builder writes into the library folder);
@@ -48,6 +52,22 @@ enum FixtureLibrary {
 	}
 }
 
+/// Process-wide FIFO lock for tests that touch Bricksmith's global state.
+actor GlobalStateLock {
+	static let shared = GlobalStateLock()
+	private var busy = false
+	private var waiters: [CheckedContinuation<Void, Never>] = []
+
+	func acquire() async {
+		if !busy { busy = true; return }
+		await withCheckedContinuation { waiters.append($0) }
+	}
+
+	func release() {
+		if waiters.isEmpty { busy = false } else { waiters.removeFirst().resume() }
+	}
+}
+
 struct FixtureLibraryTrait: SuiteTrait, TestTrait, TestScoping {
 	var isRecursive: Bool { true }
 
@@ -59,6 +79,17 @@ struct FixtureLibraryTrait: SuiteTrait, TestTrait, TestScoping {
 			return
 		}
 
+		await GlobalStateLock.shared.acquire()
+		do {
+			try await withIsolatedLibrary(function)
+		} catch {
+			await GlobalStateLock.shared.release()
+			throw error
+		}
+		await GlobalStateLock.shared.release()
+	}
+
+	private func withIsolatedLibrary(_ function: @Sendable () async throws -> Void) async throws {
 		let fileManager = FileManager.default
 		let root = fileManager.temporaryDirectory
 			.appendingPathComponent("BricksmithTests-\(UUID().uuidString)", isDirectory: true)

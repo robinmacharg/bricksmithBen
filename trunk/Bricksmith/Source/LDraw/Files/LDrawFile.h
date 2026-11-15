@@ -26,6 +26,8 @@
 // class LDrawFile
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawFile : LDrawContainer
 {
 	NSDictionary	*nameModelDict;
@@ -34,26 +36,28 @@
 }
 
 // Initialization
-+ (LDrawFile *) file;
-+ (LDrawFile *) fileFromContentsAtPath:(NSString *)path;
-+ (LDrawFile *) parseFromFileContents:(NSString *) fileContents;
++ (null_unspecified LDrawFile *) file;
++ (null_unspecified LDrawFile *) fileFromContentsAtPath:(null_unspecified NSString *)path;
++ (nullable LDrawFile *) parseFromFileContents:(null_unspecified NSString *) fileContents;
 
 // Accessors
-- (LDrawMPDModel *) activeModel;
-- (LDrawMPDModel *) firstModel;							// For using another file, we always refer to the FIRST model even if the doc is open and another model is actively edited!
-- (void) addSubmodel:(LDrawMPDModel *)newSubmodel;
-- (NSArray *) draggingDirectives;
-- (NSArray *) modelNames;
-- (LDrawMPDModel *) modelWithName:(NSString *)soughtName;
-- (NSString *)path;
-- (NSArray *) submodels;
+- (null_unspecified LDrawMPDModel *) activeModel;
+- (null_unspecified LDrawMPDModel *) firstModel;							// For using another file, we always refer to the FIRST model even if the doc is open and another model is actively edited!
+- (void) addSubmodel:(null_unspecified LDrawMPDModel *)newSubmodel;
+- (null_unspecified NSArray *) draggingDirectives;
+- (null_unspecified NSArray *) modelNames;
+- (null_unspecified LDrawMPDModel *) modelWithName:(null_unspecified NSString *)soughtName;
+- (null_unspecified NSString *)path;
+- (null_unspecified NSArray *) submodels;
 
-- (void) setActiveModel:(LDrawMPDModel *)newModel;
-- (void) setDraggingDirectives:(NSArray *)directives;
-- (void) setPath:(NSString *)newPath;
+- (void) setActiveModel:(null_unspecified LDrawMPDModel *)newModel;
+- (void) setDraggingDirectives:(null_unspecified NSArray *)directives;
+- (void) setPath:(null_unspecified NSString *)newPath;
 
 // Utilities
 - (void) optimizeStructure;
-- (void) renameModel:(LDrawMPDModel *)submodel toName:(NSString *)newName;
+- (void) renameModel:(null_unspecified LDrawMPDModel *)submodel toName:(null_unspecified NSString *)newName;
 
 @end
+
+NS_ASSUME_NONNULL_END

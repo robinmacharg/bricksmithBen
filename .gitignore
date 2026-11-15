@@ -76,3 +76,7 @@ trunk/Bricksmith/Source/LDraw.zip
 
 # LLVM coverage output from running instrumented Debug builds outside the test runner
 *.profraw
+
+# Python bytecode
+__pycache__/
+*.pyc

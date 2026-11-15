@@ -1,0 +1,322 @@
+0 FILE spider gearbox v2.io
+0 Untitled Model
+0 Name: spider gearbox v2
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+1 16 -51 -0.99999 25.57143 1 0 0 0 1 0 0 0 1 bottom cam constraint hole
+0 STEP
+1 16 -0.99997 -20.00001 -31.99999 -1 0 0 0 -1 0 0 0 1 bottom outside liftarm
+1 16 -101 0.00002 -32 1 0 0 0 1 0 0 0 1 bottom outside liftarm
+0 STEP
+1 1 -111 -29.999969 127.999901 0 1.000026 0 -1.000026 0 0 0 0 1 6558.dat
+1 1 -111 -29.99996 47.999908 0 1.000026 0 -1.000026 0 0 0 0 1 6558.dat
+1 1 -111 -30 -32 0 1 0 -1 0 0 0 0 1 6558.dat
+1 1 9.00006 -29.99991 128.000107 0 1.000026 0 -1.000026 0 0 0 0 1 6558.dat
+1 1 8.99999 -29.99995 48.000141 0 1.000026 0 -1.000026 0 0 0 0 1 6558.dat
+1 1 9.00002 -29.99999 -31.999981 0 1 0 -1 0 0 0 0 1 6558.dat
+0 STEP
+1 0 -50.999939 -30.000681 128.000107 0 0 -1 0 -1 0 -1 0 0 32524.dat
+1 71 -50.999969 -29.999981 8.00003 0 0 -1 0 1 0 1 0 0 64179.dat
+0 STEP
+1 16 -50.999969 0.00002 -58.333302 1 0 0 0 1 0 0 0 1 steering support
+0 STEP
+1 16 -51 -19.00001 8 -1 0 0 0 -1 0 0 0 1 turntable
+1 4 -111 -10 28 1 0 0 0 1 0 0 0 1 32054.dat
+1 4 -111 -10 -12 1 0 0 0 1 0 0 0 1 32054.dat
+1 4 9.00001 -10.00009 27.999861 -1 0 0 0 -1 0 0 0 1 32054.dat
+1 4 9 -10 -11.99999 -1 0 0 0 -1 0 0 0 1 32054.dat
+0 STEP
+1 72 -50.999981 10.38964 -72.000038 0 1 0 0 0 -1 -1 0 0 10928.dat
+1 16 -51 20.000019 -72.000198 1 0 0 0 1 0 0 0 1 submodel group 3
+0 STEP
+1 16 -77.33329 -30.5007 101.666702 1 0 0 0 1 0 0 0 1 walking motor assembly
+0 STEP
+1 72 9.00002 -29.99999 -72 0 1 0 -1 0 0 0 0 1 11214.dat
+1 72 9.00006 -30.0007 -112.999901 0 1 0 -1 0 0 0 0 1 11214.dat
+1 72 -111 -30 -72 0 1 0 -1 0 0 0 0 1 11214.dat
+1 72 -111 -29.99999 -112 0 1 0 -1 0 0 0 0 1 11214.dat
+0 STEP
+1 16 -50.999989 0.00002 -112 1 0 0 0 1 0 0 0 1 steering housing
+0 STEP
+1 16 -51 79 8 1 0 0 0 1 0 0 0 1 cam shaft
+0 STEP
+1 16 -130.999893 -122.699997 8 -0.999999 0.000001 0.000001 -0.000001 -0.999999 -0.000001 0.000001 -0.000001 1 large gear
+1 16 29.000031 -17.6507 8.00015 1 0 0.000001 0 1 -0.000001 -0.000001 0.000001 1 large gear
+0 STEP
+1 16 -11.00648 -54.06884 -52.002979 1 0 0 0 0.939693 0.34202 0 -0.34202 0.939693 submodel group 4
+1 72 -131.009995 -70.000702 -52.00177 0.000001 0 -1.000033 -0.342026 -0.939709 0 -0.939707 0.342026 -0.000001 10928.dat
+0 STEP
+1 0 -110.999702 -100.001297 48.000038 0 -1.000003 0 1.000003 0 0 0 0 1 4459.dat
+1 0 9.000939 -100.001099 48.000038 0 -1.000007 0 1.000007 0 0 0 0 1 4459.dat
+1 0 9.004809 -100.001099 -32.001579 0 -1.000007 0 1.000007 0 0 0 0 1 4459.dat
+1 0 -110.999901 -100.000702 -31.999901 0 -1 0 1 0 0 0 0 1 4459.dat
+0 STEP
+1 16 -131 -54.129662 66.61158 1 0 0 0 0.906308 0.422618 0 -0.422618 0.906308 submodel group 5
+1 16 -130.999893 -56.585911 89.173759 1 0 0.000001 0 1 0 -0.000001 0 1 submodel group 6
+0 STEP
+1 16 -107.332397 -100.001099 -11.99994 1 0 0 0 1 0 0 0 1 battery support
+0 STEP
+0 NOFILE
+0 FILE bottom cam constraint hole
+0 bottom cam constraint hole
+0 Name: bottom cam constraint hole
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  7
+1 0 -20 -9 22.42857 0 1 0 -1 0 0 0 0 1 32524.dat
+1 1 0.00001 -9 -37.57143 1 0 0 0 1 0 0 0 1 6558.dat
+1 1 -0.00001 -9 62.42857 1 0 0 0 1 0 0 0 1 6558.dat
+1 1 0 -9 2.42857 1 0 0 0 1 0 0 0 1 6558.dat
+0 STEP
+1 0 0.00001 -9 -37.571442 0 1 0 -1 0 0 0 0 1 18654.dat
+1 0 -0.00001 -9 42.42857 0 1 0 -1 0 0 0 0 1 32316.dat
+0 STEP
+1 0 20 -9 22.42857 0 1 0 -1 0 0 0 0 1 32524.dat
+0 STEP
+0 NOFILE
+0 FILE Bottom outside liftarm
+0 Bottom outside liftarm
+0 Name: Bottom outside liftarm
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  4
+1 72 -10 -10.00002 40 0 -1 0 1 0 0 0 0 1 71710.dat
+1 15 9.99999 -10.00003 -100 -1 0 0 0 1 0 0 0 -1 15100.dat
+1 15 10 -10.00003 -60 -1 0 0 0 1 0 0 0 -1 15100.dat
+1 71 10 -10.00001 120 0 0 1 -1 0 0 0 -1 0 48989.dat
+0 NOFILE
+0 FILE steering support
+0 steering support
+0 Name: steering support
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  3
+1 0 -20 -20 26.33333 0 -1 0 1 0 0 0 0 1 4459.dat
+1 0 0 -10 -13.66667 1 0 0 0 1 0 0 0 1 60484.dat
+1 0 20 -20 26.33333 0 -1 0 1 0 0 0 0 1 4459.dat
+0 NOFILE
+0 FILE Turntable
+0 Turntable
+0 Name: Turntable
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  2
+1 71 0 -9 0 1 0 0 0 1 0 0 0 1 48452.dat
+1 0 0 -9 0 1 0 0 0 1 0 0 0 1 48168.dat
+0 NOFILE
+0 FILE SubModel Group 3
+0 SubModel Group 3
+0 Name: SubModel Group 3
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  2
+1 71 -0.00002 -47.170761 -0.00022 0 1 0 0 0 -1 -1 0 0 32269.dat
+1 6 0.00002 -30.00001 0.00022 0 1 0 -1 0 0 0 0 1 24316.dat
+0 NOFILE
+0 FILE Walking Motor assembly
+0 Walking Motor assembly
+0 Name: Walking Motor assembly
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  21
+1 71 -43.666649 -39.5 -13.66659 0 0 1 0 -1 0 1 0 0 99499.dat
+0 STEP
+1 15 86.333351 -19.499981 26.333401 0 0 1 0 1 0 -1 0 0 15100.dat
+1 15 -33.66671 -19.50004 26.333191 0 0 1 0 1 0 -1 0 0 15100.dat
+0 STEP
+1 71 86.333366 -19.500019 -53.666599 0 0 1 0 1 0 -1 0 0 87082.dat
+1 71 86.333351 -59.500019 -53.666599 0 0 1 0 1 0 -1 0 0 87082.dat
+1 71 -33.66663 -19.5 -53.666599 0 0 1 0 1 0 -1 0 0 87082.dat
+1 71 -33.666641 -59.5 -53.666599 0 0 1 0 1 0 -1 0 0 87082.dat
+0 STEP
+1 16 76.333344 -10.49999 -93.666611 1 0 0 0 1 0 0 0 1 submodel group 2
+1 16 -23.66663 -68.5 -93.666588 -1 0 0 0 -1 0 0 0 1 submodel group 2
+0 STEP
+1 72 -33.670521 10 -183.668503 1 0 0 0 1 0 0 0 1 m5db82ef1_20251110_111542.dat
+1 72 86.333351 10.00001 -184.666595 1 0 0 0 1 0 0 0 1 m5db82ef1_20251110_111542.dat
+0 STEP
+0 STEP
+0 NOFILE
+0 FILE Steering housing
+0 Steering housing
+0 Name: Steering housing
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  14
+1 71 -0.00005 -40.000019 0 1 0 0 0 0 -1 0 1 0 99499.dat
+0 STEP
+1 16 39.99995 -0.00002 0 1 0 0 0 1 0 0 0 1 submodel group 1
+1 16 -40.000019 -0.00002 -0.00001 1 0 0 0 1 0 0 0 1 submodel group 1
+0 STEP
+1 16 -0.00003 -0.00002 0.00001 0 0 1 0 1 0 -1 0 0 steering gear
+0 STEP
+1 4 59.999969 -50.000019 0 0 0 -1 1 0 0 0 -1 0 6536.dat
+1 4 59.999962 -50.000019 40 0 0 -1 1 0 0 0 -1 0 6536.dat
+1 4 -60.000031 -50.000019 -0.00001 0 0 -1 1 0 0 0 -1 0 6536.dat
+1 4 -60.000031 -50.000019 39.999989 0 0 -1 1 0 0 0 -1 0 6536.dat
+0 STEP
+0 NOFILE
+0 FILE Cam shaft
+0 Cam shaft
+0 Name: Cam shaft
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  4
+1 4 0 -89 -0.00002 0 -1 0 0 0 -1 1 0 0 40490.dat
+0 STEP
+1 19 0 -169 0.00001 1 0 0 0 1 0 0 0 1 32556.dat
+0 STEP
+1 72 20 -149 0.00001 0 1 0 0 0 -1 -1 0 0 60483.dat
+1 72 -19.99999 -149 -0.00001 0 1 0 0 0 -1 -1 0 0 60483.dat
+0 STEP
+0 NOFILE
+0 FILE Large gear
+0 Large gear
+0 Name: Large gear
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  2
+1 72 -28 -52.349991 0.00002 1 0 0 0 1 0 0 0 1 87083.dat
+1 71 0 -52.349998 -0.00001 0 0 1 0 1 0 -1 0 0 3649.dat
+0 NOFILE
+0 FILE SubModel Group 4
+0 SubModel Group 4
+0 Name: SubModel Group 4
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  2
+1 72 40.000301 -14.97048 -5.45009 0.000001 0 -1 0 -1 0 -1 0 0 10928.dat
+1 14 -40.000301 -14.97148 -5.44791 1.000033 0 0 0 1.000017 0 0 0 1.000015 60485.dat
+0 NOFILE
+0 FILE SubModel Group 5
+0 SubModel Group 5
+0 Name: SubModel Group 5
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  2
+1 72 -0.00001 -14.9709 -5.44896 0.000001 0 -1 0 -1 0 -1 0 -0.000001 10928.dat
+0 STEP
+1 15 -0.00001 -14.97089 -5.44896 -1 0 0 0 -0.087156 -0.996195 0 -0.996195 0.087155 65249.dat
+0 STEP
+0 NOFILE
+0 FILE SubModel Group 6
+0 SubModel Group 6
+0 Name: SubModel Group 6
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  2
+1 72 0 -13.41481 -1.17365 0 0 -1 0 -1 0 -1 0 0 10928.dat
+0 STEP
+1 71 0 -13.41481 -1.17365 1 0 0 0 1 0.000349 0 -0.000349 1 4519.dat
+0 STEP
+0 NOFILE
+0 FILE Battery support
+0 Battery support
+0 Name: Battery support
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  22
+1 2 -3.66667 -10 0 1 0 0 0 1 0 0 0 1 2391.dat
+1 16 54.33334 -0.00001 39.999989 1 0 0 0 1 0 0 0 1 submodel group 7
+1 16 54.333328 -0.00001 -40.000011 1 0 0 0 1 0 0 0 1 submodel group 7
+0 STEP
+1 2 116.333298 -10.00002 -0.00002 1 0 0 0 1 0 0 0 1 2391.dat
+0 STEP
+0 NOFILE
+0 FILE SubModel Group 2
+0 SubModel Group 2
+0 Name: SubModel Group 2
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  6
+1 72 10 -29 0 0 1 0 0 0 1 1 0 0 39793.dat
+0 STEP
+1 0 0 -29 20 1 0 0 0 1 0 0 0 1 4459.dat
+1 0 0 -29 -20 1 0 0 0 1 0 0 0 1 4459.dat
+0 STEP
+1 71 10.00001 -9 -40 0 0 1 0 1 0 -1 0 0 87082.dat
+1 71 10.00388 -49 -40.001659 0.000001 0 1.000024 0 1 0 -1.000024 0 0.000001 87082.dat
+0 STEP
+1 14 -10 -29 -0.00001 0 1 0 -1 0 0 0 0 1 32316.dat
+0 STEP
+0 NOFILE
+0 FILE SubModel Group 1
+0 SubModel Group 1
+0 Name: SubModel Group 1
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  3
+1 71 0 -30.00001 0 -1 0 0 0 0 -1 0 -1 0 48989.dat
+1 0 0 -20.00001 -0.00001 0 1 0 -1 0 0 0 0 1 4459.dat
+0 STEP
+1 71 0 -50 0 0 0 -1 1 0 0 0 -1 0 48989.dat
+0 STEP
+0 NOFILE
+0 FILE steering gear
+0 steering gear
+0 Name: steering gear
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  3
+1 15 -0.00001 -30 0 0 1 0 -1 0 0 0 0 1 65249.dat
+1 71 -0.00001 -30 0.00002 1 0 0 0 0 -1 0 1 0 32270.dat
+1 14 0.00001 -10.00001 0 1 0 0 0 1 0 0 0 1 32316.dat
+0 NOFILE
+0 FILE SubModel Group 7
+0 SubModel Group 7
+0 Name: SubModel Group 7
+0 Author: 
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 FlexibleBrickLockedControlPoint 
+0 NumOfBricks:  10
+1 0 -48 -10 0.00001 -1 0 0 0 -1 0 0 0 1 4459.dat
+1 71 -28 -20 0 1 0 0 0 1 0 0 0 1 2817.dat
+1 1 2 -10.00001 0 1 0 0 0 1 0 0 0 1 6558.dat
+0 STEP
+1 71 2 -10.00001 0 0 1 0 -1 0 0 0 0 1 18654.dat
+0 STEP
+1 71 31.99999 -20.00001 -0.00001 1 0 0 0 1 0 0 0 1 2817.dat
+0 STEP
+1 0 52 -10.00001 -0.00001 -1 0 0 0 -1 0 0 0 1 4459.dat
+0 STEP
+1 71 -28 -28 -10 1 0 0 0 1 0 0 0 1 3794b.dat
+1 71 -28 -28 10 1 0 0 0 1 0 0 0 1 3794b.dat
+1 71 31.99999 -28.00001 9.99999 1 0 0 0 1 0 0 0 1 3794b.dat
+1 71 31.99999 -28.00001 -10.00001 1 0 0 0 1 0 0 0 1 3794b.dat
+0 STEP
+0 NOFILE

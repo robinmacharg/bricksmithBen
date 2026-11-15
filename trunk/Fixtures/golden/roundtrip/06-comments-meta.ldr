@@ -1,0 +1,10 @@
+0 Comments and meta commands
+0 Name: 06-comments-meta.ldr
+0 Author: Fixture Author
+0 // a slash comment
+0 // a WRITE comment
+0 // a PRINT comment
+0 BFC CERTIFY CCW
+0 !UNKNOWN_META some arguments 1 2 3
+0 plain comment with   extra   spaces
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
