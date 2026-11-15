@@ -179,8 +179,7 @@ struct HitTestingTests {
 			try ObjC.run { _ = triangle.boxTest(all, transform: IdentityMatrix4, boundsOnly: false, creditObject: nil, hits: hits) }
 			#expect(hits.count == 1)
 		}
-		withKnownIssue("BUG-017: registerHitForObject: CFBridgingRetains every hit object and nothing releases it") {
-			#expect(weakTriangle == nil, "the triangle leaked after being hit")
-		}
+		// BUG-017 (fixed 2026-11-15, maintainer decision): registerHitForObject: used to CFBridgingRetain every hit.
+		#expect(weakTriangle == nil, "the triangle leaked after being hit")
 	}
 }

@@ -540,11 +540,11 @@ static NSString				*defaultAuthor		= @"anonymous";
 	// wrap the pointers. 
 	if(creditObject == nil)
 	{
-        key = [NSValue valueWithPointer:CFBridgingRetain(hitObject)];
+        key = [NSValue valueWithPointer:(__bridge void *)hitObject];
 	}
 	else
 	{
-        key = [NSValue valueWithPointer:CFBridgingRetain(creditObject)];
+        key = [NSValue valueWithPointer:(__bridge void *)creditObject];
 	}
 
 	existingRecord = [hits objectForKey:key];
@@ -583,11 +583,11 @@ static NSString				*defaultAuthor		= @"anonymous";
 	// wrap the pointers. 
 	if(creditObject == nil)
 	{
-        key = [NSValue valueWithPointer:CFBridgingRetain(hitObject)];
+        key = [NSValue valueWithPointer:(__bridge void *)hitObject];
 	}
 	else
 	{
-        key = [NSValue valueWithPointer:CFBridgingRetain(creditObject)];
+        key = [NSValue valueWithPointer:(__bridge void *)creditObject];
 	}
 
 	[hits addObject:key];
