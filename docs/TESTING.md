@@ -19,6 +19,7 @@ scripts/test.sh                    # hosted unit/characterisation tests + covera
 scripts/test.sh --only BricksmithTests/HarnessFixtureLibraryTests   # a subset
 scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests); real windows on screen
 scripts/test.sh --ui-only --only BricksmithUITests/SmokeUITests   # UI tests alone, for iterating
+scripts/dev/coverage-tiers.py      # P2 coverage gate: tier A/B per class, raw and effective (after docs/coverage-ledger.tsv)
 scripts/mutation-smoke.sh          # each scripts/mutations/*.patch must make a test fail
 scripts/perf-compare.sh --run      # build+run perf tests in the Perf configuration, compare with docs/perf-baseline.json
 scripts/perf-compare.sh            # compare existing build/perf-results.json (≤ +20%; a missing metric fails)

@@ -231,3 +231,9 @@ section. Each entry says what happened and what to do instead.
   - Opening Preferences runs a modal "Choose LDraw Folder" panel when the `"LDraw Path"` default is unset. So pass
     `-"LDraw Path" <copy>` as a launch argument (volatile argument domain), as well as the environment variable.
   - Save-panel paths go through Cmd-Shift-G plus `typeText(path + "\r")`.
+- **L69. Check that code is live before you write tests for it.** I wrote ray-picking goldens for `-hitTest:...`.
+  Its only caller, `getDirectivesUnderPoint:`, is never called, and the fixed-function `draw:`/VBO chain is compiled
+  out by `NEW_RENDERER 1`. → Before covering a method, trace a caller back to an action, a xib or the run loop.
+  Check `@selector(`, `NSSelectorFromString`, the xib action names and Swift, not just a source grep (note that
+  `grep` here is ugrep, and `--include` works differently: use `command grep`). Dead code goes in
+  `docs/coverage-ledger.tsv` with the evidence. It is not deleted in P2.

@@ -35,20 +35,24 @@ their own port phase.
 | P2 | 🧑 Golden review: row 8 (`golden/library/mlcad.txt`, `golden/library/catalog.json`) | 2026-11-15 | maintainer | S12/S13 confirmed; BUG-015 found and fixed (maintainer decision) |
 | P2 | 🧑 Golden review: row 9 (`golden/mpd/*`) | 2026-11-15 | maintainer | S21, S22 noted; peer-file contract (lower-case names) characterised |
 | P2 | 🧑 Golden review: row 10 (`golden/document/*`, 25 actions) | 2026-11-15 | maintainer | BUG-016 found; S23, S24 noted |
-| P2 | 🧑 Golden review: row 11 (`golden/export/*`) | **pending** | | BUG-011 user-visible effect confirmed (Export Steps); S25 noted |
-| P2 | 🧑 Golden review: row 12 (`golden/app/*`) | **pending** | | No new bugs |
-| P2 | 🧑 Golden review: row 13 (`golden/lsynth/*`, plus the new `15-lsynth-band` round-trip/tree goldens) | **pending** | | S11 confirmed (CLI only) |
-| P2 | 🧑 Golden review: row 14 (`golden/prefs/*`) | **pending** | | 175 constants + 93 registered defaults; note the misspelt key "Syntak Color Colors" must stay |
-| P2 | 🧑 Golden review: row 15 (`golden/render/Mac15,7/*.png`, 8 images) | **pending** | | References for this machine only; other machines skip (not a CI gate) |
+| P2 | 🧑 Golden review: row 11 (`golden/export/*`) | 2026-11-15 | maintainer | BUG-011 user-visible effect confirmed (Export Steps); S25 noted |
+| P2 | 🧑 Golden review: row 12 (`golden/app/*`) | 2026-11-15 | maintainer | No new bugs |
+| P2 | 🧑 Golden review: row 13 (`golden/lsynth/*`, plus the new `15-lsynth-band` round-trip/tree goldens) | 2026-11-15 | maintainer | S11 confirmed (CLI only) |
+| P2 | 🧑 Golden review: row 14 (`golden/prefs/*`) | 2026-11-15 | maintainer | 175 constants + 93 registered defaults; note the misspelt key "Syntak Color Colors" must stay |
+| P2 | 🧑 Golden review: row 15 (`golden/render/Mac15,7/*.png`, 8 images) | 2026-11-15 | maintainer | References for this machine only; other machines skip (not a CI gate) |
 | P2 | Perf baseline recorded (Mac15,7; `docs/perf-baseline.json`) | 2026-11-15 | agent | Two verification runs within budget (max 116%) |
 | P2 | UI smoke (row 17): `scripts/test.sh --ui`, 5 UI tests | 2026-11-15 | agent | No new goldens (reuses approved round-trip goldens). S26 noted. Test-mode focus-ring fix (L67) |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
 
-| Class | Tier | Coverage | Reason | Signed off |
+The uncovered-line ledger is machine-readable: [coverage-ledger.tsv](coverage-ledger.tsv), checked by
+`scripts/dev/coverage-tiers.py` (run after `scripts/test.sh`). A row names a function and the evidence that it needs
+no test (dead code, debug only). A `*` row accepts a whole class below its tier target, and needs a maintainer
+sign-off here:
+
+| Class | Tier | Effective coverage | Reason | Signed off |
 |---|---|---|---|---|
-| | | | `Source/LDraw/Support/MatrixMath.c` `V3Print`, `Matrix4Print` | Debug printing only (stdout); no behaviour to characterise |
 
 ## Nullability annotations (plan §5 P1, v3.1 rule)
 
