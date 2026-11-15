@@ -73,3 +73,6 @@
 #import "RelatedParts.h"
 #import "SearchPanelController.h"
 #import "PieceCountPanel.h"
+
+// --- Test support (group 3) ---
+#import "BricksmithTestSupport.h"

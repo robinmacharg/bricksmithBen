@@ -92,8 +92,14 @@ isn't present.
 - **Goldens compare bytes** of `dataOfType:` (CRLF, UTF-8). `.gitattributes` stops git rewriting line endings.
   `Localizable.strings` is part of the output contract, so a port commit must not change it.
 - **Accessibility identifiers** may be added to xibs for XCUITest. That doesn't count as a behaviour change.
-- **Document tests** load the document's nib through `makeWindowControllers` without showing the window, then
-  drive edits by selecting rows in the outline view. Edit actions read their selection from there.
+- **Document tests** use `DocHarness.open` (`Tests/Unit/DocumentSpikeTests.swift`):
+  - It loads the nib (`makeWindowControllers`, then touching `.window`) and orders the window in **fully transparent**
+    with a fixed frame (L58).
+  - It turns off event-based undo grouping; each operation is wrapped in `DocHarness.action`, which stands in for one
+    user event.
+  - Selection goes through `selectDirectives:`, i.e. the outline view.
+- **Call ObjC that might throw through `ObjC.run { … }`.** An uncaught NSException on a test thread is swallowed by
+  AppKit and the test hangs (L57). Document suites also carry `.timeLimit(.minutes(1))`.
 - **Performance tests** run only in the Release `Bricksmith-Perf` scheme. Debug timings are meaningless for
   comparing Swift with ObjC.
 - **Randomised tests** use a fixed seed, and they print it when they fail.
@@ -114,6 +120,12 @@ confirm the list is complete.
 | Feature or action | Why it's manual | Covered by checklist step |
 |---|---|---|
 | Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | (add) |
+| Split Model, Add Part (from browser), Add Submodel Reference, Insert Part, Add Minifigure | Present panels, alerts or menus (`canDeleteDirective`, part browser, minifig dialog) | 5, 7, 11 |
+| Export Steps | Save panel; the export logic itself is covered by row 11 | (add) |
+| Missing/moved pieces checks on open | Alerts | 2 |
+| Move and Rotation panels, Find, Dimensions, Piece Count | Panels; the underlying edits (`moveSelectionBy`, `rotateSelection`) are automated in row 10 | 5 |
+| View-only actions (zoom, view angle, step navigation, step display) | Don't change the model; the render snapshots (row 15) cover views | 3, 7 |
+| Focus-ring overlay on 3D views | Skipped in test mode (separate child window, L58) | 3 |
 | 3D-view mouse, trackpad and marquee interaction | GL view interaction | 3, 8 |
 
 *(There is no printing feature in the app, so there's nothing to test.)*

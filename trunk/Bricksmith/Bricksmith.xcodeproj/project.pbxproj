@@ -215,6 +215,7 @@
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
 		5701DABC93A382AFA6BC4B71 /* ObjectModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */; };
 		5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
+		5DABC29D744250DD26B19E0A /* DocumentSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37613C878169213095B751C5 /* DocumentSpikeTests.swift */; };
 		60669DDCCFC8E5EFBE510A87 /* RoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */; };
 		64CEAFA0C7F9065C4C1FB8D2 /* SnappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58CE9892121AF3E27970B98 /* SnappingTests.swift */; };
 		6655C89BADCCD8D79F69D365 /* MPDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD9235EA9F69E87DBFF308A /* MPDTests.swift */; };
@@ -240,6 +241,7 @@
 		96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */ = {isa = PBXBuildFile; fileRef = 145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */; };
 		B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */; };
 		BBE9FA5F68E37B0B8CC00EB0 /* ParserRobustnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */; };
+		CB7E8E47D480EBCFD16FC5EF /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E03718E631C7CE4B1F41F0 /* ObjC.swift */; };
 		D54BC338573F5A29CE163ABC /* Golden.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741501FF6219F19D814635AC /* Golden.swift */; };
 		D608724816ED61F500828B4E /* MeshSmooth.h in Headers */ = {isa = PBXBuildFile; fileRef = D608724616ED61F500828B4E /* MeshSmooth.h */; };
 		D608724916ED61F500828B4E /* MeshSmooth.c in Sources */ = {isa = PBXBuildFile; fileRef = D608724716ED61F500828B4E /* MeshSmooth.c */; };
@@ -265,8 +267,10 @@
 		D6EDBC251650B9E200B4062B /* LDrawDisplayList.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EDBC231650B9E200B4062B /* LDrawDisplayList.h */; };
 		D6EDBC261650B9E200B4062B /* LDrawDisplayList.m in Sources */ = {isa = PBXBuildFile; fileRef = D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D6FC72131604EBB8005A404E /* LDrawFastSet.h in Headers */ = {isa = PBXBuildFile; fileRef = D6FC72121604EBB8005A404E /* LDrawFastSet.h */; };
+		D84F2F24A0EE06FE2ACCE7D3 /* BricksmithTestSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DABC32FD2B1ABDBA096B70E1 /* ColourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19A96774CDADD19C441D18 /* ColourTests.swift */; };
 		DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */; };
+		DDF6D286F210652714B7461C /* DocumentActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C376367B97F822AD8543185C /* DocumentActionTests.swift */; };
 		E5FCCD3318DC0660E5479B46 /* HarnessFixtureLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */; };
 		EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */; };
@@ -538,6 +542,7 @@
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawKeywords.m; sourceTree = "<group>"; };
 		234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessFixtureLibraryTests.swift; sourceTree = "<group>"; };
+		27E03718E631C7CE4B1F41F0 /* ObjC.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ObjC.swift; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -555,10 +560,13 @@
 		2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerIntMinus1.h; sourceTree = "<group>"; };
 		2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerIntMinus1.m; sourceTree = "<group>"; };
 		2F5BCDB29827F846AE619974 /* BricksmithBuildConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BricksmithBuildConfig.h; sourceTree = "<group>"; };
+		302E24F4CE18FFFC50278D2A /* BricksmithTestSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BricksmithTestSupport.h; sourceTree = "<group>"; };
 		32DBCF750370BD2300C91783 /* Mac LDraw_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mac LDraw_Prefix.pch"; sourceTree = "<group>"; };
+		37613C878169213095B751C5 /* DocumentSpikeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentSpikeTests.swift; sourceTree = "<group>"; };
 		37B9F1A1B51FCAFFB2D6E51B /* KnownIssueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KnownIssueTests.swift; sourceTree = "<group>"; };
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSmokeUITests.swift; sourceTree = "<group>"; };
+		513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = BricksmithTestSupport.m; sourceTree = "<group>"; };
 		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		5D19A96774CDADD19C441D18 /* ColourTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColourTests.swift; sourceTree = "<group>"; };
 		63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessSmokeTests.swift; sourceTree = "<group>"; };
@@ -593,6 +601,7 @@
 		985092DCDEB090B005DCF071 /* MatrixMathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatrixMathTests.swift; sourceTree = "<group>"; };
 		9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		B58CE9892121AF3E27970B98 /* SnappingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnappingTests.swift; sourceTree = "<group>"; };
+		C376367B97F822AD8543185C /* DocumentActionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentActionTests.swift; sourceTree = "<group>"; };
 		D608724616ED61F500828B4E /* MeshSmooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshSmooth.h; sourceTree = "<group>"; };
 		D608724716ED61F500828B4E /* MeshSmooth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MeshSmooth.c; sourceTree = "<group>"; };
 		D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawGLCamera.h; sourceTree = "<group>"; };
@@ -905,6 +914,8 @@
 				5D19A96774CDADD19C441D18 /* ColourTests.swift */,
 				F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */,
 				EDD9235EA9F69E87DBFF308A /* MPDTests.swift */,
+				37613C878169213095B751C5 /* DocumentSpikeTests.swift */,
+				C376367B97F822AD8543185C /* DocumentActionTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1039,6 +1050,8 @@
 				737725695C55F263D18C33B9 /* RegexKitLite.m */,
 				2F5BCDB29827F846AE619974 /* BricksmithBuildConfig.h */,
 				DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */,
+				302E24F4CE18FFFC50278D2A /* BricksmithTestSupport.h */,
+				513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */,
 			);
 			name = Other;
 			path = Source/Other;
@@ -1092,6 +1105,7 @@
 			children = (
 				8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */,
 				741501FF6219F19D814635AC /* Golden.swift */,
+				27E03718E631C7CE4B1F41F0 /* ObjC.swift */,
 			);
 			name = Support;
 			path = Support;
@@ -1506,6 +1520,9 @@
 				DABC32FD2B1ABDBA096B70E1 /* ColourTests.swift in Sources */,
 				22A85FC75233854191C5DAE5 /* LibraryTests.swift in Sources */,
 				6655C89BADCCD8D79F69D365 /* MPDTests.swift in Sources */,
+				5DABC29D744250DD26B19E0A /* DocumentSpikeTests.swift in Sources */,
+				CB7E8E47D480EBCFD16FC5EF /* ObjC.swift in Sources */,
+				DDF6D286F210652714B7461C /* DocumentActionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1614,6 +1631,7 @@
 				B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */,
 				96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */,
 				0978E78C9B0CC8B3AD30D245 /* LDrawPathNames.m in Sources */,
+				D84F2F24A0EE06FE2ACCE7D3 /* BricksmithTestSupport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

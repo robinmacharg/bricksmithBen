@@ -184,3 +184,14 @@ section. Each entry says what happened and what to do instead.
 - **L56. Call APIs with the arguments the app actually passes.** `-[ModelManager requestModel:…]` "failed" for
   `"A.ldr"`, but the app always passes the lower-cased `referenceName`. Before calling something a bug, find the
   app's real call site.
+- **L57. An NSException on a Swift Testing thread doesn't fail the test. It hangs the whole run** (AppKit's
+  handler swallows it and the task never finishes). → `BricksmithTestSupport +catchException:` (test-support ObjC
+  in the app) plus `ObjC.run { … }` turn it into a reported failure. Also, `makeWindowControllers()` doesn't load
+  the nib: touch `.window`, or the outline view has no rows and selection throws.
+- **L58. A never-shown window gives views degenerate geometry.** The focus-ring `OverlayHelperWindow` then
+  computed an out-of-range frame, and AppKit asserted from a run-loop observer, which no test code can catch.
+  → The harness orders the window in with `alphaValue = 0` and a fixed frame, and `LDrawGLView` skips the
+  focus-ring overlay in test mode (purely visual; manual checklist).
+- **L59. Check undo by comparing bytes, not just "looks right".** Exact before/after comparison showed that
+  undoing a rotation applies the inverse transform (float drift, `-0`): BUG-016. A numeric-tolerance check is
+  kept alongside, so a genuinely broken undo is still caught.

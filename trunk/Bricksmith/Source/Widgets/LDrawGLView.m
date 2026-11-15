@@ -113,7 +113,11 @@ static Box2 NSRectToBox2(NSRect rect)
 	[focusRingView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[focusRingView setFocusSource:self];
 	
-	[self addOverlayView:focusRingView];
+	// The focus ring lives in a separate overlay child window. In test runs the document window is never
+	// really on screen, the overlay computes an out-of-range frame and AppKit asserts (LEARNINGS L58).
+	// Purely visual; covered by the manual smoke checklist.
+	if([LDrawApplication isRunningTests] == NO)
+		[self addOverlayView:focusRingView];
 	
 	
 	//---------- Initialize instance variables ---------------------------------

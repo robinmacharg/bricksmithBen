@@ -44,6 +44,8 @@
 // class LDrawDocument
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawDocument : NSDocument <ViewportArrangerDelegate>
 {
 	IBOutlet DocumentToolbarController	*toolbarController;
@@ -87,121 +89,121 @@
 }
 
 // Accessors
-- (LDrawFile *) documentContents;
-- (NSWindow *)foremostWindow;
+- (null_unspecified LDrawFile *) documentContents;
+- (null_unspecified NSWindow *)foremostWindow;
 - (gridSpacingModeT) gridSpacingMode;
 - (gridOrientationModeT) gridOrientationMode;
-- (NSDrawer *) partBrowserDrawer;
+- (null_unspecified NSDrawer *) partBrowserDrawer;
 - (Tuple3) viewingAngle;
 
-- (void) setActiveModel:(LDrawMPDModel *)newActiveModel;
+- (void) setActiveModel:(null_unspecified LDrawMPDModel *)newActiveModel;
 - (void) setCurrentStep:(NSInteger)requestedStep;
-- (void) setDocumentContents:(LDrawFile *)newContents;
+- (void) setDocumentContents:(null_unspecified LDrawFile *)newContents;
 - (void) setGridSpacingMode:(gridSpacingModeT)newMode;
 - (void) setGridOrientationMode:(gridOrientationModeT)newMode;
-- (void) setLastSelectedPart:(LDrawPart *)newPart;
-- (void) setMostRecentLDrawView:(LDrawGLView *)viewIn;
+- (void) setLastSelectedPart:(null_unspecified LDrawPart *)newPart;
+- (void) setMostRecentLDrawView:(null_unspecified LDrawGLView *)viewIn;
 - (void) setStepDisplay:(BOOL)showStepsFlag;
 
 // Activities
 - (void) moveSelectionBy:(Vector3) movementVector;
 - (void) nudgeSelectionBy:(Vector3) nudgeVector;
 - (void) rotateSelectionAround:(Vector3)rotationAxis;
-- (void) rotateSelection:(Tuple3)rotation mode:(RotationModeT)mode fixedCenter:(Point3 *)fixedCenter;
-- (void) selectDirective:(LDrawDirective *)directiveToSelect byExtendingSelection:(BOOL)shouldExtend;
-- (void) selectDirectives:(NSArray *)directivesToSelect;
+- (void) rotateSelection:(Tuple3)rotation mode:(RotationModeT)mode fixedCenter:(null_unspecified Point3 *)fixedCenter;
+- (void) selectDirective:(null_unspecified LDrawDirective *)directiveToSelect byExtendingSelection:(BOOL)shouldExtend;
+- (void) selectDirectives:(null_unspecified NSArray *)directivesToSelect;
 - (void) setSelectionToHidden:(BOOL)hideFlag;
 - (void) setZoomPercentage:(CGFloat)newPercentage;
 
 // Actions
-- (void) changeLDrawColor:(id)sender;
-- (void) insertLDrawPart:(id)sender;
-- (void) panelMoveParts:(id)sender;
-- (void) panelRotateParts:(id)sender;
+- (void) changeLDrawColor:(null_unspecified id)sender;
+- (void) insertLDrawPart:(null_unspecified id)sender;
+- (void) panelMoveParts:(null_unspecified id)sender;
+- (void) panelRotateParts:(null_unspecified id)sender;
 
 // - miscellaneous
-- (void) doMissingModelnameExtensionCheck:(id)sender;
-- (void) doMissingPiecesCheck:(id)sender;
-- (void) doMovedPiecesCheck:(id)sender;
+- (void) doMissingModelnameExtensionCheck:(null_unspecified id)sender;
+- (void) doMissingPiecesCheck:(null_unspecified id)sender;
+- (void) doMovedPiecesCheck:(null_unspecified id)sender;
 
 // - Scope bar
-- (IBAction) viewAll:(id)sender;
-- (IBAction) viewSteps:(id)sender;
-- (IBAction) stepFieldChanged:(id)sender;
-- (IBAction) stepNavigatorClicked:(id)sender;
+- (IBAction) viewAll:(null_unspecified id)sender;
+- (IBAction) viewSteps:(null_unspecified id)sender;
+- (IBAction) stepFieldChanged:(null_unspecified id)sender;
+- (IBAction) stepNavigatorClicked:(null_unspecified id)sender;
 
 // - File menu
-- (IBAction) exportSteps:(id)sender;
-- (IBAction) revealInFinder:(id)sender;
+- (IBAction) exportSteps:(null_unspecified id)sender;
+- (IBAction) revealInFinder:(null_unspecified id)sender;
 
 // - Edit menu
-- (IBAction) copy:(id)sender;
-- (IBAction) paste:(id)sender;
-- (IBAction) delete:(id)sender;
-- (IBAction) duplicate:(id)sender;
-- (IBAction) splitStep:(id)sender;
-- (IBAction) splitModel:(id)sender;
-- (IBAction) orderFrontRotationPanel:(id)sender;
-- (IBAction) quickRotateClicked:(id)sender;
-- (IBAction) randomizeLDrawColors:(id)sender;
-- (IBAction) find:(id)sender;
-- (IBAction) changeOrigin:(id)sender;
+- (IBAction) copy:(null_unspecified id)sender;
+- (IBAction) paste:(null_unspecified id)sender;
+- (IBAction) delete:(null_unspecified id)sender;
+- (IBAction) duplicate:(null_unspecified id)sender;
+- (IBAction) splitStep:(null_unspecified id)sender;
+- (IBAction) splitModel:(null_unspecified id)sender;
+- (IBAction) orderFrontRotationPanel:(null_unspecified id)sender;
+- (IBAction) quickRotateClicked:(null_unspecified id)sender;
+- (IBAction) randomizeLDrawColors:(null_unspecified id)sender;
+- (IBAction) find:(null_unspecified id)sender;
+- (IBAction) changeOrigin:(null_unspecified id)sender;
 
 // - Tools menu
-- (IBAction) showInspector:(id)sender;
-- (IBAction) toggleFileContentsDrawer:(id)sender;
-- (IBAction) gridGranularityMenuChanged:(id)sender;
-- (IBAction) gridOrientationModeChanged:(id)sender;
-- (IBAction) showDimensions:(id)sender;
-- (IBAction) showPieceCount:(id)sender;
+- (IBAction) showInspector:(null_unspecified id)sender;
+- (IBAction) toggleFileContentsDrawer:(null_unspecified id)sender;
+- (IBAction) gridGranularityMenuChanged:(null_unspecified id)sender;
+- (IBAction) gridOrientationModeChanged:(null_unspecified id)sender;
+- (IBAction) showDimensions:(null_unspecified id)sender;
+- (IBAction) showPieceCount:(null_unspecified id)sender;
 
 // - View menu
-- (IBAction) zoomActual:(id)sender;
-- (IBAction) zoomIn:(id)sender;
-- (IBAction) zoomOut:(id)sender;
-- (IBAction) toggleStepDisplay:(id)sender;
-- (IBAction) advanceOneStep:(id)sender;
-- (IBAction) backOneStep:(id)sender;
-- (IBAction) useSelectionForRotationCenter:(id)sender;
-- (IBAction) clearRotationCenter:(id)sender;
+- (IBAction) zoomActual:(null_unspecified id)sender;
+- (IBAction) zoomIn:(null_unspecified id)sender;
+- (IBAction) zoomOut:(null_unspecified id)sender;
+- (IBAction) toggleStepDisplay:(null_unspecified id)sender;
+- (IBAction) advanceOneStep:(null_unspecified id)sender;
+- (IBAction) backOneStep:(null_unspecified id)sender;
+- (IBAction) useSelectionForRotationCenter:(null_unspecified id)sender;
+- (IBAction) clearRotationCenter:(null_unspecified id)sender;
 
 // - Piece menu
-- (IBAction) showParts:(id)sender;
-- (IBAction) hideParts:(id)sender;
-- (IBAction) showAllParts:(id)sender;
-- (IBAction) gotoModel:(id)sender;
-- (void) snapSelectionToGrid:(id)sender;
+- (IBAction) showParts:(null_unspecified id)sender;
+- (IBAction) hideParts:(null_unspecified id)sender;
+- (IBAction) showAllParts:(null_unspecified id)sender;
+- (IBAction) gotoModel:(null_unspecified id)sender;
+- (void) snapSelectionToGrid:(null_unspecified id)sender;
 
 // - Models menu
-- (IBAction) addModelClicked:(id)sender;
-- (IBAction) addStepClicked:(id)sender;
-- (IBAction) addPartClicked:(id)sender;
-- (void) addSubmodelReferenceClicked:(id)sender;
-- (IBAction) addLineClicked:(id)sender;
-- (IBAction) addTriangleClicked:(id)sender;
-- (IBAction) addQuadrilateralClicked:(id)sender;
-- (IBAction) addConditionalClicked:(id)sender;
-- (IBAction) addCommentClicked:(id)sender;
-- (IBAction) addRawCommandClicked:(id)sender;
-- (IBAction) addRelatedPartClicked:(id)sender;
-- (void) modelSelected:(id)sender;
+- (IBAction) addModelClicked:(null_unspecified id)sender;
+- (IBAction) addStepClicked:(null_unspecified id)sender;
+- (IBAction) addPartClicked:(null_unspecified id)sender;
+- (void) addSubmodelReferenceClicked:(null_unspecified id)sender;
+- (IBAction) addLineClicked:(null_unspecified id)sender;
+- (IBAction) addTriangleClicked:(null_unspecified id)sender;
+- (IBAction) addQuadrilateralClicked:(null_unspecified id)sender;
+- (IBAction) addConditionalClicked:(null_unspecified id)sender;
+- (IBAction) addCommentClicked:(null_unspecified id)sender;
+- (IBAction) addRawCommandClicked:(null_unspecified id)sender;
+- (IBAction) addRelatedPartClicked:(null_unspecified id)sender;
+- (void) modelSelected:(null_unspecified id)sender;
 
 // Undoable Activities
-- (void) addDirective:(LDrawDirective *)newDirective toParent:(LDrawContainer * )parent;
-- (void) addDirective:(LDrawDirective *)newDirective toParent:(LDrawContainer * )parent atIndex:(NSInteger)index;
-- (void) deleteDirective:(LDrawDirective *)doomedDirective;
-- (void) moveDirective:(LDrawDrawableElement *)object inDirection:(Vector3)moveVector;
-- (void) preserveDirectiveState:(LDrawDirective *)directive;
-- (void) rotatePart:(LDrawPart *)part byDegrees:(Tuple3)rotationDegrees aroundPoint:(Point3)rotationCenter;
-- (void) setElement:(LDrawDrawableElement *)element toHidden:(BOOL)hideFlag;
-- (void) setObject:(LDrawDirective <LDrawColorable>* )object toColor:(LDrawColor *)newColor;
-- (void) setTransformation:(TransformComponents)newComponents forPart:(LDrawPart *)part;
+- (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent;
+- (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent atIndex:(NSInteger)index;
+- (void) deleteDirective:(null_unspecified LDrawDirective *)doomedDirective;
+- (void) moveDirective:(null_unspecified LDrawDrawableElement *)object inDirection:(Vector3)moveVector;
+- (void) preserveDirectiveState:(null_unspecified LDrawDirective *)directive;
+- (void) rotatePart:(null_unspecified LDrawPart *)part byDegrees:(Tuple3)rotationDegrees aroundPoint:(Point3)rotationCenter;
+- (void) setElement:(null_unspecified LDrawDrawableElement *)element toHidden:(BOOL)hideFlag;
+- (void) setObject:(null_unspecified LDrawDirective <LDrawColorable>*)object toColor:(null_unspecified LDrawColor *)newColor;
+- (void) setTransformation:(TransformComponents)newComponents forPart:(null_unspecified LDrawPart *)part;
 
 //Notifications
-- (void)partChanged:(NSNotification *)notification;
-- (void)docChanged:(NSNotification *)notification;
-- (void)stepChanged:(NSNotification *)notification;
-- (void)syntaxColorChanged:(NSNotification *)notification;
+- (void)partChanged:(null_unspecified NSNotification *)notification;
+- (void)docChanged:(null_unspecified NSNotification *)notification;
+- (void)stepChanged:(null_unspecified NSNotification *)notification;
+- (void)syntaxColorChanged:(null_unspecified NSNotification *)notification;
 
 //Menus
 - (void) addModelsToMenus;
@@ -209,31 +211,33 @@
 - (void) buildRelatedPartsMenus;
 
 // Viewport Management
-- (void) connectLDrawGLView:(LDrawGLView *)glView;
-- (LDrawGLView *) main3DViewport;
+- (void) connectLDrawGLView:(null_unspecified LDrawGLView *)glView;
+- (null_unspecified LDrawGLView *) main3DViewport;
 - (void) updateViewportAutosaveNamesAndRestore:(BOOL)shouldRestore;
 
 // Utilities
-- (void) addModel:(LDrawMPDModel *)newModel atIndex:(NSInteger)insertAtIndex preventNameCollisions:(BOOL)renameModels;
-- (void) addStep:(LDrawStep *)newStep parent:(LDrawMPDModel*)selectedModel index:(NSInteger)insertAtIndex;
-- (void) addPartNamed:(NSString *)partName;
-- (void) addStepComponent:(LDrawDirective *)newDirective parent:(LDrawContainer*)parent index:(NSInteger)insertAtIndex;
+- (void) addModel:(null_unspecified LDrawMPDModel *)newModel atIndex:(NSInteger)insertAtIndex preventNameCollisions:(BOOL)renameModels;
+- (void) addStep:(null_unspecified LDrawStep *)newStep parent:(null_unspecified LDrawMPDModel*)selectedModel index:(NSInteger)insertAtIndex;
+- (void) addPartNamed:(null_unspecified NSString *)partName;
+- (void) addStepComponent:(null_unspecified LDrawDirective *)newDirective parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
 
-- (BOOL) canDeleteDirective:(LDrawDirective *)directive displayErrors:(BOOL)errorFlag;
+- (BOOL) canDeleteDirective:(null_unspecified LDrawDirective *)directive displayErrors:(BOOL)errorFlag;
 - (BOOL) elementsAreSelectedOfVisibility:(BOOL)visibleFlag;
-- (NSAttributedString *) formatDirective:(LDrawDirective *)item withStringRepresentation:(NSString *)representation;
+- (null_unspecified NSAttributedString *) formatDirective:(null_unspecified LDrawDirective *)item withStringRepresentation:(null_unspecified NSString *)representation;
 - (void) loadDataIntoDocumentUI;
-- (LDrawContainer *) selectedContainer;
-- (NSArray *) selectedObjects;
-- (LDrawMPDModel *) selectedModel;
-- (LDrawStep *) selectedStep;
-- (LDrawDirective *) selectedStepComponent;
-- (LDrawPart *) selectedPart;
+- (null_unspecified LDrawContainer *) selectedContainer;
+- (null_unspecified NSArray *) selectedObjects;
+- (null_unspecified LDrawMPDModel *) selectedModel;
+- (null_unspecified LDrawStep *) selectedStep;
+- (null_unspecified LDrawDirective *) selectedStepComponent;
+- (null_unspecified LDrawPart *) selectedPart;
 - (void) updateInspector;
 - (void) updateViewingAngleToMatchStep;
-- (void) writeDirectives:(NSArray *)directives toPasteboard:(NSPasteboard *)pasteboard;
-- (NSArray *) pasteFromPasteboard:(NSPasteboard *) pasteboard preventNameCollisions:(BOOL)renameModels parent:(LDrawContainer*)parent index:(NSInteger)insertAtIndex;
+- (void) writeDirectives:(null_unspecified NSArray *)directives toPasteboard:(null_unspecified NSPasteboard *)pasteboard;
+- (null_unspecified NSArray *) pasteFromPasteboard:(null_unspecified NSPasteboard *) pasteboard preventNameCollisions:(BOOL)renameModels parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
 
-- (void) flushDocChangesAndSelect:(NSArray*)directives;
+- (void) flushDocChangesAndSelect:(null_unspecified NSArray*)directives;
 
 @end
+
+NS_ASSUME_NONNULL_END
