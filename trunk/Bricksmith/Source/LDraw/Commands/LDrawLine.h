@@ -17,6 +17,8 @@
 // Class:		LDrawLine
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawLine : LDrawDrawableElement
 {
 	Point3		vertex1;
@@ -26,7 +28,7 @@
 }
 
 //Directives
-- (NSString *) write;
+- (null_unspecified NSString *) write;
 
 //Accessors
 - (Point3) vertex1;
@@ -35,3 +37,5 @@
 - (void) setVertex2:(Point3)newVertex;
 
 @end
+
+NS_ASSUME_NONNULL_END

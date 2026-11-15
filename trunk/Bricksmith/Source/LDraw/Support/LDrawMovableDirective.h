@@ -9,7 +9,11 @@
 //              by move operations.
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol LDrawMovableDirective
 - (Vector3) displacementForNudge:(Vector3)nudgeVector;
 - (void) moveBy:(Vector3)moveVector;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,6 +20,8 @@
 // LDrawDragHandle
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawDragHandle : LDrawDrawableElement
 {
 	NSInteger   tag;
@@ -30,24 +32,26 @@
 	SEL			action;
 }
 
-- (id) initWithTag:(NSInteger)tag position:(Point3)positionIn;
+- (null_unspecified id) initWithTag:(NSInteger)tag position:(Point3)positionIn;
 
 // Accessors
 - (Point3) initialPosition;
 - (Point3) position;
 - (NSInteger) tag;
-- (id) target;
+- (null_unspecified id) target;
 
 - (void) setAction:(SEL)action;
 - (void) setPosition:(Point3)positionIn updateTarget:(BOOL)update;
-- (void) setTarget:(id)sender;
+- (void) setTarget:(null_unspecified id)sender;
 
 // Draw
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor
+- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(null_unspecified LDrawColor *)parentColor
 ;
 
 // Utilities
 + (void) makeSphereWithLongitudinalCount:(int)longitudeSections
 						latitudinalCount:(int)latitudeSections;
 @end
+
+NS_ASSUME_NONNULL_END
 

@@ -244,3 +244,9 @@ section. Each entry says what happened and what to do instead.
 - **L71. Parse snippets with a header.** A file whose first line is `0 something` takes that line as the model's
   title, so a comment or meta-command under test disappears from the steps. `Prim.parse` prepends
   `0 Primitive` / `0 Name:` / `0 Author:` lines.
+- **L72. Annotate a header in the commit that first tests it, even when the test reaches it indirectly
+  through a helper.** Commits `029061e` and `b264d6f` tested LDrawLine, LDrawTriangle, LDrawQuadrilateral,
+  LDrawConditionalLine, LDrawTexture, LDrawDragHandle and LDrawRenderer directly, without annotating them. They
+  were caught up later. The annotator also mis-handled typedef'd pointers taken by address (`LDrawDLHandle *`
+  is `void **`) and function-pointer typedefs. It now handles both. A function-pointer typedef's own
+  parameters still need annotating by hand.

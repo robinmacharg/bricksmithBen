@@ -16,6 +16,8 @@
 // Class:		LDrawTriangle
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawTriangle : LDrawDrawableElement <NSCoding>
 {
 	Point3		vertex1;
@@ -39,3 +41,5 @@
 - (void) recomputeNormal;
 
 @end
+
+NS_ASSUME_NONNULL_END

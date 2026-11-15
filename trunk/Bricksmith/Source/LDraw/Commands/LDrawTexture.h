@@ -12,6 +12,8 @@
 
 #import "LDrawContainer.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawTexture : LDrawContainer
 {
 	NSArray 		*fallback;
@@ -30,18 +32,20 @@
 }
 
 // Accessors
-- (NSString *) glossmapName;
-- (NSString *) imageDisplayName;
-- (NSString *) imageReferenceName;
+- (null_unspecified NSString *) glossmapName;
+- (null_unspecified NSString *) imageDisplayName;
+- (null_unspecified NSString *) imageReferenceName;
 
-- (void) setGlossmapName:(NSString *)newName;
-- (void) setImageDisplayName:(NSString *)newName;
-- (void) setImageDisplayName:(NSString *)newName parse:(BOOL)shouldParse inGroup:(dispatch_group_t)parentGroup;
+- (void) setGlossmapName:(null_unspecified NSString *)newName;
+- (void) setImageDisplayName:(null_unspecified NSString *)newName;
+- (void) setImageDisplayName:(null_unspecified NSString *)newName parse:(BOOL)shouldParse inGroup:(null_unspecified dispatch_group_t)parentGroup;
 
 // Utilities
-+ (BOOL) lineIsTextureBeginning:(NSString*)line;
-+ (BOOL) lineIsTextureFallback:(NSString*)line;
-+ (BOOL) lineIsTextureTerminator:(NSString*)line;
-- (BOOL) parsePlanarTextureFromLine:(NSString *)line parentGroup:(dispatch_group_t)parentGroup;
++ (BOOL) lineIsTextureBeginning:(null_unspecified NSString*)line;
++ (BOOL) lineIsTextureFallback:(null_unspecified NSString*)line;
++ (BOOL) lineIsTextureTerminator:(null_unspecified NSString*)line;
+- (BOOL) parsePlanarTextureFromLine:(null_unspecified NSString *)line parentGroup:(null_unspecified dispatch_group_t)parentGroup;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -15,11 +15,15 @@
 // Class:		LDrawComment
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawComment : LDrawMetaCommand
 {
 	
 }
 
-- (NSString *) write;
+- (null_unspecified NSString *) write;
 
 @end
+
+NS_ASSUME_NONNULL_END

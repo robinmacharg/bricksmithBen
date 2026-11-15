@@ -55,6 +55,8 @@ typedef NS_ENUM(int, LDrawStepFlavorT)
 // class LDrawStep
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawStep : LDrawContainer
 {
 	LDrawStepRotationT	stepRotationType;
@@ -70,28 +72,30 @@ typedef NS_ENUM(int, LDrawStepFlavorT)
 }
 
 //Initialization
-+ (id) emptyStep;
-+ (id) emptyStepWithFlavor:(LDrawStepFlavorT) flavorType;
++ (null_unspecified id) emptyStep;
++ (null_unspecified id) emptyStepWithFlavor:(LDrawStepFlavorT) flavorType;
 
 //Directives
-- (NSString *) writeWithStepCommand:(BOOL) flag;
+- (null_unspecified NSString *) writeWithStepCommand:(BOOL) flag;
 
 //Accessors
-- (LDrawModel *) enclosingModel;
+- (null_unspecified LDrawModel *) enclosingModel;
 - (Tuple3) rotationAngle;
 - (Tuple3) rotationAngleZYX;
 - (LDrawStepFlavorT) stepFlavor;
 - (LDrawStepRotationT) stepRotationType;
 
-- (void) setModel:(LDrawModel *)enclosingModel;
+- (void) setModel:(null_unspecified LDrawModel *)enclosingModel;
 - (void) setRotationAngle:(Tuple3)newAngle;
 - (void) setRotationAngleZYX:(Tuple3)newAngleZYX;
 - (void) setStepFlavor:(LDrawStepFlavorT)newFlavor;
 - (void) setStepRotationType:(LDrawStepRotationT)newValue;
 
 //Utilities
-+ (BOOL) lineIsStepTerminator:(NSString*)line;
-+ (BOOL) lineIsRotationStepTerminator:(NSString*)line;
-- (BOOL) parseRotationStepFromLine:(NSString *)rotstep;
++ (BOOL) lineIsStepTerminator:(null_unspecified NSString*)line;
++ (BOOL) lineIsRotationStepTerminator:(null_unspecified NSString*)line;
+- (BOOL) parseRotationStepFromLine:(null_unspecified NSString *)rotstep;
 
 @end
+
+NS_ASSUME_NONNULL_END

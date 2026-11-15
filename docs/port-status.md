@@ -70,6 +70,7 @@ sign-off here:
 | `PartReport.h` | 2026-11-15 | All (tool) | `ExportTests` |
 | `RelatedParts.h`, `LSynthConfiguration.h`, `PartBrowserDataSource.h`, `MinifigureDialogController.h` | 2026-11-15 | All (tool) | `AppLogicTests` |
 | `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
+| `LDrawStep.h`, `LDrawLine.h`, `LDrawTriangle.h`, `LDrawQuadrilateral.h`, `LDrawConditionalLine.h`, `LDrawComment.h`, `LDrawMetaCommand.h`, `LDrawTexture.h`, `LDrawDragHandle.h`, `LDrawRenderer.h`, `LDrawMovableDirective.h` | 2026-11-15 | All (tool; `LDrawRenderer.h` `endDL:` and the cleanup typedef by hand) | `HitTestingTests`, `DrawingTests`, `PrimitiveEditingTests` (caught up late, L72) |
 
 ## Uncovered-line ledger (tiers A and B)
 

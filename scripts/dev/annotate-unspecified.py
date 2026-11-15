@@ -35,6 +35,7 @@ def project_pointer_typedefs():
         text = open(h, errors='replace').read()
         names.update(re.findall(r'typedef[^;{]*\(\s*\^\s*(\w+)\s*\)', text))
         names.update(re.findall(r'typedef\s+\w+\s*\*\s*(\w+)\s*;', text))
+        names.update(re.findall(r'typedef\s+\w+\s*\(\s*\*\s*(\w+)\s*\)', text))   # function pointers (L72)
     return names
 
 
@@ -47,6 +48,10 @@ def annotate_type(t):
     if ANNOTATED.search(t) or not (POINTERISH.search(t) or bare in TYPEDEF_POINTERS):
         return t
     levels = t.count('*') + (1 if re.match(r'^(id|Class)\b', t) else 0)
+    base_name = re.sub(r'\s*\*.*$', '', bare).strip()
+    if base_name in TYPEDEF_POINTERS and t.count('*') == 1:
+        # A typedef'd pointer taken by address (LDrawDLHandle *, LDrawDLCleanup_f *): two levels (L72).
+        return f'{base_name} _Null_unspecified * _Null_unspecified'
     if levels >= 2:  # multi-level pointer (incl. "id *"): annotate each level
         base = t.replace('*', '').strip()
         inner = f'{base} _Null_unspecified' if re.match(r'^(id|Class)\b', base) else f'{base} * _Null_unspecified'
