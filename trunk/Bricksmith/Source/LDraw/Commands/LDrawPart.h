@@ -36,6 +36,8 @@ typedef NS_ENUM(int, PartTypeT) {
 // Class:		LDrawPart
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawPart : LDrawDrawableElement <NSCoding, LDrawObserver>
 {
 @private
@@ -53,25 +55,25 @@ typedef NS_ENUM(int, PartTypeT) {
 }
 
 //Directives
-- (void) drawBoundsWithColor:(LDrawColor *)drawingColor;
-- (NSString *) write;
+- (void) drawBoundsWithColor:(null_unspecified LDrawColor *)drawingColor;
+- (null_unspecified NSString *) write;
 
 //Accessors
-- (NSString *) displayName;
+- (null_unspecified NSString *) displayName;
 - (Point3) position;
-- (NSString *) referenceName;
-- (LDrawModel *) referencedMPDSubmodel;
-- (LDrawModel *) referencedPeerFile;
+- (null_unspecified NSString *) referenceName;
+- (null_unspecified LDrawModel *) referencedMPDSubmodel;
+- (null_unspecified LDrawModel *) referencedPeerFile;
 - (TransformComponents) transformComponents;
 - (Matrix4) transformationMatrix;
-- (void) setDisplayName:(NSString *)newPartName;
-- (void) setDisplayName:(NSString *)newPartName parse:(BOOL)shouldParse inGroup:(dispatch_group_t)parentGroup;
+- (void) setDisplayName:(null_unspecified NSString *)newPartName;
+- (void) setDisplayName:(null_unspecified NSString *)newPartName parse:(BOOL)shouldParse inGroup:(null_unspecified dispatch_group_t)parentGroup;
 - (void) setTransformComponents:(TransformComponents)newComponents;
-- (void) setTransformationMatrix:(Matrix4 *)newMatrix;
+- (void) setTransformationMatrix:(null_unspecified Matrix4 *)newMatrix;
 
 //Actions
-- (void) collectPartReport:(PartReport *)report;
-- (void) applyToAllParts:(LDrawPartVisitor) visitor;
+- (void) collectPartReport:(null_unspecified PartReport *)report;
+- (void) applyToAllParts:(null_unspecified LDrawPartVisitor) visitor;
 
 - (TransformComponents) componentsSnappedToGrid:(float) gridSpacing minimumAngle:(float)degrees;
 - (TransformComponents) components:(TransformComponents)components snappedToGrid:(float)gridSpacing minimumAngle:(float)degrees;
@@ -88,3 +90,5 @@ typedef NS_ENUM(int, PartTypeT) {
 
 
 @end
+
+NS_ASSUME_NONNULL_END

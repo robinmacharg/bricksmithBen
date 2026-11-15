@@ -159,3 +159,9 @@ section. Each entry says what happened and what to do instead.
   `Matrix4Rotate`, but I tested it with radians. And `FloatsApproximatelyEqual` allows about 5 ULPs, not a
   decimal tolerance. Two of three "failures" in row 5 were mistakes in my tests; the third (BUG-014) was
   confirmed with a standalone C program before being logged.
+- **L49. NS_ENUM prefix stripping is literal.** `ViewOrientationT` with cases `ViewOrientationFront…` imports as
+  `.orientationFront`: the trailing `T` stops `ViewOrientation` from matching, so only `View` is stripped. If a
+  nicer spelling is wanted, add `NS_SWIFT_NAME` **before** tests use the enum (it's a Swift-spelling change).
+- **L50. Check the doc comment before calling a surprise a bug.** Position snapping put Y on 8/24 LDU, not the
+  10/20 grid. That's documented design (brick and plate heights along the part's Y axis), so the test now encodes
+  the documented rule.
