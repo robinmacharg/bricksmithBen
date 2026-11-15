@@ -198,6 +198,7 @@
 		0BF729C708AD849300E3DA53 /* PreferencesDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729B708AD849300E3DA53 /* PreferencesDialogController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0BFC4CFD1076F61900293B60 /* ViewportArranger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFC4CFB1076F61900293B60 /* ViewportArranger.h */; };
 		0BFC4CFE1076F61900293B60 /* ViewportArranger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BFC4CFC1076F61900293B60 /* ViewportArranger.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1B4CE4E9C03CCF69364D3825 /* ExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D113954FB2801F80B69C7BA4 /* ExportTests.swift */; };
 		204F991C3EC4DB0CAFFF5CB0 /* MatrixMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985092DCDEB090B005DCF071 /* MatrixMathTests.swift */; };
 		22A85FC75233854191C5DAE5 /* LibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */; };
 		2BB59F4309FEFE960077A885 /* AMSProgressBar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB5975E09FEFD250077A885 /* AMSProgressBar.framework */; };
@@ -602,6 +603,7 @@
 		9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		B58CE9892121AF3E27970B98 /* SnappingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnappingTests.swift; sourceTree = "<group>"; };
 		C376367B97F822AD8543185C /* DocumentActionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentActionTests.swift; sourceTree = "<group>"; };
+		D113954FB2801F80B69C7BA4 /* ExportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExportTests.swift; sourceTree = "<group>"; };
 		D608724616ED61F500828B4E /* MeshSmooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshSmooth.h; sourceTree = "<group>"; };
 		D608724716ED61F500828B4E /* MeshSmooth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MeshSmooth.c; sourceTree = "<group>"; };
 		D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawGLCamera.h; sourceTree = "<group>"; };
@@ -916,6 +918,7 @@
 				EDD9235EA9F69E87DBFF308A /* MPDTests.swift */,
 				37613C878169213095B751C5 /* DocumentSpikeTests.swift */,
 				C376367B97F822AD8543185C /* DocumentActionTests.swift */,
+				D113954FB2801F80B69C7BA4 /* ExportTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1523,6 +1526,7 @@
 				5DABC29D744250DD26B19E0A /* DocumentSpikeTests.swift in Sources */,
 				CB7E8E47D480EBCFD16FC5EF /* ObjC.swift in Sources */,
 				DDF6D286F210652714B7461C /* DocumentActionTests.swift in Sources */,
+				1B4CE4E9C03CCF69364D3825 /* ExportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

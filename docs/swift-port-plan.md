@@ -361,6 +361,9 @@ Goldens and known issues **must not change**.
   - `LDrawDirective` (2)
   - `LDrawDragHandle` (24)
   - `PartLibrary` texture creation
+- **Extract Export Steps' logic** out of its save-panel completion block (`-[LDrawDocument exportSteps:]`) into a
+  callable method, and point `ExportTests` at it in place of `ExportStepsMirror` (row 11 mirrors it line for line
+  until then).
 - **Split `LDrawDocument.m`** (6.4k lines) into categories by concern: file I/O, edit operations, selection, undo,
   menus, viewers.
 - **Fallback if annotations were missed in P1:** a "test spelling only" commit is allowed. Goldens and assertions stay

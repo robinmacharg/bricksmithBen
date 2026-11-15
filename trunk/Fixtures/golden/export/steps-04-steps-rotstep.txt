@@ -1,0 +1,70 @@
+=== Steps and rotation steps Steps / Steps and rotation steps, Step 6.ldr
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP END
+1 14 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP 0.000 0.000 15.000 ADD
+1 2 0 -48 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 30.000 0.000 0.000 REL
+1 1 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 0.000 45.000 0.000 ABS
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 STEP
+
+=== Steps and rotation steps Steps / Steps and rotation steps, Step 5.ldr
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP END
+1 14 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP 0.000 0.000 15.000 ADD
+1 2 0 -48 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 30.000 0.000 0.000 REL
+1 1 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 0.000 45.000 0.000 ABS
+
+=== Steps and rotation steps Steps / Steps and rotation steps, Step 4.ldr
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP END
+1 14 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP 0.000 0.000 15.000 ADD
+1 2 0 -48 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 30.000 0.000 0.000 REL
+
+=== Steps and rotation steps Steps / Steps and rotation steps, Step 3.ldr
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP END
+1 14 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP 0.000 0.000 15.000 ADD
+
+=== Steps and rotation steps Steps / Steps and rotation steps, Step 2.ldr
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP END
+
+=== Steps and rotation steps Steps / Steps and rotation steps, Step 1.ldr
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat

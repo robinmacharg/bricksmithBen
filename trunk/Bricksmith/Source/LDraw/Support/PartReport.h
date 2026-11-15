@@ -15,11 +15,11 @@
 @class LDrawContainer;
 
 
-extern NSString *PART_REPORT_NUMBER_KEY;
-extern NSString *PART_REPORT_NAME_KEY;
-extern NSString *PART_REPORT_LDRAW_COLOR;	// LDrawColor object
-extern NSString *PART_REPORT_COLOR_NAME;	// NSString representing localized name
-extern NSString *PART_REPORT_PART_QUANTITY;	// NSNumber of how many of this part there are
+extern NSString * _Null_unspecified PART_REPORT_NUMBER_KEY;
+extern NSString * _Null_unspecified PART_REPORT_NAME_KEY;
+extern NSString * _Null_unspecified PART_REPORT_LDRAW_COLOR;	// LDrawColor object
+extern NSString * _Null_unspecified PART_REPORT_COLOR_NAME;	// NSString representing localized name
+extern NSString * _Null_unspecified PART_REPORT_PART_QUANTITY;	// NSNumber of how many of this part there are
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,8 @@ extern NSString *PART_REPORT_PART_QUANTITY;	// NSNumber of how many of this part
 // class PartReport
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface PartReport : NSObject
 {
 	LDrawContainer		*reportedObject;
@@ -37,19 +39,21 @@ extern NSString *PART_REPORT_PART_QUANTITY;	// NSNumber of how many of this part
 }
 
 //Initialization
-+ (PartReport *) partReportForContainer:(LDrawContainer *)container;
++ (null_unspecified PartReport *) partReportForContainer:(null_unspecified LDrawContainer *)container;
 
 //Collecting Information
-- (void) setLDrawContainer:(LDrawContainer *)newContainer;
+- (void) setLDrawContainer:(null_unspecified LDrawContainer *)newContainer;
 - (void) getPieceCountReport;
-- (void) registerPart:(LDrawPart *)part;
+- (void) registerPart:(null_unspecified LDrawPart *)part;
 
 //Accessing Information
-- (NSArray *) allParts;
-- (NSArray *) flattenedReport;
-- (NSArray *) missingParts;
-- (NSArray *) movedParts;
+- (null_unspecified NSArray *) allParts;
+- (null_unspecified NSArray *) flattenedReport;
+- (null_unspecified NSArray *) missingParts;
+- (null_unspecified NSArray *) movedParts;
 - (NSUInteger) numberOfParts;
-- (NSString *) textualRepresentationWithSortDescriptors:(NSArray *)sortDescriptors;
+- (null_unspecified NSString *) textualRepresentationWithSortDescriptors:(null_unspecified NSArray *)sortDescriptors;
 
 @end
+
+NS_ASSUME_NONNULL_END

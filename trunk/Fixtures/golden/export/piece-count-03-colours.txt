@@ -1,0 +1,5 @@
+Quantity	Part	Description	Color
+1	3024.dat	Plate  1 x  1	
+2	3024.dat	Plate  1 x  1	(Current Color)
+1	3024.dat	Plate  1 x  1	Black
+1	3024.dat	Plate  1 x  1	White

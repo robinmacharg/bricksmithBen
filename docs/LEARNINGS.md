@@ -195,3 +195,6 @@ section. Each entry says what happened and what to do instead.
 - **L59. Check undo by comparing bytes, not just "looks right".** Exact before/after comparison showed that
   undoing a rotation applies the inverse transform (float drift, `-0`): BUG-016. A numeric-tolerance check is
   kept alongside, so a genuinely broken undo is still caught.
+- **L60. When logic is trapped in UI code (a save-panel completion block), mirror it in the test line for line and
+  cite the source.** Record a P4 task to extract it, so the mirror can't drift for long. The mirror is how BUG-011's
+  real user impact (backwards Export Steps files) was confirmed.
