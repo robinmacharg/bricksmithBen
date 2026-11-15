@@ -206,3 +206,7 @@ section. Each entry says what happened and what to do instead.
   removed** (`LDrawColorDidChangeNotification` becomes `.LDrawColorDidChange`), so generated Swift must use that
   spelling. Also, the registration domain mixes in system keys (`Apple*`, `NS*`, `METAL_*`, `XCT*`) and keys that
   views register lazily. Filter those out of goldens, or the golden depends on the machine and on test order.
+- **L64. Capturing a GL view in tests:** `display()` alone produced a black capture. What works is to call the
+  view's `-draw` with its context current, then `glReadPixels` from the back buffer (the window can stay fully
+  transparent). `glReadPixels` is bottom-up, so flip the image for humans. `zoomToFit:` misbehaves before layout
+  settles; a fixed zoom plus `scrollCenterToModelPoint:` (the model's bounding-box centre) gives stable framing.

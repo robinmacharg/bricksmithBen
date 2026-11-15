@@ -103,7 +103,12 @@ isn't present.
 - **Performance tests** run only in the Release `Bricksmith-Perf` scheme. Debug timings are meaningless for
   comparing Swift with ObjC.
 - **Randomised tests** use a fixed seed, and they print it when they fail.
-- **Render snapshot comparisons** use a tolerance. The reference machine is recorded with the images.
+- **Render snapshots** (`RenderSnapshotTests`) render fixtures in the real `LDrawGLView` from a fixed orthographic camera
+  (zoom 400%, centred), capture with `-saveImageToPath:` after an explicit `-draw` (L64), and flip the image upright.
+  - References live in `golden/render/<hw.model>/`. A machine without references skips the comparison rather than
+    failing.
+  - Tolerance: channel delta ≤ 8, with at most 0.5% of pixels exceeding it.
+  - These images are the visual reference for the later Metal renderer.
 
 ## Known issues
 Bugs live in **[KNOWN-BUGS.md](KNOWN-BUGS.md)**. Don't fix them during the port. For each bug:

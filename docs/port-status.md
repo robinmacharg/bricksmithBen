@@ -39,6 +39,7 @@ their own port phase.
 | P2 | 🧑 Golden review: row 12 (`golden/app/*`) | **pending** | | No new bugs |
 | P2 | 🧑 Golden review: row 13 (`golden/lsynth/*`, plus the new `15-lsynth-band` round-trip/tree goldens) | **pending** | | S11 confirmed (CLI only) |
 | P2 | 🧑 Golden review: row 14 (`golden/prefs/*`) | **pending** | | 175 constants + 93 registered defaults; note the misspelt key "Syntak Color Colors" must stay |
+| P2 | 🧑 Golden review: row 15 (`golden/render/Mac15,7/*.png`, 8 images) | **pending** | | References for this machine only; other machines skip (not a CI gate) |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
