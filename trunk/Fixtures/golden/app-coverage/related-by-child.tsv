@@ -1,0 +1,14 @@
+parent	child	roles (in returned order)
+60596.dat	30178.dat	Door Right
+60596.dat	30178c01.dat	Door Right
+60596.dat	57895.dat	Glass
+60596.dat	57895p01.dat	Glass
+60596.dat	60616a.dat	Door Left,Door Right
+60596.dat	60616b.dat	Door Left,Door Right
+60596.dat	60621.dat	Door Left,Door Right
+60596.dat	60623.dat	Door Left,Door Right
+60596.dat	missing.dat	
+57894.dat	57895.dat	Glass
+57894.dat	57895p01.dat	Glass
+57894.dat	missing.dat	
+3001.dat	missing.dat	

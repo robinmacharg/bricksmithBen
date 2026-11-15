@@ -1,0 +1,111 @@
+## opened (previous category Brick, row 1)
+category=Brick search="" selected=3062b.dat scopeButtonsHidden=true favouriteAction=addFavoriteClicked:
+rows (4):
+  3005 | Brick  1 x  1
+  3062b | Brick  1 x  1 Round with Hollow Stud
+  3003 | Brick  2 x  2
+  3001 | Brick  2 x  4
+## category row 'Plate' selected
+category=Plate search="" selected=3024.dat scopeButtonsHidden=true favouriteAction=addFavoriteClicked:
+rows (4):
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+  3020 | Plate  2 x  4
+## part row 1 selected
+category=Plate search="" selected=3023.dat scopeButtonsHidden=true favouriteAction=addFavoriteClicked:
+rows (4):
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+  3020 | Plate  2 x  4
+## search '1 x' (scope: all categories)
+category=Plate search="1 x" selected=3023.dat scopeButtonsHidden=false favouriteAction=addFavoriteClicked:
+rows (28):
+  3005 | Brick  1 x  1
+  3062b | Brick  1 x  1 Round with Hollow Stud
+  3001 | Brick  2 x  4
+  4-4con7 | Cone  7 x 1.0
+  4-4con8 | Cone  8 x 1.0
+  757 | Hose Flexible 12L Top  1 x  1 x  2/3 with Stud
+  ls100 | LSynth Constraint Part - Type 10 - "HOSE_FLEXIBLE_8.5L"
+  ls101 | LSynth Constraint Part - Type 11 - "HOSE_FLEXIBLE_12L"
+  ls102 | LSynth Constraint Part - Type 12 - "HOSE_FLEXIBLE_19L"
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+  4-4ring2 | Ring  2 x 1.0
+  1-8ring3 | Ring  3 x 0.125
+  1-4ring3 | Ring  3 x 0.25
+  4-4ring3 | Ring  3 x 1.0
+  4-4ring4 | Ring  4 x 1.0
+  4-4ring8 | Ring  8 x 1.0
+  stug-1x2 | Stud Group  1 x  2
+  s\3001s01 | ~Brick  2 x  4 without Front and Back Faces
+  ls11 | ~LSynth Electric Cable Segment NXT
+  ls12 | ~LSynth Electric Mindstorms NXT Cable Segment
+  ls90 | ~LSynth Hose Flexible 19M End Segment
+  ls91 | ~LSynth Hose Flexible 19M Segment
+  ls51 | ~LSynth Technic Flex-System Hose - Cross Section
+  ls41 | ~LSynth Technic Flexible Axle - Cross Section
+  s\3023s01 | ~Plate  1 x  2 without Front Face
+  s\3039s01 | ~Slope Brick 45  2 x  2 without Front Face
+## search '1 x' (scope: selected category)
+category=Plate search="1 x" selected=3023.dat scopeButtonsHidden=false favouriteAction=addFavoriteClicked:
+rows (3):
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+## catalog reloaded during the search
+category=Plate search="1 x" selected=3023.dat scopeButtonsHidden=false favouriteAction=addFavoriteClicked:
+rows (28):
+  3005 | Brick  1 x  1
+  3062b | Brick  1 x  1 Round with Hollow Stud
+  3001 | Brick  2 x  4
+  4-4con7 | Cone  7 x 1.0
+  4-4con8 | Cone  8 x 1.0
+  757 | Hose Flexible 12L Top  1 x  1 x  2/3 with Stud
+  ls100 | LSynth Constraint Part - Type 10 - "HOSE_FLEXIBLE_8.5L"
+  ls101 | LSynth Constraint Part - Type 11 - "HOSE_FLEXIBLE_12L"
+  ls102 | LSynth Constraint Part - Type 12 - "HOSE_FLEXIBLE_19L"
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+  4-4ring2 | Ring  2 x 1.0
+  1-8ring3 | Ring  3 x 0.125
+  1-4ring3 | Ring  3 x 0.25
+  4-4ring3 | Ring  3 x 1.0
+  4-4ring4 | Ring  4 x 1.0
+  4-4ring8 | Ring  8 x 1.0
+  stug-1x2 | Stud Group  1 x  2
+  s\3001s01 | ~Brick  2 x  4 without Front and Back Faces
+  ls11 | ~LSynth Electric Cable Segment NXT
+  ls12 | ~LSynth Electric Mindstorms NXT Cable Segment
+  ls90 | ~LSynth Hose Flexible 19M End Segment
+  ls91 | ~LSynth Hose Flexible 19M Segment
+  ls51 | ~LSynth Technic Flex-System Hose - Cross Section
+  ls41 | ~LSynth Technic Flexible Axle - Cross Section
+  s\3023s01 | ~Plate  1 x  2 without Front Face
+  s\3039s01 | ~Slope Brick 45  2 x  2 without Front Face
+## search cleared
+category=Plate search="" selected=3023.dat scopeButtonsHidden=true favouriteAction=addFavoriteClicked:
+rows (4):
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+  3020 | Plate  2 x  4
+## selected part added to favourites
+category=Plate search="" selected=3023.dat scopeButtonsHidden=true favouriteAction=removeFavoriteClicked:
+rows (4):
+  3024 | Plate  1 x  1
+  3023 | Plate  1 x  2
+  3794b | Plate  1 x  2 with Groove with 1 Centre Stud
+  3020 | Plate  2 x  4
+## Favorites category
+category=Favorites search="" selected=3023.dat scopeButtonsHidden=true favouriteAction=removeFavoriteClicked:
+rows (1):
+  3023 | Plate  1 x  2
+## favourite removed
+category=Favorites search="" selected=nil scopeButtonsHidden=true favouriteAction=addFavoriteClicked:
+rows (0):
+

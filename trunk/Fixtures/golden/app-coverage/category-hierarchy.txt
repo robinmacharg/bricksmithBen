@@ -1,0 +1,3 @@
+{"Children":[{"DisplayName":"All Categories","Name":"AllCategories"},{"DisplayName":"Favorites","Name":"Favorites"}],"DisplayName":"Library","Name":"Library"}
+{"Children":[{"DisplayName":"Brick","Name":"Brick"},{"DisplayName":"Hose","Name":"Hose"},{"DisplayName":"LSynth","Name":"LSynth"},{"DisplayName":"Plate","Name":"Plate"},{"DisplayName":"Slope","Name":"Slope"},{"DisplayName":"String","Name":"String"},{"DisplayName":"Technic","Name":"Technic"}],"DisplayName":"Part Categories","Name":"Part Categories"}
+{"Children":[{"DisplayName":"Alias","Name":"Alias"},{"DisplayName":"Moved","Name":"Moved"},{"DisplayName":"Primitives","Name":"Primitives"},{"DisplayName":"Subparts","Name":"Subparts"}],"DisplayName":"Other","Name":"Other"}
