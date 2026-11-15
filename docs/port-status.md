@@ -49,7 +49,7 @@ their own port phase.
 | P3 | Build (Debug/Release) no new warnings; baselines re-recorded (5 missing-[super dealloc] warnings gone, BUG-032) | 2026-11-15 | agent | |
 | P3 | Tests 185 passed (73 known), no golden changed; ASan run of the unit suite clean (185 passed) | 2026-11-15 | agent | `-enableAddressSanitizer YES`, separate derived data |
 | P3 | Leaks smoke (`scripts/dev/leaks-smoke.sh`: 3 fixtures in the Debug app) | 2026-11-15 | agent | 11 leaks / 512 bytes, all one root: Sparkle `SPUStandardUpdaterController` (unreferenced MainMenu.xib top-level object; pre-existing) |
-| P3 | 🧑 Perf: copy_20000_parts 124-136% of baseline (master measured 103-111% the same day); draw noisy on both (2 ms metric) | **pending** | | Copy now includes freeing 20,000 directives, which MRC never did (BUG-032). Decision needed: accept and re-baseline, or optimise |
+| P3 | 🧑 Perf: copy_20000_parts +25-35% accepted (ARC retain/release, plus freeing 20,000 directives now that BUG-032 is fixed); baseline re-recorded; draw metric now 20 frames per sample (`draw_20000_parts_x20`) | 2026-11-15 | maintainer | Verification run after re-baselining: all metrics 90-100% |
 | P2 | Mutation smoke: 30/30 killed (`scripts/mutation-smoke.sh`, patches from `scripts/dev/make-mutations.py`) | 2026-11-15 | agent | Two survivors on the first run: one revealed a missing test (untyped ROTSTEP), one targeted dead code (retargeted) |
 | P2 | Default suite time | 2026-11-15 | agent | 185 tests in ~31-60 s (limit 3 min) |
 | P2 | 🧑 Golden review: re-recorded render references (`golden/render/Mac15,7/*`, harness now fixes 1x and 625x691, L73) | **pending** | | Same renders, offset a few pixels |
