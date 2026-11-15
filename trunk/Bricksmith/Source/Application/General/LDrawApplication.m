@@ -40,7 +40,7 @@
 //------------------------------------------------------------------------------
 + (void) initialize
 {
-	TransformerIntMinus1 *minus1Transformer = [[[TransformerIntMinus1 alloc] init] autorelease];
+	TransformerIntMinus1 *minus1Transformer = [[TransformerIntMinus1 alloc] init];
 	
 	[NSValueTransformer setValueTransformer:minus1Transformer
 									forName:@"TransformerIntMinus1" ];
@@ -99,7 +99,7 @@
 															0};
 
 	pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes: pixelAttributes];
-	return [pixelFormat autorelease];
+	return pixelFormat;
 }
 
 
@@ -562,7 +562,6 @@
 		[donation runModal];
 	}
 	
-	[donation release];
 	
 	return NSTerminateNow;
 	
@@ -869,7 +868,12 @@ mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
 
         NSArray *lsynthMLCADDefaults = [[MLCadIni iniFile] lsynthVisibleTypes];
 
-        for (NSDictionary *entry in [[appDelegate lsynthConfiguration] performSelector:NSSelectorFromString([menuSpec objectForKey:@"getter"])])
+        // The getter is a plain accessor returning an unowned array, so performSelector: cannot leak here.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        NSArray *entries = [[appDelegate lsynthConfiguration] performSelector:NSSelectorFromString([menuSpec objectForKey:@"getter"])];
+#pragma clang diagnostic pop
+        for (NSDictionary *entry in entries)
 		{
 			// The MLCad.ini file contains a list of semi-official LSynth types.  The lsynth.mpd file also contains legacy entries
 			// for backward compatibility.  We want to filter out non-semi-official synth parts unless the user has turned this off
@@ -883,7 +887,7 @@ mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
                     // User has turned off filtering in prefs
                     ![userDefaults boolForKey:LSYNTH_SHOW_BASIC_PARTS_LIST_KEY])
             {
-                NSMenuItem *entryMenuItem = [[[NSMenuItem alloc] init] autorelease];
+                NSMenuItem *entryMenuItem = [[NSMenuItem alloc] init];
                 [entryMenuItem setTitle:[entry objectForKey:[menuSpec objectForKey:@"entry_key"]]];
                 [entryMenuItem setRepresentedObject:entry];
                 [entryMenuItem setAction:NSSelectorFromString([menuSpec objectForKey:@"action"])];
@@ -917,21 +921,21 @@ mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
 //  [invertSelectionItem setTag:lsynthInvertINSIDEOUTSIDETag];
 //  [insideOutsideMenu addItem:invertSelectionItem];
 	
-	NSMenuItem *addInsideItem = [[[NSMenuItem alloc] init] autorelease];
+	NSMenuItem *addInsideItem = [[NSMenuItem alloc] init];
 	[addInsideItem setTitle:@"Insert INSIDE"];
 	[addInsideItem setTarget:nil];
 	[addInsideItem setAction:@selector(insertINSIDEOUTSIDELSynthDirective:)];
 	[addInsideItem setTag:lsynthInsertINSIDETag];
 	[insideOutsideMenu addItem:addInsideItem];
 	
-	NSMenuItem *addOutsideItem = [[[NSMenuItem alloc] init] autorelease];
+	NSMenuItem *addOutsideItem = [[NSMenuItem alloc] init];
 	[addOutsideItem setTitle:@"Insert OUTSIDE"];
 	[addOutsideItem setTarget:nil];
 	[addOutsideItem setAction:@selector(insertINSIDEOUTSIDELSynthDirective:)];
 	[addOutsideItem setTag:lsynthInsertOUTSIDETag];
 	[insideOutsideMenu addItem:addOutsideItem];
 	
-	NSMenuItem *addCrossItem = [[[NSMenuItem alloc] init] autorelease];
+	NSMenuItem *addCrossItem = [[NSMenuItem alloc] init];
 	[addCrossItem setTitle:@"Insert CROSS"];
 	[addCrossItem setTarget:nil];
 	[addCrossItem setAction:@selector(insertINSIDEOUTSIDELSynthDirective:)];
@@ -969,15 +973,7 @@ mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
 // Purpose:		The curtain falls.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[partLibraryController	release];
-	[inspector				release];
-	[sharedGLContext		release];
-
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

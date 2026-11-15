@@ -296,3 +296,13 @@ section. Each entry says what happened and what to do instead.
   full-screen app). → The render test now records the window's occlusion state and skips, with a message, when the
   capture is uniform *and* the window wasn't visible. Before bisecting a render failure, rerun it on the last good
   commit.
+- **L79. Under ARC, *when* a release happens can be behaviour.**
+  - `LDrawShaderRenderer` does its real drawing in `dealloc`. ARCMT removed `[ren release]`, so the renderer now
+    lived to the end of the method, after GL-state asserts, and they aborted. → Set the variable to `nil` where the
+    release used to be.
+  - `IBOutlet` ivars are not retained by nib loading under MRC, but they are **strong** under ARC. LDrawDocument's
+    strong outlets kept a closed window's views alive until the document went away. The views were then torn down
+    during another window's display cycle ("Collection was mutated while being enumerated" in
+    `NSViewUpdateVibrancyForSubtree`). → Bare outlets become `IBOutlet __unsafe_unretained`, matching MRC; NSDrawer
+    and some other AppKit classes can't be weakly referenced. The exceptions are outlets the original code retained
+    itself and released in `dealloc` (DocumentToolbarController's tool views): they stay strong.

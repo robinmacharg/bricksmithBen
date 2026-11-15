@@ -48,34 +48,34 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LDrawDocument : NSDocument <ViewportArrangerDelegate>
 {
-	IBOutlet DocumentToolbarController	*toolbarController;
-	IBOutlet NSObjectController			*bindingsController;
+	IBOutlet __unsafe_unretained DocumentToolbarController	*toolbarController;
+	IBOutlet __unsafe_unretained NSObjectController			*bindingsController;
 	
 	// Window satellites
-	IBOutlet NSDrawer					*partBrowserDrawer;
-	IBOutlet PartBrowserDataSource		*partsBrowser;
+	IBOutlet __unsafe_unretained NSDrawer					*partBrowserDrawer;
+	IBOutlet __unsafe_unretained PartBrowserDataSource		*partsBrowser;
 	
 	// Scope bar
-	IBOutlet NSButton					*viewAllButton;
-	IBOutlet NSButton					*viewStepsButton;
-	IBOutlet NSPopUpButton				*submodelPopUpMenu;
-	IBOutlet NSView						*scopeStepControlsContainer;
-	IBOutlet NSTextField				*stepField;
-	IBOutlet NSSegmentedControl			*stepNavigator;
+	IBOutlet __unsafe_unretained NSButton					*viewAllButton;
+	IBOutlet __unsafe_unretained NSButton					*viewStepsButton;
+	IBOutlet __unsafe_unretained NSPopUpButton				*submodelPopUpMenu;
+	IBOutlet __unsafe_unretained NSView						*scopeStepControlsContainer;
+	IBOutlet __unsafe_unretained NSTextField				*stepField;
+	IBOutlet __unsafe_unretained NSSegmentedControl			*stepNavigator;
 	
 	// Window contents
-	IBOutlet ExtendedSplitView			*fileContentsSplitView;
-	IBOutlet LDrawFileOutlineView		*fileContentsOutline;
-	IBOutlet NSPopUpButton				*addReferenceButton;
+	IBOutlet __unsafe_unretained ExtendedSplitView			*fileContentsSplitView;
+	IBOutlet __unsafe_unretained LDrawFileOutlineView		*fileContentsOutline;
+	IBOutlet __unsafe_unretained NSPopUpButton				*addReferenceButton;
 	
 	// LDraw graphic view
-	IBOutlet ViewportArranger			*viewportArranger;
-	IBOutlet NSTextField				*coordinateLabelX;
-	IBOutlet NSTextField				*coordinateLabelY;
-	IBOutlet NSTextField				*coordinateLabelZ;
-	IBOutlet NSTextField				*coordinateFieldX;
-	IBOutlet NSTextField				*coordinateFieldY;
-	IBOutlet NSTextField				*coordinateFieldZ;
+	IBOutlet __unsafe_unretained ViewportArranger			*viewportArranger;
+	IBOutlet __unsafe_unretained NSTextField				*coordinateLabelX;
+	IBOutlet __unsafe_unretained NSTextField				*coordinateLabelY;
+	IBOutlet __unsafe_unretained NSTextField				*coordinateLabelZ;
+	IBOutlet __unsafe_unretained NSTextField				*coordinateFieldX;
+	IBOutlet __unsafe_unretained NSTextField				*coordinateFieldY;
+	IBOutlet __unsafe_unretained NSTextField				*coordinateFieldZ;
 	
 	@private
 		LDrawFile		*documentContents;
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 		NSArray			*selectedDirectivesBeforeCopyDrag;
 		gridSpacingModeT gridMode;
 		gridOrientationModeT gridOrientation;
-		LDrawGLView		*mostRecentLDrawView; //file graphic view which most recently had focus. Weak link.
+		__weak LDrawGLView		*mostRecentLDrawView; //file graphic view which most recently had focus. Weak link.
 		NSArray		*	markedSelection;		// if we are mid-marquee selection, this is an array of the previously selected directives before drag started
 }
 

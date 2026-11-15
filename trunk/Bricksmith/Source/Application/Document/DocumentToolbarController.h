@@ -39,7 +39,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface DocumentToolbarController : NSObject <NSToolbarDelegate>
 {
-	IBOutlet LDrawDocument			*document; //link to the documnt to which this is attached.
+	IBOutlet __weak LDrawDocument			*document;	// the document owns us: unretained under MRC (L77) //link to the documnt to which this is attached.
 
 	IBOutlet NSView					*nudgeXToolView;
 	IBOutlet NSView					*nudgeYToolView;
@@ -47,7 +47,7 @@
 	IBOutlet NSView					*zoomToolView; //enter zoom percentage.
 	
 	IBOutlet NSSegmentedControl		*gridSegmentedControl;
-	IBOutlet NSSegmentedControl		*orientationSegmentedControl;
+	IBOutlet __unsafe_unretained NSSegmentedControl		*orientationSegmentedControl;
 }
 
 //Button factories

@@ -109,7 +109,7 @@ static Box2 NSRectToBox2(NSRect rect)
 	// Yes, we have a nib file. Don't laugh. This view has accessories.
 	[NSBundle loadNibNamed:@"LDrawGLViewAccessories" owner:self];
 	
-	self->focusRingView = [[[FocusRingView alloc] initWithFrame:[self bounds]] autorelease];
+	self->focusRingView = [[FocusRingView alloc] initWithFrame:[self bounds]];
 	[focusRingView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[focusRingView setFocusSource:self];
 	
@@ -187,7 +187,6 @@ static Box2 NSRectToBox2(NSRect rect)
 																	owner:self
 																 userInfo:nil];
 	[self addTrackingArea:trackingArea];
-	[trackingArea release];
 	
 }//end internalInit
 
@@ -557,8 +556,6 @@ static Box2 NSRectToBox2(NSRect rect)
 //==============================================================================
 - (void) setAutosaveName:(NSString *)newName
 {
-	[newName retain];
-	[self->autosaveName release];
 	self->autosaveName = newName;
 	
 }//end setAutosaveName:
@@ -1096,8 +1093,8 @@ static Box2 NSRectToBox2(NSRect rect)
 					cursorImage = [NSImage imageNamed:@"Crosshair"];
 					break;
 				}
-				cursor = [[[NSCursor alloc] initWithImage:cursorImage
-												  hotSpot:NSMakePoint(8, 8)] autorelease];
+				cursor = [[NSCursor alloc] initWithImage:cursorImage
+												  hotSpot:NSMakePoint(8, 8)];
 			}
 			else			
 				cursor = [NSCursor arrowCursor];
@@ -1114,8 +1111,8 @@ static Box2 NSRectToBox2(NSRect rect)
 			if([self->renderer isTrackingDrag] == YES)
 			{
 				cursorImage = [NSImage imageNamed:@"ZoomCursor"];
-				cursor = [[[NSCursor alloc] initWithImage:cursorImage
-												  hotSpot:NSMakePoint(7, 10)] autorelease];
+				cursor = [[NSCursor alloc] initWithImage:cursorImage
+												  hotSpot:NSMakePoint(7, 10)];
 			}
 			else
 				cursor = [NSCursor crosshairCursor];
@@ -1123,20 +1120,20 @@ static Box2 NSRectToBox2(NSRect rect)
 			
 		case ZoomInTool:
 			cursorImage = [NSImage imageNamed:@"ZoomInCursor"];
-			cursor = [[[NSCursor alloc] initWithImage:cursorImage
-											  hotSpot:NSMakePoint(7, 10)] autorelease];
+			cursor = [[NSCursor alloc] initWithImage:cursorImage
+											  hotSpot:NSMakePoint(7, 10)];
 			break;
 			
 		case ZoomOutTool:
 			cursorImage = [NSImage imageNamed:@"ZoomOutCursor"];
-			cursor = [[[NSCursor alloc] initWithImage:cursorImage
-											  hotSpot:NSMakePoint(7, 10)] autorelease];
+			cursor = [[NSCursor alloc] initWithImage:cursorImage
+											  hotSpot:NSMakePoint(7, 10)];
 			break;
 		
 		case SpinTool:
 			cursorImage = [NSImage imageNamed:@"Spin"];
-			cursor = [[[NSCursor alloc] initWithImage:cursorImage
-											  hotSpot:NSMakePoint(7, 10)] autorelease];
+			cursor = [[NSCursor alloc] initWithImage:cursorImage
+											  hotSpot:NSMakePoint(7, 10)];
 			break;
 			
 		case EraserTool:
@@ -3161,11 +3158,8 @@ static Box2 NSRectToBox2(NSRect rect)
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-	[renderer		release];
-	[autosaveName	release];
 	[focusRingView	setFocusSource:nil];
 
-	[super dealloc];
 	
 }//end dealloc
 
