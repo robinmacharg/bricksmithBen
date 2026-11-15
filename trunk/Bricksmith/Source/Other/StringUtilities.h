@@ -10,12 +10,16 @@
 #import <Cocoa/Cocoa.h>
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface StringUtilities : NSObject
 {
 
 }
 
-+ (NSString *) nextCopyNameForString:(NSString *)originalString;
-+ (NSString *) nextCopyPathForFilePath:(NSString *)basePath;
++ (null_unspecified NSString *) nextCopyNameForString:(null_unspecified NSString *)originalString;
++ (null_unspecified NSString *) nextCopyPathForFilePath:(null_unspecified NSString *)basePath;
 
 @end
+
+NS_ASSUME_NONNULL_END

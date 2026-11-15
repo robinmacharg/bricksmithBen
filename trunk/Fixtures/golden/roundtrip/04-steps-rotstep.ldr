@@ -1,0 +1,15 @@
+0 Steps and rotation steps
+0 Name: 04-steps-rotstep.ldr
+0 Author: Fixture Author
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 STEP
+1 1 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 0.000 45.000 0.000 ABS
+1 2 0 -48 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 ROTSTEP 30.000 0.000 0.000 REL
+1 14 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP 0.000 0.000 15.000 ADD
+1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 ROTSTEP END
+1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 STEP

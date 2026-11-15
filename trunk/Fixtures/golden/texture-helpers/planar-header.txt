@@ -1,0 +1,50 @@
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+  -> YES; image=a.png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+0 !TEXMAP NEXT PLANAR 1 2 3 4 5 6 7 8 9 a.png
+  -> YES; image=a.png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+1 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 0 0 0 0 0 0 0 0 0 (null)
+0 !TEXMOP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 0 0 0 0 0 0 0 0 0 (null)
+0 !TEXMAP BEGIN PLANAR 1 2 3 4 5 6 7 8 9 a.png
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 0 0 0 0 0 0 0 0 0 (null)
+0 !TEXMAP START SPHERICAL 1 2 3 4 5 6 7 8 9 a.png
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 0 0 0 0 0 0 0 0 0 (null)
+0 !TEXMAP START PLANAR x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 0 0 0 0 0 0 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 0 0 0 0 0 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 0 0 0 0 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 0 0 0 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 0 0 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 0 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 0 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 0 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 x
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 0 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 ""
+  -> NO ; image=nil gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 (null)
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 "two words.png"
+  -> YES; image=two words.png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 two words.png
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 "say \"hi\".png"
+  -> YES; image=say "hi".png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 say "hi".png
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 dir\\a.png
+  -> YES; image=dir\\a.png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 dir\\a.png
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP g.png
+  -> YES; image=a.png gloss=g.png; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP g.png
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP "g g.png"
+  -> YES; image=a.png gloss=g g.png; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP g g.png
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP
+  -> NO ; image=a.png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png SOMETHING else
+  -> YES; image=a.png gloss=nil; writes: 0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png
+0 !TEXMAP START PLANAR 1e1 -0.5 +3 4 5 6 7 8 9 a.png
+  -> YES; image=a.png gloss=nil; writes: 0 !TEXMAP START PLANAR 10 -0.5 3 4 5 6 7 8 9 a.png

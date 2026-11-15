@@ -1,0 +1,8 @@
+0 LSynth hose block (not synthesised)
+0 Name: 08-lsynth.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN PNEUMATIC_HOSE 16
+0 SYNTH SHOW
+0 SYNTH END
+
+1   4     0.000000     0.000000     0.000000     1.000000     0.000000     0.000000     0.000000     1.000000     0.000000     0.000000     0.000000     1.000000 3001.dat

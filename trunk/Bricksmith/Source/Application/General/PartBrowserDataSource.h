@@ -20,6 +20,8 @@
 // class PartBrowserDataSource
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface PartBrowserDataSource : NSObject <NSOutlineViewDelegate, NSOutlineViewDataSource>
 {
 	IBOutlet NSButton		*searchAllCategoriesButton;
@@ -45,34 +47,36 @@
 }
 
 //Accessors
-- (NSString *) category;
-- (NSString *) selectedPartName;
+- (null_unspecified NSString *) category;
+- (null_unspecified NSString *) selectedPartName;
 
-- (void) setPartLibrary:(PartLibrary *)partLibraryIn;
-- (BOOL) loadCategory:(NSString *)newCategory;
-- (void) setCategoryList:(NSArray *)categoryList;
-- (void) setTableDataSource:(NSMutableArray *) partsInCategory;
+- (void) setPartLibrary:(null_unspecified PartLibrary *)partLibraryIn;
+- (BOOL) loadCategory:(null_unspecified NSString *)newCategory;
+- (void) setCategoryList:(null_unspecified NSArray *)categoryList;
+- (void) setTableDataSource:(null_unspecified NSMutableArray *) partsInCategory;
 
 //Actions
-- (IBAction) searchAllCategoriesButtonClicked:(id)sender;
-- (IBAction) searchSelectedCategoryButtonClicked:(id)sender;
-- (IBAction) addPartClicked:(id)sender;
-- (IBAction) addFavoriteClicked:(id)sender;
-- (void) doubleClickedInPartTable:(id)sender;
-- (IBAction) removeFavoriteClicked:(id)sender;
-- (IBAction) searchFieldChanged:(id)sender;
+- (IBAction) searchAllCategoriesButtonClicked:(null_unspecified id)sender;
+- (IBAction) searchSelectedCategoryButtonClicked:(null_unspecified id)sender;
+- (IBAction) addPartClicked:(null_unspecified id)sender;
+- (IBAction) addFavoriteClicked:(null_unspecified id)sender;
+- (void) doubleClickedInPartTable:(null_unspecified id)sender;
+- (IBAction) removeFavoriteClicked:(null_unspecified id)sender;
+- (IBAction) searchFieldChanged:(null_unspecified id)sender;
 
 //Notifications
-- (void) sharedPartCatalogDidChange:(NSNotification *)notification;
+- (void) sharedPartCatalogDidChange:(null_unspecified NSNotification *)notification;
 
 //Utilities
-- (NSMutableArray *) filterPartRecords:(NSArray *)partRecords bySearchString:(NSString *)searchString excludeParts:(NSSet *)excludedParts;
-- (NSUInteger) indexOfPartNamed:(NSString *)searchName;
+- (null_unspecified NSMutableArray *) filterPartRecords:(null_unspecified NSArray *)partRecords bySearchString:(null_unspecified NSString *)searchString excludeParts:(null_unspecified NSSet *)excludedParts;
+- (NSUInteger) indexOfPartNamed:(null_unspecified NSString *)searchName;
 - (void) performSearch;
 - (void) setConstraints;
 - (void) scrollSelectedCategoryToCenter;
 - (void) syncSelectionAndCategoryDisplayed;
 - (void) syncSelectionAndPartDisplayed;
-- (BOOL) writeSelectedPartToPasteboard:(NSPasteboard *)pasteboard;
+- (BOOL) writeSelectedPartToPasteboard:(null_unspecified NSPasteboard *)pasteboard;
 
 @end
+
+NS_ASSUME_NONNULL_END

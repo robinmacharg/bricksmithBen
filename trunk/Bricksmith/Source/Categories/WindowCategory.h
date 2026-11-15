@@ -10,9 +10,13 @@
 #import <Cocoa/Cocoa.h>
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSWindow (WindowCategory)
 
 - (NSRect) frameRectForContentSize:(NSSize)newSize;
 - (void) resizeToSize:(NSSize)newSize animate:(BOOL)animate;
 
 @end
+
+NS_ASSUME_NONNULL_END

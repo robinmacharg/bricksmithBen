@@ -1,0 +1,5 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (2)
+      LDrawPart: 1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+      LDrawLine: 2 24 0 0 0 10 0 0

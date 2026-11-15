@@ -1,0 +1,5 @@
+inTextures.png placed=textures/inTextures.png -> 8x4 cachedUnderReferenceName=false
+besidefile.png placed=besidefile.png -> 4x2 cachedUnderReferenceName=true
+lowercase.png placed=textures/lowercase.png -> 2x2 cachedUnderReferenceName=true
+absent.png placed=- -> nil cachedUnderReferenceName=false
+unsaved.png in an unsaved file -> nil

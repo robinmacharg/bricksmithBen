@@ -115,3 +115,163 @@ section. Each entry says what happened and what to do instead.
   `SUEnableAutomaticChecks` is undecided. Test runs relaunch the app all the time (hosts, exit-test children),
   so it could hang a run. → In Debug, `updaterShouldPromptForPermissionToCheckForUpdates:` returns NO; Release is
   unchanged. Any perf scheme built from Release needs the same treatment.
+- **L36. Typedef'd pointers are invisible to a `*`-based scan.** A `dispatch_group_t` parameter (here a macro for
+  `void *`) went unannotated, so `NS_ASSUME_NONNULL` silently made it `nonnull`, and a caller passing `nil` drew a
+  new `-Wnonnull` warning. That's exactly the hazard the explicit `null_unspecified` rule exists for. The warning
+  gate caught it. → `scripts/dev/annotate-unspecified.py` also treats `dispatch_*_t` and `…Ref` as pointers. Treat
+  any new `-Wnonnull` warning as a wrong annotation.
+- **L37. `.serialized` only orders tests within one suite; separate suites run concurrently.** Suites sharing
+  Bricksmith's singletons reset each other mid-test: the fixture path came out nil and the colour marker was
+  missing. → The `.fixtureLibrary` trait takes a process-wide async FIFO lock (`GlobalStateLock`), so every test
+  that touches global state runs alone.
+- **L38. Swift doesn't strip a leading "class" from ObjC selectors.** `+classForDirectiveBeginningWithLine:`
+  imports as `classForDirectiveBeginning(withLine:)`. If unsure of an imported name, let the compiler tell you
+  rather than guessing.
+- **L39. Golden review finds real bugs.** Diffing each fixture against its recorded golden surfaced two data-loss
+  bugs (BUG-003, BUG-004) on the first pass. → Always review golden diffs line by line before the review gate;
+  never just accept a recording.
+- **L40. Swift imports an ObjC class factory named after its class (`+[LDrawFile file]`) as `init()`.** That
+  collides with the inherited `-init`, and `LDrawFile()` silently called plain `-init`, giving a file with **no
+  model**. → Pin factories with `NS_SWIFT_NAME(file())` when their header is annotated. Expect the same with
+  `+[LDrawMPDModel model]`, `+[LDrawStep emptyStep]` and similar.
+- **L41. Form a bug hypothesis from code reading, then let the test decide.** Reading the code predicted that
+  "1e14 is written as "1"", but `Float(1e14)` is `100000000376832`, which fits the buffer. The real failures were
+  -1e14 and 1e20. Likewise, the suspected RGB truncation was disproved by checking all 768 values. Swift Testing
+  reports "Known issue was not recorded" when an expected failure passes, so keep each known-issue test to the
+  cases that actually fail.
+- **L42. Exit-test capture lists aren't available in this Swift Testing** ("Cannot specify a capture clause").
+  → To find which input crashes, run all cases in one child, write each case name to a progress file first, and
+  have the parent read the file after a crash. Then **confirm each crasher in isolation**: heap corruption can
+  surface in a later case than the one that caused it.
+- **L43. Swift Testing `--only` identifiers need the parentheses** (`Suite/test()`). Without them, zero tests run
+  and the run still "passes". → Prefer suite-level `--only`, and check the "N tests" count.
+- **L44. Ask the spec, not memory.** The local LDraw spec copies (`docs/reference/ldraw-spec`) turned two
+  suspicions into confirmed bugs (BUG-009 TEXMAP, BUG-010 encoding). They also showed `0x4` codes are not in the
+  spec. → Check `AGENT-NOTES.md` before calling LDraw behaviour right or wrong.
+- **L45. Block typedefs hide pointers too** (`LDrawPartVisitor`). → `annotate-unspecified.py` now collects every
+  block and pointer typedef in the app's headers and treats those names as pointers.
+- **L46. Characterise both modes of mode-dependent behaviour.** Parsed trees don't post notifications; a document
+  turns them on (`setPostsNotifications:YES`). Testing only the default mode would have recorded "nothing
+  happens", which isn't what the app sees.
+- **L47. Put a readable diff in every equality assertion** (`Golden.firstDifference`, or `before -> after`). The
+  first BUG-011/BUG-012 failures said only "Expectation failed"; the diagnostics found both bugs in one rerun.
+- **L48. Read a C helper's units before testing it.** `V3AntiEuler` takes and returns degrees because it calls
+  `Matrix4Rotate`, but I tested it with radians. And `FloatsApproximatelyEqual` allows about 5 ULPs, not a
+  decimal tolerance. Two of three "failures" in row 5 were mistakes in my tests; the third (BUG-014) was
+  confirmed with a standalone C program before being logged.
+- **L49. NS_ENUM prefix stripping is literal.** `ViewOrientationT` with cases `ViewOrientationFront…` imports as
+  `.orientationFront`: the trailing `T` stops `ViewOrientation` from matching, so only `View` is stripped. If a
+  nicer spelling is wanted, add `NS_SWIFT_NAME` **before** tests use the enum (it's a Swift-spelling change).
+- **L50. Check the doc comment before calling a surprise a bug.** Position snapping put Y on 8/24 LDU, not the
+  10/20 grid. That's documented design (brick and plate heights along the part's Y axis), so the test now encodes
+  the documented rule.
+- **L51. A heredoc ends an `&&` chain.** In `cmd && python3 - <<'EOF' … EOF` followed by `git commit` on the next
+  line, the commit runs regardless of `cmd`'s status, and a failed build gate got committed. → Put the gate on
+  the same line as the commit (`scripts/build.sh && git commit …`) or use `|| exit 1`. Also, C prototypes after
+  a class's `@end` need nullability too; the annotator now handles `extern` prototypes.
+- **L53. Some code reads the "LDraw Path" preference directly** (`PartCatalogBuilder` creates its own
+  `LDrawPaths`), so overriding the shared instance isn't enough. → The `.fixtureLibrary` trait also sets the path
+  in the volatile `NSArgumentDomain`, which outranks persistent domains and is never written. Exit-test children
+  don't inherit it, so they must set it themselves.
+- **L54. When a crash appears in a file the in-progress ARC edit touched, diff that edit first**
+  (`git show af3483f -- <file>`). BUG-015 was a removed `retain`/`autorelease` pair around a local
+  `NSAutoreleasePool`, in a file that still compiles with manual retain/release. The decisive experiment was
+  "call it exactly as the app does": it still crashed, so it was real.
+- **L55. For ObjC `NSString **` out-parameters, pass `&optionalVar` from Swift.** Hand-building an
+  `AutoreleasingUnsafeMutablePointer` from `withUnsafeMutablePointer` skips Swift's write-back and over-releases
+  the returned object, which crashed the test host. Zombies (`TEST_RUNNER_NSZombieEnabled=YES`) and running each
+  test in isolation pinpointed it as a test bug, not an app bug.
+- **L56. Call APIs with the arguments the app actually passes.** `-[ModelManager requestModel:…]` "failed" for
+  `"A.ldr"`, but the app always passes the lower-cased `referenceName`. Before calling something a bug, find the
+  app's real call site.
+- **L57. An NSException on a Swift Testing thread doesn't fail the test. It hangs the whole run** (AppKit's
+  handler swallows it and the task never finishes). → `BricksmithTestSupport +catchException:` (test-support ObjC
+  in the app) plus `ObjC.run { … }` turn it into a reported failure. Also, `makeWindowControllers()` doesn't load
+  the nib: touch `.window`, or the outline view has no rows and selection throws.
+- **L58. A never-shown window gives views degenerate geometry.** The focus-ring `OverlayHelperWindow` then
+  computed an out-of-range frame, and AppKit asserted from a run-loop observer, which no test code can catch.
+  → The harness orders the window in with `alphaValue = 0` and a fixed frame, and `LDrawGLView` skips the
+  focus-ring overlay in test mode (purely visual; manual checklist).
+- **L59. Check undo by comparing bytes, not just "looks right".** Exact before/after comparison showed that
+  undoing a rotation applies the inverse transform (float drift, `-0`): BUG-016. A numeric-tolerance check is
+  kept alongside, so a genuinely broken undo is still caught.
+- **L60. When logic is trapped in UI code (a save-panel completion block), mirror it in the test line for line and
+  cite the source.** Record a P4 task to extract it, so the mirror can't drift for long. The mirror is how BUG-011's
+  real user impact (backwards Export Steps files) was confirmed.
+- **L61. Never put Foundation `-description` output in a golden.** Its formatting of nested collections can change
+  between OS versions. → Serialise to compact sorted JSON (`JSONSerialization` with `.sortedKeys`).
+- **L62. Private ObjC actions can be driven from tests by selector** (`perform(NSSelectorFromString("generateMinifigure:"))`)
+  inside `ObjC.run`, mirroring the order the app calls them (`restoreFromPreferences` first, as `-runModal` does).
+- **L63. `NSNotificationName` constants import as `NSNotification.Name` members with the `Notification` suffix
+  removed** (`LDrawColorDidChangeNotification` becomes `.LDrawColorDidChange`), so generated Swift must use that
+  spelling. Also, the registration domain mixes in system keys (`Apple*`, `NS*`, `METAL_*`, `XCT*`) and keys that
+  views register lazily. Filter those out of goldens, or the golden depends on the machine and on test order.
+- **L64. Capturing a GL view in tests:** `display()` alone produced a black capture. What works is to call the
+  view's `-draw` with its context current, then `glReadPixels` from the back buffer (the window can stay fully
+  transparent). `glReadPixels` is bottom-up, so flip the image for humans. `zoomToFit:` misbehaves before layout
+  settles; a fixed zoom plus `scrollCenterToModelPoint:` (the model's bounding-box centre) gives stable framing.
+- **L65. Benchmarking on a working desktop:** medians of millisecond timings varied from 44% to 121% between
+  identical runs, which made a +20% gate useless. → Make the workload large enough for timings in the 10–250 ms
+  range, warm up first, and take the **minimum** of N runs (interference only adds time). After that, re-runs were
+  within ±16%. Remember `glFinish()` when timing GL, or you only measure command submission.
+- **L66. A new build configuration must exist in every sub-project** (AMSProgressBar, LSynth). Otherwise they
+  build under their default configuration into a different products folder, and the app can't find their
+  headers. The `xcodeproj` gem's `add_build_configuration` fails when targets differ in deployment target; create
+  `XCBuildConfiguration` objects by hand.
+- **L67. A test-mode guard can leave an MRC object without an owner.** Skipping `addOverlayView:` in test mode
+  (L58) left `focusRingView`, which is only autoreleased, with no owner. The first focus change in a UI test then
+  messaged a freed object. To XCUITest this looked like a 35 s hang followed by "application is not running": the
+  Swift runtime's backtracer was writing a crash report. → When a guard skips the call that retains something,
+  nil the reference too. When a UI test "hangs", `sample` the app process before guessing.
+- **L68. XCUITest on this AppKit app.** Probe the tree (`app.debugDescription`) rather than guessing names (L38):
+  - NSPanels (Parts Browser, Preferences) are **Dialogs**, not Windows.
+  - Outline rows report "not hittable"; click them by coordinate.
+  - Menu items have only `_NS:` identifiers, and titles change with state ("Undo Duplicate"). macOS 13+ also
+    retitles "Preferences…" to "Settings…". Match by title prefix.
+  - Opening Preferences runs a modal "Choose LDraw Folder" panel when the `"LDraw Path"` default is unset. So pass
+    `-"LDraw Path" <copy>` as a launch argument (volatile argument domain), as well as the environment variable.
+  - Save-panel paths go through Cmd-Shift-G plus `typeText(path + "\r")`.
+- **L69. Check that code is live before you write tests for it.** I wrote ray-picking goldens for `-hitTest:...`.
+  Its only caller, `getDirectivesUnderPoint:`, is never called, and the fixed-function `draw:`/VBO chain is compiled
+  out by `NEW_RENDERER 1`. → Before covering a method, trace a caller back to an action, a xib or the run loop.
+  Check `@selector(`, `NSSelectorFromString`, the xib action names and Swift, not just a source grep (note that
+  `grep` here is ugrep, and `--include` works differently: use `command grep`). Dead code goes in
+  `docs/coverage-ledger.tsv` with the evidence. It is not deleted in P2.
+- **L70. Some model calls need a current GL context, even in "pure model" tests.** Creating an `LDrawDragHandle`
+  (which `setSelected:YES` does for primitives) builds a sphere mesh with `glGenBuffers`. Drawing an
+  `LDrawTexture` asks PartLibrary for a GL texture name. With no current context, both crash (SIGSEGV in
+  libGL). → Use `OffscreenGL.makeCurrent()` (`Tests/Unit/DrawingTests.swift`) in suites that select or draw.
+- **L71. Parse snippets with a header.** A file whose first line is `0 something` takes that line as the model's
+  title, so a comment or meta-command under test disappears from the steps. `Prim.parse` prepends
+  `0 Primitive` / `0 Name:` / `0 Author:` lines.
+- **L72. Annotate a header in the commit that first tests it, even when the test reaches it indirectly
+  through a helper.** Commits `029061e` and `b264d6f` tested LDrawLine, LDrawTriangle, LDrawQuadrilateral,
+  LDrawConditionalLine, LDrawTexture, LDrawDragHandle and LDrawRenderer directly, without annotating them. They
+  were caught up later. The annotator also mis-handled typedef'd pointers taken by address (`LDrawDLHandle *`
+  is `void **`) and function-pointer typedefs. It now handles both. A function-pointer typedef's own
+  parameters still need annotating by hand.
+- **L73. Render snapshots must fix their own geometry.** When the main display changed to the built-in Retina
+  screen, captures came out at 2x. Even at 1x, the GL viewport followed the split-view layout, which comes from
+  divider positions autosaved in the debug defaults domain (636x702 against 625x691). → `DocHarness.open` turns off
+  `wantsBestResolutionOpenGLSurface` before the window is first shown. `RenderHarness` sizes the
+  `LDrawViewerContainer` and the view to 625x691 after `display()`, then calls `reshape` and re-centres. References
+  were re-recorded with this harness on 2026-11-15; the renders are the same, offset by a few pixels.
+- **L74. Never chain a commit after a test run with `;`.** Commit `06ba93d` went in while 8 render tests were
+  failing (the L51 mistake again). Use `&&` from the test command to the commit, with `setopt pipefail` and a
+  grep that fails on failure, or check the result first and commit in a separate call.
+- **L75. Parallel agents in worktrees (learned from the P2 coverage work):**
+  - Worktrees started on an old commit (`b19a8ab`), not the current HEAD. Each agent had to `git reset --hard` to
+    the base. → Tell agents the base commit explicitly, and check it.
+  - Register placeholder test files in the target first, so agents never edit `project.pbxproj`. Their commits then
+    cherry-pick cleanly.
+  - Concurrent `scripts/test.sh` runs share the debug defaults domain (snapshot/restore races). Autosaved
+    window/split-view state then drifts between runs, which made render geometry unstable (L73).
+- **L76. Swift gotchas from the same work:**
+  - `.first as? T` on an imported `NSArray`/`NSMutableArray` resolves to `first(where:)`, so the cast silently
+    fails, with only a warning. Use `firstObject`, or cast to `[Any]` first.
+  - `NSTableView.style = .plain` gives deterministic row geometry; the default style adds OS-dependent padding.
+  - Undeclared or deprecated ObjC methods can be called through `method(for:)` plus `unsafeBitCast` to a
+    `@convention(c)` type.
+  - Test preferences through the volatile argument domain, never a persistent domain.
+  - Read private outlets by KVC name only where necessary. The port must keep those names (listed in
+    `AppLogicCoverageTests`).

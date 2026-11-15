@@ -1,0 +1,8 @@
+parts: 29 [{"LSYNTH_CLASS":2,"LSYNTH_TYPE":"PLI_ELECTRIC_NXT_CABLE_20CM","method":"ELECTRIC_NXT_CABLE","product":"4297187.dat","title":"Pli Electric Nxt Cable 20Cm"} | {"LSYNTH_CLASS":2,"LSYNTH_TYPE":"PLI_ELECTRIC_NXT_CABLE_35CM","method":"ELECTRIC_NXT_CABLE","product":"4297188.dat","title":"Pli Electric Nxt Cable 35Cm"}]
+hoseTypes: 33 [{"LSYNTH_CLASS":2,"LSYNTH_TYPE":"BRICK_ARC","title":"Brick Arc"} | {"LSYNTH_CLASS":2,"LSYNTH_TYPE":"ELECTRIC_NXT_CABLE","title":"Electric Nxt Cable"}]
+bandTypes: 12 [{"LSYNTH_CLASS":3,"LSYNTH_TYPE":"RUBBER_BAND","title":"Rubber Band"} | {"LSYNTH_CLASS":3,"LSYNTH_TYPE":"RUBBER_BELT","title":"Rubber Belt"}]
+hoseConstraints: 12 [{"description":"1 - Hose","flip":0,"LSYNTH_CONSTRAINT_CLASS":2,"offset":[0,0,0],"orient":[[1,0,0],[0,1,0],[0,0,1]],"partName":"LS01.dat"} | {"description":"2 - Hose","flip":0,"LSYNTH_CONSTRAINT_CLASS":2,"offset":[0,0,0],"orient":[[1,0,0],[0,1,0],[0,0,1]],"partName":"LS02.dat"}]
+bandConstraints: 47 [{"description":"Electric Technic Micromotor Pulley","LSYNTH_CONSTRAINT_CLASS":3,"offset":[0,0,-4],"orient":[[1,0,0],[0,0,1],[0,-1,0]],"partName":"2983.DAT","radius":13} | {"description":"Technic Axle 2 Notched","LSYNTH_CONSTRAINT_CLASS":3,"offset":[0,0,0],"orient":[[0,0,1],[0,1,0],[-1,0,0]],"partName":"32062.DAT","radius":8}]
+quickRefHoses: 33 [BRICK_ARC | ELECTRIC_NXT_CABLE]
+quickRefBands: 12 [RUBBER_BAND | RUBBER_BELT]
+defaults: hose=TECHNIC_PNEUMATIC_HOSE band=TECHNIC_CHAIN_LINK hoseConstraint=LS01.DAT bandConstraint=3648a.dat

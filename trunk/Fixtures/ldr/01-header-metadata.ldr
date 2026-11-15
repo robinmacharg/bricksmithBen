@@ -1,0 +1,7 @@
+0 Header metadata round-trip fixture
+0 Name: 01-header-metadata.ldr
+0 Author: Fixture Author [fixture]
+0 !LDRAW_ORG Unofficial_Model
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat

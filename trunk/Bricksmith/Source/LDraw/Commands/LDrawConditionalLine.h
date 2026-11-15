@@ -15,6 +15,8 @@
 // Class:		LDrawConditionalLine
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawConditionalLine : LDrawLine <NSCoding>
 {
 	
@@ -29,3 +31,5 @@
 -(void) setConditionalVertex2:(Point3)newVertex;
 
 @end
+
+NS_ASSUME_NONNULL_END

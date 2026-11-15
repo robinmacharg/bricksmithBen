@@ -1,0 +1,11 @@
+query "2 x 4": 10
+1-4ring3.dat
+3001.dat
+3020.dat
+3024.dat
+3039.dat
+3794b.dat
+4-4ring2.dat
+box4.dat
+s\3001s01.dat
+s\3039s01.dat

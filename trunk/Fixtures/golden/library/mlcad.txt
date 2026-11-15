@@ -1,0 +1,34 @@
+lsynthVisibleTypes: 60 BRICK_ARC | ELECTRIC_NXT_CABLE
+hats: 308 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 10048.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 10051.DAT
+heads: 367 LDrawPart
+1 0 0 24 0 1 0 0 0 1 0 0 0 1 13195.DAT | LDrawPart
+1 0 0 24 0 1 0 0 0 1 0 0 0 1 13195P01.DAT
+necks: 69 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 10052.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 11097.DAT
+torsos: 549 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 15526.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 17.DAT
+hips: 57 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 15.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 16709.DAT
+armsLeft: 26 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 10058.DAT | LDrawPart
+1 0 0 0 0 -1 0 0 0 0 -1 0 -1 0 10303.DAT
+armsRight: 29 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 10058.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 0 -1 0 1 0 10303.DAT
+handsLeft: 4 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 13543.DAT | LDrawPart
+1 0 0 0.4 0 -1 0 0 0 1 0 0 0 1 2531.DAT
+handsRight: 4 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 13543.DAT | LDrawPart
+1 0 0 0.4 0 1 0 0 0 1 0 0 0 1 2531.DAT
+legsLeft: 69 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 20460P01.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 20460P02.DAT
+legsRight: 71 LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 20461P01.DAT | LDrawPart
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 20461P02.DAT

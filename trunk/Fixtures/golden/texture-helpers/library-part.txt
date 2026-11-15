@@ -1,0 +1,45 @@
+# the part as loaded from the library (optimised)
+0 FILE Texture test part
+0 Texture test part
+0 Name: textest.dat
+0 Author: Fixture Author
+4 16 0 -1 0 10 -1 0 10 -1 10 0 -1 10
+0 STEP
+0 !TEXMAP START PLANAR 0 0 0 10 0 0 0 0 10 sticker.png GLOSSMAP gloss.png
+0 !: 2 24 0 0 0 10 0 0
+0 !: 2 24 0 0 10 0 0 0
+0 !: 2 24 10 0 10 10 0 0
+0 !: 2 24 10 0 10 0 0 10
+0 !: 3 16 0 0 0 10 0 0 0 0 10
+0 !: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+0 !: 4 16 0 0 10 0 0 0 10 0 0 10 0 10
+0 !TEXMAP END
+0 STEP
+0 NOFILE
+
+# a part with a nested texture, as loaded from the library (optimised)
+0 FILE Nested texture part
+0 Nested texture part
+0 Name: texnest.dat
+0 Author: Fixture Author
+0 !TEXMAP START PLANAR 0 0 0 10 0 0 0 0 10 outer.png
+0 !: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+0 !: 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+0 !: 3 16 0 0 0 10 0 0 0 0 10
+0 !TEXMAP END
+0 !TEXMAP END
+0 NOFILE
+
+# a model using the part at x=100, colour 4, optimised
+4 4 100 -1 0 110 -1 0 110 -1 10 100 -1 10
+0 STEP
+0 !TEXMAP START PLANAR 100 0 0 110 0 0 100 0 10 sticker.png GLOSSMAP gloss.png
+0 !: 2 24 110 0 10 100 0 10
+0 !: 2 24 110 0 10 110 0 0
+0 !: 2 24 100 0 10 100 0 0
+0 !: 2 24 100 0 0 110 0 0
+0 !: 3 4 100 0 0 110 0 0 100 0 10
+0 !: 4 4 100 0 10 100 0 0 110 0 0 110 0 10
+0 !: 4 4 100 0 0 110 0 0 110 0 10 100 0 10
+0 !TEXMAP END
+0 STEP

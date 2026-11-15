@@ -16,6 +16,8 @@
 // Class:		LDrawQuadrilateral
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawQuadrilateral : LDrawDrawableElement <NSCoding>
 {
 	Point3		vertex1;
@@ -29,7 +31,7 @@
 }
 
 // Directives
-- (NSString *) write;
+- (null_unspecified NSString *) write;
 
 //Accessors
 - (Point3) vertex1;
@@ -46,3 +48,5 @@
 - (void) recomputeNormal;
 
 @end
+
+NS_ASSUME_NONNULL_END

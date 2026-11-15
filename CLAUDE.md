@@ -7,6 +7,8 @@ Read these first:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the code is organised.
 - [docs/TESTING.md](docs/TESTING.md): how to test, plus the manual smoke checklist.
 - [docs/port-status.md](docs/port-status.md): per-file phase and status ledger. Keep it current.
+- [docs/reference/ldraw-spec/](docs/reference/ldraw-spec/INDEX.md): local copies of the official LDraw specs (fetched 2026-11-15).
+  Start with `AGENT-NOTES.md`: verbatim spec quotes plus what Bricksmith actually does. Cite the spec, never memory.
 - [docs/KNOWN-BUGS.md](docs/KNOWN-BUGS.md): bugs found along the way. They are recorded, not fixed, until P12.
 
 ## Toolchain

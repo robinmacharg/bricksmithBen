@@ -1,0 +1,14 @@
+## RUBBER_BAND
+box whole view, credit nil: returned NO, hits [synth]
+box whole view, credit file: returned YES, hits [synth]
+box left constraint only, credit nil: returned NO, hits [synth]
+box left constraint only, credit file: returned YES, hits [synth]
+box lower synthesized part only, credit nil: returned NO, hits [synth]
+box lower synthesized part only, credit file: returned YES, hits [synth]
+box empty corner, credit nil: returned NO, hits []
+box empty corner, credit file: returned NO, hits []
+click left constraint: constraint0 depth -0.02000
+click right constraint: constraint1 depth -0.02000
+click upper synthesized part: synth depth -0.01000
+click lower synthesized part: synth depth -0.01000
+click nothing: nothing depth 1.00000

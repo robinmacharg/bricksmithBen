@@ -21,28 +21,28 @@
 
 //The part catalog was regenerated from disk.
 // Object is the new catalog. No userInfo.
-extern NSString *LDrawPartLibraryDidChangeNotification;
+extern NSString * _Null_unspecified LDrawPartLibraryDidChangeNotification;
 
 // Catalog info keys
-extern NSString	*PARTS_CATALOG_KEY;
-extern NSString *PART_NUMBER_KEY;
-extern NSString *PART_NAME_KEY;
-extern NSString *PART_CATEGORY_KEY;
-extern NSString *PART_KEYWORDS_KEY;
-extern NSString	*PARTS_LIST_KEY;
-extern NSString	*VERSION_KEY;
-extern NSString	*COMPATIBILITY_VERSION_KEY;
+extern NSString * _Null_unspecified PARTS_CATALOG_KEY;
+extern NSString * _Null_unspecified PART_NUMBER_KEY;
+extern NSString * _Null_unspecified PART_NAME_KEY;
+extern NSString * _Null_unspecified PART_CATEGORY_KEY;
+extern NSString * _Null_unspecified PART_KEYWORDS_KEY;
+extern NSString * _Null_unspecified PARTS_LIST_KEY;
+extern NSString * _Null_unspecified VERSION_KEY;
+extern NSString * _Null_unspecified COMPATIBILITY_VERSION_KEY;
 
-extern NSString	*CategoryNameKey;
-extern NSString	*CategoryDisplayNameKey;
-extern NSString	*CategoryChildrenKey;
+extern NSString * _Null_unspecified CategoryNameKey;
+extern NSString * _Null_unspecified CategoryDisplayNameKey;
+extern NSString * _Null_unspecified CategoryChildrenKey;
 
-extern NSString	*Category_All;
-extern NSString	*Category_Favorites;
-extern NSString	*Category_Alias;
-extern NSString *Category_Moved;
-extern NSString	*Category_Primitives;
-extern NSString	*Category_Subparts;
+extern NSString * _Null_unspecified Category_All;
+extern NSString * _Null_unspecified Category_Favorites;
+extern NSString * _Null_unspecified Category_Alias;
+extern NSString * _Null_unspecified Category_Moved;
+extern NSString * _Null_unspecified Category_Primitives;
+extern NSString * _Null_unspecified Category_Subparts;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +50,8 @@ extern NSString	*Category_Subparts;
 // class PartLibrary
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface PartLibrary : NSObject
 {
 	id<PartLibraryDelegate> delegate;
@@ -64,54 +66,54 @@ extern NSString	*Category_Subparts;
 }
 
 // Initialization
-+ (PartLibrary *) sharedPartLibrary;
++ (PartLibrary *) sharedPartLibrary;	// nonnull: allocated on first use (verified)
 
 // Accessors
-- (NSArray *) allPartCatalogRecords;
-- (NSArray *) categories;
-- (NSArray *) categoryHierarchy;
-- (NSString *) displayNameForCategory:(NSString *)categoryName;
-- (NSArray *) favoritePartNames;
-- (NSArray *) favoritePartCatalogRecords;
-- (NSArray *) partCatalogRecordsInCategory:(NSString *)category;
-- (NSString *) categoryForPartName:(NSString *)partName;
+- (null_unspecified NSArray *) allPartCatalogRecords;
+- (null_unspecified NSArray *) categories;
+- (null_unspecified NSArray *) categoryHierarchy;
+- (null_unspecified NSString *) displayNameForCategory:(null_unspecified NSString *)categoryName;
+- (null_unspecified NSArray *) favoritePartNames;
+- (null_unspecified NSArray *) favoritePartCatalogRecords;
+- (null_unspecified NSArray *) partCatalogRecordsInCategory:(null_unspecified NSString *)category;
+- (null_unspecified NSString *) categoryForPartName:(null_unspecified NSString *)partName;
 
-- (void) setDelegate:(id<PartLibraryDelegate>)delegateIn;
-- (void) setFavorites:(NSArray *)favoritesIn;
-- (void) setPartCatalog:(NSDictionary *)newCatalog;
+- (void) setDelegate:(null_unspecified id<PartLibraryDelegate>)delegateIn;
+- (void) setFavorites:(null_unspecified NSArray *)favoritesIn;
+- (void) setPartCatalog:(null_unspecified NSDictionary *)newCatalog;
 
 // Actions
 - (BOOL) load;
-- (void) reloadPartsWithMaxLoadCountHandler:(void (^)(NSUInteger maxPartCount))maxLoadCountHandler
-				   progressIncrementHandler:(void (^)())progressIncrementHandler
-						  completionHandler:(void (^)(BOOL success))completionHandler;
+- (void) reloadPartsWithMaxLoadCountHandler:(null_unspecified void (^)(NSUInteger maxPartCount))maxLoadCountHandler
+				   progressIncrementHandler:(null_unspecified void (^)())progressIncrementHandler
+						  completionHandler:(null_unspecified void (^)(BOOL success))completionHandler;
 
 // Favorites
-- (void) addPartNameToFavorites:(NSString *)partName;
-- (void) removePartNameFromFavorites:(NSString *)partName;
+- (void) addPartNameToFavorites:(null_unspecified NSString *)partName;
+- (void) removePartNameFromFavorites:(null_unspecified NSString *)partName;
 - (void) saveFavoritesToUserDefaults;
 
 // Finding Parts
-- (void) loadImageForName:(NSString *)imageName inGroup:(dispatch_group_t)parentGroup;
-- (void) loadModelForName:(NSString *)name inGroup:(dispatch_group_t)parentGroup;
-- (CGImageRef) imageForTextureName:(NSString *)imageName;
-- (CGImageRef) imageForTexture:(LDrawTexture *)texture;
-- (CGImageRef) imageFromNeighboringFileForTexture:(LDrawTexture *)texture;
-- (LDrawModel *) modelForName:(NSString *) partName;
-- (LDrawModel *) modelForName_threadSafe:(NSString *) partName;
+- (void) loadImageForName:(null_unspecified NSString *)imageName inGroup:(null_unspecified dispatch_group_t)parentGroup;
+- (void) loadModelForName:(null_unspecified NSString *)name inGroup:(null_unspecified dispatch_group_t)parentGroup;
+- (null_unspecified CGImageRef) imageForTextureName:(null_unspecified NSString *)imageName;
+- (null_unspecified CGImageRef) imageForTexture:(null_unspecified LDrawTexture *)texture;
+- (null_unspecified CGImageRef) imageFromNeighboringFileForTexture:(null_unspecified LDrawTexture *)texture;
+- (null_unspecified LDrawModel *) modelForName:(null_unspecified NSString *) partName;
+- (null_unspecified LDrawModel *) modelForName_threadSafe:(null_unspecified NSString *) partName;
 
-- (LDrawDirective *) optimizedDrawableForPart:(LDrawPart *) part color:(LDrawColor *)color;
-- (GLuint) textureTagForTexture:(LDrawTexture*)texture;
+- (null_unspecified LDrawDirective *) optimizedDrawableForPart:(null_unspecified LDrawPart *) part color:(null_unspecified LDrawColor *)color;
+- (GLuint) textureTagForTexture:(null_unspecified LDrawTexture*)texture;
 
 // Utilites
-- (NSString *)descriptionForPart:(LDrawPart *)part;
-- (NSString *)descriptionForPartName:(NSString *)name;
-- (CGImageRef) readImageAtPath:(NSString *)imagePath
+- (null_unspecified NSString *)descriptionForPart:(null_unspecified LDrawPart *)part;
+- (null_unspecified NSString *)descriptionForPartName:(null_unspecified NSString *)name;
+- (null_unspecified CGImageRef) readImageAtPath:(null_unspecified NSString *)imagePath
 				asynchronously:(BOOL)asynchronous
-			 completionHandler:(void (^)(CGImageRef))completionBlock;
-- (LDrawModel *) readModelAtPath:(NSString *)partPath
+			 completionHandler:(null_unspecified void (^)(CGImageRef _Null_unspecified))completionBlock;
+- (null_unspecified LDrawModel *) readModelAtPath:(null_unspecified NSString *)partPath
 				  asynchronously:(BOOL)asynchronous
-			   completionHandler:(void (^)(LDrawModel *))completionBlock;
+			   completionHandler:(null_unspecified void (^)(LDrawModel * _Null_unspecified))completionBlock;
 
 
 // Test support (do not call from app code)
@@ -127,7 +129,9 @@ extern NSString	*Category_Subparts;
 ////////////////////////////////////////////////////////////////////////////////
 @protocol PartLibraryDelegate
 
-- (void) partLibrary:(PartLibrary *)partLibrary didChangeFavorites:(NSArray *)newFavorites;
+- (void) partLibrary:(null_unspecified PartLibrary *)partLibrary didChangeFavorites:(null_unspecified NSArray *)newFavorites;
 
 @end
+
+NS_ASSUME_NONNULL_END
 

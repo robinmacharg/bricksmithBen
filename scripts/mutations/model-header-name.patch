@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawModel.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawModel.m
+index c7b7219..216342a 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawModel.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawModel.m
+@@ -579,7 +579,7 @@
+ 	
+ 	//Write out the file header in all of its irritating glory.
+ 	[written appendFormat:@"0 %@%@", [self modelDescription], CRLF];
+-	[written appendFormat:@"0 %@ %@%@", LDRAW_HEADER_NAME, [self fileName], CRLF];
++	[written appendFormat:@"0 %@  %@%@", LDRAW_HEADER_NAME, [self fileName], CRLF];
+ 	[written appendFormat:@"0 %@ %@%@", LDRAW_HEADER_AUTHOR, [self author], CRLF];		
+ 	
+ 	//Write out all the steps in the file.

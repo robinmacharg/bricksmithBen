@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m
+index 6de3c1e..847f7d2 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m
+@@ -339,7 +339,7 @@
+ 	   creditObject:(id)creditObject 
+ 	           hits:(NSMutableSet *)hits
+ {
+-	if(self->hidden == NO)
++	if(YES)
+ 	{
+ 		Point4 clipVertex1    = V4MulPointByMatrix(V4FromPoint3(self->vertex1), transform);
+ 		Point4 clipVertex2    = V4MulPointByMatrix(V4FromPoint3(self->vertex2), transform);

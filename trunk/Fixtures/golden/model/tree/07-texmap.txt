@@ -1,0 +1,7 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (2)
+      LDrawTexture (2)
+        LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+        LDrawTriangle: 3 16 -10 0 -10 10 0 10 -10 0 10
+      LDrawPart: 1 15 0 8 0 1 0 0 0 1 0 0 0 1 3024.dat

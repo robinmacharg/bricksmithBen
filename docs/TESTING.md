@@ -17,9 +17,13 @@ scripts/build.sh --release         # same for Release (docs/warnings-baseline-re
 scripts/test.sh                    # hosted unit/characterisation tests + coverage (build/coverage.txt);
                                    #   fails if the user's com.AllenSmith.Bricksmith defaults changed
 scripts/test.sh --only BricksmithTests/HarnessFixtureLibraryTests   # a subset
-scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests)
+scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests); real windows on screen
+scripts/test.sh --ui-only --only BricksmithUITests/SmokeUITests   # UI tests alone, for iterating
+scripts/dev/coverage-tiers.py      # P2 coverage gate: tier A/B per class, raw and effective (after docs/coverage-ledger.tsv)
 scripts/mutation-smoke.sh          # each scripts/mutations/*.patch must make a test fail
-scripts/perf-compare.sh            # build/perf-results.json vs docs/perf-baseline.json (≤ +20%; missing metric fails)
+scripts/perf-compare.sh --run      # build+run perf tests in the Perf configuration, compare with docs/perf-baseline.json
+scripts/perf-compare.sh            # compare existing build/perf-results.json (≤ +20%; a missing metric fails)
+scripts/perf-compare.sh --update-baseline   # deliberate only; explain in the commit
 scripts/make-ldraw-mini.py         # regenerate trunk/Fixtures/ldraw-mini from a full library (read-only source)
 RECORD_GOLDENS=1 scripts/test.sh   # (planned, P2) regenerate goldens - deliberate only; review the diff
 ```
@@ -92,12 +96,36 @@ isn't present.
 - **Goldens compare bytes** of `dataOfType:` (CRLF, UTF-8). `.gitattributes` stops git rewriting line endings.
   `Localizable.strings` is part of the output contract, so a port commit must not change it.
 - **Accessibility identifiers** may be added to xibs for XCUITest. That doesn't count as a behaviour change.
-- **Document tests** load the document's nib through `makeWindowControllers` without showing the window, then
-  drive edits by selecting rows in the outline view. Edit actions read their selection from there.
-- **Performance tests** run only in the Release `Bricksmith-Perf` scheme. Debug timings are meaningless for
-  comparing Swift with ObjC.
+- **Drawing** is characterised through `Tests/Support/RecordingRenderer.swift`. It implements the
+  `LDrawRenderer`/`LDrawCollector` protocols and logs every call (`golden/drawing/*.txt`). The Metal renderer
+  should reproduce the same stream. Suites that select primitives or draw textures need
+  `OffscreenGL.makeCurrent()` (L70).
+- **UI smoke tests** (`Tests/UI/SmokeUITests.swift`, row 17) are deliberately thin:
+  - Every test opens a **temp copy** of a fixture, with `BRICKSMITH_TEST_MODE=1`, the fixture library, and
+    `-"LDraw Path"` in the argument domain.
+  - Byte checks reuse the approved round-trip goldens: after undo + save, or Save As, the file must equal
+    `golden/roundtrip/<name>.ldr`.
+  - Quirks of driving AppKit are listed in LEARNINGS L68. Don't type or click in the app's windows while they run.
+- **Document tests** use `DocHarness.open` (`Tests/Unit/DocumentSpikeTests.swift`):
+  - It loads the nib (`makeWindowControllers`, then touching `.window`) and orders the window in **fully transparent**
+    with a fixed frame (L58).
+  - It turns off event-based undo grouping; each operation is wrapped in `DocHarness.action`, which stands in for one
+    user event.
+  - Selection goes through `selectDirectives:`, i.e. the outline view.
+- **Call ObjC that might throw through `ObjC.run { … }`.** An uncaught NSException on a test thread is swallowed by
+  AppKit and the test hangs (L57). Document suites also carry `.timeLimit(.minutes(1))`.
+- **Performance tests** (`PerformanceTests`) run only through `scripts/perf-compare.sh --run`.
+  - They use the **Perf** build configuration: a Release clone with testability enabled, which defines
+    `BRICKSMITH_PERF`. Debug timings are meaningless for comparing Swift with ObjC.
+  - Each metric is the best of 15 runs after 2 warm-ups, on a 20,000-part synthetic model (L65).
+  - The baseline belongs to the machine recorded in it; comparisons on other machines fail with a message.
 - **Randomised tests** use a fixed seed, and they print it when they fail.
-- **Render snapshot comparisons** use a tolerance. The reference machine is recorded with the images.
+- **Render snapshots** (`RenderSnapshotTests`) render fixtures in the real `LDrawGLView` from a fixed orthographic camera
+  (zoom 400%, centred), capture with `-saveImageToPath:` after an explicit `-draw` (L64), and flip the image upright.
+  - References live in `golden/render/<hw.model>/`. A machine without references skips the comparison rather than
+    failing.
+  - Tolerance: channel delta ≤ 8, with at most 0.5% of pixels exceeding it.
+  - These images are the visual reference for the later Metal renderer.
 
 ## Known issues
 Bugs live in **[KNOWN-BUGS.md](KNOWN-BUGS.md)**. Don't fix them during the port. For each bug:
@@ -107,14 +135,27 @@ Bugs live in **[KNOWN-BUGS.md](KNOWN-BUGS.md)**. Don't fix them during the port.
 
 Fixes happen after the port, in P12.
 
-## Manual-only list *(fill in during P2)*
+## Manual-only list
 These are behaviours that can't reasonably be automated, each with a reason. **🧑 HUMAN GATE** at the end of P2:
 confirm the list is complete.
 
 | Feature or action | Why it's manual | Covered by checklist step |
 |---|---|---|
-| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | (add) |
+| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | 14 |
+| Split Model, Add Part (from browser), Add Submodel Reference, Insert Part, Add Minifigure | Present panels, alerts or menus (`canDeleteDirective`, part browser, minifig dialog) | 5, 7, 11 |
+| Export Steps | Save panel; the export logic itself is covered by row 11 (note BUG-011: files come out in reverse order) | 15 |
+| Search panel (Find) | Its matching logic is bound to the panel's controls (scope/colour/part popups) | 16 |
+| Missing/moved pieces checks on open | Alerts | 2 |
+| Move and Rotation panels, Find, Dimensions, Piece Count | Panels; the underlying edits (`moveSelectionBy`, `rotateSelection`) are automated in row 10 | 5 |
+| View-only actions (zoom, view angle, step navigation, step display) | Don't change the model; the render snapshots (row 15) cover views | 3, 7 |
+| Focus-ring overlay on 3D views | Skipped in test mode (separate child window, L58) | 3 |
 | 3D-view mouse, trackpad and marquee interaction | GL view interaction | 3, 8 |
+| Add Related Part (`addRelatedPartClicked:`) | Driven by a generated menu item's represented object; the related-part lookup is covered by row 12 and `AppLogicCoverageTests` | 17 |
+| Hide / Show parts (`hideParts:`, `showParts:`) | Hiding is temporary by design (not saved, S23); picking and drawing of hidden objects are covered by `HitTestingTests` and `DrawingTests` | 17 |
+| Quick-rotate toolbar buttons (`quickRotateClicked:`) | Thin wrapper reading the sender's tag; the rotation itself (`rotateSelectionAround:`) is automated in row 10 | 5 |
+| Rotation centre (`useSelectionForRotationCenter:`, `clearRotationCenter:`), grid granularity/orientation menus, zoom, view-all | Camera, view or preference state only; nothing in the model changes | 3, 10 |
+| Reveal in Finder, Show Inspector / Dimensions / Piece Count, file-contents drawer, Go to Model | Open panels, windows or Finder; the reports behind Dimensions and Piece Count are covered by row 11 | 4, 5 |
+| Minifigure dialog's modal loop (`runModal`) | A real modal session; everything it calls is covered by `AppLogicCoverageTests` | 11 |
 
 *(There is no printing feature in the app, so there's nothing to test.)*
 
@@ -136,3 +177,7 @@ things automation covers poorly. Record the sign-off in port-status.md.
 11. Use the Minifigure generator and add a minifig to the model.
 12. Add an LSynth hose and regenerate it.
 13. Close every document while it has unsaved changes. Each save prompt works, and nothing crashes.
+14. Select a few parts and use Randomize Colors. The colours change; Undo restores them.
+15. Export Steps to a temporary folder. One file per step is written (they come out in reverse order: BUG-011).
+16. Open Find, search by part and by colour; matching parts are selected.
+17. Hide a part, then Show All. Use Add Related Part from a part's context menu; the related part is added and Undo removes it.

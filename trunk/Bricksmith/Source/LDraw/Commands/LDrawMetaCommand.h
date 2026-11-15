@@ -15,20 +15,24 @@
 // Class:		LDrawMetaCommand
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawMetaCommand : LDrawDirective
 {
 	NSString		*commandString;
 }
 
 // Initialization
-- (BOOL) finishParsing:(NSScanner *)scanner;
+- (BOOL) finishParsing:(null_unspecified NSScanner *)scanner;
 
 // Directives
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor;
-- (NSString *) write;
+- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(null_unspecified LDrawColor *)parentColor;
+- (null_unspecified NSString *) write;
 
 //Accessors
--(void) setStringValue:(NSString *)newString;
--(NSString *) stringValue;
+-(void) setStringValue:(null_unspecified NSString *)newString;
+-(null_unspecified NSString *) stringValue;
 
 @end
+
+NS_ASSUME_NONNULL_END

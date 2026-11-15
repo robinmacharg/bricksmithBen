@@ -1,0 +1,154 @@
+## hose, unselected (synthesized parts only)
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+## hose, selected (constraints too)
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 -50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 0.2)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 0.2)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+## hose, a constraint selected
+pushColor rgba(0.70588 0 0 1)
+  pushWireFrame
+    pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 -50 0 0 1]
+      checkCull [-20 -4 -20] to [20 24 20] -> 2
+      drawDL #1
+    popMatrix
+  popColor
+popWireFrame
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 0.2)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 0.2)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+## band (constraints always drawn)
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 -50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+## LSynth PART of band class (constraints drawn)
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 -50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+## LSynth PART of hose class (synthesized parts only)
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+## hidden band (nothing)
+## hidden then shown again
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 -50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 50 0 0 1]
+    checkCull [-20 -4 -20] to [20 24 20] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 -40 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor
+pushColor rgba(0.70588 0 0 1)
+  pushMatrix [1 0 0 0 0 1 0 0 0 0 1 0 0 60 0 1]
+    checkCull [-10 -4 -10] to [10 24 10] -> 2
+    drawDL #1
+  popMatrix
+popColor

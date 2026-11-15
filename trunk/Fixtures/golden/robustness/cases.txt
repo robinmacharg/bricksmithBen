@@ -1,0 +1,104 @@
+### empty file
+in:  ""
+out: <parse returned nil>
+
+### whitespace only
+in:  "   \n\t\n  \n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n0    \r\n0 \t\r\n0"
+
+### single 0
+in:  "0"
+out: "0 \r\n0 Name: \r\n0 Author:"
+
+### leading whitespace before line type
+in:  "   1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"
+
+### lower-case step
+in:  "1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 step\n1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\r\n0 step\r\n1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat"
+
+### type 1 missing part name
+in:  "1 4 0 0 0 1 0 0 0 1 0 0 0 1\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1"
+
+### type 1 with too few fields
+in:  "1 4 0 0 0\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 0 0 0 0 0 0 0 0 0"
+
+### type 1 non-numeric fields
+in:  "1 4 a b c 1 0 0 0 1 0 0 0 1 3001.dat\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"
+
+### type 1 extra fields (part name with spaces)
+in:  "1 4 0 0 0 1 0 0 0 1 0 0 0 1 my part name.dat\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 my part name.dat"
+
+### type 2 truncated (S2)
+in:  "2 16 1 2\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n2 16 1 2 0 0 0 0"
+
+### type 3 truncated
+in:  "3 16 0 0 0 1 1\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n3 16 0 0 0 1 1 0 0 0 0"
+
+### type 4 truncated
+in:  "4 16 0 0 0\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n4 16 0 0 0 0 0 0 0 0 0 0 0 0"
+
+### type 5 truncated
+in:  "5 24 0 0\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n5 24 0 0 0 0 0 0 0 0 0 0 0 0"
+
+### type 2 bare
+in:  "2\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n2 0 0 0 0 0 0 0"
+
+### colour code non-numeric
+in:  "1 red 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 0 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"
+
+### negative colour code
+in:  "1 -5 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"
+
+### malformed !COLOUR missing CODE value (S1)
+in:  "0 !COLOUR Broken CODE\n"
+out: "0 !COLOUR Broken CODE\r\n0 Name: \r\n0 Author:"
+
+### malformed !COLOUR missing VALUE (S1)
+in:  "0 !COLOUR Broken CODE 901\n"
+out: "0 !COLOUR Broken CODE 901\r\n0 Name: \r\n0 Author:"
+
+### malformed !COLOUR bad hex
+in:  "0 !COLOUR Broken CODE 902 VALUE #XYZ EDGE #000000\n"
+out: "0 !COLOUR Broken CODE 902 VALUE #XYZ EDGE #000000\r\n0 Name: \r\n0 Author:"
+
+### 0 FILE without name
+in:  "0 FILE\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 NOFILE\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"
+
+### MPD missing NOFILE
+in:  "0 FILE a.ldr\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 FILE b.ldr\n1 2 0 0 0 1 0 0 0 1 0 0 0 1 3003.dat\n"
+out: "0 FILE a.ldr\r\n0 \r\n0 Name: \r\n0 Author: \r\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\r\n0 NOFILE\r\n0 FILE b.ldr\r\n0 \r\n0 Name: \r\n0 Author: \r\n1 2 0 0 0 1 0 0 0 1 0 0 0 1 3003.dat\r\n0 NOFILE"
+
+### MPD reference to missing submodel
+in:  "0 FILE a.ldr\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 missing.ldr\n0 NOFILE\n"
+out: "0 \r\n0 Name: \r\n0 Author: \r\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 missing.ldr"
+
+### TEXMAP START without END
+in:  "0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 a.png\n3 16 0 0 0 1 0 0 0 0 1\n"
+out: "0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 a.png\r\n0 Name: \r\n0 Author: \r\n3 16 0 0 0 1 0 0 0 0 1"
+
+### SYNTH BEGIN without END
+in:  "0 SYNTH BEGIN PNEUMATIC_HOSE 16\n0 SYNTH SHOW\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 LS01.dat\n"
+out: "0 SYNTH BEGIN PNEUMATIC_HOSE 16\r\n0 Name: \r\n0 Author: \r\n0 SYNTH SHOW\r\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 LS01.dat"
+
+### very long comment line
+in:  "0 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+out: "0 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+### NUL byte in comment
+in:  "0 before\0after\n"
+out: "0 before\0after\r\n0 Name: \r\n0 Author:"
+

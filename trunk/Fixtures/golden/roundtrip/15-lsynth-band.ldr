@@ -1,0 +1,8 @@
+0 LSynth band around two gears (not synthesised)
+0 Name: 15-lsynth-band.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN RUBBER_BAND 0
+0 SYNTH SHOW
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 3648a.dat
+1 0 80 0 0 1 0 0 0 1 0 0 0 1 3648a.dat
+0 SYNTH END

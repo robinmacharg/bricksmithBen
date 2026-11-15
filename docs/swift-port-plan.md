@@ -297,7 +297,7 @@ How to handle the awkward cases:
 | 13 | **LSynth** | `LDrawLSynth` parse, write and synthesise round trips (the ObjC class, which runs `lsynthcp` through `NSTask`), plus a black-box `lsynthcp` test | Golden files. |
 | 14 | **Preferences contract** | Every defaults key and notification-name string, and each registered default | Snapshot test. |
 | 15 | **Render snapshots** | Fixed-camera offscreen renders of 5–10 fixtures, wireframe and shaded | Offscreen CGL → FBO with a tolerance. References are **per machine**, not a CI gate, and serve as a loose reference for the Metal work. |
-| 16 | **Performance** | Parse, collect and draw, build catalog | Self-timed Swift tests (median of a fixed number of iterations) in a **Release** configuration with testability enabled, on a **synthetic large model generated from ldraw-mini** (generator script committed, so no full library is needed). Results go to `build/perf-results.json`. `scripts/perf-compare.sh` checks them against `docs/perf-baseline.json` (machine recorded) and enforces **≤ +20%**; a missing metric fails. *(Design changed in P1 from XCTest `measure`, to avoid device-keyed `.xcbaselines`. The `Bricksmith-Perf` scheme and configuration arrive with the first perf test.)* |
+| 16 | **Performance** | Parse, collect and draw, build catalog | Self-timed Swift tests (median of a fixed number of iterations) in a **Release** configuration with testability enabled, on a **synthetic large model generated from ldraw-mini** (generator script committed, so no full library is needed). Results go to `build/perf-results.json`. `scripts/perf-compare.sh` checks them against `docs/perf-baseline.json` (machine recorded) and enforces **≤ +20%**; a missing metric fails. *(Design changed in P1 from XCTest `measure`, to avoid device-keyed `.xcbaselines`. As built in P2: a **Perf** build configuration (Release clone with testability enabled) is used instead of a separate scheme; the statistic is best-of-15 after warm-up on a 20,000-part model, because medians of millisecond timings were too noisy (L65).)* |
 | 17 | **UI smoke** | Launch, open, select in the outline, inspector shows values, edit, undo, save-as and reopen, open each panel | XCUITest, kept thin. |
 
 **Not testable automatically:**
@@ -361,6 +361,9 @@ Goldens and known issues **must not change**.
   - `LDrawDirective` (2)
   - `LDrawDragHandle` (24)
   - `PartLibrary` texture creation
+- **Extract Export Steps' logic** out of its save-panel completion block (`-[LDrawDocument exportSteps:]`) into a
+  callable method, and point `ExportTests` at it in place of `ExportStepsMirror` (row 11 mirrors it line for line
+  until then).
 - **Split `LDrawDocument.m`** (6.4k lines) into categories by concern: file I/O, edit operations, selection, undo,
   menus, viewers.
 - **Fallback if annotations were missed in P1:** a "test spelling only" commit is allowed. Goldens and assertions stay

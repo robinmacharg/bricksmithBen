@@ -37,6 +37,7 @@
 #import "GLMatrixMath.h"
 #import "LDrawDirective.h"
 #import "LDrawDragHandle.h"
+#import "LDrawRenderer.h"
 #import "LDrawFastSet.h"
 #import "LDrawGLCamera.h"
 #import "LDrawGLRenderer.h"
@@ -73,3 +74,7 @@
 #import "RelatedParts.h"
 #import "SearchPanelController.h"
 #import "PieceCountPanel.h"
+
+// --- Test support (group 3) ---
+#import "BricksmithTestSupport.h"
+#import "PreferencesDialogController.h"

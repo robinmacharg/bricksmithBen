@@ -498,9 +498,12 @@
 		NSLog(@"%@ is not a valid file", filepath);
 	}
 	
+	// catalogInfo was autoreleased into the local pool: keep it alive across the drain. Restored from the
+	// pre-ARC original (removed by the in-progress ARC edit while this file is still MRC) - BUG-015.
+	[catalogInfo retain];
 	[pool drain];
 	
-	return catalogInfo;
+	return [catalogInfo autorelease];
 	
 }//end catalogInfoForFileAtPath
 

@@ -1,0 +1,30 @@
+# parseColorFromField
+"4": code 4 rgba 0.706 0.000 0.000 1.000
+"16": code 16 rgba 1.000 1.000 0.810 1.000
+"24": code 24 rgba 0.750 0.750 0.750 1.000
+"0x2FF0000": code -2 rgba 1.000 0.000 0.000 1.000
+"0x2ff00aa": code -2 rgba 1.000 0.000 0.667 1.000
+"0x3123456": code -2 rgba 0.071 0.204 0.337 0.500
+"0x4F00F00": code -2 rgba 0.000 0.000 0.000 1.000
+"#FF0000": code 0 rgba 0.106 0.165 0.204 1.000
+"abc": code 0 rgba 0.106 0.165 0.204 1.000
+"": code 0 rgba 0.106 0.165 0.204 1.000
+"-1": code 16 rgba 1.000 1.000 0.810 1.000
+"999999": code 16 rgba 1.000 1.000 0.810 1.000
+"500": code 500 rgba 0.900 0.500 0.500 1.000
+# scanQuotableToken
+"simple rest": token "simple", rest at 6
+"\"quoted token\" rest": token "quoted token", rest at 14
+"\"unterminated": token "unterminated", rest at 13
+"\"a\\\"b\" x": token "a\"b", rest at 6
+"  leading": token "leading", rest at 9
+"": raises Objective-C exception NSInvalidArgumentException: -[__NSCFString appendString:]: nil argument
+# angleForViewOrientation
+orientation 0: (30.976, 40.609, 21.342)
+orientation 1: (0.000, 0.000, 0.000)
+orientation 2: (0.000, 180.000, 0.000)
+orientation 3: (0.000, -90.000, 0.000)
+orientation 4: (0.000, 90.000, 0.000)
+orientation 5: (90.000, 0.000, 0.000)
+orientation 6: (-90.000, 0.000, 0.000)
+orientation 7: (0.000, 0.000, 0.000)

@@ -128,18 +128,20 @@ typedef NS_ENUM(int, MessageT) {
     MessageObservedChanged = 2
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol LDrawObserver
 @required
-- (void) observableSaysGoodbyeCruelWorld:(id<LDrawObservable>) doomedObservable;
-- (void) statusInvalidated:(CacheFlagsT) flags who:(id<LDrawObservable>) observable;
-- (void) receiveMessage:(MessageT) msg who:(id<LDrawObservable>) observable;
+- (void) observableSaysGoodbyeCruelWorld:(null_unspecified id<LDrawObservable>) doomedObservable;
+- (void) statusInvalidated:(CacheFlagsT) flags who:(null_unspecified id<LDrawObservable>) observable;
+- (void) receiveMessage:(MessageT) msg who:(null_unspecified id<LDrawObservable>) observable;
 @end
 
 
 @protocol LDrawObservable
 @required
-- (void) addObserver:(id<LDrawObserver>) observer;
-- (void) removeObserver:(id<LDrawObserver>) observer;
+- (void) addObserver:(null_unspecified id<LDrawObserver>) observer;
+- (void) removeObserver:(null_unspecified id<LDrawObserver>) observer;
 @end
 
 
@@ -164,7 +166,7 @@ typedef NS_ENUM(int, MessageT) {
 #define DRAW_WIREFRAME							1 << 1
 #define DRAW_BOUNDS_ONLY						1 << 3
 
-typedef void(^LDrawPartVisitor)(LDrawPart *);
+typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invoked as visitor(self) by -[LDrawPart applyToAllParts:] (verified 2026-11-15)
 
 
 
@@ -189,57 +191,57 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);
 }
 
 // Class methods
-+(NSString *)defaultIconName;
++(null_unspecified NSString *)defaultIconName;
 
 // Initialization
-- (id) initWithLines:(NSArray *)lines inRange:(NSRange)range;
-- (id) initWithLines:(NSArray *)lines inRange:(NSRange)range parentGroup:(dispatch_group_t)parentGroup;
-+ (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index inLines:(NSArray *)lines maxIndex:(NSUInteger)maxIndex;
+- (null_unspecified id) initWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range;
+- (null_unspecified id) initWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup;
++ (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index inLines:(null_unspecified NSArray *)lines maxIndex:(NSUInteger)maxIndex;
 
 // Directives
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor;
-- (void) drawSelf:(id<LDrawRenderer>)renderer;
-- (void) collectSelf:(id<LDrawCollector>)renderer;
+- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(null_unspecified LDrawColor *)parentColor;
+- (void) drawSelf:(null_unspecified id<LDrawRenderer>)renderer;
+- (void) collectSelf:(null_unspecified id<LDrawCollector>)renderer;
 - (Box3) boundingBox3;
 - (void) debugDrawboundingBox;
 
 // Hit testing primitives
-- (void) hitTest:(Ray3)pickRay transform:(Matrix4)transform viewScale:(float)scaleFactor boundsOnly:(BOOL)boundsOnly creditObject:(id)creditObject hits:(NSMutableDictionary *)hits;
-- (BOOL) boxTest:(Box2)bounds transform:(Matrix4)transform boundsOnly:(BOOL)boundsOnly creditObject:(id)creditObject hits:(NSMutableSet *)hits;
-- (void) depthTest:(Point2)testPt inBox:(Box2)bounds transform:(Matrix4)transform creditObject:(id)creditObject bestObject:(id *)bestObject bestDepth:(float *)bestDepth;
+- (void) hitTest:(Ray3)pickRay transform:(Matrix4)transform viewScale:(float)scaleFactor boundsOnly:(BOOL)boundsOnly creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableDictionary *)hits;
+- (BOOL) boxTest:(Box2)bounds transform:(Matrix4)transform boundsOnly:(BOOL)boundsOnly creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableSet *)hits;
+- (void) depthTest:(Point2)testPt inBox:(Box2)bounds transform:(Matrix4)transform creditObject:(null_unspecified id)creditObject bestObject:(id _Null_unspecified * _Null_unspecified)bestObject bestDepth:(null_unspecified float *)bestDepth;
 
-- (NSString *) write;
+- (null_unspecified NSString *) write;
 
 // Display
-- (NSString *) browsingDescription;
-- (NSString *) iconName;
-- (NSString *) inspectorClassName;
+- (null_unspecified NSString *) browsingDescription;
+- (null_unspecified NSString *) iconName;
+- (null_unspecified NSString *) inspectorClassName;
 
 // Accessors
-- (NSArray *)ancestors;
-- (LDrawContainer *) enclosingDirective;
-- (LDrawFile *) enclosingFile;
-- (LDrawModel *) enclosingModel;
-- (LDrawStep *) enclosingStep;
+- (null_unspecified NSArray *)ancestors;
+- (null_unspecified LDrawContainer *) enclosingDirective;
+- (null_unspecified LDrawFile *) enclosingFile;
+- (null_unspecified LDrawModel *) enclosingModel;
+- (null_unspecified LDrawStep *) enclosingStep;
 - (BOOL) isSelected;
 
-- (void) setEnclosingDirective:(LDrawContainer *)newParent;
+- (void) setEnclosingDirective:(null_unspecified LDrawContainer *)newParent;
 - (void) setSelected:(BOOL)flag;
-- (void) setIconName:(NSString *)icon;
+- (void) setIconName:(null_unspecified NSString *)icon;
 
 // Utilities
-- (BOOL) containsReferenceTo:(NSString *)name;
-- (void) flattenIntoLines:(NSMutableArray *)lines
-				triangles:(NSMutableArray *)triangles
-		   quadrilaterals:(NSMutableArray *)quadrilaterals
-					other:(NSMutableArray *)everythingElse
-			 currentColor:(LDrawColor *)parentColor
+- (BOOL) containsReferenceTo:(null_unspecified NSString *)name;
+- (void) flattenIntoLines:(null_unspecified NSMutableArray *)lines
+				triangles:(null_unspecified NSMutableArray *)triangles
+		   quadrilaterals:(null_unspecified NSMutableArray *)quadrilaterals
+					other:(null_unspecified NSMutableArray *)everythingElse
+			 currentColor:(null_unspecified LDrawColor *)parentColor
 		 currentTransform:(Matrix4)transform
 		  normalTransform:(Matrix3)normalTransform
 				recursive:(BOOL)recursive;
-- (BOOL) isAncestorInList:(NSArray *)containers;
+- (BOOL) isAncestorInList:(null_unspecified NSArray *)containers;
 - (void) noteNeedsDisplay;
-- (void) registerUndoActions:(NSUndoManager *)undoManager;
+- (void) registerUndoActions:(null_unspecified NSUndoManager *)undoManager;
 
 // These methods should really be "protected" methods for sub-classes to use when acting like observables.
 // Obj-C doesn't give us compiler-level support to stop externals from calling them.
@@ -249,3 +251,5 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);
 - (CacheFlagsT) revalCache:(CacheFlagsT) flags;						// Revalidate flags - no notifications are sent, but internals are updated.  Returns which flags _were_ dirty.
 
 @end
+
+NS_ASSUME_NONNULL_END

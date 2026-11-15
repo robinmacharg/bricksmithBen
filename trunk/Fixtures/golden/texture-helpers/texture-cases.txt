@@ -1,0 +1,261 @@
+## START with !: geometry, then FALLBACK geometry
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP FALLBACK
+< 3 16 -10 0 -10 10 0 10 -10 0 10
+< 0 !TEXMAP END
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP FALLBACK
+> 3 16 -10 0 -10 10 0 10 -10 0 10
+> 0 !TEXMAP END
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+stable: yes
+
+## mixed !: and plain lines of every type
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !: 2 24 0 0 0 10 0 0
+< 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+< 5 24 0 0 0 10 0 0 0 5 0 0 -5 0
+< 0 !: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+< 0 // comment in a texture
+< 0 !TEXMAP END
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      LDrawLine: 2 24 0 0 0 10 0 0
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+      LDrawQuadrilateral: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+      LDrawConditionalLine: 5 24 0 0 0 10 0 0 0 5 0 0 -5 0
+      LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+      LDrawComment: 0 // comment in a texture
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 2 24 0 0 0 10 0 0
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+> 0 !: 5 24 0 0 0 10 0 0 0 5 0 0 -5 0
+> 0 !: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !: 0 // comment in a texture
+> 0 !TEXMAP END
+stable: yes
+
+## GLOSSMAP name
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png GLOSSMAP gloss.png
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+  step
+    texture image=sticker.png ref=sticker.png gloss=gloss.png browsing=sticker.png icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png GLOSSMAP gloss.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: yes
+
+## quoted image name with spaces
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 "my sticker.png"
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+  step
+    texture image=my sticker.png ref=my sticker.png gloss=nil browsing=my sticker.png icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 my sticker.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: NO, second write:
+>> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 my
+>> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+>> 0 !TEXMAP END
+
+## upper-case image name (reference name is lower-cased)
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 Sticker.PNG
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+  step
+    texture image=Sticker.PNG ref=sticker.png gloss=nil browsing=Sticker.PNG icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 Sticker.PNG
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: yes
+
+## no END, end of file (spec: texture runs to the end of the file; see unterminated())
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+stable: yes
+
+## no END, then STEP (spec: texture runs to the STEP; see unterminated())
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 STEP
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+    LDrawMetaCommand: 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+  step
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !TEXMAP END
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 STEP
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 STEP
+stable: yes
+
+## empty texture
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !TEXMAP END
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !TEXMAP END
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+stable: yes
+
+## FALLBACK with nothing after it
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP FALLBACK
+< 0 !TEXMAP END
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: yes
+
+## nested START/END, as many lines after the inner END as inside it
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+< 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+< 3 16 -10 0 -10 10 0 10 -10 0 10
+< 0 !TEXMAP END
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      texture image=inner.png ref=inner.png gloss=nil browsing=inner.png icon=Texture
+        LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+      LDrawTriangle: 3 16 -10 0 -10 10 0 10 -10 0 10
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+> 0 !: 3 16 -10 0 -10 10 0 10 -10 0 10
+> 0 !TEXMAP END
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+stable: NO, second write:
+>> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+>> 0 !: 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+>> 0 !TEXMAP END
+>> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+>> 0 !TEXMAP END
+>> 0 !: 3 16 -10 0 -10 10 0 10 -10 0 10
+>> 0 !TEXMAP END
+>> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+
+## nested START/END, more lines after the inner END than inside it
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+< 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+< 3 16 -10 0 -10 10 0 10 -10 0 10
+< 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      texture image=inner.png ref=inner.png gloss=nil browsing=inner.png icon=Texture
+        LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+      LDrawTriangle: 3 16 -10 0 -10 10 0 10 -10 0 10
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+    LDrawMetaCommand: 0 !TEXMAP END
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+> 0 !: 3 16 -10 0 -10 10 0 10 -10 0 10
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+> 0 !TEXMAP END
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+stable: NO, second write:
+>> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+>> 0 !: 0 !TEXMAP START PLANAR 0 0 0 1 0 0 0 0 1 inner.png
+>> 0 !TEXMAP END
+>> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+>> 0 !TEXMAP END
+>> 0 !: 3 16 -10 0 -10 10 0 10 -10 0 10
+>> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+>> 0 !TEXMAP END
+>> 0 !TEXMAP END
+>> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+
+## NEXT followed by two lines (spec: applies to the next line only; see nextCoversOneLine())
+< 0 !TEXMAP NEXT PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+< 3 16 -10 0 -10 10 0 -10 10 0 10
+< 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+  step
+    texture image=sticker.png ref=sticker.png gloss=nil browsing=sticker.png icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+    LDrawPart: 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+> 1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3005.dat
+stable: yes
+
+## CYLINDRICAL (not supported: not a texture)
+< 0 !TEXMAP START CYLINDRICAL 0 0 0 0 10 0 10 0 0 90 sticker.png
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+  step
+    LDrawMetaCommand: 0 !TEXMAP START CYLINDRICAL 0 0 0 0 10 0 10 0 0 90 sticker.png
+    LDrawMetaCommand: 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+    LDrawMetaCommand: 0 !TEXMAP END
+> 0 !TEXMAP START CYLINDRICAL 0 0 0 0 10 0 10 0 0 90 sticker.png
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: yes
+
+## PLANAR header with no image name
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+  step
+    texture image=nil ref=nil gloss=nil browsing=nil icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 (null)
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: yes
+
+## PLANAR header with too few coordinates
+< 0 !TEXMAP START PLANAR -10 0 -10 10 0
+< 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+< 0 !TEXMAP END
+  step
+    texture image=nil ref=nil gloss=nil browsing=nil icon=Texture
+      LDrawTriangle: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP START PLANAR -10 0 -10 10 0 0 0 0 0 (null)
+> 0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+> 0 !TEXMAP END
+stable: yes

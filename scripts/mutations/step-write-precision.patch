@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+index 837fdb1..c92ba02 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+@@ -576,7 +576,7 @@
+ 				break;
+ 			
+ 			case LDrawStepRotationRelative:
+-				[written appendFormat:@"0 %@ %.3f %.3f %.3f %@",LDRAW_ROTATION_STEP_TERMINATOR,
++				[written appendFormat:@"0 %@ %.2f %.3f %.3f %@",LDRAW_ROTATION_STEP_TERMINATOR,
+ 																angleZYX.x, 
+ 																angleZYX.y, 
+ 																angleZYX.z, 

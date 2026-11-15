@@ -1,0 +1,8 @@
+0 Planar texture block
+0 Name: 07-texmap.ldr
+0 Author: Fixture Author
+0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png
+3 16 -10 0 -10 10 0 -10 10 0 10
+3 16 -10 0 -10 10 0 10 -10 0 10
+0 !TEXMAP END
+1 15 0 8 0 1 0 0 0 1 0 0 0 1 3024.dat

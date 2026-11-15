@@ -28,6 +28,8 @@ typedef struct
 // class LDrawDrawableElement
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawDrawableElement : LDrawDirective <LDrawColorable, NSCoding, LDrawMovableDirective>
 {
 	LDrawColor  *color;
@@ -35,9 +37,9 @@ typedef struct
 }
 
 // Directives
-- (VBOVertexData *) writeToVertexBuffer:(VBOVertexData *)vertexBuffer parentColor:(LDrawColor *)parentColor wireframe:(BOOL)wireframe;
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(LDrawColor *)drawingColor;
-- (VBOVertexData *) writeElementToVertexBuffer:(VBOVertexData *)vertexBuffer withColor:(LDrawColor *)drawingColor wireframe:(BOOL)wireframe;
+- (null_unspecified VBOVertexData *) writeToVertexBuffer:(null_unspecified VBOVertexData *)vertexBuffer parentColor:(null_unspecified LDrawColor *)parentColor wireframe:(BOOL)wireframe;
+- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(null_unspecified LDrawColor *)drawingColor;
+- (null_unspecified VBOVertexData *) writeElementToVertexBuffer:(null_unspecified VBOVertexData *)vertexBuffer withColor:(null_unspecified LDrawColor *)drawingColor wireframe:(BOOL)wireframe;
 
 
 // Accessors
@@ -55,3 +57,5 @@ typedef struct
 - (Point3) position:(Point3)position snappedToGrid:(float)gridSpacing;
 
 @end
+
+NS_ASSUME_NONNULL_END

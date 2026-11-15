@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+index 837fdb1..5ff539d 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+@@ -1105,7 +1105,7 @@
+ 				[self setStepRotationType:LDrawStepRotationAbsolute];
+ 			
+ 			else if( [scanner scanString:LDRAW_ROTATION_ADDITIVE intoString:NULL] == YES )
+-				[self setStepRotationType:LDrawStepRotationAdditive];
++				[self setStepRotationType:LDrawStepRotationAbsolute];
+ 
+ 			else if( [scanner scanString:LDRAW_ROTATION_RELATIVE intoString:NULL] == YES )
+ 				[self setStepRotationType:LDrawStepRotationRelative];

@@ -1,0 +1,26 @@
+kind	input	result
+compliantName	"My Model"	"Optional(\"My Model.ldr\")"
+compliantName	"my model.ldr"	"Optional(\"my model.ldr\")"
+compliantName	"Sub Model 2.mpd"	"Optional(\"Sub Model 2.mpd.ldr\")"
+compliantName	"weird/name:with*chars"	"Optional(\"weird/name:with*chars.ldr\")"
+compliantName	""	"Optional(\".ldr\")"
+compliantName	"  padded  "	"Optional(\"padded.ldr\")"
+compliantName	"ÜnïcödÉ"	"Optional(\"ÜnïcödÉ.ldr\")"
+isStart	"0 FILE main.ldr"	true "main.ldr"
+isEnd	"0 FILE main.ldr"	false
+isStart	"0 FILE  name with spaces.ldr"	true "name with spaces.ldr"
+isEnd	"0 FILE  name with spaces.ldr"	false
+isStart	"0 file lower.ldr"	false nil
+isEnd	"0 file lower.ldr"	false
+isStart	"0  FILE  extra.ldr"	true "extra.ldr"
+isEnd	"0  FILE  extra.ldr"	false
+isStart	"0 FILE"	true ""
+isEnd	"0 FILE"	false
+isStart	"0 NOFILE"	false nil
+isEnd	"0 NOFILE"	true
+isStart	"0 nofile"	false nil
+isEnd	"0 nofile"	false
+isStart	"0 //FILE no"	false nil
+isEnd	"0 //FILE no"	false
+isStart	"1 16 0 0 0 1 0 0 0 1 0 0 0 1 x.ldr"	false nil
+isEnd	"1 16 0 0 0 1 0 0 0 1 0 0 0 1 x.ldr"	false

@@ -1,0 +1,10 @@
+0 Colour codes: standard, current/edge, direct and definitions
+0 Name: 03-colours.ldr
+0 Author: Fixture Author
+0 !COLOUR Fixture_Purple CODE 900 VALUE #7F00FF EDGE #333333
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+1 15 20 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+1 16 40 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+1 900 60 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+1 0x2FF8000 80 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+2 24 0 0 0 0 -8 0

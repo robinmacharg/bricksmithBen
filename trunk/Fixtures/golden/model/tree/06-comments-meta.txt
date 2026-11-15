@@ -1,0 +1,10 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (7)
+      LDrawComment: 0 // a slash comment
+      LDrawComment: 0 // a WRITE comment
+      LDrawComment: 0 // a PRINT comment
+      LDrawMetaCommand: 0 BFC CERTIFY CCW
+      LDrawMetaCommand: 0 !UNKNOWN_META some arguments 1 2 3
+      LDrawMetaCommand: 0 plain comment with   extra   spaces
+      LDrawPart: 1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat

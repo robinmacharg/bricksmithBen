@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Support/PartLibrary.m b/trunk/Bricksmith/Source/LDraw/Support/PartLibrary.m
+index 2f918da..ed1c2fc 100644
+--- a/trunk/Bricksmith/Source/LDraw/Support/PartLibrary.m
++++ b/trunk/Bricksmith/Source/LDraw/Support/PartLibrary.m
+@@ -1134,7 +1134,7 @@ static PartLibrary *SharedPartLibrary = nil;
+ {
+ 	//Look up the verbose part description in the scanned part catalog.
+ 	NSDictionary	*partList			= [self->partCatalog	objectForKey:PARTS_LIST_KEY];
+-	NSDictionary	*partRecord			= [partList				objectForKey:[part referenceName]];
++	NSDictionary	*partRecord			= [partList				objectForKey:[[part referenceName] uppercaseString]];
+ 	NSString		*partDescription	= [partRecord			objectForKey:PART_NAME_KEY];
+ 	
+ 	// Maybe it's an MPD reference?

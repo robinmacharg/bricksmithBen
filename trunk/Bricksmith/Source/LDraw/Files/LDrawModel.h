@@ -19,6 +19,8 @@
 // class LDrawModel
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawModel : LDrawContainer <NSCoding>
 {	
 	NSString				*modelDescription;
@@ -44,41 +46,43 @@
 }
 
 //Initialization
-+ (id) model;
++ (null_unspecified id) model NS_SWIFT_NAME(model());	// factory: keep distinct from -init (LEARNINGS L40)
 
 //Accessors
-- (NSString *) category;
-- (ColorLibrary *) colorLibrary;
-- (NSArray *) draggingDirectives;
-- (LDrawFile *)enclosingFile;
-- (NSString *)modelDescription;
-- (NSString *)fileName;
-- (NSString *)author;
+- (null_unspecified NSString *) category;
+- (null_unspecified ColorLibrary *) colorLibrary;
+- (null_unspecified NSArray *) draggingDirectives;
+- (null_unspecified LDrawFile *)enclosingFile;
+- (null_unspecified NSString *)modelDescription;
+- (null_unspecified NSString *)fileName;
+- (null_unspecified NSString *)author;
 - (NSUInteger) maximumStepIndexForStepDisplay;
 - (Tuple3) rotationAngleForStepAtIndex:(NSUInteger)stepNumber;
 - (Point3) rotationCenter;
 - (BOOL) stepDisplay;
-- (NSArray *) steps;
-- (LDrawStep *) visibleStep;
+- (null_unspecified NSArray *) steps;
+- (null_unspecified LDrawStep *) visibleStep;
 
-- (void) setDraggingDirectives:(NSArray *)directives;
-- (void) setModelDescription:(NSString *)newDescription;
-- (void) setFileName:(NSString *)newName;
-- (void) setAuthor:(NSString *)newAuthor;
+- (void) setDraggingDirectives:(null_unspecified NSArray *)directives;
+- (void) setModelDescription:(null_unspecified NSString *)newDescription;
+- (void) setFileName:(null_unspecified NSString *)newName;
+- (void) setAuthor:(null_unspecified NSString *)newAuthor;
 - (void) setRotationCenter:(Point3)newPoint;
 - (void) setStepDisplay:(BOOL)flag;
 - (void) setMaximumStepIndexForStepDisplay:(NSUInteger)stepIndex;
 
 //Actions
-- (LDrawStep *) addStep;
-- (void) addStep:(LDrawStep *)newStep;
-- (void) makeStepVisible:(LDrawStep *)step;
+- (null_unspecified LDrawStep *) addStep;
+- (void) addStep:(null_unspecified LDrawStep *)newStep;
+- (void) makeStepVisible:(null_unspecified LDrawStep *)step;
 
 //Utilities
 - (NSUInteger) maxStepIndexToOutput;
 - (NSUInteger) numberElements;
 - (void) optimizeStructure;
-- (NSUInteger) parseHeaderFromLines:(NSArray *)lines beginningAtIndex:(NSUInteger)index;
-- (BOOL) line:(NSString *)line isValidForHeader:(NSString *)headerKey info:(NSString**)infoPtr;
+- (NSUInteger) parseHeaderFromLines:(null_unspecified NSArray *)lines beginningAtIndex:(NSUInteger)index;
+- (BOOL) line:(null_unspecified NSString *)line isValidForHeader:(null_unspecified NSString *)headerKey info:(NSString * _Null_unspecified * _Null_unspecified)infoPtr;
 
 @end
+
+NS_ASSUME_NONNULL_END

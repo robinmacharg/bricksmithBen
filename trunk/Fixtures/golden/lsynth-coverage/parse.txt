@@ -1,0 +1,141 @@
+## band with stored synthesized parts
+lsynthClass 3 type RUBBER_BAND colour 4
+browsingDescription Rubber Band, iconName LSynthPart, inspector InspectionLSynth
+synthesized parts 2
+tree:
+LDrawLSynth (3)
+  LDrawPart: 1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+  LDrawLSynthDirective: 0 SYNTH OUTSIDE
+  LDrawPart: 1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+constraint icons: LSynthBandConstraint LSynthDirection LSynthBandConstraint
+written:
+0 LSynth coverage
+0 Name: lsynth-coverage.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN RUBBER_BAND 4
+0 SYNTH SHOW
+1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH OUTSIDE
+1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH SYNTHESIZED BEGIN
+1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 0 60 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 SYNTH SYNTHESIZED END
+0 SYNTH END
+
+## HIDE instead of SHOW
+lsynthClass 2 type PNEUMATIC_HOSE colour 16
+browsingDescription Pneumatic Hose, iconName LSynthPart, inspector InspectionLSynth
+synthesized parts 2
+tree:
+LDrawLSynth (3)
+  LDrawPart: 1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+  LDrawLSynthDirective: 0 SYNTH OUTSIDE
+  LDrawPart: 1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+constraint icons: LSynthHoseConstraint LSynthDirection LSynthHoseConstraint
+written:
+0 LSynth coverage
+0 Name: lsynth-coverage.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN PNEUMATIC_HOSE 16
+0 SYNTH SHOW
+1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH OUTSIDE
+1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH SYNTHESIZED BEGIN
+1 16 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 16 0 60 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 SYNTH SYNTHESIZED END
+0 SYNTH END
+
+## INSIDE, OUTSIDE and CROSS directives
+lsynthClass 3 type TECHNIC_CHAIN_LINK colour 0
+browsingDescription Technic Chain Link, iconName LSynthPart, inspector InspectionLSynth
+synthesized parts 0
+tree:
+LDrawLSynth (5)
+  LDrawLSynthDirective: 0 SYNTH INSIDE
+  LDrawPart: 1 0 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+  LDrawLSynthDirective: 0 SYNTH OUTSIDE
+  LDrawPart: 1 0 80 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+  LDrawLSynthDirective: 0 SYNTH CROSS
+constraint icons: LSynthDirection LSynthBandConstraint LSynthDirection LSynthBandConstraint LSynthDirection
+written:
+0 LSynth coverage
+0 Name: lsynth-coverage.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN TECHNIC_CHAIN_LINK 0
+0 SYNTH SHOW
+0 SYNTH INSIDE
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 SYNTH OUTSIDE
+1 0 80 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 SYNTH CROSS
+0 SYNTH END
+
+## unknown type, unexpected lines
+lsynthClass 0 type NOT_A_TYPE colour 1
+browsingDescription NOT_A_TYPE, iconName LSynthPart, inspector InspectionLSynth
+synthesized parts 0
+tree:
+LDrawLSynth (1)
+  LDrawPart: 1 1 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+constraint icons: Brick
+written:
+0 LSynth coverage
+0 Name: lsynth-coverage.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN NOT_A_TYPE 1
+0 SYNTH SHOW
+1 1 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 SYNTH END
+
+## LSynth PART type (band class)
+lsynthClass 1 type PLI_TECHNIC_TREAD colour 0
+browsingDescription PLI_TECHNIC_TREAD, iconName LSynthPart, inspector InspectionLSynth
+synthesized parts 2
+tree:
+LDrawLSynth (3)
+  LDrawPart: 1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+  LDrawLSynthDirective: 0 SYNTH OUTSIDE
+  LDrawPart: 1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+constraint icons: LSynthBandConstraint LSynthDirection LSynthBandConstraint
+written:
+0 LSynth coverage
+0 Name: lsynth-coverage.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN PLI_TECHNIC_TREAD 0
+0 SYNTH SHOW
+1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH OUTSIDE
+1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH SYNTHESIZED BEGIN
+1 0 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 0 0 60 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 SYNTH SYNTHESIZED END
+0 SYNTH END
+
+## LSynth PART type (hose class)
+lsynthClass 1 type PLI_HOSE_FLEXIBLE_12L colour 0
+browsingDescription PLI_HOSE_FLEXIBLE_12L, iconName LSynthPart, inspector InspectionLSynth
+synthesized parts 2
+tree:
+LDrawLSynth (3)
+  LDrawPart: 1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+  LDrawLSynthDirective: 0 SYNTH OUTSIDE
+  LDrawPart: 1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+constraint icons: LSynthHoseConstraint LSynthDirection LSynthHoseConstraint
+written:
+0 LSynth coverage
+0 Name: lsynth-coverage.ldr
+0 Author: Fixture Author
+0 SYNTH BEGIN PLI_HOSE_FLEXIBLE_12L 0
+0 SYNTH SHOW
+1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH OUTSIDE
+1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH SYNTHESIZED BEGIN
+1 0 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 0 0 60 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 SYNTH SYNTHESIZED END
+0 SYNTH END

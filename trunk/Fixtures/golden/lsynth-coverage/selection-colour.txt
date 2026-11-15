@@ -1,0 +1,26 @@
+## TransparentSelection (0), 20%
+unselected: code 4 rgba 0.706 0.000 0.000 1.000
+selected:   code -1 rgba 0.706 0.000 0.000 0.200 | code -1 rgba 0.706 0.000 0.000 0.200
+deselected: code 4 rgba 0.706 0.000 0.000 1.000
+constraint selected: code -1 rgba 0.706 0.000 0.000 0.200
+style changed to transparent 75% + notification: code -1 rgba 0.706 0.000 0.000 0.750
+constraint deselected: code 4 rgba 0.706 0.000 0.000 1.000
+written synthesized line: 1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+
+## ColoredSelection (1), green
+unselected: code 4 rgba 0.706 0.000 0.000 1.000
+selected:   code -1 rgba 0.000 1.000 0.000 1.000 | code -1 rgba 0.000 1.000 0.000 1.000
+deselected: code 4 rgba 0.706 0.000 0.000 1.000
+constraint selected: code -1 rgba 0.000 1.000 0.000 1.000
+style changed to transparent 75% + notification: code -1 rgba 0.706 0.000 0.000 0.750
+constraint deselected: code 4 rgba 0.706 0.000 0.000 1.000
+written synthesized line: 1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+
+## TransparentColoredSelection (2), green, 50%
+unselected: code 4 rgba 0.706 0.000 0.000 1.000
+selected:   code -1 rgba 0.000 1.000 0.000 0.500 | code -1 rgba 0.000 1.000 0.000 0.500
+deselected: code 4 rgba 0.706 0.000 0.000 1.000
+constraint selected: code -1 rgba 0.000 1.000 0.000 0.500
+style changed to transparent 75% + notification: code -1 rgba 0.706 0.000 0.000 0.750
+constraint deselected: code 4 rgba 0.706 0.000 0.000 1.000
+written synthesized line: 1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat

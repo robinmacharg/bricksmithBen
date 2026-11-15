@@ -40,6 +40,7 @@ if (( ${#patches} == 0 )); then
 fi
 
 survivors=()
+invalid=()
 for patch in "${patches[@]}"; do
 	name=${patch:t:r}
 	print -n "mutation $name … "
@@ -47,15 +48,23 @@ for patch in "${patches[@]}"; do
 	if "$REPO_ROOT/scripts/test.sh" >"$REPO_ROOT/build/mutation-$name.log" 2>&1; then
 		print "SURVIVED (no test caught it)"
 		survivors+=("$name")
+	elif grep -qE '\.(m|c|h|swift):[0-9]+:[0-9]+: error:' "$REPO_ROOT/build/test.log"; then
+		# A mutation that doesn't compile proves nothing about the tests.
+		print "INVALID (does not build)"
+		invalid+=("$name")
 	else
 		print "killed"
 	fi
 	git apply -R "$patch"
 done
 
+if (( ${#invalid} )); then
+	print -u2 "\n${#invalid} mutation(s) do not build: ${invalid[*]}. Fix them in scripts/dev/make-mutations.py."
+fi
 if (( ${#survivors} )); then
 	print -u2 "\n${#survivors} mutation(s) survived: ${survivors[*]}"
 	print -u2 "Add or strengthen tests until each one is killed."
 	exit 1
 fi
+(( ${#invalid} )) && exit 1
 print "\nAll ${#patches} mutations killed."

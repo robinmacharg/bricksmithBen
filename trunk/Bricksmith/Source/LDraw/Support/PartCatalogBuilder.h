@@ -15,10 +15,14 @@
 /// 			categories. 
 ///
 //------------------------------------------------------------------------------
+NS_ASSUME_NONNULL_BEGIN
+
 @interface PartCatalogBuilder : NSObject
 
-- (void) makePartCatalogWithMaxLoadCountHandler:(void (^)(NSUInteger maxPartCount))maxLoadCountHandler
-					   progressIncrementHandler:(void (^)())progressIncrementHandler
-							  completionHandler:(void (^)(NSDictionary<NSString*, id> *newCatalog))completionHandler;
+- (void) makePartCatalogWithMaxLoadCountHandler:(null_unspecified void (^)(NSUInteger maxPartCount))maxLoadCountHandler
+					   progressIncrementHandler:(null_unspecified void (^)())progressIncrementHandler
+							  completionHandler:(null_unspecified void (^)(NSDictionary<NSString*, id> * _Null_unspecified newCatalog))completionHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

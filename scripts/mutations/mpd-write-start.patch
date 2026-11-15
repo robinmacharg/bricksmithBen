@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawMPDModel.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawMPDModel.m
+index 33231c6..8b1a715 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawMPDModel.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawMPDModel.m
+@@ -271,7 +271,7 @@
+ 	//		   model text
+ 	//			....
+ 	//		0 NOFILE
+-	[written appendFormat:@"0 %@ %@%@", LDRAW_MPD_SUBMODEL_START, [self modelName], CRLF];
++	[written appendFormat:@"0 %@ %@%@", LDRAW_MPD_SUBMODEL_START, [[self modelName] uppercaseString], CRLF];
+ 	[written appendFormat:@"%@%@", [super write], CRLF];
+ 	[written appendFormat:@"0 %@", LDRAW_MPD_SUBMODEL_END];
+ 	

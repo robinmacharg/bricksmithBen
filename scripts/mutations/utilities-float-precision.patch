@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+index 9a0bc33..9c44529 100644
+--- a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
++++ b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+@@ -489,7 +489,7 @@ static NSString				*defaultAuthor		= @"anonymous";
+ 		
+ 		// First format the number into a string. We could wind up with
+ 		// something like "50.090000".
+-		snprintf(formattedFloat, sizeof(formattedFloat), "%f", number);
++		snprintf(formattedFloat, sizeof(formattedFloat), "%.3f", number);
+ 		fullLength  = strlen(formattedFloat);
+ 		endOfString = &formattedFloat[fullLength - 1];
+ 		

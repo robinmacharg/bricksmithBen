@@ -27,20 +27,58 @@ their own port phase.
 | P0 | Automated: Debug and Release build, no new warnings, `codesign --verify --deep` | 2026-11-14 | agent | Branch `20261114-p0-build-hygiene` |
 | P0 | 🧑 Manual smoke checklist (full LDraw library) | 2026-11-14 | maintainer | Passed, apart from Settings, which never opens: BUG-002 is pre-existing, caused by colour preferences written by the installed 3.1.0. Debug builds now use their own preferences domain |
 | P1 | Automated: build (Debug/Release), unit tests, defaults unchanged ×3+, swap spike passed, exit-test spike passed, mutation pipeline verified | 2026-11-14 | agent | Branch `20261114-p1-test-harness` |
+| P2 | 🧑 Golden review: `Fixtures/golden/roundtrip/*` (row 1) | 2026-11-15 | maintainer | Diffs vs inputs summarised in the P2 row-1 commit message; BUG-003/004 and S14/S15 found |
+| P2 | 🧑 Golden review: row 2 (`golden/format/*`, `golden/roundtrip/1[0-4]*`) | 2026-11-15 | maintainer | Found BUG-005, BUG-006, S16; disproved suspected RGB truncation (768 values checked) |
+| P2 | 🧑 Golden review: row 3 (`golden/robustness/cases.txt`) | 2026-11-15 | maintainer | Found BUG-007, BUG-008, S17, S18 |
+| P2 | 🧑 Golden review: row 4 (`golden/model/**`; archives in `Fixtures/archives`) | 2026-11-15 | maintainer | Found BUG-011, BUG-012, S19 |
+| P2 | 🧑 Golden review: row 6 (`golden/transforms/snapping.tsv`) | 2026-11-15 | maintainer | No bugs found; LDraw-aware vertical grid confirmed as documented design |
+| P2 | 🧑 Golden review: row 8 (`golden/library/mlcad.txt`, `golden/library/catalog.json`) | 2026-11-15 | maintainer | S12/S13 confirmed; BUG-015 found and fixed (maintainer decision) |
+| P2 | 🧑 Golden review: row 9 (`golden/mpd/*`) | 2026-11-15 | maintainer | S21, S22 noted; peer-file contract (lower-case names) characterised |
+| P2 | 🧑 Golden review: row 10 (`golden/document/*`, 25 actions) | 2026-11-15 | maintainer | BUG-016 found; S23, S24 noted |
+| P2 | 🧑 Golden review: row 11 (`golden/export/*`) | 2026-11-15 | maintainer | BUG-011 user-visible effect confirmed (Export Steps); S25 noted |
+| P2 | 🧑 Golden review: row 12 (`golden/app/*`) | 2026-11-15 | maintainer | No new bugs |
+| P2 | 🧑 Golden review: row 13 (`golden/lsynth/*`, plus the new `15-lsynth-band` round-trip/tree goldens) | 2026-11-15 | maintainer | S11 confirmed (CLI only) |
+| P2 | 🧑 Golden review: row 14 (`golden/prefs/*`) | 2026-11-15 | maintainer | 175 constants + 93 registered defaults; note the misspelt key "Syntak Color Colors" must stay |
+| P2 | 🧑 Golden review: row 15 (`golden/render/Mac15,7/*.png`, 8 images) | 2026-11-15 | maintainer | References for this machine only; other machines skip (not a CI gate) |
+| P2 | Perf baseline recorded (Mac15,7; `docs/perf-baseline.json`) | 2026-11-15 | agent | Two verification runs within budget (max 116%) |
+| P2 | UI smoke (row 17): `scripts/test.sh --ui`, 5 UI tests | 2026-11-15 | agent | No new goldens (reuses approved round-trip goldens). S26 noted. Test-mode focus-ring fix (L67) |
+| P2 | 🧑 Manual-only list complete (TESTING.md; checklist steps 14-17 added) | 2026-11-15 | maintainer | Signed off in conversation |
+| P2 | Coverage gate: `scripts/dev/coverage-tiers.py` exits 0 (22 tier A + 17 tier B classes at target; dead code in `docs/coverage-ledger.tsv`) | 2026-11-15 | agent | **Deviation for sign-off:** the ledger is per function (dead code), not per uncovered block; residual uncovered branches inside live methods are listed by `coverage-tiers.py --uncovered` but not individually justified |
+| P2 | 🧑 Coverage ledger granularity: per-function ledger accepted; residual uncovered branches inside live methods accepted at class level (all classes at target) | 2026-11-15 | maintainer | Signed off in conversation |
+| P2 | Mutation smoke: 30/30 killed (`scripts/mutation-smoke.sh`, patches from `scripts/dev/make-mutations.py`) | 2026-11-15 | agent | Two survivors on the first run: one revealed a missing test (untyped ROTSTEP), one targeted dead code (retargeted) |
+| P2 | Default suite time | 2026-11-15 | agent | 185 tests in ~31-60 s (limit 3 min) |
+| P2 | 🧑 Golden review: re-recorded render references (`golden/render/Mac15,7/*`, harness now fixes 1x and 625x691, L73) | **pending** | | Same renders, offset a few pixels |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
 
-| Class | Tier | Coverage | Reason | Signed off |
+The uncovered-line ledger is machine-readable: [coverage-ledger.tsv](coverage-ledger.tsv), checked by
+`scripts/dev/coverage-tiers.py` (run after `scripts/test.sh`). A row names a function and the evidence that it needs
+no test (dead code, debug only). A `*` row accepts a whole class below its tier target, and needs a maintainer
+sign-off here:
+
+| Class | Tier | Effective coverage | Reason | Signed off |
 |---|---|---|---|---|
-| | | | | |
 
 ## Nullability annotations (plan §5 P1, v3.1 rule)
 
 | Header | Annotated | Unverified (`null_unspecified`) | First test |
 |---|---|---|---|
 | `LDrawPaths.h` | 2026-11-14 | — | `HarnessFixtureLibraryTests` |
+| `LDrawUtilities.h` | 2026-11-15 | All except `classForDirectiveBeginningWithLine:` (nullable, BUG-001) and `stringFromFileData:` (nullable) | `RoundTripTests`, `KnownIssueTests` |
+| `LDrawDirective.h` | 2026-11-15 | All except `parentGroup:` (nullable: callers pass nil) | `RoundTripTests` |
+| `LDrawFile.h` | 2026-11-15 | All except `parseFromFileContents:` (nullable). `+file` is pinned as `NS_SWIFT_NAME(file())` (L40) | `RoundTripTests`, `FormatTests` |
+| `LDrawContainer.h` | 2026-11-15 | All (tool) | `ObjectModelTests` |
+| `LDrawPart.h`, `LDrawDrawableElement.h` | 2026-11-15 | All (tool) | `SnappingTests` |
+| `PartLibrary.h`, `PartCatalogBuilder.h`, `MLCadIni.h` | 2026-11-15 | All except `+sharedPartLibrary` (nonnull: allocated on first use) | `LibraryPathTests`, `LibraryCatalogTests` |
+| `LDrawMPDModel.h`, `LDrawModel.h`, `ModelManager.h` | 2026-11-15 | All except `+sharedModelManager` (nonnull). `+model` is pinned with `NS_SWIFT_NAME(model())` | `MPDTests` |
+| `LDrawDocument.h` | 2026-11-15 | All (tool) | `DocumentSpikeTests`, `DocumentActionTests` |
+| `PartReport.h` | 2026-11-15 | All (tool) | `ExportTests` |
+| `RelatedParts.h`, `LSynthConfiguration.h`, `PartBrowserDataSource.h`, `MinifigureDialogController.h` | 2026-11-15 | All (tool) | `AppLogicTests` |
 | `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
+| `LDrawStep.h`, `LDrawLine.h`, `LDrawTriangle.h`, `LDrawQuadrilateral.h`, `LDrawConditionalLine.h`, `LDrawComment.h`, `LDrawMetaCommand.h`, `LDrawTexture.h`, `LDrawDragHandle.h`, `LDrawRenderer.h`, `LDrawMovableDirective.h` | 2026-11-15 | All (tool; `LDrawRenderer.h` `endDL:` and the cleanup typedef by hand) | `HitTestingTests`, `DrawingTests`, `PrimitiveEditingTests` (caught up late, L72) |
+| `StringUtilities.h`, `BezierPathCategory.h`, `OverlayViewCategory.h`, `TableViewCategory.h`, `WindowCategory.h` | 2026-11-15 | All (tool; the last two have no pointers) | `TextureAndHelpersTests` |
+| `LDrawLSynth.h`, `LDrawLSynthDirective.h` | 2026-11-15 | All (tool; `LDrawLSynth.h` caught up late, L72: `LSynthTests` tested it first) | `LSynthCoverageTests` |
 
 ## Uncovered-line ledger (tiers A and B)
 

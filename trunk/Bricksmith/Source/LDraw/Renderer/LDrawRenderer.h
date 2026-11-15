@@ -57,7 +57,7 @@ struct	LDrawTextureSpec {
 // might be retaining.
 
 typedef void *	LDrawDLHandle;									// Opaque handle to some kinf of cached drawing representation.
-typedef void (* LDrawDLCleanup_f)(LDrawDLHandle  who);			// Cleanup function associated with a given DL.
+typedef void (* LDrawDLCleanup_f)(LDrawDLHandle _Null_unspecified who);			// Cleanup function associated with a given DL.
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,17 +70,19 @@ typedef void (* LDrawDLCleanup_f)(LDrawDLHandle  who);			// Cleanup function ass
 // to push/pop texture state; if no texture state is pushed, the mesh ends up capable of "taking current
 // texture."
 //
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol LDrawCollector
 
 // Texture stack - sets up new texturing.  When the stack is totally popped, no texturing is applied.
-- (void) pushTexture:(struct LDrawTextureSpec *)tex_spec;
+- (void) pushTexture:(null_unspecified struct LDrawTextureSpec *)tex_spec;
 - (void) popTexture;
 
 // Raw drawing APIs to push one quad/tri/line.  Vertices are consecutive float verts, e.g. 12 for quad, 9 for tri, 6 for line/
 // Color can be null to use the current color.  Normal is a float[3] normal ptr.
-- (void) drawQuad:(GLfloat *) vertices normal:(GLfloat *) normal color:(GLfloat *)color;
-- (void) drawTri:(GLfloat *) vertices normal:(GLfloat *) normal color:(GLfloat *)color;
-- (void) drawLine:(GLfloat *) vertices normal:(GLfloat *) normal color:(GLfloat *)color;
+- (void) drawQuad:(null_unspecified GLfloat *) vertices normal:(null_unspecified GLfloat *) normal color:(null_unspecified GLfloat *)color;
+- (void) drawTri:(null_unspecified GLfloat *) vertices normal:(null_unspecified GLfloat *) normal color:(null_unspecified GLfloat *)color;
+- (void) drawLine:(null_unspecified GLfloat *) vertices normal:(null_unspecified GLfloat *) normal color:(null_unspecified GLfloat *)color;
 
 @end
 
@@ -102,20 +104,20 @@ typedef void (* LDrawDLCleanup_f)(LDrawDLHandle  who);			// Cleanup function ass
 @required
 
 // Matrix stack.  The new matrix is accumulated onto the existing transform.
-- (void) pushMatrix:(GLfloat *)matrix;
+- (void) pushMatrix:(null_unspecified GLfloat *)matrix;
 - (void) popMatrix;
 
 // Returns a cull code indicating whether the AABB from minXYZ to maxXYZ is on screen and big enough
 // to be worth drawing.
-- (int) checkCull:(GLfloat *)minXYZ to:(GLfloat *)maxXYZ;
+- (int) checkCull:(null_unspecified GLfloat *)minXYZ to:(null_unspecified GLfloat *)maxXYZ;
 
 // This draws a plane AABB cube in the current color from minXYZ to maxXYZ.
 // It can be used for cheap bouding-box approximations of small bricks.
-- (void) drawBoxFrom:(GLfloat *)minXyz to:(GLfloat *)maxXyz;
+- (void) drawBoxFrom:(null_unspecified GLfloat *)minXyz to:(null_unspecified GLfloat *)maxXyz;
 
 // Color stack.  Pushing a color overrides the current color.  If no one ever sets the current color we get
 // that generic beige that is the RGBA of color 16.
-- (void) pushColor:(GLfloat *)color;
+- (void) pushColor:(null_unspecified GLfloat *)color;
 - (void) popColor;
 
 // Wire frame count - if a non-zero number of wire frame requests are outstanding, we render in wireframe.
@@ -123,21 +125,23 @@ typedef void (* LDrawDLCleanup_f)(LDrawDLHandle  who);			// Cleanup function ass
 - (void) popWireFrame;
 
 // Texture stack - sets up new texturing.  When the stack is totally popped, no texturing is applied.
-- (void) pushTexture:(struct LDrawTextureSpec *)tex_spec;
+- (void) pushTexture:(null_unspecified struct LDrawTextureSpec *)tex_spec;
 - (void) popTexture;
 
 // Draw drag handle at a given location (3 floats).  The coordinates are within the current
 // transform.  The size is in screen pixels.
-- (void) drawDragHandle:(GLfloat *)xyz withSize:(GLfloat)size;
+- (void) drawDragHandle:(null_unspecified GLfloat *)xyz withSize:(GLfloat)size;
 
 // Begin/end for a display list.  Multiple display lists can be "open" for recording at one time;
 // each one returns its own collector object.  However, only the most recently (innermost)
 // display list can be accumulated into at one time.  (This is a bit of a defect of the API that we
 // should consider some day fixing.)
-- (id<LDrawCollector>) beginDL;	
-- (void) endDL:(LDrawDLHandle *) outHandle cleanupFunc:(LDrawDLCleanup_f *)func;		// Returns NULL if the display list is empty (e.g. no calls between begin/end)
+- (null_unspecified id<LDrawCollector>) beginDL;	
+- (void) endDL:(LDrawDLHandle _Null_unspecified * _Null_unspecified) outHandle cleanupFunc:(LDrawDLCleanup_f _Null_unspecified * _Null_unspecified)func;		// Returns NULL if the display list is empty (e.g. no calls between begin/end)
 
-- (void) drawDL:(LDrawDLHandle)dl;
+- (void) drawDL:(null_unspecified LDrawDLHandle)dl;
 
 @end
+
+NS_ASSUME_NONNULL_END
 

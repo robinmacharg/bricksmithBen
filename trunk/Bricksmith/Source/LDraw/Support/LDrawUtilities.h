@@ -37,46 +37,50 @@ typedef NS_ENUM(int, ViewOrientationT)
 // LDrawUtilities
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawUtilities : NSObject
 {
 
 }
 
 // Configuration
-+ (NSString *) defaultAuthor;
++ (null_unspecified NSString *) defaultAuthor;
 
 + (void) setColumnizesOutput:(BOOL)flag;
-+ (void) setDefaultAuthor:(NSString *)nameIn;
++ (void) setDefaultAuthor:(null_unspecified NSString *)nameIn;
 
 // Parsing
-+ (Class) classForDirectiveBeginningWithLine:(NSString *)line;
-+ (LDrawColor *) parseColorFromField:(NSString *)colorField;
-+ (NSString *) readNextField:(NSString *) partialDirective
-				   remainder:(NSString **) remainder;
-+ (NSString *) scanQuotableToken:(NSScanner *)scanner;
-+ (NSString *) stringFromFile:(NSString *)path;
-+ (NSString *) stringFromFileData:(NSData *)fileData;
++ (nullable Class) classForDirectiveBeginningWithLine:(null_unspecified NSString *)line;	// Nil for unknown line codes (BUG-001)
++ (null_unspecified LDrawColor *) parseColorFromField:(null_unspecified NSString *)colorField;
++ (null_unspecified NSString *) readNextField:(null_unspecified NSString *) partialDirective
+				   remainder:(NSString * _Null_unspecified * _Null_unspecified) remainder;
++ (null_unspecified NSString *) scanQuotableToken:(null_unspecified NSScanner *)scanner;
++ (null_unspecified NSString *) stringFromFile:(null_unspecified NSString *)path;
++ (nullable NSString *) stringFromFileData:(nullable NSData *)fileData;	// nil only for nil data (falls back UTF-8 -> Latin-1 -> MacRoman)
 
 // Writing
-+ (NSString *) outputStringForColor:(LDrawColor *)color;
-+ (NSString *) outputStringForFloat:(float)number;
++ (null_unspecified NSString *) outputStringForColor:(null_unspecified LDrawColor *)color;
++ (null_unspecified NSString *) outputStringForFloat:(float)number;
 
 // Hit Detection
-+ (void) registerHitForObject:(id)hitObject depth:(float)depth creditObject:(id)creditObject hits:(NSMutableDictionary *)hits;
-+ (void) registerHitForObject:(id)hitObject creditObject:(id)creditObject hits:(NSMutableSet *)hits;
++ (void) registerHitForObject:(null_unspecified id)hitObject depth:(float)depth creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableDictionary *)hits;
++ (void) registerHitForObject:(null_unspecified id)hitObject creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableSet *)hits;
 
 // Images
-+ (CGImageRef) imageAtPath:(NSString *)imagePath;
++ (null_unspecified CGImageRef) imageAtPath:(null_unspecified NSString *)imagePath;
 
 // Miscellaneous
 + (Tuple3) angleForViewOrientation:(ViewOrientationT)orientation;
-+ (Box3) boundingBox3ForDirectives:(NSArray *)directives;
-+ (BOOL) isLDrawFilenameValid:(NSString *)fileName;
-+ (void) updateNameForMovedPart:(LDrawPart *)movedPart;
++ (Box3) boundingBox3ForDirectives:(null_unspecified NSArray *)directives;
++ (BOOL) isLDrawFilenameValid:(null_unspecified NSString *)fileName;
++ (void) updateNameForMovedPart:(null_unspecified LDrawPart *)movedPart;
 + (ViewOrientationT) viewOrientationForAngle:(Tuple3)rotationAngle;
-+ (void) unresolveLibraryParts:(LDrawDirective *)directive;
++ (void) unresolveLibraryParts:(null_unspecified LDrawDirective *)directive;
 
 // Test support (do not call from app code)
 + (void) resetForTesting;
 
 @end
+
+NS_ASSUME_NONNULL_END

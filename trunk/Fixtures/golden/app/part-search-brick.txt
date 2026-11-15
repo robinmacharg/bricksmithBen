@@ -1,0 +1,8 @@
+query "brick": 7
+3001.dat
+3003.dat
+3005.dat
+3039.dat
+3062b.dat
+s\3001s01.dat
+s\3039s01.dat

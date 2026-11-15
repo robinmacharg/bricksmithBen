@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
+index 15f44be..ae4e27b 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
+@@ -950,7 +950,7 @@ To work, this needs to multiply the modelViewGLMatrix by the part transform.
+ 				  parse:(BOOL)shouldParse
+ 				inGroup:(dispatch_group_t)parentGroup
+ {
+-	NSString            *newReferenceName   = [newPartName lowercaseString];
++	NSString            *newReferenceName   = newPartName;
+ 	dispatch_group_t    parseGroup          = NULL;
+ 
+ 	[newPartName retain];

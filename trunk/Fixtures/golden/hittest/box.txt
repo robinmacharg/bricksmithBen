@@ -1,0 +1,19 @@
+# legend
+A 0.0.0 LDrawPart
+B 0.0.1 LDrawPart
+C 0.0.2 LDrawLine
+D 0.0.3 LDrawTriangle
+E 0.0.4 LDrawQuadrilateral
+F 0.0.5 LDrawTriangle
+G 0.0.6 LDrawConditionalLine
+H 0.0.7 LDrawTexture
+I 0.0.7.0 LDrawTriangle
+
+whole view: returned NO, selected [A B C D E F G I]
+left half: returned NO, selected [A C D G I]
+right half: returned NO, selected [B D E F I]
+top half: returned NO, selected [A B G I]
+quad corner only: returned NO, selected [E]
+empty corner: returned NO, selected []
+crosses the line: returned NO, selected [C]
+zero size on triangle: returned NO, selected [D]
