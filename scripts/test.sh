@@ -5,6 +5,8 @@
 # Usage:
 #   scripts/test.sh                           # unit + characterisation tests (BricksmithTests)
 #   scripts/test.sh --only <Target/Suite>     # pass through to -only-testing (repeatable)
+#   scripts/test.sh --ui                      # also run the XCUITest smoke tests (real windows on screen)
+#   scripts/test.sh --ui-only [--only BricksmithUITests/SmokeUITests]   # UI tests alone, for iterating
 #   RECORD_GOLDENS=1 scripts/test.sh          # (re)write golden files instead of comparing; review the diff!
 #
 # Output:
@@ -36,6 +38,7 @@ UI=0
 while (( $# )); do
 	case $1 in
 		--ui)   UI=1; shift ;;
+		--ui-only) UI=2; shift ;;   # skip the hosted unit run (iterating on UI tests); --only applies to UI
 		--only) ONLY+=("-only-testing:$2"); shift 2 ;;
 		*) print -u2 "unknown argument: $1"; exit 2 ;;
 	esac
@@ -65,18 +68,23 @@ snapshot_defaults before
 
 print "Testing…"
 set +e
-xcodebuild test -project "$PROJECT" -scheme Bricksmith -configuration Debug \
-	-derivedDataPath "$BUILD_DIR/DerivedData" -resultBundlePath "$RESULT" \
-	"${ONLY[@]}" >"$LOG" 2>&1
-STATUS=$?
+STATUS=0
+: >"$LOG"
+if (( UI != 2 )); then
+	xcodebuild test -project "$PROJECT" -scheme Bricksmith -configuration Debug \
+		-derivedDataPath "$BUILD_DIR/DerivedData" -resultBundlePath "$RESULT" \
+		"${ONLY[@]}" >"$LOG" 2>&1
+	STATUS=$?
+fi
 if (( UI && STATUS == 0 )); then
 	# UI tests drive the real app in a separate process (first run triggers macOS automation /
 	# accessibility permission prompts). Separate scheme so the default run stays prompt-free.
 	print "UI testing…"
 	rm -rf "$BUILD_DIR/UITestResults.xcresult"
+	UI_ONLY=(); (( UI == 2 )) && UI_ONLY=("${ONLY[@]}")
 	xcodebuild test -project "$PROJECT" -scheme Bricksmith-UITests -configuration Debug \
 		-derivedDataPath "$BUILD_DIR/DerivedData" -resultBundlePath "$BUILD_DIR/UITestResults.xcresult" \
-		>>"$LOG" 2>&1
+		"${UI_ONLY[@]}" >>"$LOG" 2>&1
 	STATUS=$?
 fi
 set -e

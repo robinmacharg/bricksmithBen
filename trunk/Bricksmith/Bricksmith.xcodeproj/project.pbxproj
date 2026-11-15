@@ -220,6 +220,7 @@
 		5701DABC93A382AFA6BC4B71 /* ObjectModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */; };
 		5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		5DABC29D744250DD26B19E0A /* DocumentSpikeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37613C878169213095B751C5 /* DocumentSpikeTests.swift */; };
+		6054A646D0448CE3137A7775 /* SmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C75795F33B4E0DABD484C9 /* SmokeUITests.swift */; };
 		60669DDCCFC8E5EFBE510A87 /* RoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */; };
 		64CEAFA0C7F9065C4C1FB8D2 /* SnappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58CE9892121AF3E27970B98 /* SnappingTests.swift */; };
 		6655C89BADCCD8D79F69D365 /* MPDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD9235EA9F69E87DBFF308A /* MPDTests.swift */; };
@@ -574,6 +575,7 @@
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSmokeUITests.swift; sourceTree = "<group>"; };
 		4119F21A77A4B2343C726CE1 /* LSynthTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LSynthTests.swift; sourceTree = "<group>"; };
+		46C75795F33B4E0DABD484C9 /* SmokeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
 		4AB8369002EE06CEE9EA9CB5 /* PerformanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = BricksmithTestSupport.m; sourceTree = "<group>"; };
 		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -1170,6 +1172,7 @@
 			isa = PBXGroup;
 			children = (
 				3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */,
+				46C75795F33B4E0DABD484C9 /* SmokeUITests.swift */,
 			);
 			name = UI;
 			path = UI;
@@ -1668,6 +1671,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F40CAC2930A7FE9230E2FC7D /* LaunchSmokeUITests.swift in Sources */,
+				6054A646D0448CE3137A7775 /* SmokeUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

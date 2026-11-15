@@ -17,7 +17,8 @@ scripts/build.sh --release         # same for Release (docs/warnings-baseline-re
 scripts/test.sh                    # hosted unit/characterisation tests + coverage (build/coverage.txt);
                                    #   fails if the user's com.AllenSmith.Bricksmith defaults changed
 scripts/test.sh --only BricksmithTests/HarnessFixtureLibraryTests   # a subset
-scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests)
+scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests); real windows on screen
+scripts/test.sh --ui-only --only BricksmithUITests/SmokeUITests   # UI tests alone, for iterating
 scripts/mutation-smoke.sh          # each scripts/mutations/*.patch must make a test fail
 scripts/perf-compare.sh --run      # build+run perf tests in the Perf configuration, compare with docs/perf-baseline.json
 scripts/perf-compare.sh            # compare existing build/perf-results.json (≤ +20%; a missing metric fails)
@@ -94,6 +95,12 @@ isn't present.
 - **Goldens compare bytes** of `dataOfType:` (CRLF, UTF-8). `.gitattributes` stops git rewriting line endings.
   `Localizable.strings` is part of the output contract, so a port commit must not change it.
 - **Accessibility identifiers** may be added to xibs for XCUITest. That doesn't count as a behaviour change.
+- **UI smoke tests** (`Tests/UI/SmokeUITests.swift`, row 17) are deliberately thin:
+  - Every test opens a **temp copy** of a fixture, with `BRICKSMITH_TEST_MODE=1`, the fixture library, and
+    `-"LDraw Path"` in the argument domain.
+  - Byte checks reuse the approved round-trip goldens: after undo + save, or Save As, the file must equal
+    `golden/roundtrip/<name>.ldr`.
+  - Quirks of driving AppKit are listed in LEARNINGS L68. Don't type or click in the app's windows while they run.
 - **Document tests** use `DocHarness.open` (`Tests/Unit/DocumentSpikeTests.swift`):
   - It loads the nib (`makeWindowControllers`, then touching `.window`) and orders the window in **fully transparent**
     with a fixed frame (L58).

@@ -41,6 +41,7 @@ their own port phase.
 | P2 | 🧑 Golden review: row 14 (`golden/prefs/*`) | **pending** | | 175 constants + 93 registered defaults; note the misspelt key "Syntak Color Colors" must stay |
 | P2 | 🧑 Golden review: row 15 (`golden/render/Mac15,7/*.png`, 8 images) | **pending** | | References for this machine only; other machines skip (not a CI gate) |
 | P2 | Perf baseline recorded (Mac15,7; `docs/perf-baseline.json`) | 2026-11-15 | agent | Two verification runs within budget (max 116%) |
+| P2 | UI smoke (row 17): `scripts/test.sh --ui`, 5 UI tests | 2026-11-15 | agent | No new goldens (reuses approved round-trip goldens). S26 noted. Test-mode focus-ring fix (L67) |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions

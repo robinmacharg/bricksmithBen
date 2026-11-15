@@ -116,8 +116,12 @@ static Box2 NSRectToBox2(NSRect rect)
 	// The focus ring lives in a separate overlay child window. In test runs the document window is never
 	// really on screen, the overlay computes an out-of-range frame and AppKit asserts (LEARNINGS L58).
 	// Purely visual; covered by the manual smoke checklist.
+	// The overlay is the view's only owner (it is autoreleased above), so in test mode drop the reference
+	// rather than leave it dangling: the next focus change would message a freed object (L67).
 	if([LDrawApplication isRunningTests] == NO)
 		[self addOverlayView:focusRingView];
+	else
+		self->focusRingView = nil;
 	
 	
 	//---------- Initialize instance variables ---------------------------------

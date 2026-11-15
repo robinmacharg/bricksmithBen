@@ -218,3 +218,16 @@ section. Each entry says what happened and what to do instead.
   build under their default configuration into a different products folder, and the app can't find their
   headers. The `xcodeproj` gem's `add_build_configuration` fails when targets differ in deployment target; create
   `XCBuildConfiguration` objects by hand.
+- **L67. A test-mode guard can leave an MRC object without an owner.** Skipping `addOverlayView:` in test mode
+  (L58) left `focusRingView`, which is only autoreleased, with no owner. The first focus change in a UI test then
+  messaged a freed object. To XCUITest this looked like a 35 s hang followed by "application is not running": the
+  Swift runtime's backtracer was writing a crash report. → When a guard skips the call that retains something,
+  nil the reference too. When a UI test "hangs", `sample` the app process before guessing.
+- **L68. XCUITest on this AppKit app.** Probe the tree (`app.debugDescription`) rather than guessing names (L38):
+  - NSPanels (Parts Browser, Preferences) are **Dialogs**, not Windows.
+  - Outline rows report "not hittable"; click them by coordinate.
+  - Menu items have only `_NS:` identifiers, and titles change with state ("Undo Duplicate"). macOS 13+ also
+    retitles "Preferences…" to "Settings…". Match by title prefix.
+  - Opening Preferences runs a modal "Choose LDraw Folder" panel when the `"LDraw Path"` default is unset. So pass
+    `-"LDraw Path" <copy>` as a launch argument (volatile argument domain), as well as the environment variable.
+  - Save-panel paths go through Cmd-Shift-G plus `typeText(path + "\r")`.
