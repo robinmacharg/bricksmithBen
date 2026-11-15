@@ -104,6 +104,16 @@ struct FixtureLibraryTrait: SuiteTrait, TestTrait, TestScoping {
 		FixtureLibrary.resetGlobalState()
 		LDrawPaths.shared().setPreferredLDrawPath(library.path)
 
+		// Some code reads the preference directly instead of the shared LDrawPaths (e.g. PartCatalogBuilder
+		// makes its own LDrawPaths). Put the fixture path in the volatile argument domain - it outranks the
+		// persistent domains and is never written to disk (LEARNINGS L53).
+		let defaults = UserDefaults.standard
+		let savedArguments = defaults.volatileDomain(forName: UserDefaults.argumentDomain)
+		var arguments = savedArguments
+		arguments[LDRAW_PATH_KEY] = library.path
+		defaults.setVolatileDomain(arguments, forName: UserDefaults.argumentDomain)
+		defer { defaults.setVolatileDomain(savedArguments, forName: UserDefaults.argumentDomain) }
+
 		try await FixtureLibrary.$current.withValue(library) {
 			try await function()
 		}

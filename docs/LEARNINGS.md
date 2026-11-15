@@ -169,3 +169,11 @@ section. Each entry says what happened and what to do instead.
   line, the commit runs regardless of `cmd`'s status, and a failed build gate got committed. → Put the gate on
   the same line as the commit (`scripts/build.sh && git commit …`) or use `|| exit 1`. Also, C prototypes after
   a class's `@end` need nullability too; the annotator now handles `extern` prototypes.
+- **L53. Some code reads the "LDraw Path" preference directly** (`PartCatalogBuilder` creates its own
+  `LDrawPaths`), so overriding the shared instance isn't enough. → The `.fixtureLibrary` trait also sets the path
+  in the volatile `NSArgumentDomain`, which outranks persistent domains and is never written. Exit-test children
+  don't inherit it, so they must set it themselves.
+- **L54. When a crash appears in a file the in-progress ARC edit touched, diff that edit first**
+  (`git show af3483f -- <file>`). BUG-015 was a removed `retain`/`autorelease` pair around a local
+  `NSAutoreleasePool`, in a file that still compiles with manual retain/release. The decisive experiment was
+  "call it exactly as the app does": it still crashed, so it was real.

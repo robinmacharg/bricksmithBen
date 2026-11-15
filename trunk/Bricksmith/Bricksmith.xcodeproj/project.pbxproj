@@ -199,6 +199,7 @@
 		0BFC4CFD1076F61900293B60 /* ViewportArranger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFC4CFB1076F61900293B60 /* ViewportArranger.h */; };
 		0BFC4CFE1076F61900293B60 /* ViewportArranger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BFC4CFC1076F61900293B60 /* ViewportArranger.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		204F991C3EC4DB0CAFFF5CB0 /* MatrixMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985092DCDEB090B005DCF071 /* MatrixMathTests.swift */; };
+		22A85FC75233854191C5DAE5 /* LibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */; };
 		2BB59F4309FEFE960077A885 /* AMSProgressBar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB5975E09FEFD250077A885 /* AMSProgressBar.framework */; };
 		2BF2E2CD0AB0FBB50026D5DB /* MLCad.ini in Resources */ = {isa = PBXBuildFile; fileRef = 2BF2E2CC0AB0FBB50026D5DB /* MLCad.ini */; };
 		2BF2E3030AB0FC5E0026D5DB /* MovePanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E2FF0AB0FC5E0026D5DB /* MovePanel.h */; };
@@ -619,6 +620,7 @@
 		E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawPathNames.m; sourceTree = "<group>"; };
 		E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessExitTests.swift; sourceTree = "<group>"; };
 		F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ParserRobustnessTests.swift; sourceTree = "<group>"; };
+		F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibraryTests.swift; sourceTree = "<group>"; };
 		F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoundTripTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -899,6 +901,7 @@
 				985092DCDEB090B005DCF071 /* MatrixMathTests.swift */,
 				B58CE9892121AF3E27970B98 /* SnappingTests.swift */,
 				5D19A96774CDADD19C441D18 /* ColourTests.swift */,
+				F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1498,6 +1501,7 @@
 				204F991C3EC4DB0CAFFF5CB0 /* MatrixMathTests.swift in Sources */,
 				64CEAFA0C7F9065C4C1FB8D2 /* SnappingTests.swift in Sources */,
 				DABC32FD2B1ABDBA096B70E1 /* ColourTests.swift in Sources */,
+				22A85FC75233854191C5DAE5 /* LibraryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -166,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define DRAW_WIREFRAME							1 << 1
 #define DRAW_BOUNDS_ONLY						1 << 3
 
-typedef void(^LDrawPartVisitor)(LDrawPart *);
+typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invoked as visitor(self) by -[LDrawPart applyToAllParts:] (verified 2026-11-15)
 
 
 

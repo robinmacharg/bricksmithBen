@@ -56,6 +56,74 @@ def annotate_type(t):
     return 'null_unspecified ' + t
 
 
+def annotate_block(t):
+    """`R (^)(P1 *a, Q b)` -> `null_unspecified R (^)(P1 * _Null_unspecified a, Q b)` (block itself + its pointer params)."""
+    head, _, rest = t.partition('(^)')
+    params = rest.strip()
+    if params.startswith('(') and params.endswith(')'):
+        inner = params[1:-1]
+        parts = []
+        def split_top(text):   # split on commas outside <...> generics
+            out, depth, cur = [], 0, ''
+            for ch in text:
+                depth += (ch == '<') - (ch == '>')
+                if ch == ',' and depth == 0:
+                    out.append(cur); cur = ''
+                else:
+                    cur += ch
+            return out + [cur]
+        for p in [x.strip() for x in split_top(inner)] if inner.strip() else []:
+            if ANNOTATED.search(p) or p in ('void', ''):
+                parts.append(p); continue
+            m = re.match(r'^(.*?\*)\s*(\w*)$', p)
+            if m:   # object/C pointer param
+                parts.append(f"{m.group(1)} _Null_unspecified {m.group(2)}".rstrip())
+            elif re.match(r'^(\w+Ref|id|Class)(\s+\w+)?$', p) or p.split()[0] in TYPEDEF_POINTERS:
+                bits = p.split(); parts.append(' '.join([bits[0], '_Null_unspecified'] + bits[1:]))
+            else:
+                parts.append(p)
+        params = '(' + ', '.join(parts) + ')'
+    return f"null_unspecified {head.strip()} (^){params}"
+
+
+def scan_types(code):
+    """Yield (start, end) spans of parenthesised method types following -/+ or ':' (balanced parens)."""
+    i = 0
+    while i < len(code):
+        j = code.find('(', i)
+        if j < 0:
+            return
+        before = code[:j].rstrip()
+        if not (before.endswith(':') or re.fullmatch(r'\s*[-+]', before)):
+            i = j + 1; continue
+        depth, k = 0, j
+        while k < len(code):
+            if code[k] == '(':
+                depth += 1
+            elif code[k] == ')':
+                depth -= 1
+                if depth == 0:
+                    break
+            k += 1
+        yield j, k
+        i = k + 1
+
+
+def annotate_code(code, problems, stripped, path):
+    spans = list(scan_types(code))
+    for j, k in reversed(spans):
+        t = code[j + 1:k]
+        if '(^)' in t:
+            new = t if ANNOTATED.search(t.partition('(^)')[0]) else annotate_block(t)
+        else:
+            new = annotate_type(t)
+        if (POINTERISH.search(new) or new.strip() in TYPEDEF_POINTERS) and not ANNOTATED.search(new) \
+                and not new.strip().startswith('SEL'):
+            problems.append(f'{path}: unannotated pointer in: {stripped}')
+        code = code[:j + 1] + new + code[k:]
+    return code
+
+
 def process(path):
     text = open(path).read()
     if 'NS_ASSUME_NONNULL_BEGIN' in text:
@@ -72,12 +140,7 @@ def process(path):
         if in_block and (re.match(r'^[-+]\s*\(', stripped) or in_decl):
             in_decl = not stripped.split('//')[0].rstrip().endswith(';')
             code, _, comment = line.partition('//')
-            code = TYPE.sub(lambda m: f"{m.group('pre')}({annotate_type(m.group('type'))})", code)
-            for m in TYPE.finditer(code):
-                t = m.group('type')
-                if (POINTERISH.search(t) or t.strip() in TYPEDEF_POINTERS) and not ANNOTATED.search(t) \
-                        and not t.strip().startswith('SEL'):
-                    problems.append(f'{path}: unannotated pointer in: {stripped}')
+            code = annotate_code(code, problems, stripped, path)
             line = code + ('//' + comment if comment else '')
         out.append(line)
     text = '\n'.join(out)
@@ -87,6 +150,8 @@ def process(path):
         params = re.sub(r'(\w+)\s*\*\s*(?!_N|\*)(\w+)', r'\1 * _Null_unspecified \2', m.group(2))
         return m.group(1) + params + m.group(3)
     text = re.sub(r'(^extern\s[^(;]*\()([^;]*)(\)\s*;)', c_proto, text, flags=re.M)
+    # extern pointer variables: "extern NSString *Name;" -> "extern NSString * _Null_unspecified Name;"
+    text = re.sub(r'^(extern\s+(?:const\s+)?\w+)\s*\*\s*(?!_N)(\w+)\s*;', r'\1 * _Null_unspecified \2;', text, flags=re.M)
     first = re.search(r'^@(interface|protocol)\b(?!.*;\s*$)', text, re.M)
     # wrap from the first @interface/@protocol definition to the last @end
     start = first.start()
