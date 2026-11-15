@@ -202,3 +202,7 @@ section. Each entry says what happened and what to do instead.
   between OS versions. → Serialise to compact sorted JSON (`JSONSerialization` with `.sortedKeys`).
 - **L62. Private ObjC actions can be driven from tests by selector** (`perform(NSSelectorFromString("generateMinifigure:"))`)
   inside `ObjC.run`, mirroring the order the app calls them (`restoreFromPreferences` first, as `-runModal` does).
+- **L63. `NSNotificationName` constants import as `NSNotification.Name` members with the `Notification` suffix
+  removed** (`LDrawColorDidChangeNotification` becomes `.LDrawColorDidChange`), so generated Swift must use that
+  spelling. Also, the registration domain mixes in system keys (`Apple*`, `NS*`, `METAL_*`, `XCT*`) and keys that
+  views register lazily. Filter those out of goldens, or the golden depends on the machine and on test order.

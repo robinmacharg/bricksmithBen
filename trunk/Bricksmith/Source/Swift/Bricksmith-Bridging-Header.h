@@ -76,3 +76,4 @@
 
 // --- Test support (group 3) ---
 #import "BricksmithTestSupport.h"
+#import "PreferencesDialogController.h"
