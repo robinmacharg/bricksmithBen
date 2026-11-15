@@ -24,9 +24,27 @@ TYPE = re.compile(r'(?P<pre>(?:^\s*[-+]\s*|:\s*))\((?P<type>[^()]*?)\)')
 POINTERISH = re.compile(r'(\*|\bid\b|\bClass\b|\b\w+Ref\b|\bdispatch_\w+_t\b|\bSEL\b(?!ector)|\^)')
 
 
+def project_pointer_typedefs():
+    """Names of block typedefs (`typedef void (^Name)(...)`) and pointer typedefs (`typedef T *Name;`) in the
+    app's headers. They hide their pointer-ness, so a '*' scan misses them (L36, L45)."""
+    import glob, os
+    root = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                        'trunk', 'Bricksmith', 'Source')
+    names = set()
+    for h in glob.glob(os.path.join(root, '**', '*.h'), recursive=True):
+        text = open(h, errors='replace').read()
+        names.update(re.findall(r'typedef[^;{]*\(\s*\^\s*(\w+)\s*\)', text))
+        names.update(re.findall(r'typedef\s+\w+\s*\*\s*(\w+)\s*;', text))
+    return names
+
+
+TYPEDEF_POINTERS = project_pointer_typedefs()
+
+
 def annotate_type(t):
     t = t.strip()
-    if ANNOTATED.search(t) or not POINTERISH.search(t):
+    bare = re.sub(r'\b(const|__kindof|__unsafe_unretained|__weak|__strong)\b', '', t).strip()
+    if ANNOTATED.search(t) or not (POINTERISH.search(t) or bare in TYPEDEF_POINTERS):
         return t
     levels = t.count('*') + (1 if re.match(r'^(id|Class)\b', t) else 0)
     if levels >= 2:  # multi-level pointer (incl. "id *"): annotate each level
@@ -57,7 +75,8 @@ def process(path):
             code = TYPE.sub(lambda m: f"{m.group('pre')}({annotate_type(m.group('type'))})", code)
             for m in TYPE.finditer(code):
                 t = m.group('type')
-                if POINTERISH.search(t) and not ANNOTATED.search(t) and not t.strip().startswith('SEL'):
+                if (POINTERISH.search(t) or t.strip() in TYPEDEF_POINTERS) and not ANNOTATED.search(t) \
+                        and not t.strip().startswith('SEL'):
                     problems.append(f'{path}: unannotated pointer in: {stripped}')
             line = code + ('//' + comment if comment else '')
         out.append(line)

@@ -20,6 +20,8 @@
 // Class:		LDrawContainer
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawContainer : LDrawDirective <NSCoding, NSCopying, LDrawObserver>
 {
 	@protected
@@ -30,24 +32,26 @@
 }
 
 //Accessors
-- (NSArray *) allEnclosedElements;
+- (null_unspecified NSArray *) allEnclosedElements;
 - (Box3) projectedBoundingBoxWithModelView:(Matrix4)modelView
 								projection:(Matrix4)projection
 									  view:(Box2)viewport;
-- (NSInteger) indexOfDirective:(LDrawDirective *)directive;
-- (NSMutableArray *) subdirectives;
+- (NSInteger) indexOfDirective:(null_unspecified LDrawDirective *)directive;
+- (null_unspecified NSMutableArray *) subdirectives;
 
 - (void) setPostsNotifications:(BOOL)flag;
 - (void) setSubdirectiveSelected:(BOOL)flag;
 
 //Actions
-- (void) addDirective:(LDrawDirective *)directive;
-- (void) collectPartReport:(PartReport *)report;
-- (void) applyToAllParts:(LDrawPartVisitor) visitor;
-- (void) insertDirective:(LDrawDirective *)directive atIndex:(NSInteger)index;
-- (void) removeDirective:(LDrawDirective *)doomedDirective;
+- (void) addDirective:(null_unspecified LDrawDirective *)directive;
+- (void) collectPartReport:(null_unspecified PartReport *)report;
+- (void) applyToAllParts:(null_unspecified LDrawPartVisitor) visitor;
+- (void) insertDirective:(null_unspecified LDrawDirective *)directive atIndex:(NSInteger)index;
+- (void) removeDirective:(null_unspecified LDrawDirective *)doomedDirective;
 - (void) removeDirectiveAtIndex:(NSInteger)index;
 
-- (BOOL) acceptsDroppedDirective:(LDrawDirective *)directive;
+- (BOOL) acceptsDroppedDirective:(null_unspecified LDrawDirective *)directive;
 
 @end
+
+NS_ASSUME_NONNULL_END

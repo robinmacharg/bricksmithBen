@@ -1,0 +1,14 @@
+LDrawFile (1)
+  LDrawMPDModel (6)
+    LDrawStep (1)
+      LDrawPart: 1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+    LDrawStep (1)
+      LDrawPart: 1 1 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+    LDrawStep (1)
+      LDrawPart: 1 2 0 -48 0 1 0 0 0 1 0 0 0 1 3001.dat
+    LDrawStep (1)
+      LDrawPart: 1 14 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+    LDrawStep (1)
+      LDrawPart: 1 15 0 -96 0 1 0 0 0 1 0 0 0 1 3003.dat
+    LDrawStep (1)
+      LDrawPart: 1 0 0 -120 0 1 0 0 0 1 0 0 0 1 3005.dat

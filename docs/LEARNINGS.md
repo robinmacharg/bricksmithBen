@@ -148,3 +148,10 @@ section. Each entry says what happened and what to do instead.
 - **L44. Ask the spec, not memory.** The local LDraw spec copies (`docs/reference/ldraw-spec`) turned two
   suspicions into confirmed bugs (BUG-009 TEXMAP, BUG-010 encoding). They also showed `0x4` codes are not in the
   spec. → Check `AGENT-NOTES.md` before calling LDraw behaviour right or wrong.
+- **L45. Block typedefs hide pointers too** (`LDrawPartVisitor`). → `annotate-unspecified.py` now collects every
+  block and pointer typedef in the app's headers and treats those names as pointers.
+- **L46. Characterise both modes of mode-dependent behaviour.** Parsed trees don't post notifications; a document
+  turns them on (`setPostsNotifications:YES`). Testing only the default mode would have recorded "nothing
+  happens", which isn't what the app sees.
+- **L47. Put a readable diff in every equality assertion** (`Golden.firstDifference`, or `before -> after`). The
+  first BUG-011/BUG-012 failures said only "Expectation failed"; the diagnostics found both bugs in one rerun.

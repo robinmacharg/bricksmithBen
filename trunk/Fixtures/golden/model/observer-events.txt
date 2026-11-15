@@ -1,0 +1,5 @@
+## part.setLDrawColor(4)
+## part.moveBy(10,0,0)
+part: message 2 from LDrawPart
+## step.addDirective(copy of part)
+## step.removeDirective(copy of part)

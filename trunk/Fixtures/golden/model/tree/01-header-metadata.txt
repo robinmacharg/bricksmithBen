@@ -1,0 +1,6 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (3)
+      LDrawMetaCommand: 0 !LDRAW_ORG Unofficial_Model
+      LDrawMetaCommand: 0 !LICENSE Redistributable under CCAL version 2.0 : see CAre
+      LDrawPart: 1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat

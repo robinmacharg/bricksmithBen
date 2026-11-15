@@ -30,6 +30,7 @@ their own port phase.
 | P2 | 🧑 Golden review: `Fixtures/golden/roundtrip/*` (row 1) | 2026-11-15 | maintainer | Diffs vs inputs summarised in the P2 row-1 commit message; BUG-003/004 and S14/S15 found |
 | P2 | 🧑 Golden review: row 2 (`golden/format/*`, `golden/roundtrip/1[0-4]*`) | **pending** | | Found BUG-005, BUG-006, S16; disproved suspected RGB truncation (768 values checked) |
 | P2 | 🧑 Golden review: row 3 (`golden/robustness/cases.txt`) | **pending** | | Found BUG-007, BUG-008, S17, S18 |
+| P2 | 🧑 Golden review: row 4 (`golden/model/**`; archives in `Fixtures/archives`) | **pending** | | Found BUG-011, BUG-012, S19 |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
@@ -46,6 +47,7 @@ their own port phase.
 | `LDrawUtilities.h` | 2026-11-15 | All except `classForDirectiveBeginningWithLine:` (nullable, BUG-001) and `stringFromFileData:` (nullable) | `RoundTripTests`, `KnownIssueTests` |
 | `LDrawDirective.h` | 2026-11-15 | All except `parentGroup:` (nullable: callers pass nil) | `RoundTripTests` |
 | `LDrawFile.h` | 2026-11-15 | All except `parseFromFileContents:` (nullable). `+file` is pinned as `NS_SWIFT_NAME(file())` (L40) | `RoundTripTests`, `FormatTests` |
+| `LDrawContainer.h` | 2026-11-15 | All (tool) | `ObjectModelTests` |
 | `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
 
 ## Uncovered-line ledger (tiers A and B)

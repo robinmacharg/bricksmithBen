@@ -1,0 +1,10 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (7)
+      LDrawColor: 0 !COLOUR Fixture_Purple CODE 900 VALUE #7F00FF EDGE #333333
+      LDrawPart: 1 0 0 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 15 20 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 16 40 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 16 60 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 0x2FF8000 80 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawLine: 2 24 0 0 0 0 -8 0

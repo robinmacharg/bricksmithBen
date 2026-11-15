@@ -1,0 +1,9 @@
+LDrawFile (1)
+  LDrawMPDModel (1)
+    LDrawStep (6)
+      LDrawPart: 1 0x2FF8000 0 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 0x2010203 20 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 0x27F7F7F 40 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 0x3FF0000 60 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 0x2000000 80 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+      LDrawPart: 1 0x2040000 100 0 0 1 0 0 0 1 0 0 0 1 3024.dat

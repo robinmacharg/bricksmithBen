@@ -211,6 +211,7 @@
 		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
 		2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
+		5701DABC93A382AFA6BC4B71 /* ObjectModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */; };
 		5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		60669DDCCFC8E5EFBE510A87 /* RoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */; };
 		6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */; };
@@ -567,6 +568,7 @@
 		73772E30A6856B15E73A951A /* ComputationalGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComputationalGeometry.h; sourceTree = "<group>"; };
 		73772F01F06AC293E3F650C4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		741501FF6219F19D814635AC /* Golden.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Golden.swift; sourceTree = "<group>"; };
+		7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ObjectModelTests.swift; sourceTree = "<group>"; };
 		81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		855E62A9683786D2025D0557 /* FormatTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FormatTests.swift; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
@@ -887,6 +889,7 @@
 				37B9F1A1B51FCAFFB2D6E51B /* KnownIssueTests.swift */,
 				855E62A9683786D2025D0557 /* FormatTests.swift */,
 				F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */,
+				7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1482,6 +1485,7 @@
 				F9B36DA0A7993C7FBB241D83 /* KnownIssueTests.swift in Sources */,
 				F477FA6F72E134A874EA93C1 /* FormatTests.swift in Sources */,
 				BBE9FA5F68E37B0B8CC00EB0 /* ParserRobustnessTests.swift in Sources */,
+				5701DABC93A382AFA6BC4B71 /* ObjectModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
