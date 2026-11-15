@@ -173,7 +173,7 @@ struct TextureCoverageTests {
 		let texture = try #require(Tex.firstTexture(file))
 		#expect(texture.imageDisplayName() == "my sticker.png")
 		let again = try Tex.load(Tex.body(Tex.text(file)))
-		withKnownIssue("BUG-TBD-texmap-quotes: -[LDrawTexture write] drops the quotes around an image name with spaces") {
+		withKnownIssue("BUG-020: -[LDrawTexture write] drops the quotes around an image name with spaces") {
 			#expect(Tex.text(file).contains("\"my sticker.png\""), "written: \(Tex.text(file))")
 			#expect(Tex.firstTexture(again)?.imageDisplayName() == "my sticker.png")
 		}
@@ -186,7 +186,7 @@ struct TextureCoverageTests {
 									.joined(separator: "\n"))
 		let step = try DrawHarness.stepSync(file)
 		let texture = try #require(Tex.firstTexture(file))
-		withKnownIssue("BUG-TBD-texmap-next: 0 !TEXMAP NEXT is parsed like START with no END, so it takes in the following lines but one") {
+		withKnownIssue("BUG-022: 0 !TEXMAP NEXT is parsed like START with no END, so it takes in the following lines but one") {
 			#expect(texture.subdirectives().count == 1, "texture: \(Tex.tree(texture).joined(separator: " | "))")
 			#expect(Tex.children(step).count == 3, "step: \(Tex.tree(step).joined(separator: " | "))")
 		}
@@ -201,7 +201,7 @@ struct TextureCoverageTests {
 		let toStep = try Tex.load([Tex.start, "0 !: \(Tex.triA)", "0 STEP", Tex.part].joined(separator: "\n"))
 		let textureToStep = try #require(Tex.firstTexture(toStep))
 		let stepTree = Tex.tree(try DrawHarness.stepSync(toStep)).joined(separator: " | ")
-		withKnownIssue("BUG-TBD-texmap-unterminated: a texture with no END stops one line short; its last line falls out of the texture (a !: line becomes an undrawn meta command)") {
+		withKnownIssue("BUG-021: a texture with no END stops one line short; its last line falls out of the texture (a !: line becomes an undrawn meta command)") {
 			#expect(textureToEnd.subdirectives().count == 2, "texture: \(Tex.tree(textureToEnd).joined(separator: " | "))")
 			#expect(textureToStep.subdirectives().count == 1, "step: \(stepTree)")
 		}
@@ -214,7 +214,7 @@ struct TextureCoverageTests {
 		let step = try DrawHarness.stepSync(file)
 		let outer = try #require(Tex.firstTexture(file))
 		#expect(outer.subdirectives().count == 3, "outer children: \(Tex.tree(outer).joined(separator: " | "))")
-		withKnownIssue("BUG-TBD-texmap-nested-range: with a nested START/END, the outer texture's range is wrong unless the lines after the inner END equal the lines inside it") {
+		withKnownIssue("BUG-023: with a nested START/END, the outer texture's range is wrong unless the lines after the inner END equal the lines inside it") {
 			#expect(Tex.children(step).count == 2, "step: \(Tex.tree(step).joined(separator: " | "))")
 		}
 	}
@@ -226,7 +226,7 @@ struct TextureCoverageTests {
 								 Tex.triB, "0 !TEXMAP END", Tex.part].joined(separator: "\n"))
 		let before = Tex.tree(file)
 		let reopened = try Tex.load(Tex.body(Tex.text(file)))
-		withKnownIssue("BUG-TBD-texmap-nested-write: a nested texture's END is written without 0 !:, so on reopening it closes the outer texture") {
+		withKnownIssue("BUG-024: a nested texture's END is written without 0 !:, so on reopening it closes the outer texture") {
 			#expect(Tex.tree(reopened) == before, "reopened: \(Tex.tree(reopened).joined(separator: " | "))")
 		}
 	}
@@ -344,7 +344,7 @@ struct TextureCoverageTests {
 			weakChild = Tex.children(texture).first as? LDrawDirective
 		}
 		#expect(weakTexture == nil, "the texture leaked")
-		withKnownIssue("BUG-TBD-texture-child-leak: -[LDrawTexture initWithLines:...] never releases the directives it allocates (MRC), so they outlive the texture") {
+		withKnownIssue("BUG-025: -[LDrawTexture initWithLines:...] never releases the directives it allocates (MRC), so they outlive the texture") {
 			#expect(weakChild == nil, "the texture's child leaked")
 		}
 	}

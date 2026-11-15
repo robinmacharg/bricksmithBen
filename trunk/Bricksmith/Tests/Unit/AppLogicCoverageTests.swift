@@ -505,7 +505,7 @@ struct MinifigureCoverageTests {
 		// MLCad.ini line 1424 ("Rear Sticker White "1" on Transparent Background") has quotes inside its quoted
 		// description; the parser splits there and yields a part named " on Transparent Background" with a
 		// garbage matrix, which the generator then writes into the model.
-		withKnownIssue("BUG-TBD-mlcad-embedded-quotes: an MLCad.ini entry with quotes in its description becomes a bogus part") {
+		withKnownIssue("BUG-026: an MLCad.ini entry with quotes in its description becomes a bogus part") {
 			#expect(bad.isEmpty, "entries that are not part references:\n\(bad.joined(separator: "\n"))")
 		}
 	}

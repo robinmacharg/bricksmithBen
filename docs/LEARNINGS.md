@@ -259,3 +259,19 @@ section. Each entry says what happened and what to do instead.
 - **L74. Never chain a commit after a test run with `;`.** Commit `06ba93d` went in while 8 render tests were
   failing (the L51 mistake again). Use `&&` from the test command to the commit, with `setopt pipefail` and a
   grep that fails on failure, or check the result first and commit in a separate call.
+- **L75. Parallel agents in worktrees (learned from the P2 coverage work):**
+  - Worktrees started on an old commit (`b19a8ab`), not the current HEAD. Each agent had to `git reset --hard` to
+    the base. → Tell agents the base commit explicitly, and check it.
+  - Register placeholder test files in the target first, so agents never edit `project.pbxproj`. Their commits then
+    cherry-pick cleanly.
+  - Concurrent `scripts/test.sh` runs share the debug defaults domain (snapshot/restore races). Autosaved
+    window/split-view state then drifts between runs, which made render geometry unstable (L73).
+- **L76. Swift gotchas from the same work:**
+  - `.first as? T` on an imported `NSArray`/`NSMutableArray` resolves to `first(where:)`, so the cast silently
+    fails, with only a warning. Use `firstObject`, or cast to `[Any]` first.
+  - `NSTableView.style = .plain` gives deterministic row geometry; the default style adds OS-dependent padding.
+  - Undeclared or deprecated ObjC methods can be called through `method(for:)` plus `unsafeBitCast` to a
+    `@convention(c)` type.
+  - Test preferences through the volatile argument domain, never a persistent domain.
+  - Read private outlets by KVC name only where necessary. The port must keep those names (listed in
+    `AppLogicCoverageTests`).

@@ -156,7 +156,7 @@ struct LSynthCoverageTests {
 	func hideRoundTrip() throws {
 		let (file, _) = try SynthKit.load(SynthKit.block("PNEUMATIC_HOSE", colour: 16, visibility: "HIDE"))
 		let written = SynthKit.lines(String(decoding: RoundTrip.save(file), as: UTF8.self))
-		withKnownIssue("BUG-TBD-lsynth-hide: -[LDrawLSynth write] always writes 0 SYNTH SHOW, so HIDE becomes SHOW on save") {
+		withKnownIssue("BUG-027: -[LDrawLSynth write] always writes 0 SYNTH SHOW, so HIDE becomes SHOW on save") {
 			#expect(written.contains("\n0 SYNTH HIDE\n"), "\(written)")
 		}
 	}
@@ -176,7 +176,7 @@ struct LSynthCoverageTests {
 			"""
 		let (file, _) = try SynthKit.load(body)
 		let written = SynthKit.lines(String(decoding: RoundTrip.save(file), as: UTF8.self))
-		withKnownIssue("BUG-TBD-lsynth-lines-dropped: lines other than SYNTH directives and type-1 parts inside an LSynth block are dropped on parse, so lost on save") {
+		withKnownIssue("BUG-028: lines other than SYNTH directives and type-1 parts inside an LSynth block are dropped on parse, so lost on save") {
 			#expect(written.contains("\n\(line)\n"), "\(written)")
 		}
 	}
@@ -266,7 +266,7 @@ struct LSynthCoverageTests {
 		// -redComponent raises (it needs an RGB colour space).
 		let systemRed = ArgumentPrefs.archivedColour(NSColor.systemRed)
 		try ArgumentPrefs.with([LSYNTH_SELECTION_MODE_KEY: mode, LSYNTH_SELECTION_COLOR_KEY: systemRed]) {
-			withKnownIssue("BUG-TBD-lsynth-selection-catalog-colour: colorSelectedSynthesizedParts: calls -redComponent on the default (catalog) selection colour and raises") {
+			withKnownIssue("BUG-029: colorSelectedSynthesizedParts: calls -redComponent on the default (catalog) selection colour and raises") {
 				#expect(throws: Never.self) { try ObjC.run { synth.setSelected(true) } }
 			}
 			// Deselecting uses the block's own colour and is unaffected.
@@ -414,7 +414,7 @@ struct LSynthCoverageTests {
 			_ = file.boxTest(Box2(origin: Point2(x: -0.1, y: -0.85), size: Size2(width: 0.2, height: 0.2)),
 							 transform: HitLayout.transform, boundsOnly: false, creditObject: nil, hits: hits)
 		}
-		withKnownIssue("BUG-TBD-lsynth-bounds: LDrawLSynth boundingBox3 covers only the constraints, so synthesized parts outside them can't be clicked or marquee-selected") {
+		withKnownIssue("BUG-031: LDrawLSynth boundingBox3 covers only the constraints, so synthesized parts outside them can't be clicked or marquee-selected") {
 			#expect(lower === synth, "click on the lower synthesized part picked \(String(describing: lower))")
 			#expect(hits.count == 1, "marquee around the lower synthesized part hit \(hits.count) objects")
 		}
@@ -433,7 +433,7 @@ struct LSynthCoverageTests {
 			synth.depthTest(Point2(x: -0.5, y: -0.1), inBox: Self.clickBox(Point2(x: -0.5, y: -0.1)),
 							transform: HitLayout.transform, creditObject: nil, bestObject: &best, bestDepth: &depth)
 		}
-		withKnownIssue("BUG-TBD-lsynth-hidden-pickable: boxTest:/depthTest: ignore the block's hidden flag (drawSelf: and hitTest: honour it)") {
+		withKnownIssue("BUG-030: boxTest:/depthTest: ignore the block's hidden flag (drawSelf: and hitTest: honour it)") {
 			#expect(hits.count == 0, "marquee picked a hidden block")
 			#expect(best == nil, "click picked \(String(describing: best)) in a hidden block")
 		}
