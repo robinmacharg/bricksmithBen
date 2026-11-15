@@ -74,6 +74,9 @@
 #import "RelatedParts.h"
 #import "SearchPanelController.h"
 #import "PieceCountPanel.h"
+#import "LDrawColorWell.h"
+#import "LDrawColorBar.h"
+#import "BackgroundColorView.h"
 
 // --- Test support (group 3) ---
 #import "BricksmithTestSupport.h"

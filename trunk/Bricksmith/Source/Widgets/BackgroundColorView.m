@@ -54,7 +54,8 @@
 - (void)drawRect:(NSRect)rect
 {
 	[self->backgroundColor set];
-	NSRectFill(rect);
+	// Clip to the bounds: views do not clip to bounds (macOS 14 SDK), so rect may exceed the view (BUG-033).
+	NSRectFill(NSIntersectionRect(rect, [self bounds]));
 	
 }//end drawRect:
 

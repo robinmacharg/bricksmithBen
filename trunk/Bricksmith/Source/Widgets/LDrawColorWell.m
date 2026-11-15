@@ -136,7 +136,8 @@ static LDrawColorWell *sharedActiveColorWell = nil;
 {
 	[super drawRect:aRect];
 	
-	NSRect	 colorRect = NSInsetRect(aRect, 4, 4);
+	// The bounds, not the dirty rect: views do not clip to bounds (macOS 14 SDK), so aRect may exceed the well (BUG-033).
+	NSRect	 colorRect = NSInsetRect([self bounds], 4, 4);
 	
 	[self->nsColor set];
 	NSRectFill(colorRect);

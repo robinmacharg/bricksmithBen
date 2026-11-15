@@ -27,14 +27,18 @@
 {
 	[super drawRect:aRect]; //does nothing.
 	
+	// Paint the bounds, not the dirty rect: views do not clip to bounds (macOS 14 SDK), so aRect may exceed the bar,
+	// and a partial dirty rect would draw the border in the wrong place (BUG-033).
+	NSRect bounds = [self bounds];
+	
 //	NSBezierPath *rectPath = [NSBezierPath bezierPathWithRect:aRect];
 //	[rectPath stroke];
 	
 	[[NSColor grayColor] set];
-	NSRectFill(aRect);
+	NSRectFill(bounds);
 	
 	[[NSColor whiteColor] set];
-	NSRectFill(NSInsetRect(aRect, 1, 1));
+	NSRectFill(NSInsetRect(bounds, 1, 1));
 	
 	//We can let the OS do it, but I'm not going to. Basically, it's because 
 	// their display of transparent colors is mind-bogglingly ugly.
@@ -42,7 +46,7 @@
 	// which I am for no apparent reason.
 //	[self->nsColor drawSwatchInRect:NSInsetRect(aRect, 2, 2)];
 	[self->nsColor set];
-	NSRectFill(NSInsetRect(aRect, 2, 2));
+	NSRectFill(NSInsetRect(bounds, 2, 2));
 	
 }//end drawRect:
 

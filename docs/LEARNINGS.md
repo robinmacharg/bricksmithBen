@@ -306,3 +306,16 @@ section. Each entry says what happened and what to do instead.
     `NSViewUpdateVibrancyForSubtree`). → Bare outlets become `IBOutlet __unsafe_unretained`, matching MRC; NSDrawer
     and some other AppKit classes can't be weakly referenced. The exceptions are outlets the original code retained
     itself and released in `dealloc` (DocumentToolbarController's tool views): they stay strong.
+- **L80. A Debug build can draw differently from a release build of the same code, on the same Mac.** The P3 manual
+  smoke found black and yellow panels (BUG-033). They came from views that fill their dirty rect instead of their
+  bounds. The pre-port snapshot drew them correctly under the release bundle id and wrongly when built with
+  `com.AllenSmith.Bricksmith.debug`; preferences, window position and displays were ruled out. → When a UI symptom
+  appears, A/B the *same bundle id* before blaming a commit, and fix the drawing code rather than relying on it.
+  Related traps found on the way:
+  - Commits before `50b795b` (including tag `snapshot-20261114-pre-swift-plan`) build with the **real** bundle id
+    and write the user's real preferences when launched. Build them with
+    `PRODUCT_BUNDLE_IDENTIFIER=com.AllenSmith.Bricksmith.debug`, or back up and restore the real domain.
+  - `defaults import` **merges** into a domain; it does not replace it. To restore, `defaults delete` the domain
+    first (or delete the keys the run added), then diff against the backup.
+  - UI-scripting a click (System Events) on a button inside an `NSApp runModalForWindow:` session did not trigger
+    its action here; drive modal dialogs from tests by calling the action directly.

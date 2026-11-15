@@ -575,3 +575,58 @@ struct SmallAppLogicCoverageTests {
 		manager.documentSignOut(fileB)
 	}
 }
+
+@MainActor
+@Suite("Widgets: colour views paint only inside their bounds (BUG-033)", .fixtureLibrary, .serialized)
+struct ColorWellTests {
+
+	/// BUG-033: these views filled the dirty rect they were given instead of their bounds. Since the macOS 14 SDK
+	/// views don't clip to bounds, so AppKit can pass a dirty rect larger than the view, and the colour covered the
+	/// whole panel (Find, Minifigure Generator, inspector) in Debug builds.
+	/// Draws `view` (40x20) at (30,40) on a white 100x100 canvas with the whole canvas as the dirty rect.
+	static func paint(_ view: NSView) throws -> NSBitmapImageRep {
+		let rep = try #require(NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 100, pixelsHigh: 100, bitsPerSample: 8,
+			samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+		let context = try #require(NSGraphicsContext(bitmapImageRep: rep))
+		NSGraphicsContext.saveGraphicsState()
+		NSGraphicsContext.current = context
+		NSColor.white.setFill(); NSRect(x: 0, y: 0, width: 100, height: 100).fill()
+		let shift = NSAffineTransform(); shift.translateX(by: 30, yBy: 40); shift.concat()
+		view.draw(NSRect(x: -30, y: -40, width: 100, height: 100))
+		NSGraphicsContext.restoreGraphicsState()
+		return rep
+	}
+
+	static func isRed(_ rep: NSBitmapImageRep, _ x: Int, _ y: Int) -> Bool {   // bitmap rows run top-down
+		guard let c = rep.colorAt(x: x, y: 99 - y)?.usingColorSpace(.deviceRGB) else { return false }
+		return c.redComponent > 0.5 && c.greenComponent < 0.3 && c.blueComponent < 0.3
+	}
+
+	static func expectPaintedInsideOnly(_ view: NSView) throws {
+		let rep = try paint(view)
+		#expect(isRed(rep, 50, 50), "\(type(of: view)): its own centre is not painted")
+		for (x, y) in [(5, 5), (95, 95), (5, 95), (95, 5), (50, 10), (50, 90)] {
+			#expect(!isRed(rep, x, y), "\(type(of: view)): colour painted outside the view at (\(x), \(y))")
+		}
+	}
+
+	static func red() throws -> LDrawColor { try #require(ColorLibrary.shared()?.color(forCode: LDrawColorT(rawValue: 4))) }
+
+	@Test("LDrawColorWell") func colorWell() throws {
+		let well = LDrawColorWell(frame: NSRect(x: 0, y: 0, width: 40, height: 20))
+		well.setLDrawColor(try Self.red())
+		try Self.expectPaintedInsideOnly(well)
+	}
+
+	@Test("LDrawColorBar") func colorBar() throws {
+		let bar = LDrawColorBar(frame: NSRect(x: 0, y: 0, width: 40, height: 20))
+		bar.setLDrawColor(try Self.red())
+		try Self.expectPaintedInsideOnly(bar)
+	}
+
+	@Test("BackgroundColorView") func backgroundView() throws {
+		let view = BackgroundColorView(frame: NSRect(x: 0, y: 0, width: 40, height: 20))
+		view.setBackgroundColor(.red)
+		try Self.expectPaintedInsideOnly(view)
+	}
+}
