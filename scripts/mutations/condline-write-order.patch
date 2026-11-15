@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m
+index ee66111..b42c277 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m
+@@ -254,7 +254,7 @@
+ 				[LDrawUtilities outputStringForFloat:vertex2.y],
+ 				[LDrawUtilities outputStringForFloat:vertex2.z],
+ 				
+-				[LDrawUtilities outputStringForFloat:conditionalVertex1.x],
++				[LDrawUtilities outputStringForFloat:conditionalVertex2.x],
+ 				[LDrawUtilities outputStringForFloat:conditionalVertex1.y],
+ 				[LDrawUtilities outputStringForFloat:conditionalVertex1.z],
+ 		

@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m
+index 28528f1..ecf06ae 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m
+@@ -325,7 +325,7 @@
+ - (void) insertDirective:(LDrawDirective *)directive atIndex:(NSInteger)index
+ {
+ 	// Insert
+-	[containedObjects insertObject:directive atIndex:index];
++	[containedObjects insertObject:directive atIndex:(index > 0 ? index - 1 : 0)];
+ 	[directive setEnclosingDirective:self];
+ 	
+ 	// Apply notification policy to new children

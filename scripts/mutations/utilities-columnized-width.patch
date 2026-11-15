@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+index 9a0bc33..ac4244d 100644
+--- a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
++++ b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+@@ -477,7 +477,7 @@ static NSString				*defaultAuthor		= @"anonymous";
+ 	{
+ 		// Make a nice wide fixed-width string which will force the numbers into
+ 		// columns.
+-		outputString = [NSString stringWithFormat:@"%12f", number];
++		outputString = [NSString stringWithFormat:@"%11f", number];
+ 	}
+ 	else
+ 	{

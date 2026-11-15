@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+index 9a0bc33..0ecda7c 100644
+--- a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
++++ b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+@@ -498,7 +498,7 @@ static NSString				*defaultAuthor		= @"anonymous";
+ 		{
+ 			endOfString--;
+ 		}
+-		if(*endOfString != '.')
++		if(*endOfString == '.')
+ 		{
+ 			// We must be pointing at a non-zero digit, so lop off the
+ 			// subsequent character that is a zero.

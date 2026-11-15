@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+index 837fdb1..cef6734 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+@@ -580,7 +580,7 @@
+ 																angleZYX.x, 
+ 																angleZYX.y, 
+ 																angleZYX.z, 
+-																LDRAW_ROTATION_RELATIVE ];
++																LDRAW_ROTATION_ABSOLUTE ];
+ 				break;
+ 			
+ 			case LDrawStepRotationAbsolute:

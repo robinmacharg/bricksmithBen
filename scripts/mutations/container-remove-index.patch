@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m
+index 28528f1..ea74a17 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawContainer.m
+@@ -366,7 +366,7 @@
+ 	// case we'll puke.
+ 	[doomedDirective removeObserver:self];
+ 	
+-	[containedObjects removeObjectAtIndex:index]; //or disowned at least.
++	[containedObjects removeObjectAtIndex:0]; //or disowned at least.
+ 	
+ 	if(self->postsNotifications == YES)
+ 	{

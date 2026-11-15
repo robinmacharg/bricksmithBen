@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+index 9a0bc33..6d4d94d 100644
+--- a/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
++++ b/trunk/Bricksmith/Source/LDraw/Support/LDrawUtilities.m
+@@ -197,7 +197,7 @@ static NSString				*defaultAuthor		= @"anonymous";
+ 				components[0] = (GLfloat) ((hexBytes >> 2*8) & 0xFF) / 255; // Red
+ 				components[1] = (GLfloat) ((hexBytes >> 1*8) & 0xFF) / 255; // Green
+ 				components[2] = (GLfloat) ((hexBytes >> 0*8) & 0xFF) / 255; // Blue
+-				components[3] = (GLfloat) 1.0; // alpha
++				components[3] = (GLfloat) 0.9; // alpha
+ 				break;
+ 			
+ 			// Transparent color

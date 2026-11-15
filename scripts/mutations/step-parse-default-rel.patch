@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+index 837fdb1..71d5205 100644
+--- a/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
++++ b/trunk/Bricksmith/Source/LDraw/Files/LDrawStep.m
+@@ -1112,7 +1112,7 @@
+ 			
+ 			// if no type is explicitly specified, it is a relative rotation.
+ 			else if( [scanner isAtEnd] == YES )
+-				[self setStepRotationType:LDrawStepRotationRelative];
++				[self setStepRotationType:LDrawStepRotationAbsolute];
+ 			
+ 			// there is some syntax we don't recognize. Abort parsing attempt.
+ 			else

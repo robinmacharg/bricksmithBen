@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m
+index c688b5f..138acc6 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m
+@@ -952,7 +952,7 @@
+ 	// vectors (since the denominator is always positive, we can ignore it).
+ 	
+ 	//If 1 & 4 point opposite directions, we have a case 1 bowtie
+-	if(V3Dot(cross1, cross4) < 0)
++	if(V3Dot(cross1, cross4) > 0)
+ 	{
+ 		//vectors point in opposite directions
+ 		Point3 swapPoint = self->vertex3;

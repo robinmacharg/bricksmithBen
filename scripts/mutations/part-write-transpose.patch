@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
+index 15f44be..5416a60 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
+@@ -624,7 +624,7 @@ int floatNearGrid(float v, float grid, float epsi)
+ 				[LDrawUtilities outputStringForFloat:transformation.element[3][2]], //position.z,			(z)
+ 				
+ 				[LDrawUtilities outputStringForFloat:transformation.element[0][0]], //transformationX.x,	(a)
+-				[LDrawUtilities outputStringForFloat:transformation.element[1][0]], //transformationX.y,	(b)
++				[LDrawUtilities outputStringForFloat:transformation.element[0][1]], //transformationX.y,	(b)
+ 				[LDrawUtilities outputStringForFloat:transformation.element[2][0]], //transformationX.z,	(c)
+ 				
+ 				[LDrawUtilities outputStringForFloat:transformation.element[0][1]], //transformationY.x,	(d)

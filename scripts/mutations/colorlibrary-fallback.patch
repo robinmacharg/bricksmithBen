@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Support/ColorLibrary.m b/trunk/Bricksmith/Source/LDraw/Support/ColorLibrary.m
+index cc102ec..224d4f5 100644
+--- a/trunk/Bricksmith/Source/LDraw/Support/ColorLibrary.m
++++ b/trunk/Bricksmith/Source/LDraw/Support/ColorLibrary.m
+@@ -184,7 +184,7 @@ static ColorLibrary	*sharedColorLibrary	= nil;
+ 	// Return something!
+ 	if(color == nil)
+ 	{
+-		color = [[ColorLibrary sharedColorLibrary] colorForCode:LDrawCurrentColor];
++		color = [[ColorLibrary sharedColorLibrary] colorForCode:LDrawEdgeColor];
+ 	}
+ 	
+ 	return color;

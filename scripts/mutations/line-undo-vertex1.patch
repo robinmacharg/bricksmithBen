@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawLine.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawLine.m
+index 6a59919..25c16e6 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawLine.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawLine.m
+@@ -690,7 +690,7 @@
+ 	[super registerUndoActions:undoManager];
+ 
+ 	[[undoManager prepareWithInvocationTarget:self] setVertex2:[self vertex2]];
+-	[[undoManager prepareWithInvocationTarget:self] setVertex1:[self vertex1]];
++	
+ 	
+ 	[undoManager setActionName:NSLocalizedString(@"UndoAttributesLine", nil)];
+ 	

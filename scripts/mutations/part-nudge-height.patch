@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
+index 15f44be..ba09208 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawPart.m
+@@ -1107,7 +1107,7 @@ To work, this needs to multiply the modelViewGLMatrix by the part transform.
+ 		
+ 		if(floatNearGrid(nudgeDistance,20,k_small_nudge))
+ 		{
+-			nudgeVector = V3MulScalar(nudgeVector, 24.0 / 20.0);
++			nudgeVector = V3MulScalar(nudgeVector, 20.0 / 20.0);
+ 		}
+ 		else if(floatNearGrid(nudgeDistance,10,k_small_nudge))
+ 		{

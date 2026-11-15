@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m
+index 6de3c1e..47d599f 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawTriangle.m
+@@ -96,7 +96,7 @@
+ 			workingVertex.y = [parsedField floatValue];
+ 			// (z2)
+ 			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+-			workingVertex.z = [parsedField floatValue];
++			workingVertex.z = -[parsedField floatValue];
+ 			
+ 			[self setVertex2:workingVertex];
+ 			

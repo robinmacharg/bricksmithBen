@@ -1,0 +1,13 @@
+diff --git a/trunk/Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m b/trunk/Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m
+index ed76c3a..b94da60 100644
+--- a/trunk/Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m
++++ b/trunk/Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m
+@@ -432,7 +432,7 @@
+ 	  snappedToGrid:(float)gridSpacing
+ {
+ 	position.x = roundf(position.x/gridSpacing) * gridSpacing;
+-	position.y = roundf(position.y/gridSpacing) * gridSpacing;
++	position.y = floorf(position.y/gridSpacing) * gridSpacing;
+ 	position.z = roundf(position.z/gridSpacing) * gridSpacing;
+ 	
+ 	return position;
