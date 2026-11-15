@@ -89,9 +89,9 @@ PreferencesDialogController *preferencesDialog = nil;
 {
 	//Grab the current window content from the Nib (it should be blank). 
 	// We will display this while changing panes.
-	blankContent = [[preferencesWindow contentView] retain];
+	blankContent = [preferencesWindow contentView];
 
-	NSToolbar *tabToolbar = [[[NSToolbar alloc] initWithIdentifier:@"Preferences"] autorelease];
+	NSToolbar *tabToolbar = [[NSToolbar alloc] initWithIdentifier:@"Preferences"];
 	[tabToolbar setDelegate:self];
 	[preferencesWindow setToolbar:tabToolbar];
 	
@@ -901,7 +901,7 @@ PreferencesDialogController *preferencesDialog = nil;
 	[newItem setTarget:self];
 	[newItem setAction:@selector(changeTab:)];
 	
-	return [newItem autorelease];
+	return newItem;
 	
 }//end toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:
 
@@ -929,8 +929,11 @@ PreferencesDialogController *preferencesDialog = nil;
 	// we have to track in manually.  
 	[self->preferencesWindow saveFrameUsingName:PREFERENCES_WINDOW_AUTOSAVE_NAME];
 	
-	//Make sure our memory is all released.
-	[preferencesDialog autorelease];
+	//Make sure our memory is all released. (Was [preferencesDialog autorelease]: keep it alive until the
+	// current pool drains, then let it go.)
+	__autoreleasing PreferencesDialogController *deferredRelease = preferencesDialog;
+	(void)deferredRelease;
+	preferencesDialog = nil;
 	
 	return YES;
 	
@@ -1291,15 +1294,11 @@ PreferencesDialogController *preferencesDialog = nil;
 //==============================================================================
 - (void) dealloc
 {
-	[generalTabContentView	release];
-	[preferencesWindow		release];
-	[blankContent			release];
 	
 	//clear out our global preferences controller. 
 	// It will be reinitialized when needed.
 	preferencesDialog = nil;
 	
-	[super dealloc];
 	
 }//end dealloc
 

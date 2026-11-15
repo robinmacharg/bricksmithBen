@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 	IBOutlet NSButton		*insertButton;
 	IBOutlet NSMenu			*contextualMenu;
 
-	PartLibrary     *partLibrary; //weak reference to the shared part catalog.
+	__weak PartLibrary     *partLibrary; //weak reference to the shared part catalog.
 	NSString		*selectedCategory;
 	NSArray         *categoryList;
 	NSMutableArray  *tableDataSource;

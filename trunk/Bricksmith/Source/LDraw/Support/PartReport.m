@@ -54,7 +54,7 @@ NSString    *PART_REPORT_PART_QUANTITY  = @"QuantityKey";
 	
 	[partReport setLDrawContainer:container];
 	
-	return [partReport autorelease];
+	return partReport;
 	
 }//end partReportForContainer
 
@@ -87,8 +87,6 @@ NSString    *PART_REPORT_PART_QUANTITY  = @"QuantityKey";
 //==============================================================================
 - (void) setLDrawContainer:(LDrawContainer *)newContainer
 {
-	[newContainer			retain];
-	[self->reportedObject	release];
 	
 	self->reportedObject = newContainer;
 	
@@ -129,10 +127,6 @@ NSString    *PART_REPORT_PART_QUANTITY  = @"QuantityKey";
 	NSUInteger		 counter			= 0;
 	
 	//clear out any previous reports.
-	if(self->missingParts != nil)
-		[missingParts release];
-	if(self->movedParts != nil)
-		[movedParts release];
 		
 	self->missingParts  = [[NSMutableArray alloc] init];
 	self->movedParts    = [[NSMutableArray alloc] init];
@@ -401,15 +395,6 @@ NSString    *PART_REPORT_PART_QUANTITY  = @"QuantityKey";
 // Purpose:		Quoth the Raven: "Nevermore!"
 //
 //==============================================================================
-- (void) dealloc
-{
-	[reportedObject	release];
-	[partsReport	release];
-	[missingParts	release];
-	[movedParts		release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 @end

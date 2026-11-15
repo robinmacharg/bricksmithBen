@@ -87,8 +87,11 @@ typedef enum
 {
 	[super awakeFromNib];
 	
-	// Under MRC these balanced the nib loader's retain of top-level objects. Under ARC the legacy
-	// loadNibNamed:owner: still retains them, so they now leak once per inspector (KNOWN-BUGS S36, P4).
+	// Top-level nib objects get an extra retain from the legacy loadNibNamed:owner:; we hold them in strong
+	// properties, so balance it (was autorelease under MRC; L77).
+	CFRelease((__bridge CFTypeRef)_formatterBasic);
+	CFRelease((__bridge CFTypeRef)_formatterAngle);
+	CFRelease((__bridge CFTypeRef)_formatterScale);
 }
 
 

@@ -24,7 +24,7 @@
 //------------------------------------------------------------------------------
 static NSInteger sort_by_part_description(id a, id b, void * ref)
 {
-	PartLibrary * pl = (PartLibrary *) ref;
+	PartLibrary * pl = (__bridge PartLibrary *) ref;
 	NSString * aa = a;
 	NSString * bb = b;
 	
@@ -129,18 +129,17 @@ static NSInteger sort_by_role(id a, id b, void * ref)
 		transform[11] = 0.0f;		
 		transform[15] = 1.0f;
 
-		self->child = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] retain];
+		self->child = [line stringByTrimmingCharactersInSet:whitespaceCharacterSet];
 		
-		self->childName = [[[PartLibrary sharedPartLibrary] descriptionForPartName:self->child] retain];
+		self->childName = [[PartLibrary sharedPartLibrary] descriptionForPartName:self->child];
 		
-		self->role = [relation retain];
+		self->role = relation;
 		
-		self->parent = [parentName retain];
+		self->parent = parentName;
 	}
 	@catch (NSException * e) {
 		NSLog(@"a related part line '%@' was fatally invalid", orig);
 		NSLog(@" raised exception %@", [e name]);
-		[self release];
 		self = nil;
 	
 	}
@@ -153,14 +152,7 @@ static NSInteger sort_by_role(id a, id b, void * ref)
 // Purpose:		Beam me out, Scotty!
 //
 //==============================================================================
-- (void) dealloc
-{
-	[parent release];
-	[child release];
-	[childName release];
-	[role release];
-	[super dealloc];
-}//end dealloc
+//end dealloc
 
 
 //========== dump ==============================================================
@@ -380,7 +372,6 @@ static RelatedParts * SharedRelatedParts = nil;
 					NSString * pname = [parents objectAtIndex:pidx];
 					RelatedPart * p = [[RelatedPart alloc] initWithParent:pname offset:offset relation:relName childLine:line];
 					[arr addObject:p];
-					[p release];
 					
 				}
 			}
@@ -400,13 +391,7 @@ static RelatedParts * SharedRelatedParts = nil;
 // Purpose:		My name is John D. Alec, but you can call me Mr. Alec.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[self->relatedParts release];
-
-	[super dealloc];
-
-}//end dealloc
+//end dealloc
 
 
 //========== getChildPartList: =================================================
@@ -433,7 +418,7 @@ static RelatedParts * SharedRelatedParts = nil;
 	}
 
 	NSArray * kids_sorted = [kids allObjects];
-	return [kids_sorted sortedArrayUsingFunction:sort_by_part_description context:[PartLibrary sharedPartLibrary]];
+	return [kids_sorted sortedArrayUsingFunction:sort_by_part_description context:(__bridge void *)[PartLibrary sharedPartLibrary]];
 
 }//end getChildPartList:
 

@@ -40,7 +40,7 @@
 		0B06F7170F633FD2004E7DD7 /* ExtendedTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B06F7150F633FD2004E7DD7 /* ExtendedTableView.h */; };
 		0B06F7180F633FD2004E7DD7 /* ExtendedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B06F7160F633FD2004E7DD7 /* ExtendedTableView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B0B6CCD2787D87800F6E225 /* PartCatalogBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B0B6CCB2787D87800F6E225 /* PartCatalogBuilder.h */; };
-		0B0B6CCE2787D87800F6E225 /* PartCatalogBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B6CCC2787D87800F6E225 /* PartCatalogBuilder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0B0B6CCE2787D87800F6E225 /* PartCatalogBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B6CCC2787D87800F6E225 /* PartCatalogBuilder.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B1DA5A813172DA700E14960 /* LDrawDirective.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B1DA5A213172DA700E14960 /* LDrawDirective.h */; };
 		0B1DA5A913172DA700E14960 /* LDrawDirective.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA5A313172DA700E14960 /* LDrawDirective.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0B1DA5AA13172DA700E14960 /* LDrawUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B1DA5A413172DA700E14960 /* LDrawUtilities.h */; };
@@ -169,7 +169,7 @@
 		0BC6AAEB0987296700505A88 /* Help in Resources */ = {isa = PBXBuildFile; fileRef = 0BC6AACC0987296700505A88 /* Help */; };
 		0BC71D910E6CC8340007F10D /* AMSProgressBar.framework in Copy Frameworks (1) */ = {isa = PBXBuildFile; fileRef = 2BB5975E09FEFD250077A885 /* AMSProgressBar.framework */; };
 		0BC75339136FC878002568B8 /* PartLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BC75337136FC878002568B8 /* PartLibrary.h */; };
-		0BC7533A136FC878002568B8 /* PartLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BC75338136FC878002568B8 /* PartLibrary.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0BC7533A136FC878002568B8 /* PartLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BC75338136FC878002568B8 /* PartLibrary.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BCD0C6507FD0BA10066A536 /* LDrawContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BCD0C6307FD0BA10066A536 /* LDrawContainer.h */; };
 		0BCD0C6607FD0BA10066A536 /* LDrawContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BCD0C6407FD0BA10066A536 /* LDrawContainer.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BDC146F0B9D0502001D1FF1 /* PartBrowserPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BDC146D0B9D0502001D1FF1 /* PartBrowserPanelController.h */; };
@@ -180,7 +180,7 @@
 		0BE49CD025AAB7FF00E96C96 /* LDrawViewerContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BE49CCE25AAB7FF00E96C96 /* LDrawViewerContainer.h */; };
 		0BE49CD125AAB7FF00E96C96 /* LDrawViewerContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BE49CCF25AAB7FF00E96C96 /* LDrawViewerContainer.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BE524011373C26200E21FBC /* PartReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BE523FF1373C26200E21FBC /* PartReport.h */; };
-		0BE524021373C26200E21FBC /* PartReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BE524001373C26200E21FBC /* PartReport.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0BE524021373C26200E21FBC /* PartReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BE524001373C26200E21FBC /* PartReport.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BE84A1F1300F91F004E7626 /* BricksmithUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BE84A1D1300F91F004E7626 /* BricksmithUtilities.h */; };
 		0BE84A201300F91F004E7626 /* BricksmithUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BE84A1E1300F91F004E7626 /* BricksmithUtilities.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BED4743136D30C10098D353 /* LDrawKeywords.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BED4742136D30C10098D353 /* LDrawKeywords.h */; };
@@ -193,9 +193,9 @@
 		0BF729BE08AD849300E3DA53 /* LDrawColorPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729AE08AD849300E3DA53 /* LDrawColorPanelController.h */; };
 		0BF729BF08AD849300E3DA53 /* LDrawColorPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729AF08AD849300E3DA53 /* LDrawColorPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BF729C008AD849300E3DA53 /* PartBrowserDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729B008AD849300E3DA53 /* PartBrowserDataSource.h */; };
-		0BF729C108AD849300E3DA53 /* PartBrowserDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729B108AD849300E3DA53 /* PartBrowserDataSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0BF729C108AD849300E3DA53 /* PartBrowserDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729B108AD849300E3DA53 /* PartBrowserDataSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BF729C608AD849300E3DA53 /* PreferencesDialogController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BF729B608AD849300E3DA53 /* PreferencesDialogController.h */; };
-		0BF729C708AD849300E3DA53 /* PreferencesDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729B708AD849300E3DA53 /* PreferencesDialogController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		0BF729C708AD849300E3DA53 /* PreferencesDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BF729B708AD849300E3DA53 /* PreferencesDialogController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0BFC4CFD1076F61900293B60 /* ViewportArranger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFC4CFB1076F61900293B60 /* ViewportArranger.h */; };
 		0BFC4CFE1076F61900293B60 /* ViewportArranger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BFC4CFC1076F61900293B60 /* ViewportArranger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		0FB3E799D4BA01AA54468652 /* LSynthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119F21A77A4B2343C726CE1 /* LSynthTests.swift */; };
@@ -210,7 +210,7 @@
 		2BF2E3050AB0FC5E0026D5DB /* RotationPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3010AB0FC5E0026D5DB /* RotationPanelController.h */; };
 		2BF2E3060AB0FC5E0026D5DB /* RotationPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3020AB0FC5E0026D5DB /* RotationPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		2BF2E30F0AB0FC840026D5DB /* MinifigureDialogController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E30D0AB0FC840026D5DB /* MinifigureDialogController.h */; };
-		2BF2E3100AB0FC840026D5DB /* MinifigureDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E30E0AB0FC840026D5DB /* MinifigureDialogController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2BF2E3100AB0FC840026D5DB /* MinifigureDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E30E0AB0FC840026D5DB /* MinifigureDialogController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		2BF2E3150AB0FCAB0026D5DB /* MLCadIni.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3110AB0FCAB0026D5DB /* MLCadIni.h */; };
 		2BF2E3160AB0FCAB0026D5DB /* MLCadIni.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
@@ -264,9 +264,9 @@
 		D6191B9E17F277B600B5DF44 /* GLMatrixMath.c in Sources */ = {isa = PBXBuildFile; fileRef = D6191B9C17F277B600B5DF44 /* GLMatrixMath.c */; };
 		D687D424170A6DF3007300E2 /* related.ldr in Resources */ = {isa = PBXBuildFile; fileRef = D687D423170A6DF3007300E2 /* related.ldr */; };
 		D6C0C5CF16DABE70007E4266 /* RelatedParts.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C0C5CD16DABE70007E4266 /* RelatedParts.h */; };
-		D6C0C5D016DABE70007E4266 /* RelatedParts.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0C5CE16DABE70007E4266 /* RelatedParts.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D6C0C5D016DABE70007E4266 /* RelatedParts.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0C5CE16DABE70007E4266 /* RelatedParts.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D6CB41E015E2AA6C00730E2A /* ModelManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D6CB41DE15E2AA6C00730E2A /* ModelManager.h */; };
-		D6CB459515E316D300730E2A /* ModelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6CB41DF15E2AA6C00730E2A /* ModelManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D6CB459515E316D300730E2A /* ModelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6CB41DF15E2AA6C00730E2A /* ModelManager.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D6EC01BE15A54B3B0004CEB8 /* OpenGLUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EC01BC15A54B3B0004CEB8 /* OpenGLUtilities.h */; };
 		D6EC01BF15A54B3B0004CEB8 /* OpenGLUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = D6EC01BD15A54B3B0004CEB8 /* OpenGLUtilities.c */; };
 		D6EDB983164DEB0000B4062B /* LDrawRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EDB980164DEB0000B4062B /* LDrawRenderer.h */; };

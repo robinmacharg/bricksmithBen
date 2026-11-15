@@ -359,7 +359,8 @@
 //==============================================================================
 - (NSMutableDictionary *) catalogInfoForFileAtPath:(NSString *)filepath
 {
-	NSAutoreleasePool	*pool				= [[NSAutoreleasePool alloc] init];
+	NSMutableDictionary *catalogInfo		= nil;	// outside the pool: it is returned (BUG-015)
+	@autoreleasepool {
 
 	NSString			*fileContents		= [LDrawUtilities stringFromFile:filepath];
 	NSCharacterSet		*whitespace 		= [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -369,7 +370,6 @@
 	NSString			*category			= nil;
 	NSMutableArray		*keywords			= nil;
 	
-	NSMutableDictionary *catalogInfo		= nil;
 	
 	
 	// Read the first line of the file. Make sure the file is parsable.
@@ -498,12 +498,9 @@
 		NSLog(@"%@ is not a valid file", filepath);
 	}
 	
-	// catalogInfo was autoreleased into the local pool: keep it alive across the drain. Restored from the
-	// pre-ARC original (removed by the in-progress ARC edit while this file is still MRC) - BUG-015.
-	[catalogInfo retain];
-	[pool drain];
+	} // @autoreleasepool: catalogInfo is a strong local declared outside it, so it survives the drain (BUG-015)
 	
-	return [catalogInfo autorelease];
+	return catalogInfo;
 	
 }//end catalogInfoForFileAtPath
 

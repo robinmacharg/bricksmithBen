@@ -118,27 +118,27 @@
 	[_minifigurePreview.glView	setAutosaveName:@"MinifigureGeneratorView"];
 	[_minifigurePreview.glView	restoreConfiguration];
 	
-	// Top-level nib object are never released. We assign them to strong properties,
-	// so we have to let them go here.
-	[_objectController autorelease];
-	[_degreesFormatter autorelease];
-	[_hatsController autorelease];
-	[_headsController autorelease];
-	[_necksController autorelease];
-	[_torsosController autorelease];
-	[_rightArmsController autorelease];
-	[_rightHandsController autorelease];
-	[_rightHandAccessoriesController autorelease];
-	[_leftArmsController autorelease];
-	[_leftHandsController autorelease];
-	[_leftHandAccessoriesController autorelease];
-	[_hipsController autorelease];
-	[_rightLegsController autorelease];
-	[_rightLegAccessoriesController autorelease];
-	[_leftLegsController autorelease];
-	[_leftLegAccessoriesController autorelease];
+	// Top-level nib objects get an extra retain from the legacy loadNibNamed:owner:. We hold them in strong
+	// properties, so balance that retain here (was autorelease under MRC; L77).
+	CFRelease((__bridge CFTypeRef)_objectController);
+	CFRelease((__bridge CFTypeRef)_degreesFormatter);
+	CFRelease((__bridge CFTypeRef)_hatsController);
+	CFRelease((__bridge CFTypeRef)_headsController);
+	CFRelease((__bridge CFTypeRef)_necksController);
+	CFRelease((__bridge CFTypeRef)_torsosController);
+	CFRelease((__bridge CFTypeRef)_rightArmsController);
+	CFRelease((__bridge CFTypeRef)_rightHandsController);
+	CFRelease((__bridge CFTypeRef)_rightHandAccessoriesController);
+	CFRelease((__bridge CFTypeRef)_leftArmsController);
+	CFRelease((__bridge CFTypeRef)_leftHandsController);
+	CFRelease((__bridge CFTypeRef)_leftHandAccessoriesController);
+	CFRelease((__bridge CFTypeRef)_hipsController);
+	CFRelease((__bridge CFTypeRef)_rightLegsController);
+	CFRelease((__bridge CFTypeRef)_rightLegAccessoriesController);
+	CFRelease((__bridge CFTypeRef)_leftLegsController);
+	CFRelease((__bridge CFTypeRef)_leftLegAccessoriesController);
 
-	[_minifigureGeneratorPanel autorelease];
+	CFRelease((__bridge CFTypeRef)_minifigureGeneratorPanel);
 	
 }//end awakeFromNib
 
@@ -156,7 +156,7 @@
 {
 	self = [super init];
 	
-	iniFile = [[MLCadIni iniFile] retain];
+	iniFile = [MLCadIni iniFile];
 	[self setMinifigureName:NSLocalizedString(@"UntitledMinifigure", nil)];
 	
 	//we'll call -generateMinifigure: when the dialog is ready and loaded with 
@@ -193,8 +193,6 @@
 //==============================================================================
 - (void) setMinifigure:(LDrawMPDModel *)newMinifigure
 {
-	[newMinifigure		retain];
-	[self->minifigure	release];
 	
 	self->minifigure = newMinifigure;
 	
@@ -259,8 +257,6 @@
 //==============================================================================
 - (void) setMinifigureName:(NSString *)newName
 {
-	[newName retain];
-	[self->minifigureName release];
 	
 	minifigureName = newName;
 	
@@ -611,21 +607,6 @@
 	
 	
 	//Free memory
-	[hat				release];
-	[head				release];
-	[neck				release];
-	[torso				release];
-	[leftArm			release];
-	[leftHand			release];
-	[leftHandAccessory	release];
-	[rightArm			release];
-	[rightHand			release];
-	[rightHandAccessory	release];
-	[hips				release];
-	[leftLeg			release];
-	[leftLegAccessory	release];
-	[rightLeg			release];
-	[rightLegAccessory	release];
 
 }//end generateMinifigure
 
@@ -953,32 +934,7 @@
 // Purpose:		
 //
 //==============================================================================
-- (void) dealloc
-{
-	[_objectController release];
-	[_degreesFormatter release];
-	[_hatsController release];
-	[_headsController release];
-	[_necksController release];
-	[_torsosController release];
-	[_rightArmsController release];
-	[_rightHandsController release];
-	[_rightHandAccessoriesController release];
-	[_leftArmsController release];
-	[_leftHandsController release];
-	[_leftHandAccessoriesController release];
-	[_hipsController release];
-	[_rightLegsController release];
-	[_rightLegAccessoriesController release];
-	[_leftLegsController release];
-	[_leftLegAccessoriesController release];
-	[_minifigureGeneratorPanel release];
-
-	[iniFile			release];
-
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end
