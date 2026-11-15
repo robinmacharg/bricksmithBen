@@ -97,3 +97,21 @@ section. Each entry says what happened and what to do instead.
   confirm suspicions with a tiny standalone program.
 - **L30. `lldb --batch` stops at the first command that errors**, including an `expr` interrupted by a breakpoint,
   even with `stop-command-source-on-error false`. → Use separate lldb runs, or reproduce outside lldb.
+- **L31. `xcodebuild test` can return while the test-host app is still terminating**, and AppKit writes autosave
+  state on the way out. A preferences snapshot or restore taken straight away races with it. → `scripts/test.sh`
+  waits for the host process to exit first.
+- **L32. Exit-test children don't get `XCTestConfigurationFilePath`.** Swift Testing relaunches the host with
+  `SWT_EXIT_TEST_ID` instead, so the app did a **normal** launch in them: LDraw discovery, catalog load, and a
+  modal "LDraw folder not complete" alert once the dev domain had no path, which hung the run. It only looked
+  fine before because the shared real preferences held a valid path. → `+isRunningTests` also checks
+  `SWT_EXIT_TEST_ID`, and `HarnessExitTests.childIsInTestMode` guards it.
+- **L33. Separating domains can expose leaks that a shared domain was hiding.** AppKit table and split-view
+  autosave, plus Sparkle's `SUHasLaunchedBefore`, were always written by test runs, but with the same values
+  already present the guard saw no change. → The dev/test domain is restored after every run; the real domain is
+  strictly guarded.
+- **L34. Don't use the fixture files as working documents in manual testing.** Saving rewrites them (BOM dropped,
+  `0 FILE` name changed, spacing normalised). → Open a temp copy, and restore with `git checkout` if one is saved.
+- **L35. Sparkle's "Check for updates automatically?" prompt is modal and appears on a second launch** when
+  `SUEnableAutomaticChecks` is undecided. Test runs relaunch the app all the time (hosts, exit-test children),
+  so it could hang a run. → In Debug, `updaterShouldPromptForPermissionToCheckForUpdates:` returns NO; Release is
+  unchanged. Any perf scheme built from Release needs the same treatment.

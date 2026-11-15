@@ -78,7 +78,12 @@ isn't present.
     because the real defaults key is `"LDraw Path"`, which contains a space.
   - `Fixtures/ldraw-mini` is copied to a temp directory for each run, because the catalog builder writes
     `parts.plist` into it.
-  - `scripts/test.sh` diffs the app's real defaults before and after the run, and fails on any change.
+  - Debug builds (including the test host) use their own preferences domain, `com.AllenSmith.Bricksmith.debug`.
+    `scripts/test.sh` **fails** if the installed app's real domain (`com.AllenSmith.Bricksmith`) changes during a run.
+    It **restores** the debug domain to its pre-run snapshot, because AppKit autosave and Sparkle write there
+    whenever nibs load (L33).
+  - Test mode is detected from `XCTestConfigurationFilePath` (hosted tests), `SWT_EXIT_TEST_ID` (exit-test child
+    processes) or `BRICKSMITH_TEST_MODE=1` (UI tests).
 - **Singletons and statics:**
   - Suites that touch `ColorLibrary`, `PartLibrary`, `LDrawPaths`, `ModelManager`, `MLCadIni` or the
     `LDrawUtilities` statics call `+resetForTesting` and are marked `.serialized`.

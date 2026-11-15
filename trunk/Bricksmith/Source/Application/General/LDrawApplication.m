@@ -72,8 +72,9 @@
 
 	dispatch_once(&once, ^{
 		NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-		testing =	[environment objectForKey:@"XCTestConfigurationFilePath"] != nil
-				||	[[environment objectForKey:@"BRICKSMITH_TEST_MODE"] isEqualToString:@"1"];
+		testing =	[environment objectForKey:@"XCTestConfigurationFilePath"] != nil	// hosted unit tests
+				||	[environment objectForKey:@"SWT_EXIT_TEST_ID"] != nil				// Swift Testing exit-test child process
+				||	[[environment objectForKey:@"BRICKSMITH_TEST_MODE"] isEqualToString:@"1"];	// UI tests
 	});
 
 	return testing;
@@ -640,6 +641,26 @@ mayPerformUpdateCheck:(SPUUpdateCheck)updateCheck
 	}
 	return NO;
 }//end updater:mayPerformUpdateCheck:error:
+
+
+#if DEBUG
+//========== updaterShouldPromptForPermissionToCheckForUpdates: ================
+//
+// Purpose:		Debug builds never check for updates, so never ask the user
+//				whether to check automatically. Besides being pointless, the
+//				modal prompt appears on a second launch and would hang
+//				automated test runs (see LEARNINGS L32/L35).
+//
+// Notes:		Compiled into Debug only, so Release keeps Sparkle's default
+//				permission behaviour exactly.
+//
+//==============================================================================
+- (BOOL) updaterShouldPromptForPermissionToCheckForUpdates:(SPUUpdater *)updater
+{
+	return NO;
+
+}//end updaterShouldPromptForPermissionToCheckForUpdates:
+#endif
 
 
 //========== updaterWillRelaunchApplication: ===================================

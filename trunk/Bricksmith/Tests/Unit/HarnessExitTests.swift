@@ -28,4 +28,13 @@ struct HarnessExitTests {
 			exit(output?.intValue == 0 ? EXIT_SUCCESS : EXIT_FAILURE)
 		}
 	}
+
+	@Test("Exit-test child processes launch the app in test mode (no LDraw discovery, prompts or prefs writes)")
+	func childIsInTestMode() async {
+		// Swift Testing relaunches the host without XCTestConfigurationFilePath but with
+		// SWT_EXIT_TEST_ID; LDrawApplication must still detect test mode (LEARNINGS L32).
+		await #expect(processExitsWith: .success) {
+			exit(LDrawApplication.isRunningTests() ? EXIT_SUCCESS : EXIT_FAILURE)
+		}
+	}
 }
