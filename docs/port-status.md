@@ -33,6 +33,7 @@ their own port phase.
 | P2 | 🧑 Golden review: row 4 (`golden/model/**`; archives in `Fixtures/archives`) | **pending** | | Found BUG-011, BUG-012, S19 |
 | P2 | 🧑 Golden review: row 6 (`golden/transforms/snapping.tsv`) | **pending** | | No bugs found; LDraw-aware vertical grid confirmed as documented design |
 | P2 | 🧑 Golden review: row 8 (`golden/library/mlcad.txt`, `golden/library/catalog.json`) | **pending** | | S12/S13 confirmed; BUG-015 found and fixed (maintainer decision) |
+| P2 | 🧑 Golden review: row 9 (`golden/mpd/*`) | **pending** | | S21, S22 noted; peer-file contract (lower-case names) characterised |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
@@ -52,6 +53,7 @@ their own port phase.
 | `LDrawContainer.h` | 2026-11-15 | All (tool) | `ObjectModelTests` |
 | `LDrawPart.h`, `LDrawDrawableElement.h` | 2026-11-15 | All (tool) | `SnappingTests` |
 | `PartLibrary.h`, `PartCatalogBuilder.h`, `MLCadIni.h` | 2026-11-15 | All except `+sharedPartLibrary` (nonnull: allocated on first use) | `LibraryPathTests`, `LibraryCatalogTests` |
+| `LDrawMPDModel.h`, `LDrawModel.h`, `ModelManager.h` | 2026-11-15 | All except `+sharedModelManager` (nonnull). `+model` is pinned with `NS_SWIFT_NAME(model())` | `MPDTests` |
 | `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
 
 ## Uncovered-line ledger (tiers A and B)

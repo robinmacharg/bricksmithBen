@@ -12,6 +12,8 @@
 #import "LDrawDirective.h"
 #import "LDrawModel.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawMPDModel : LDrawModel <NSCoding>
 {
 	@private
@@ -21,20 +23,22 @@
 	
 }
 
-+ (id) model;
++ (null_unspecified id) model NS_SWIFT_NAME(model());	// factory: keep distinct from -init (LEARNINGS L40)
 
 // Directives
-- (NSString *) writeModel;
+- (null_unspecified NSString *) writeModel;
 
 // Accessors
-- (NSString *) modelDisplayName;
-- (NSString *)modelName;
-- (void) setModelDisplayName:(NSString *)newDisplayName;
-- (void) setModelName:(NSString *)newModelName;
+- (null_unspecified NSString *) modelDisplayName;
+- (null_unspecified NSString *)modelName;
+- (void) setModelDisplayName:(null_unspecified NSString *)newDisplayName;
+- (void) setModelName:(null_unspecified NSString *)newModelName;
 
 // Utilities
-+ (NSString *) ldrawCompliantNameForName:(NSString *)newDisplayName;
-+ (BOOL) lineIsMPDModelStart:(NSString*)line modelName:(NSString**)modelNamePtr;
-+ (BOOL) lineIsMPDModelEnd:(NSString*)line;
++ (null_unspecified NSString *) ldrawCompliantNameForName:(null_unspecified NSString *)newDisplayName;
++ (BOOL) lineIsMPDModelStart:(null_unspecified NSString*)line modelName:(NSString * _Null_unspecified * _Null_unspecified)modelNamePtr;
++ (BOOL) lineIsMPDModelEnd:(null_unspecified NSString*)line;
 
 @end
+
+NS_ASSUME_NONNULL_END

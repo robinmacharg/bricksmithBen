@@ -36,6 +36,8 @@
 // class ModelManager
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface ModelManager : NSObject {
 
 	NSMutableDictionary *	serviceTables;	// Maps NSValue<LDrawfile*> -> ServiceTable.  Service table is in the cpp.
@@ -43,22 +45,24 @@
 }
 
 // Singleton access
-+ (ModelManager *)	sharedModelManager;
++ (ModelManager *)	sharedModelManager;	// nonnull: allocated on first use (verified)
 
 // Accept docs signing in.  Begin service on their dir with a scan, and sub out any
 // previously opened "reference" files.
-- (void) documentSignIn:(NSString *) docPath withFile:(LDrawFile *) file;
+- (void) documentSignIn:(null_unspecified NSString *) docPath withFile:(null_unspecified LDrawFile *) file;
 
 // Terminate service: close out the file, purge the dir if needed, purge any files they use.
-- (void) documentSignOut:(LDrawFile *) doc;
+- (void) documentSignOut:(null_unspecified LDrawFile *) doc;
 
 // Signed in document (ID-ed by its ldraw-doc) can request a part by name.
 // Code will search its service table and load the part if needed.  The model is
 // retained by the model manager until the document signs out.
-- (LDrawModel *) requestModel:(NSString *) partName withDocument:(LDrawFile *) whoIsAsking;
+- (null_unspecified LDrawModel *) requestModel:(null_unspecified NSString *) partName withDocument:(null_unspecified LDrawFile *) whoIsAsking;
 
 
 // Test support (do not call from app code)
 + (void) resetForTesting;
 
 @end
+
+NS_ASSUME_NONNULL_END

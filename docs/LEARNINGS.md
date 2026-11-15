@@ -177,3 +177,10 @@ section. Each entry says what happened and what to do instead.
   (`git show af3483f -- <file>`). BUG-015 was a removed `retain`/`autorelease` pair around a local
   `NSAutoreleasePool`, in a file that still compiles with manual retain/release. The decisive experiment was
   "call it exactly as the app does": it still crashed, so it was real.
+- **L55. For ObjC `NSString **` out-parameters, pass `&optionalVar` from Swift.** Hand-building an
+  `AutoreleasingUnsafeMutablePointer` from `withUnsafeMutablePointer` skips Swift's write-back and over-releases
+  the returned object, which crashed the test host. Zombies (`TEST_RUNNER_NSZombieEnabled=YES`) and running each
+  test in isolation pinpointed it as a test bug, not an app bug.
+- **L56. Call APIs with the arguments the app actually passes.** `-[ModelManager requestModel:…]` "failed" for
+  `"A.ldr"`, but the app always passes the lower-cased `referenceName`. Before calling something a bug, find the
+  app's real call site.

@@ -217,6 +217,7 @@
 		5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		60669DDCCFC8E5EFBE510A87 /* RoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */; };
 		64CEAFA0C7F9065C4C1FB8D2 /* SnappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58CE9892121AF3E27970B98 /* SnappingTests.swift */; };
+		6655C89BADCCD8D79F69D365 /* MPDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD9235EA9F69E87DBFF308A /* MPDTests.swift */; };
 		6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */; };
 		737726E8FC931A7828531671 /* ComputationalGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 73772C8BCC3A6435E0AE9103 /* ComputationalGeometry.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7377276DD2BFF116BEE36F0A /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 73772F01F06AC293E3F650C4 /* libicucore.dylib */; };
@@ -619,6 +620,7 @@
 		DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MacLDraw.m; sourceTree = "<group>"; };
 		E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawPathNames.m; sourceTree = "<group>"; };
 		E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessExitTests.swift; sourceTree = "<group>"; };
+		EDD9235EA9F69E87DBFF308A /* MPDTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MPDTests.swift; sourceTree = "<group>"; };
 		F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ParserRobustnessTests.swift; sourceTree = "<group>"; };
 		F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibraryTests.swift; sourceTree = "<group>"; };
 		F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoundTripTests.swift; sourceTree = "<group>"; };
@@ -902,6 +904,7 @@
 				B58CE9892121AF3E27970B98 /* SnappingTests.swift */,
 				5D19A96774CDADD19C441D18 /* ColourTests.swift */,
 				F9E37DA3744E1FB480B6CB64 /* LibraryTests.swift */,
+				EDD9235EA9F69E87DBFF308A /* MPDTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1502,6 +1505,7 @@
 				64CEAFA0C7F9065C4C1FB8D2 /* SnappingTests.swift in Sources */,
 				DABC32FD2B1ABDBA096B70E1 /* ColourTests.swift in Sources */,
 				22A85FC75233854191C5DAE5 /* LibraryTests.swift in Sources */,
+				6655C89BADCCD8D79F69D365 /* MPDTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
