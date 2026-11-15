@@ -13,6 +13,9 @@
 #import "MacLDraw.h"
 
 
+static LDrawPaths *sharedObject = nil;
+static NSArray    *PartSearchPaths = nil;	// cache for -pathForPartName: (see KNOWN-BUGS S12)
+
 @implementation LDrawPaths
 
 //---------- sharedPaths ---------------------------------------------[static]--
@@ -22,8 +25,6 @@
 //------------------------------------------------------------------------------
 + (LDrawPaths *) sharedPaths
 {
-	static LDrawPaths *sharedObject = nil;
-	
 	if(sharedObject == nil)
 	{
 		sharedObject = [[LDrawPaths alloc] init];
@@ -31,6 +32,22 @@
 	
 	return sharedObject;
 }
+
+
+//---------- resetForTesting -----------------------------------------[static]--
+//
+// Purpose:		TEST SUPPORT ONLY. Discards the shared instance so the next
+//				access rebuilds it (e.g. from a test fixture library).
+//
+//------------------------------------------------------------------------------
++ (void) resetForTesting
+{
+#if !__has_feature(objc_arc)
+	[sharedObject release];
+#endif
+	sharedObject = nil;
+	PartSearchPaths = nil;
+}//end resetForTesting
 
 
 //========== init ==============================================================
@@ -382,13 +399,12 @@
 - (NSString *) pathForPartName:(NSString *)partName
 {
 	NSFileManager	*fileManager	= [[NSFileManager alloc] init];
-	static NSArray	*searchPaths	= nil;
 	NSMutableString *fixedPartName	= [NSMutableString stringWithString:partName];
 	NSString		*partPath		= nil;
 	
-	if(searchPaths == nil)
+	if(PartSearchPaths == nil)
 	{
-		searchPaths = [[NSArray alloc] initWithObjects:
+		PartSearchPaths = [[NSArray alloc] initWithObjects:
 							[self partsPathForDomain:LDrawUserOfficial],
 							[self primitivesPathForDomain:LDrawUserOfficial],
 							[self partsPathForDomain:LDrawUserUnofficial],
@@ -417,7 +433,7 @@
 	{
 		//We have a file path name; try each directory.
 		
-		for(NSString *basePath in searchPaths)
+		for(NSString *basePath in PartSearchPaths)
 		{
 			NSString *testPath = [basePath stringByAppendingPathComponent:fixedPartName];
 			

@@ -86,6 +86,20 @@ static NSString				*defaultAuthor		= @"anonymous";
 }
 
 
+//---------- resetForTesting -----------------------------------------[static]--
+//
+// Purpose:		TEST SUPPORT ONLY. Restores the process-wide output settings to
+//				their compiled-in defaults (the app sets them from preferences
+//				and NSFullUserName() at launch; tests must pin them).
+//
+//------------------------------------------------------------------------------
++ (void) resetForTesting
+{
+	ColumnizesOutput	= NO;
+	defaultAuthor		= @"anonymous";
+}//end resetForTesting
+
+
 #pragma mark -
 #pragma mark PARSING
 #pragma mark -

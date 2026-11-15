@@ -58,4 +58,7 @@
 - (LDrawModel *) requestModel:(NSString *) partName withDocument:(LDrawFile *) whoIsAsking;
 
 
+// Test support (do not call from app code)
++ (void) resetForTesting;
+
 @end

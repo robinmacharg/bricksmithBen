@@ -12,8 +12,8 @@
 #import "LDrawShaderRenderer.h"
 #import "MeshSmooth.h"
 #import "GLMatrixMath.h"
-#import OPEN_GL_HEADER
-#import OPEN_GL_EXT_HEADER
+#import <OpenGL/gl.h>
+#import <OpenGL/glext.h>
 
 
 // This forces quads to be subdivided into tris at creation.

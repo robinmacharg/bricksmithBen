@@ -18,7 +18,7 @@
 
 
 // Viewing Angle
-typedef enum
+typedef NS_ENUM(int, ViewOrientationT)
 {
 	ViewOrientation3D			= 0,
 	ViewOrientationFront		= 1,
@@ -29,7 +29,7 @@ typedef enum
 	ViewOrientationBottom		= 6,
 	ViewOrientationWalkThrough	= 7
 	
-} ViewOrientationT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,5 +75,8 @@ typedef enum
 + (void) updateNameForMovedPart:(LDrawPart *)movedPart;
 + (ViewOrientationT) viewOrientationForAngle:(Tuple3)rotationAngle;
 + (void) unresolveLibraryParts:(LDrawDirective *)directive;
+
+// Test support (do not call from app code)
++ (void) resetForTesting;
 
 @end

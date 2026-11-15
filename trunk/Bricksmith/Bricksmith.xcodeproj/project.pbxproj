@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0978E78C9B0CC8B3AD30D245 /* LDrawPathNames.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */; };
 		0B040CBE164F526D000CA89A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B040CBD164F526D000CA89A /* Sparkle.framework */; };
 		0B040CCE164F529F000CA89A /* Sparkle.framework in Copy Frameworks (1) */ = {isa = PBXBuildFile; fileRef = 0B040CBD164F526D000CA89A /* Sparkle.framework */; };
 		0B040CD7164F5511000CA89A /* Bricksmith_Sparkle_signature_public.pem in Resources */ = {isa = PBXBuildFile; fileRef = 0B040CD6164F5511000CA89A /* Bricksmith_Sparkle_signature_public.pem */; };
@@ -210,11 +211,14 @@
 		2BF2E3170AB0FCAB0026D5DB /* TransformerIntMinus1.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */; };
 		2BF2E3180AB0FCAB0026D5DB /* TransformerIntMinus1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
+		5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
+		6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */; };
 		737726E8FC931A7828531671 /* ComputationalGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 73772C8BCC3A6435E0AE9103 /* ComputationalGeometry.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7377276DD2BFF116BEE36F0A /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 73772F01F06AC293E3F650C4 /* libicucore.dylib */; };
 		73772B77F842475786994924 /* InspectionLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 737728C3A3DF6166BE9183ED /* InspectionLSynth.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		73772E2FDEFC3AB2B54D58D3 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 737725695C55F263D18C33B9 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		73772F8E91836860E4330407 /* LDrawLSynthDirective.m in Sources */ = {isa = PBXBuildFile; fileRef = 737720E867742FB944EB62C7 /* LDrawLSynthDirective.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		9506E0E0189BD6480006CE9C /* lsynth.mpd in Resources */ = {isa = PBXBuildFile; fileRef = 95D893AD1655334500AA055B /* lsynth.mpd */; };
@@ -227,6 +231,8 @@
 		95D893B916555F3E00AA055B /* LSynthConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D893B716555F3E00AA055B /* LSynthConfiguration.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		95D893CA16569CFD00AA055B /* LDrawLSynth.h in Headers */ = {isa = PBXBuildFile; fileRef = 95D893C816569CFD00AA055B /* LDrawLSynth.h */; };
 		95D893CB16569CFD00AA055B /* LDrawLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D893C916569CFD00AA055B /* LDrawLSynth.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */ = {isa = PBXBuildFile; fileRef = 145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */; };
+		B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */; };
 		D608724816ED61F500828B4E /* MeshSmooth.h in Headers */ = {isa = PBXBuildFile; fileRef = D608724616ED61F500828B4E /* MeshSmooth.h */; };
 		D608724916ED61F500828B4E /* MeshSmooth.c in Sources */ = {isa = PBXBuildFile; fileRef = D608724716ED61F500828B4E /* MeshSmooth.c */; };
 		D619130117F004A300B5DF44 /* LDrawGLCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */; };
@@ -251,6 +257,11 @@
 		D6EDBC251650B9E200B4062B /* LDrawDisplayList.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EDBC231650B9E200B4062B /* LDrawDisplayList.h */; };
 		D6EDBC261650B9E200B4062B /* LDrawDisplayList.m in Sources */ = {isa = PBXBuildFile; fileRef = D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		D6FC72131604EBB8005A404E /* LDrawFastSet.h in Headers */ = {isa = PBXBuildFile; fileRef = D6FC72121604EBB8005A404E /* LDrawFastSet.h */; };
+		DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */; };
+		E5FCCD3318DC0660E5479B46 /* HarnessFixtureLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */; };
+		EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
+		ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */; };
+		F40CAC2930A7FE9230E2FC7D /* LaunchSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -267,6 +278,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AMSProgressBar;
+		};
+		6AFF5A9AD129844AF6F2ED07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = Bricksmith;
+		};
+		7DC1F46DF5EF14164015FB1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = Bricksmith;
 		};
 		95D893A61655325100AA055B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -311,6 +336,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09E3A83323C43757A3923438 /* BricksmithTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B040CBD164F526D000CA89A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../ThirdParty/Sparkle/Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		0B040CD6164F5511000CA89A /* Bricksmith_Sparkle_signature_public.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bricksmith_Sparkle_signature_public.pem; sourceTree = "<group>"; };
 		0B04E9481093BB4200E201EE /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ColorPanel.xib; sourceTree = "<group>"; };
@@ -499,6 +525,8 @@
 		0BFC4CFB1076F61900293B60 /* ViewportArranger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewportArranger.h; sourceTree = "<group>"; };
 		0BFC4CFC1076F61900293B60 /* ViewportArranger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewportArranger.m; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawKeywords.m; sourceTree = "<group>"; };
+		234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessFixtureLibraryTests.swift; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -515,8 +543,13 @@
 		2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCadIni.m; sourceTree = "<group>"; };
 		2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerIntMinus1.h; sourceTree = "<group>"; };
 		2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerIntMinus1.m; sourceTree = "<group>"; };
+		2F5BCDB29827F846AE619974 /* BricksmithBuildConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BricksmithBuildConfig.h; sourceTree = "<group>"; };
 		32DBCF750370BD2300C91783 /* Mac LDraw_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mac LDraw_Prefix.pch"; sourceTree = "<group>"; };
 		39C633C2278F56F6005511E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LaunchSmokeUITests.swift; sourceTree = "<group>"; };
+		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessSmokeTests.swift; sourceTree = "<group>"; };
+		652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Bricksmith-Bridging-Header.h"; sourceTree = "<group>"; };
 		737720E867742FB944EB62C7 /* LDrawLSynthDirective.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawLSynthDirective.m; sourceTree = "<group>"; };
 		73772480B291C29D1B0D13B4 /* LDrawMovableDirective.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawMovableDirective.h; sourceTree = "<group>"; };
 		7377248D1A5C278143C65104 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
@@ -527,8 +560,10 @@
 		73772D9444E1E3B92321011F /* InspectionLSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectionLSynth.h; sourceTree = "<group>"; };
 		73772E30A6856B15E73A951A /* ComputationalGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComputationalGeometry.h; sourceTree = "<group>"; };
 		73772F01F06AC293E3F650C4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		8D15AC370486D014006FF6A4 /* Bricksmith.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricksmith.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FixtureLibrary.swift; sourceTree = "<group>"; };
 		9506E0EE18A3F4130006CE9C /* SearchPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPanelController.h; sourceTree = "<group>"; };
 		9506E0EF18A3F4130006CE9C /* SearchPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPanelController.m; sourceTree = "<group>"; };
 		9506E0FD18AA74BE0006CE9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SearchPanel.xib; sourceTree = "<group>"; };
@@ -539,6 +574,7 @@
 		95D893B716555F3E00AA055B /* LSynthConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSynthConfiguration.m; sourceTree = "<group>"; };
 		95D893C816569CFD00AA055B /* LDrawLSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawLSynth.h; sourceTree = "<group>"; };
 		95D893C916569CFD00AA055B /* LDrawLSynth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawLSynth.m; sourceTree = "<group>"; };
+		9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
 		D608724616ED61F500828B4E /* MeshSmooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshSmooth.h; sourceTree = "<group>"; };
 		D608724716ED61F500828B4E /* MeshSmooth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MeshSmooth.c; sourceTree = "<group>"; };
 		D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawGLCamera.h; sourceTree = "<group>"; };
@@ -563,9 +599,28 @@
 		D6EDBC231650B9E200B4062B /* LDrawDisplayList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawDisplayList.h; sourceTree = "<group>"; };
 		D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawDisplayList.m; sourceTree = "<group>"; };
 		D6FC72121604EBB8005A404E /* LDrawFastSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawFastSet.h; sourceTree = "<group>"; };
+		DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MacLDraw.m; sourceTree = "<group>"; };
+		E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawPathNames.m; sourceTree = "<group>"; };
+		E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessExitTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		46D422FFBC4B335598F8AA46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CA0FAFDF68C3444BB25E4BE /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		539C5283BDE2602FDFD2AB90 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D15AC330486D014006FF6A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -642,6 +697,8 @@
 				0BC75338136FC878002568B8 /* PartLibrary.m */,
 				0BE523FF1373C26200E21FBC /* PartReport.h */,
 				0BE524001373C26200E21FBC /* PartReport.m */,
+				145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */,
+				E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -810,6 +867,17 @@
 			path = Source/Widgets;
 			sourceTree = "<group>";
 		};
+		0B7D7DD7F5AABF51BA5EBBA4 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */,
+				E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */,
+				234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */,
+			);
+			name = Unit;
+			path = Unit;
+			sourceTree = "<group>";
+		};
 		0BF729A608AD849300E3DA53 /* Document */ = {
 			isa = PBXGroup;
 			children = (
@@ -886,6 +954,8 @@
 			isa = PBXGroup;
 			children = (
 				8D15AC370486D014006FF6A4 /* Bricksmith.app */,
+				09E3A83323C43757A3923438 /* BricksmithTests.xctest */,
+				81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -901,6 +971,8 @@
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				2BB5975809FEFD250077A885 /* AMSProgressBar.xcodeproj */,
 				95D8939E1655325000AA055B /* LSynth.xcodeproj */,
+				7D443C30ABD0BCD468D01020 /* Source */,
+				EC487B98C7B1F6099CEC4E73 /* Tests */,
 			);
 			name = "Mac LDraw";
 			sourceTree = "<group>";
@@ -933,6 +1005,8 @@
 				2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */,
 				7377248D1A5C278143C65104 /* RegexKitLite.h */,
 				737725695C55F263D18C33B9 /* RegexKitLite.m */,
+				2F5BCDB29827F846AE619974 /* BricksmithBuildConfig.h */,
+				DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */,
 			);
 			name = Other;
 			path = Source/Other;
@@ -968,6 +1042,7 @@
 				0B040CBD164F526D000CA89A /* Sparkle.framework */,
 				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+				FE3077E9720EEC4AE82133EB /* OS X */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -978,6 +1053,23 @@
 				2BB5975E09FEFD250077A885 /* AMSProgressBar.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7890E7BBA98A177A0B370C11 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */,
+			);
+			name = Support;
+			path = Support;
+			sourceTree = "<group>";
+		};
+		7D443C30ABD0BCD468D01020 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				EE6EA2E4E672C68A7BAE46B6 /* Swift */,
+			);
+			name = Source;
 			sourceTree = "<group>";
 		};
 		952AA8F5169D552E0087919E /* Inspectors */ = {
@@ -1006,6 +1098,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CDC3495388581A874FAF32BA /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */,
+			);
+			name = UI;
+			path = UI;
+			sourceTree = "<group>";
+		};
 		D6EDB97F164DEB0000B4062B /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1030,6 +1131,35 @@
 				D6EDBA0C164DF86F00B4062B /* test.glsl */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		EC487B98C7B1F6099CEC4E73 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				0B7D7DD7F5AABF51BA5EBBA4 /* Unit */,
+				7890E7BBA98A177A0B370C11 /* Support */,
+				CDC3495388581A874FAF32BA /* UI */,
+			);
+			name = Tests;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		EE6EA2E4E672C68A7BAE46B6 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				9BEF09B85F2DABEAD07580A1 /* SwiftSupport.swift */,
+				652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */,
+			);
+			name = Swift;
+			path = Source/Swift;
+			sourceTree = "<group>";
+		};
+		FE3077E9720EEC4AE82133EB /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1143,6 +1273,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		2AEE1AF7413CD10EFC03AD83 /* BricksmithTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1934F15560CA825FEFE65E3 /* Build configuration list for PBXNativeTarget "BricksmithTests" */;
+			buildPhases = (
+				029E0597AD009BE221486E2E /* Sources */,
+				539C5283BDE2602FDFD2AB90 /* Frameworks */,
+				E9C9FFC9E7631D8E8A2F7EE8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9F51D7FC01523032C7B33564 /* PBXTargetDependency */,
+			);
+			name = BricksmithTests;
+			productName = BricksmithTests;
+			productReference = 09E3A83323C43757A3923438 /* BricksmithTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		8D15AC270486D014006FF6A4 /* Bricksmith */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2BB5974D09FEFD180077A885 /* Build configuration list for PBXNativeTarget "Bricksmith" */;
@@ -1165,6 +1313,24 @@
 			productName = "Mac LDraw";
 			productReference = 8D15AC370486D014006FF6A4 /* Bricksmith.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FB6FF4844B23E9E4B7442EB0 /* BricksmithUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 59EDA9FDD37AC00DB70E8120 /* Build configuration list for PBXNativeTarget "BricksmithUITests" */;
+			buildPhases = (
+				C7395F41C607619F10766E6E /* Sources */,
+				46D422FFBC4B335598F8AA46 /* Frameworks */,
+				F4637C16F0F3E890357241D6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1DEC21942CB4374717E028A1 /* PBXTargetDependency */,
+			);
+			name = BricksmithUITests;
+			productName = BricksmithUITests;
+			productReference = 81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -1200,6 +1366,8 @@
 			projectRoot = ..;
 			targets = (
 				8D15AC270486D014006FF6A4 /* Bricksmith */,
+				2AEE1AF7413CD10EFC03AD83 /* BricksmithTests */,
+				FB6FF4844B23E9E4B7442EB0 /* BricksmithUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1269,9 +1437,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E9C9FFC9E7631D8E8A2F7EE8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4637C16F0F3E890357241D6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		029E0597AD009BE221486E2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7AA9DDF8C87E4F358B692943 /* HarnessSmokeTests.swift in Sources */,
+				6923F7A2DC1FC7BEB7C6E5FB /* HarnessExitTests.swift in Sources */,
+				ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */,
+				E5FCCD3318DC0660E5479B46 /* HarnessFixtureLibraryTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D15AC300486D014006FF6A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1373,12 +1566,30 @@
 				D619130217F004A300B5DF44 /* LDrawGLCamera.m in Sources */,
 				D6191B9E17F277B600B5DF44 /* GLMatrixMath.c in Sources */,
 				0B0B6CCE2787D87800F6E225 /* PartCatalogBuilder.m in Sources */,
+				DD3CC3C72DA60E59406D2657 /* SwiftSupport.swift in Sources */,
+				B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */,
+				96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */,
+				0978E78C9B0CC8B3AD30D245 /* LDrawPathNames.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7395F41C607619F10766E6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F40CAC2930A7FE9230E2FC7D /* LaunchSmokeUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1DEC21942CB4374717E028A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Bricksmith;
+			target = 8D15AC270486D014006FF6A4 /* Bricksmith */;
+			targetProxy = 6AFF5A9AD129844AF6F2ED07 /* PBXContainerItemProxy */;
+		};
 		2BB5976009FEFD2E0077A885 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AMSProgressBar;
@@ -1388,6 +1599,12 @@
 			isa = PBXTargetDependency;
 			name = LSynth;
 			targetProxy = 95D893A91655328300AA055B /* PBXContainerItemProxy */;
+		};
+		9F51D7FC01523032C7B33564 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Bricksmith;
+			target = 8D15AC270486D014006FF6A4 /* Bricksmith */;
+			targetProxy = 7DC1F46DF5EF14164015FB1C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1639,9 +1856,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../ThirdParty\"",
 					"\"$(SRCROOT)/../ThirdParty/Sparkle\"",
@@ -1663,6 +1882,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.Bricksmith.debug;
 				PRODUCT_NAME = Bricksmith;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Swift/Bricksmith-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1672,6 +1895,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -1694,6 +1918,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.Bricksmith;
 				PRODUCT_NAME = Bricksmith;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Swift/Bricksmith-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1729,6 +1957,76 @@
 			};
 			name = Release;
 		};
+		60609AF2A9A511D9BBBE3385 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Bricksmith;
+			};
+			name = Release;
+		};
+		B79D08A3546883FB5866829F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Bricksmith;
+			};
+			name = Debug;
+		};
+		D0C4D934D079D146A70B156C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bricksmith.app/Contents/MacOS/Bricksmith";
+			};
+			name = Debug;
+		};
+		FEEC6A83905732A6EB60CF19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AllenSmith.BricksmithTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bricksmith.app/Contents/MacOS/Bricksmith";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1749,6 +2047,24 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		59EDA9FDD37AC00DB70E8120 /* Build configuration list for PBXNativeTarget "BricksmithUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60609AF2A9A511D9BBBE3385 /* Release */,
+				B79D08A3546883FB5866829F /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1934F15560CA825FEFE65E3 /* Build configuration list for PBXNativeTarget "BricksmithTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEEC6A83905732A6EB60CF19 /* Release */,
+				D0C4D934D079D146A70B156C /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

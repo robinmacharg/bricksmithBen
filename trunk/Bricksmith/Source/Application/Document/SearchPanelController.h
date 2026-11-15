@@ -10,26 +10,26 @@
 
 // UI radio buttons are tagged:
 // Where to search
-typedef enum {
+typedef NS_ENUM(int, ScopeT){
     ScopeFile  = 1,
     ScopeModel = 2,
     ScopeStep  = 3,
     ScopeSelection = 4
-} ScopeT;
+};
 
 // How to search for colors
-typedef enum {
+typedef NS_ENUM(int, ColorFilterT){
     ColorNoFilter = 1,
     ColorSelectionFilter = 2,
     ColorFilter = 3
-} ColorFilterT;
+};
 
 // What to search for
-typedef enum {
+typedef NS_ENUM(int, SearchPartCriteriaT){
     SearchAllParts = 1,
     SearchSpecificPart = 2,
     SearchSelectedParts = 3
-} SearchPartCriteriaT;
+};
 
 @interface SearchPanelController : NSWindowController <NSWindowDelegate, NSDraggingDestination>
 {

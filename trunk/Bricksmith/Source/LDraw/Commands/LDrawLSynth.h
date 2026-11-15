@@ -6,6 +6,7 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import "LDrawContainer.h"
 #import "LDrawDrawableElement.h"
 #import "ColorLibrary.h"
@@ -46,7 +47,7 @@
 //
 
 // Lsynth block parser states
-typedef enum
+typedef NS_ENUM(int, LSynthParserStateT)
 {
     PARSER_READY_TO_PARSE       = 1, // Idle state - we've not found a SYNTH BEGIN <TYPE> <COLOR> line
     PARSER_PARSING_BEGUN        = 2, // SYNTH BEGIN has been found
@@ -55,7 +56,7 @@ typedef enum
     PARSER_SYNTHESIZED_FINISHED = 5, // Looking for SYNTH END
     PARSER_FINISHED             = 6, // All finished.
     PARSER_STATE_COUNT
-} LSynthParserStateT;
+};
 
 @interface LDrawLSynth : LDrawContainer <LDrawColorable, LDrawMovableDirective>
 {

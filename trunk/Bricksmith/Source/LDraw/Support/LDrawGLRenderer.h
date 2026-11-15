@@ -8,7 +8,7 @@
 //
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import OPEN_GL_HEADER
+#import <OpenGL/gl.h>
 
 #import "MacLDraw.h"
 #import "ColorLibrary.h"
@@ -31,12 +31,12 @@
 
 
 // Draw Mode
-typedef enum
+typedef NS_ENUM(int, RotationDrawModeT)
 {
 	LDrawGLDrawNormal			= 0,	//full draw
 	LDrawGLDrawExtremelyFast	= 1		//bounds only
 	
-} RotationDrawModeT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////

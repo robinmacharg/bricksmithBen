@@ -2,6 +2,7 @@
 
 Bricksmith is a macOS LEGO CAD app (LDraw editor), written in Objective-C and C. It is being ported to Swift.
 Read these first:
+- **[docs/LEARNINGS.md](docs/LEARNINGS.md): read this first.** It lists mistakes already made and gotchas already hit. Add an entry whenever something bites.
 - [docs/swift-port-plan.md](docs/swift-port-plan.md): the plan. It covers phases, interop rules, the per-class recipe and exit gates.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the code is organised.
 - [docs/TESTING.md](docs/TESTING.md): how to test, plus the manual smoke checklist.
@@ -14,7 +15,8 @@ Read these first:
 - Build: `scripts/build.sh` (Debug) or `scripts/build.sh --release`. These always do a clean build into
   `build/DerivedData`, and fail on any compiler warning that isn't in `docs/warnings-baseline*.txt`.
   - Re-record a baseline with `--update-baseline`, but only deliberately, and explain why in the commit.
-  - Tests: `scripts/test.sh` (arrives in P1).
+  - Tests: `scripts/test.sh` (`--ui` for UI tests, `--only Target/Suite`). Conventions for writing tests are in
+    docs/TESTING.md ("Writing a test").
 - The shell is zsh, so quote globs and paths that contain spaces (`"trunk/Test Data"`).
 
 ## Versioning

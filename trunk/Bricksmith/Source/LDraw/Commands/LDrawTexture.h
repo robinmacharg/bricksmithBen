@@ -8,6 +8,7 @@
 //
 //==============================================================================
 #import <Cocoa/Cocoa.h>
+#import "BricksmithBuildConfig.h"   // dispatch_group_t (see USE_BLOCKS)
 
 #import "LDrawContainer.h"
 

@@ -93,6 +93,21 @@ static PartLibrary *SharedPartLibrary = nil;
 }//end sharedPartLibrary
 
 
+//---------- resetForTesting -----------------------------------------[static]--
+//
+// Purpose:		TEST SUPPORT ONLY. Discards the shared instance so the next
+//				access rebuilds it (e.g. from a test fixture library).
+//
+//------------------------------------------------------------------------------
++ (void) resetForTesting
+{
+#if !__has_feature(objc_arc)
+	[SharedPartLibrary release];
+#endif
+	SharedPartLibrary = nil;
+}//end resetForTesting
+
+
 //========== init ==============================================================
 //
 // Purpose:		Creates a part library with no parts loaded.

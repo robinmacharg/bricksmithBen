@@ -15,120 +15,123 @@
 //==============================================================================
 
 
+#import <Foundation/Foundation.h>
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 #pragma mark		Preferences Keys
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#define COLUMNIZE_OUTPUT_KEY						@"ColumnizeOutput"
-#define DOCUMENT_WINDOW_SIZE						@"Document Window Size"
-#define DONATION_SCREEN_LAST_VERSION_DISPLAYED		@"DonationRequestLastVersion"
-#define DONATION_SCREEN_SUPPRESS_THIS_VERSION		@"DonationRequestSuppressThisVersion"
-#define FAVORITE_PARTS_KEY							@"FavoriteParts"
-#define FILE_CONTENTS_DRAWER_STATE					@"File Contents Drawer State" //obsolete
-#define GRID_SPACING_COARSE							@"Grid Spacing: Coarse"
-#define GRID_SPACING_FINE							@"Grid Spacing: Fine"
-#define GRID_SPACING_MEDIUM							@"Grid Spacing: Medium"
-#define LDRAW_GL_VIEW_ANGLE							@"LDrawGLView Viewing Angle"
-#define LDRAW_GL_VIEW_PROJECTION					@"LDrawGLView Viewing Projection"
-#define LDRAW_PATH_KEY								@"LDraw Path"
-#define LDRAW_VIEWER_BACKGROUND_COLOR_KEY			@"LDraw Viewer Background Color"
-#define MOUSE_DRAGGING_BEHAVIOR_KEY					@"Mouse Dragging Behavior"
-#define RIGHT_BUTTON_BEHAVIOR_KEY					@"Right Button Behavior"
-#define ROTATE_MODE_KEY								@"Rotate Mode"
-#define MOUSE_WHEEL_BEHAVIOR_KEY					@"Mouse Wheel Behavior"
-#define PART_BROWSER_DRAWER_STATE					@"Part Browser Drawer State"
-#define PART_BROWSER_PANEL_SHOW_AT_LAUNCH			@"Part Browser Panel Show at Launch"
-#define PART_BROWSER_PREVIOUS_CATEGORY				@"Part Browser Previous Category"
-#define PART_BROWSER_PREVIOUS_SELECTED_ROW			@"Part Browser Previous Selected Row"
-#define PART_BROWSER_SEARCH_MODE					@"Part Browser Search Mode"
-#define PART_BROWSER_STYLE_KEY						@"Part Browser Style"
-#define PREFERENCES_LAST_TAB_DISPLAYED				@"Preferences Tab"
-#define SYNTAX_COLOR_COLORS_KEY						@"Syntak Color Colors"
-#define SYNTAX_COLOR_COMMENTS_KEY					@"Syntax Color Comments"
-#define SYNTAX_COLOR_MODELS_KEY						@"Syntax Color Models"
-#define SYNTAX_COLOR_PARTS_KEY						@"Syntax Color Parts"
-#define SYNTAX_COLOR_PRIMITIVES_KEY					@"Syntax Color Primitives"
-#define SYNTAX_COLOR_STEPS_KEY						@"Syntax Color Steps"
-#define SYNTAX_COLOR_UNKNOWN_KEY					@"Syntax Color Unknown"
-#define TOOL_PALETTE_HIDDEN							@"Tool Palette Hidden"
-#define VIEWPORTS_EXPAND_TO_AVAILABLE_SIZE			@"ViewportsExpandToAvailableSize"
+FOUNDATION_EXPORT NSString * const COLUMNIZE_OUTPUT_KEY; // @"ColumnizeOutput"
+FOUNDATION_EXPORT NSString * const DOCUMENT_WINDOW_SIZE; // @"Document Window Size"
+FOUNDATION_EXPORT NSString * const DONATION_SCREEN_LAST_VERSION_DISPLAYED; // @"DonationRequestLastVersion"
+FOUNDATION_EXPORT NSString * const DONATION_SCREEN_SUPPRESS_THIS_VERSION; // @"DonationRequestSuppressThisVersion"
+FOUNDATION_EXPORT NSString * const FAVORITE_PARTS_KEY; // @"FavoriteParts"
+FOUNDATION_EXPORT NSString * const FILE_CONTENTS_DRAWER_STATE; // @"File Contents Drawer State"  //obsolete
+FOUNDATION_EXPORT NSString * const GRID_SPACING_COARSE; // @"Grid Spacing: Coarse"
+FOUNDATION_EXPORT NSString * const GRID_SPACING_FINE; // @"Grid Spacing: Fine"
+FOUNDATION_EXPORT NSString * const GRID_SPACING_MEDIUM; // @"Grid Spacing: Medium"
+FOUNDATION_EXPORT NSString * const LDRAW_GL_VIEW_ANGLE; // @"LDrawGLView Viewing Angle"
+FOUNDATION_EXPORT NSString * const LDRAW_GL_VIEW_PROJECTION; // @"LDrawGLView Viewing Projection"
+FOUNDATION_EXPORT NSString * const LDRAW_PATH_KEY; // @"LDraw Path"
+FOUNDATION_EXPORT NSString * const LDRAW_VIEWER_BACKGROUND_COLOR_KEY; // @"LDraw Viewer Background Color"
+FOUNDATION_EXPORT NSString * const MOUSE_DRAGGING_BEHAVIOR_KEY; // @"Mouse Dragging Behavior"
+FOUNDATION_EXPORT NSString * const RIGHT_BUTTON_BEHAVIOR_KEY; // @"Right Button Behavior"
+FOUNDATION_EXPORT NSString * const ROTATE_MODE_KEY; // @"Rotate Mode"
+FOUNDATION_EXPORT NSString * const MOUSE_WHEEL_BEHAVIOR_KEY; // @"Mouse Wheel Behavior"
+FOUNDATION_EXPORT NSString * const PART_BROWSER_DRAWER_STATE; // @"Part Browser Drawer State"
+FOUNDATION_EXPORT NSString * const PART_BROWSER_PANEL_SHOW_AT_LAUNCH; // @"Part Browser Panel Show at Launch"
+FOUNDATION_EXPORT NSString * const PART_BROWSER_PREVIOUS_CATEGORY; // @"Part Browser Previous Category"
+FOUNDATION_EXPORT NSString * const PART_BROWSER_PREVIOUS_SELECTED_ROW; // @"Part Browser Previous Selected Row"
+FOUNDATION_EXPORT NSString * const PART_BROWSER_SEARCH_MODE; // @"Part Browser Search Mode"
+FOUNDATION_EXPORT NSString * const PART_BROWSER_STYLE_KEY; // @"Part Browser Style"
+FOUNDATION_EXPORT NSString * const PREFERENCES_LAST_TAB_DISPLAYED; // @"Preferences Tab"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_COLORS_KEY; // @"Syntak Color Colors"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_COMMENTS_KEY; // @"Syntax Color Comments"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_MODELS_KEY; // @"Syntax Color Models"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_PARTS_KEY; // @"Syntax Color Parts"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_PRIMITIVES_KEY; // @"Syntax Color Primitives"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_STEPS_KEY; // @"Syntax Color Steps"
+FOUNDATION_EXPORT NSString * const SYNTAX_COLOR_UNKNOWN_KEY; // @"Syntax Color Unknown"
+FOUNDATION_EXPORT NSString * const TOOL_PALETTE_HIDDEN; // @"Tool Palette Hidden"
+FOUNDATION_EXPORT NSString * const VIEWPORTS_EXPAND_TO_AVAILABLE_SIZE; // @"ViewportsExpandToAvailableSize"
 
 // LSynth
-#define LSYNTH_EXECUTABLE_PATH_KEY                  @"LSynth Executable Path"
-#define LSYNTH_CONFIGURATION_PATH_KEY               @"LSynth Configuration Path"
-#define LSYNTH_SELECTION_TRANSPARENCY_KEY           @"LSynth Selection Transparency"
-#define LSYNTH_SELECTION_COLOR_KEY                  @"LSynth Selection Color"
-#define LSYNTH_SELECTION_MODE_KEY                   @"LSynth Selection Mode"
-#define LSYNTH_SAVE_SYNTHESIZED_PARTS_KEY           @"LSynth Save Synthesized Parts"
-#define LSYNTH_SHOW_BASIC_PARTS_LIST_KEY            @"LSynth Show Basic Parts List"
+FOUNDATION_EXPORT NSString * const LSYNTH_EXECUTABLE_PATH_KEY; // @"LSynth Executable Path"
+FOUNDATION_EXPORT NSString * const LSYNTH_CONFIGURATION_PATH_KEY; // @"LSynth Configuration Path"
+FOUNDATION_EXPORT NSString * const LSYNTH_SELECTION_TRANSPARENCY_KEY; // @"LSynth Selection Transparency"
+FOUNDATION_EXPORT NSString * const LSYNTH_SELECTION_COLOR_KEY; // @"LSynth Selection Color"
+FOUNDATION_EXPORT NSString * const LSYNTH_SELECTION_MODE_KEY; // @"LSynth Selection Mode"
+FOUNDATION_EXPORT NSString * const LSYNTH_SAVE_SYNTHESIZED_PARTS_KEY; // @"LSynth Save Synthesized Parts"
+FOUNDATION_EXPORT NSString * const LSYNTH_SHOW_BASIC_PARTS_LIST_KEY; // @"LSynth Show Basic Parts List"
 
-#define MINIFIGURE_HAS_HAT							@"Minifigure Has Hat"
-#define MINIFIGURE_HAS_HEAD							@"Minifigure Has Head"
-#define MINIFIGURE_HAS_NECK							@"Minifigure Has Neck"
-#define MINIFIGURE_HAS_TORSO						@"Minifigure Has Torso"
-#define MINIFIGURE_HAS_ARM_RIGHT					@"Minifigure Has Arm Right"
-#define MINIFIGURE_HAS_ARM_LEFT						@"Minifigure Has Arm Left"
-#define MINIFIGURE_HAS_HAND_RIGHT					@"Minifigure Has Hand Right"
-#define MINIFIGURE_HAS_HAND_RIGHT_ACCESSORY			@"Minifigure Has Hand Right Accessory"
-#define MINIFIGURE_HAS_HAND_LEFT					@"Minifigure Has Hand Left"
-#define MINIFIGURE_HAS_HAND_LEFT_ACCESSORY			@"Minifigure Has Hand Left Accessory"
-#define MINIFIGURE_HAS_HIPS							@"Minifigure Has Hips"
-#define MINIFIGURE_HAS_LEG_RIGHT					@"Minifigure Has Leg Right"
-#define MINIFIGURE_HAS_LEG_RIGHT_ACCESSORY			@"Minifigure Has Leg Right Accessory"
-#define MINIFIGURE_HAS_LEG_LEFT						@"Minifigure Has Leg Left"
-#define MINIFIGURE_HAS_LEG_LEFT_ACCESSORY			@"Minifigure Has Leg Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HAT; // @"Minifigure Has Hat"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HEAD; // @"Minifigure Has Head"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_NECK; // @"Minifigure Has Neck"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_TORSO; // @"Minifigure Has Torso"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_ARM_RIGHT; // @"Minifigure Has Arm Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_ARM_LEFT; // @"Minifigure Has Arm Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HAND_RIGHT; // @"Minifigure Has Hand Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HAND_RIGHT_ACCESSORY; // @"Minifigure Has Hand Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HAND_LEFT; // @"Minifigure Has Hand Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HAND_LEFT_ACCESSORY; // @"Minifigure Has Hand Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_HIPS; // @"Minifigure Has Hips"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_LEG_RIGHT; // @"Minifigure Has Leg Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_LEG_RIGHT_ACCESSORY; // @"Minifigure Has Leg Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_LEG_LEFT; // @"Minifigure Has Leg Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HAS_LEG_LEFT_ACCESSORY; // @"Minifigure Has Leg Left Accessory"
 
-#define MINIFIGURE_PARTNAME_HAT						@"Minifigure Partname Hat"
-#define MINIFIGURE_PARTNAME_HEAD					@"Minifigure Partname Head"
-#define MINIFIGURE_PARTNAME_NECK					@"Minifigure Partname Neck"
-#define MINIFIGURE_PARTNAME_TORSO					@"Minifigure Partname Torso"
-#define MINIFIGURE_PARTNAME_ARM_RIGHT				@"Minifigure Partname Arm Right"
-#define MINIFIGURE_PARTNAME_ARM_LEFT				@"Minifigure Partname Arm Left"
-#define MINIFIGURE_PARTNAME_HAND_RIGHT				@"Minifigure Partname Hand Right"
-#define MINIFIGURE_PARTNAME_HAND_RIGHT_ACCESSORY	@"Minifigure Partname Hand Right Accessory"
-#define MINIFIGURE_PARTNAME_HAND_LEFT				@"Minifigure Partname Hand Left"
-#define MINIFIGURE_PARTNAME_HAND_LEFT_ACCESSORY		@"Minifigure Partname Hand Left Accessory"
-#define MINIFIGURE_PARTNAME_HIPS					@"Minifigure Partname Hips"
-#define MINIFIGURE_PARTNAME_LEG_RIGHT				@"Minifigure Partname Leg Right"
-#define MINIFIGURE_PARTNAME_LEG_RIGHT_ACCESSORY		@"Minifigure Partname Leg Right Accessory"
-#define MINIFIGURE_PARTNAME_LEG_LEFT				@"Minifigure Partname Leg Left"
-#define MINIFIGURE_PARTNAME_LEG_LEFT_ACCESSORY		@"Minifigure Partname Leg Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HAT; // @"Minifigure Partname Hat"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HEAD; // @"Minifigure Partname Head"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_NECK; // @"Minifigure Partname Neck"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_TORSO; // @"Minifigure Partname Torso"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_ARM_RIGHT; // @"Minifigure Partname Arm Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_ARM_LEFT; // @"Minifigure Partname Arm Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HAND_RIGHT; // @"Minifigure Partname Hand Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HAND_RIGHT_ACCESSORY; // @"Minifigure Partname Hand Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HAND_LEFT; // @"Minifigure Partname Hand Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HAND_LEFT_ACCESSORY; // @"Minifigure Partname Hand Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_HIPS; // @"Minifigure Partname Hips"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_LEG_RIGHT; // @"Minifigure Partname Leg Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_LEG_RIGHT_ACCESSORY; // @"Minifigure Partname Leg Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_LEG_LEFT; // @"Minifigure Partname Leg Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_PARTNAME_LEG_LEFT_ACCESSORY; // @"Minifigure Partname Leg Left Accessory"
 
-#define MINIFIGURE_ANGLE_HAT						@"Minifigure Angle Hat"
-#define MINIFIGURE_ANGLE_HEAD						@"Minifigure Angle Head"
-#define MINIFIGURE_ANGLE_NECK						@"Minifigure Angle Neck"
-#define MINIFIGURE_ANGLE_TORSO						@"Minifigure Angle Torso"
-#define MINIFIGURE_ANGLE_ARM_RIGHT					@"Minifigure Angle Arm Right"
-#define MINIFIGURE_ANGLE_ARM_LEFT					@"Minifigure Angle Arm Left"
-#define MINIFIGURE_ANGLE_HAND_RIGHT					@"Minifigure Angle Hand Right"
-#define MINIFIGURE_ANGLE_HAND_RIGHT_ACCESSORY		@"Minifigure Angle Hand Right Accessory"
-#define MINIFIGURE_ANGLE_HAND_LEFT					@"Minifigure Angle Hand Left"
-#define MINIFIGURE_ANGLE_HAND_LEFT_ACCESSORY		@"Minifigure Angle Hand Left Accessory"
-#define MINIFIGURE_ANGLE_HIPS						@"Minifigure Angle Hips"
-#define MINIFIGURE_ANGLE_LEG_RIGHT					@"Minifigure Angle Leg Right"
-#define MINIFIGURE_ANGLE_LEG_RIGHT_ACCESSORY		@"Minifigure Angle Leg Right Accessory"
-#define MINIFIGURE_ANGLE_LEG_LEFT					@"Minifigure Angle Leg Left"
-#define MINIFIGURE_ANGLE_LEG_LEFT_ACCESSORY			@"Minifigure Angle Leg Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HAT; // @"Minifigure Angle Hat"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HEAD; // @"Minifigure Angle Head"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_NECK; // @"Minifigure Angle Neck"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_TORSO; // @"Minifigure Angle Torso"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_ARM_RIGHT; // @"Minifigure Angle Arm Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_ARM_LEFT; // @"Minifigure Angle Arm Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HAND_RIGHT; // @"Minifigure Angle Hand Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HAND_RIGHT_ACCESSORY; // @"Minifigure Angle Hand Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HAND_LEFT; // @"Minifigure Angle Hand Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HAND_LEFT_ACCESSORY; // @"Minifigure Angle Hand Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_HIPS; // @"Minifigure Angle Hips"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_LEG_RIGHT; // @"Minifigure Angle Leg Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_LEG_RIGHT_ACCESSORY; // @"Minifigure Angle Leg Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_LEG_LEFT; // @"Minifigure Angle Leg Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_ANGLE_LEG_LEFT_ACCESSORY; // @"Minifigure Angle Leg Left Accessory"
 
-#define MINIFIGURE_COLOR_HAT						@"Minifigure Color Hat"
-#define MINIFIGURE_COLOR_HEAD						@"Minifigure Color Head"
-#define MINIFIGURE_COLOR_NECK						@"Minifigure Color Neck"
-#define MINIFIGURE_COLOR_TORSO						@"Minifigure Color Torso"
-#define MINIFIGURE_COLOR_ARM_RIGHT					@"Minifigure Color Arm Right"
-#define MINIFIGURE_COLOR_ARM_LEFT					@"Minifigure Color Arm Left"
-#define MINIFIGURE_COLOR_HAND_RIGHT					@"Minifigure Color Hand Right"
-#define MINIFIGURE_COLOR_HAND_RIGHT_ACCESSORY		@"Minifigure Color Hand Right Accessory"
-#define MINIFIGURE_COLOR_HAND_LEFT					@"Minifigure Color Hand Left"
-#define MINIFIGURE_COLOR_HAND_LEFT_ACCESSORY		@"Minifigure Color Hand Left Accessory"
-#define MINIFIGURE_COLOR_HIPS						@"Minifigure Color Hips"
-#define MINIFIGURE_COLOR_LEG_RIGHT					@"Minifigure Color Leg Right"
-#define MINIFIGURE_COLOR_LEG_RIGHT_ACCESSORY		@"Minifigure Color Leg Right Accessory"
-#define MINIFIGURE_COLOR_LEG_LEFT					@"Minifigure Color Leg Left"
-#define MINIFIGURE_COLOR_LEG_LEFT_ACCESSORY			@"Minifigure Color Leg Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HAT; // @"Minifigure Color Hat"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HEAD; // @"Minifigure Color Head"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_NECK; // @"Minifigure Color Neck"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_TORSO; // @"Minifigure Color Torso"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_ARM_RIGHT; // @"Minifigure Color Arm Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_ARM_LEFT; // @"Minifigure Color Arm Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HAND_RIGHT; // @"Minifigure Color Hand Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HAND_RIGHT_ACCESSORY; // @"Minifigure Color Hand Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HAND_LEFT; // @"Minifigure Color Hand Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HAND_LEFT_ACCESSORY; // @"Minifigure Color Hand Left Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_HIPS; // @"Minifigure Color Hips"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_LEG_RIGHT; // @"Minifigure Color Leg Right"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_LEG_RIGHT_ACCESSORY; // @"Minifigure Color Leg Right Accessory"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_LEG_LEFT; // @"Minifigure Color Leg Left"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_COLOR_LEG_LEFT_ACCESSORY; // @"Minifigure Color Leg Left Accessory"
 
-#define MINIFIGURE_HEAD_ELEVATION					@"Minifigure Head Elevation"
+FOUNDATION_EXPORT NSString * const MINIFIGURE_HEAD_ELEVATION; // @"Minifigure Head Elevation"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,46 +156,46 @@
 
 //The color which will be assigned to new parts has changed.
 // Object is the new LDrawColorT, as an NSNumber. No userInfo.
-#define LDrawColorDidChangeNotification					@"LDrawColorDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawColorDidChangeNotification; // @"LDrawColorDidChangeNotification"
 
 //the keys on the keyboard which were depressed just changed.
 // Object is an NSEvent: keyUp, keyDown, or flagsChanged.
-#define LDrawKeyboardDidChangeNotification				@"LDrawKeyboardDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawKeyboardDidChangeNotification; // @"LDrawKeyboardDidChangeNotification"
 
 //tool mode changed.
 // Object is an NSNumber containing the new ToolModeT.
-#define LDrawMouseToolDidChangeNotification				@"LDrawMouseToolDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawMouseToolDidChangeNotification; // @"LDrawMouseToolDidChangeNotification"
 
 //tablet pointing device changed.
 // Object is an NSEvent: NSTabletProximity.
-#define LDrawPointingDeviceDidChangeNotification		@"LDrawPointingDeviceDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawPointingDeviceDidChangeNotification; // @"LDrawPointingDeviceDidChangeNotification"
 
 //Part Browser should be shown a different way.
 // Object is NSNumber of new style. No userInfo.
-#define LDrawPartBrowserStyleDidChangeNotification		@"LDrawPartBrowserStyleDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawPartBrowserStyleDidChangeNotification; // @"LDrawPartBrowserStyleDidChangeNotification"
 
 //Syntax coloring changed in preferences.
 // Object is the application. No userInfo.
-#define LDrawSyntaxColorsDidChangeNotification			@"LDrawSyntaxColorsDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawSyntaxColorsDidChangeNotification; // @"LDrawSyntaxColorsDidChangeNotification"
 
 //Syntax coloring changed in preferences.
 // Object is the new color. No userInfo.
-#define LDrawViewBackgroundColorDidChangeNotification	@"LDrawViewBackgroundColorDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LDrawViewBackgroundColorDidChangeNotification; // @"LDrawViewBackgroundColorDidChangeNotification"
 
 //A model was added to a document.  Note that the object
 // for this notification is the LDrawFile that was edited!
-#define LDrawMPDSubModelAdded							@"LDrawMPDSubModelAdded"
+FOUNDATION_EXPORT NSString * const LDrawMPDSubModelAdded; // @"LDrawMPDSubModelAdded"
 
 //The library was reloaded.  Documents need to tell their parts
 // to re-resolve their references.
-#define LDrawPartLibraryReloaded						@"LDrawPartLibraryReloaded"
+FOUNDATION_EXPORT NSString * const LDrawPartLibraryReloaded; // @"LDrawPartLibraryReloaded"
 
 // The LSynth selection appearance changed.  Selected LSynth
 // parts need to update to reflect this
-#define LSynthSelectionDisplayDidChangeNotification    @"LSynthSelectionDisplayDidChangeNotification"
+FOUNDATION_EXPORT NSNotificationName const LSynthSelectionDisplayDidChangeNotification; // @"LSynthSelectionDisplayDidChangeNotification"
 
 // The LSynth parts need to resynthesize for some reason - maybe config or exe changes
-#define LSynthResynthesisRequiredNotification          @"LSynthResynthesisRequiredNotification"
+FOUNDATION_EXPORT NSNotificationName const LSynthResynthesisRequiredNotification; // @"LSynthResynthesisRequiredNotification"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -297,7 +300,7 @@ typedef enum MenuTags
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum MouseDragBehavior
+typedef NS_ENUM(int, MouseDragBehaviorT)
 {
 	MouseDraggingOff									= 0,
 	MouseDraggingBeginImmediately						= 1,
@@ -305,51 +308,51 @@ typedef enum MouseDragBehavior
 	MouseDraggingImmediatelyInOrthoNeverInPerspective	= 3
 	
 
-} MouseDragBehaviorT;
+};
 
-typedef enum RightButtonBehavior
+typedef NS_ENUM(int, RightButtonBehaviorT)
 {
 	RightButtonContextual								= 0,
 	RightButtonRotates									= 1
 
-} RightButtonBehaviorT;
+};
 
-typedef enum RotateMode {
+typedef NS_ENUM(int, RotateModeT) {
 	RotateModeTrackball									= 0,
 	RotateModeTurntable									= 1
 
-} RotateModeT;
+};
 
-typedef enum MouseWheelBeahvior {
+typedef NS_ENUM(int, MouseWheelBeahviorT) {
 	MouseWheelScrolls									= 0,
 	MouseWheelZooms										= 1
 
-} MouseWheelBeahviorT;
+};
 
-typedef enum PartBrowserStyle
+typedef NS_ENUM(int, PartBrowserStyleT)
 {
 	PartBrowserShowAsDrawer	= 0,
 	PartBrowserShowAsPanel	= 1
 
-} PartBrowserStyleT;
+};
 
 
-typedef enum SearchMode
+typedef NS_ENUM(int, SearchModeT)
 {
 	SearchModeAllCategories	= 0,
 	SearchModeSelectedCategory = 1
 
-} SearchModeT;
+};
 
 
-typedef enum SelectionMode {
+typedef NS_ENUM(int, SelectionModeT) {
 	
 	SelectionReplace		= 0,			// Normal drag - take new
 	SelectionExtend			= 1,			// Shift drag - take old | new
 	SelectionSubtract		= 2,			// Option drag - take old - new
 	SelectionIntersection	= 3				// Option-shift drag - take old & new
 	
-} SelectionModeT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -363,27 +366,27 @@ typedef enum SelectionMode {
 //Used for dragging within the File Contents outline. Contains an array of 
 // LDrawDirectives stored as NSData objects. There should be no duplication of 
 // objects.
-#define LDrawDirectivePboardType				@"LDrawDirectivePboardType"
+FOUNDATION_EXPORT NSString * const LDrawDirectivePboardType; // @"LDrawDirectivePboardType"
 
 //Used for dragging parts around in or between viewports. Contains an array of 
 // LDrawDirectives stored as NSData objects. There should be no duplication of 
 // objects.
-#define LDrawDraggingPboardType					@"LDrawDraggingPboardType"
+FOUNDATION_EXPORT NSString * const LDrawDraggingPboardType; // @"LDrawDraggingPboardType"
 
 // Contains a Vector3 as NSData indicating the offset between the click location 
 // which originated the drag and the position of the first dragged directive. 
-#define LDrawDraggingInitialOffsetPboardType	@"LDrawDraggingInitialOffsetPboardType"
+FOUNDATION_EXPORT NSString * const LDrawDraggingInitialOffsetPboardType; // @"LDrawDraggingInitialOffsetPboardType"
 
 // Contains a BOOL indicating the dragging directive has never been part of a 
 // model before.  
-#define LDrawDraggingIsUninitializedPboardType	@"LDrawDraggingIsUninitializedPboardType"
+FOUNDATION_EXPORT NSString * const LDrawDraggingIsUninitializedPboardType; // @"LDrawDraggingIsUninitializedPboardType"
 
 //Contains an array of indexes for the original objects being drug.
 // Since the objects are converted to data when placed on the 
 // LDrawDirectivePboardType (effectively copying them), these source indexes 
 // must be used to delete the original objects after the copies have been 
 // deposited in their new destination.
-#define LDrawDragSourceRowsPboardType			@"LDrawDragSourceRowsPboardType"
+FOUNDATION_EXPORT NSString * const LDrawDragSourceRowsPboardType; // @"LDrawDragSourceRowsPboardType"
 
-#define LDrawDisallowDragToSourcePboardType		@"LDrawDisallowDragToSourcePboardType"
+FOUNDATION_EXPORT NSString * const LDrawDisallowDragToSourcePboardType; // @"LDrawDisallowDragToSourcePboardType"
 

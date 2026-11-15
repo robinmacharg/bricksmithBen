@@ -9,7 +9,7 @@
 //
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import OPEN_GL_HEADER
+#import <OpenGL/gl.h>
 
 #import "LDrawMetaCommand.h"
 
@@ -107,7 +107,7 @@ typedef enum
 } LDrawColorT;
 
 
-typedef enum LDrawColorMaterial
+typedef NS_ENUM(int, LDrawColorMaterialT)
 {
 	LDrawColorMaterialNone			= 0,
 	LDrawColorMaterialChrome		= 1,
@@ -117,7 +117,7 @@ typedef enum LDrawColorMaterial
 	LDrawColorMaterialMetal			= 5,
 	LDrawColorMaterialCustom		= 6,
 
-} LDrawColorMaterialT;
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
