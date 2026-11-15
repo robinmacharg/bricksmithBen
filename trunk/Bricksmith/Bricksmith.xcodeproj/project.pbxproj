@@ -264,6 +264,7 @@
 		EBF8ECA41084248E08A951F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */; };
 		ECAAECE4C9CA0793277343F8 /* FixtureLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */; };
 		F40CAC2930A7FE9230E2FC7D /* LaunchSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6591C25629EC43DD5B801 /* LaunchSmokeUITests.swift */; };
+		F477FA6F72E134A874EA93C1 /* FormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855E62A9683786D2025D0557 /* FormatTests.swift */; };
 		F9B36DA0A7993C7FBB241D83 /* KnownIssueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9F1A1B51FCAFFB2D6E51B /* KnownIssueTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -566,6 +567,7 @@
 		73772F01F06AC293E3F650C4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = ../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		741501FF6219F19D814635AC /* Golden.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Golden.swift; sourceTree = "<group>"; };
 		81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		855E62A9683786D2025D0557 /* FormatTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FormatTests.swift; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		8D15AC370486D014006FF6A4 /* Bricksmith.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricksmith.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FD44D0D7A78934895B33948 /* FixtureLibrary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FixtureLibrary.swift; sourceTree = "<group>"; };
@@ -881,6 +883,7 @@
 				234FAA488ABF2DF621B06269 /* HarnessFixtureLibraryTests.swift */,
 				F9F48B59F94E6459844F5E1E /* RoundTripTests.swift */,
 				37B9F1A1B51FCAFFB2D6E51B /* KnownIssueTests.swift */,
+				855E62A9683786D2025D0557 /* FormatTests.swift */,
 			);
 			name = Unit;
 			path = Unit;
@@ -1474,6 +1477,7 @@
 				D54BC338573F5A29CE163ABC /* Golden.swift in Sources */,
 				60669DDCCFC8E5EFBE510A87 /* RoundTripTests.swift in Sources */,
 				F9B36DA0A7993C7FBB241D83 /* KnownIssueTests.swift in Sources */,
+				F477FA6F72E134A874EA93C1 /* FormatTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

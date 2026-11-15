@@ -130,3 +130,12 @@ section. Each entry says what happened and what to do instead.
 - **L39. Golden review finds real bugs.** Diffing each fixture against its recorded golden surfaced two data-loss
   bugs (BUG-003, BUG-004) on the first pass. → Always review golden diffs line by line before the review gate;
   never just accept a recording.
+- **L40. Swift imports an ObjC class factory named after its class (`+[LDrawFile file]`) as `init()`.** That
+  collides with the inherited `-init`, and `LDrawFile()` silently called plain `-init`, giving a file with **no
+  model**. → Pin factories with `NS_SWIFT_NAME(file())` when their header is annotated. Expect the same with
+  `+[LDrawMPDModel model]`, `+[LDrawStep emptyStep]` and similar.
+- **L41. Form a bug hypothesis from code reading, then let the test decide.** Reading the code predicted that
+  "1e14 is written as "1"", but `Float(1e14)` is `100000000376832`, which fits the buffer. The real failures were
+  -1e14 and 1e20. Likewise, the suspected RGB truncation was disproved by checking all 768 values. Swift Testing
+  reports "Known issue was not recorded" when an expected failure passes, so keep each known-issue test to the
+  cases that actually fail.

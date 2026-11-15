@@ -28,6 +28,7 @@ their own port phase.
 | P0 | 🧑 Manual smoke checklist (full LDraw library) | 2026-11-14 | maintainer | Passed, apart from Settings, which never opens: BUG-002 is pre-existing, caused by colour preferences written by the installed 3.1.0. Debug builds now use their own preferences domain |
 | P1 | Automated: build (Debug/Release), unit tests, defaults unchanged ×3+, swap spike passed, exit-test spike passed, mutation pipeline verified | 2026-11-14 | agent | Branch `20261114-p1-test-harness` |
 | P2 | 🧑 Golden review: `Fixtures/golden/roundtrip/*` (row 1) | 2026-11-15 | maintainer | Diffs vs inputs summarised in the P2 row-1 commit message; BUG-003/004 and S14/S15 found |
+| P2 | 🧑 Golden review: row 2 (`golden/format/*`, `golden/roundtrip/1[0-4]*`) | **pending** | | Found BUG-005, BUG-006, S16; disproved suspected RGB truncation (768 values checked) |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
@@ -43,7 +44,7 @@ their own port phase.
 | `LDrawPaths.h` | 2026-11-14 | — | `HarnessFixtureLibraryTests` |
 | `LDrawUtilities.h` | 2026-11-15 | All except `classForDirectiveBeginningWithLine:` (nullable, BUG-001) and `stringFromFileData:` (nullable) | `RoundTripTests`, `KnownIssueTests` |
 | `LDrawDirective.h` | 2026-11-15 | All except `parentGroup:` (nullable: callers pass nil) | `RoundTripTests` |
-| `LDrawFile.h` | 2026-11-15 | All except `parseFromFileContents:` (nullable) | `RoundTripTests` |
+| `LDrawFile.h` | 2026-11-15 | All except `parseFromFileContents:` (nullable). `+file` is pinned as `NS_SWIFT_NAME(file())` (L40) | `RoundTripTests`, `FormatTests` |
 | `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
 
 ## Uncovered-line ledger (tiers A and B)

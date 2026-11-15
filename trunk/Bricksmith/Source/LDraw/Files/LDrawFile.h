@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 // Initialization
-+ (null_unspecified LDrawFile *) file;
++ (null_unspecified LDrawFile *) file NS_SWIFT_NAME(file());	// keep as a factory: imported as init() it would collide with -init (LEARNINGS L40)
 + (null_unspecified LDrawFile *) fileFromContentsAtPath:(null_unspecified NSString *)path;
 + (nullable LDrawFile *) parseFromFileContents:(null_unspecified NSString *) fileContents;
 
