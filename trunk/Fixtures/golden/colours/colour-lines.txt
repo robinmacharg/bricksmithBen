@@ -1,0 +1,27 @@
+in:  0 !COLOUR Black                                                 CODE   0   VALUE #1B2A34   EDGE #808080
+out: 0 !COLOUR Black                                                 CODE   0   VALUE #1B2A34   EDGE #808080
+
+in:  0 !COLOUR Trans_Dark_Blue                                       CODE  33   VALUE #0020A0   EDGE #000B38   ALPHA 128
+out: 0 !COLOUR Trans_Dark_Blue                                       CODE  33   VALUE #0020A0   EDGE #000B38   ALPHA 128
+
+in:  0 !COLOUR Glow_In_Dark_Opaque                                   CODE  21   VALUE #E0FFB0   EDGE #B8FF4D   ALPHA 240   LUMINANCE 15
+out: 0 !COLOUR Glow_In_Dark_Opaque                                   CODE  21   VALUE #E0FFB0   EDGE #B8FF4D   ALPHA 240   LUMINANCE 15
+
+in:  0 !COLOUR Chrome_Antique_Brass                                  CODE  60   VALUE #645A4C   EDGE #665B4D                               CHROME
+out: 0 !COLOUR Chrome_Antique_Brass                                  CODE  60   VALUE #645A4C   EDGE #665B4D                               CHROME
+
+in:  0 !COLOUR Metallic_Green                                        CODE  81   VALUE #6A7944   EDGE #333333                               PEARLESCENT
+out: 0 !COLOUR Metallic_Green                                        CODE  81   VALUE #6A7944   EDGE #333333                               PEARLESCENT
+
+in:  0 !COLOUR Rubber_Yellow                                         CODE  65   VALUE #FAC80A   EDGE #333333                               RUBBER
+out: 0 !COLOUR Rubber_Yellow                                         CODE  65   VALUE #FAC80A   EDGE #333333                               RUBBER
+
+in:  0 !COLOUR Metallic_Silver                                       CODE  80   VALUE #767676   EDGE #333333                               METAL
+out: 0 !COLOUR Metallic_Silver                                       CODE  80   VALUE #767676   EDGE #333333                               METAL
+
+in:  0 !COLOUR Glitter_Trans_Dark_Pink                               CODE 114   VALUE #DF6695   EDGE #B9275F   ALPHA 128                   MATERIAL GLITTER VALUE #B92790 FRACTION 0.17 VFRACTION 0.2 SIZE 1
+out: 0 !COLOUR Glitter_Trans_Dark_Pink                               CODE 114   VALUE #DF6695   EDGE #B9275F   ALPHA 128                   MATERIAL GLITTER VALUE #B92790 FRACTION 0.17 VFRACTION 0.2 SIZE 1
+
+in:  0 !COLOUR Speckle_Black_Silver                                  CODE 132   VALUE #000000   EDGE #898788                               MATERIAL SPECKLE VALUE #898788 FRACTION 0.4 MINSIZE 1 MAXSIZE 3
+out: 0 !COLOUR Speckle_Black_Silver                                  CODE 132   VALUE #000000   EDGE #898788                               MATERIAL SPECKLE VALUE #898788 FRACTION 0.4 MINSIZE 1 MAXSIZE 3
+

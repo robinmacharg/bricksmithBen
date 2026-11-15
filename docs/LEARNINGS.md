@@ -165,3 +165,7 @@ section. Each entry says what happened and what to do instead.
 - **L50. Check the doc comment before calling a surprise a bug.** Position snapping put Y on 8/24 LDU, not the
   10/20 grid. That's documented design (brick and plate heights along the part's Y axis), so the test now encodes
   the documented rule.
+- **L51. A heredoc ends an `&&` chain.** In `cmd && python3 - <<'EOF' … EOF` followed by `git commit` on the next
+  line, the commit runs regardless of `cmd`'s status, and a failed build gate got committed. → Put the gate on
+  the same line as the commit (`scripts/build.sh && git commit …`) or use `|| exit 1`. Also, C prototypes after
+  a class's `@end` need nullability too; the annotator now handles `extern` prototypes.

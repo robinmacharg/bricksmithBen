@@ -10,9 +10,13 @@
 #import <Foundation/Foundation.h>
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSUserDefaults (UserDefaultsCategory)
 
-- (void)setColor:(NSColor *)aColor forKey:(NSString *)aKey;
-- (NSColor *)colorForKey:(NSString *)aKey;
+- (void)setColor:(null_unspecified NSColor *)aColor forKey:(null_unspecified NSString *)aKey;
+- (nullable NSColor *)colorForKey:(null_unspecified NSString *)aKey;	// nil if absent or not a non-keyed NSArchiver blob (BUG-002)
 
 @end
+
+NS_ASSUME_NONNULL_END

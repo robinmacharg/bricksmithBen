@@ -128,6 +128,8 @@ typedef NS_ENUM(int, LDrawColorMaterialT)
 //			color picker changes affecting the values of these objects. 
 //
 ////////////////////////////////////////////////////////////////////////////////
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawColor : LDrawMetaCommand
 {
 	LDrawColorT			 colorCode;
@@ -145,38 +147,40 @@ typedef NS_ENUM(int, LDrawColorMaterialT)
 }
 
 // Initialization
-+ (LDrawColor *) blendedColorForCode:(LDrawColorT)colorCode;
++ (null_unspecified LDrawColor *) blendedColorForCode:(LDrawColorT)colorCode;
 
 // Accessors
 
 - (GLfloat)				alpha;
 - (LDrawColorT)			colorCode;
-- (LDrawColor *)		complimentColor;
+- (null_unspecified LDrawColor *)		complimentColor;
 - (LDrawColorT)			edgeColorCode;
-- (void)				getColorRGBA:(GLfloat *)inComponents;
-- (void)				getEdgeColorRGBA:(GLfloat *)inComponents;
-- (NSString *)			localizedName;
+- (void)				getColorRGBA:(null_unspecified GLfloat *)inComponents;
+- (void)				getEdgeColorRGBA:(null_unspecified GLfloat *)inComponents;
+- (null_unspecified NSString *)			localizedName;
 - (uint8_t)				luminance;
 - (LDrawColorMaterialT)	material;
-- (NSString *)			materialParameters;
-- (NSString *)			name;
+- (null_unspecified NSString *)			materialParameters;
+- (null_unspecified NSString *)			name;
 
 - (void) setColorCode:(LDrawColorT)newCode;
-- (void) setColorRGBA:(GLfloat *)newComponents;
+- (void) setColorRGBA:(null_unspecified GLfloat *)newComponents;
 - (void) setEdgeColorCode:(LDrawColorT)newCode;
-- (void) setEdgeColorRGBA:(GLfloat *)newComponents;
+- (void) setEdgeColorRGBA:(null_unspecified GLfloat *)newComponents;
 - (void) setLuminance:(uint8_t)newValue;
 - (void) setMaterial:(LDrawColorMaterialT)newValue;
-- (void) setMaterialParameters:(NSString *)newValue;
-- (void) setName:(NSString *)newName;
+- (void) setMaterialParameters:(null_unspecified NSString *)newValue;
+- (void) setName:(null_unspecified NSString *)newName;
 
 // Utilities
-- (NSComparisonResult) HSVACompare:(LDrawColor *)otherColor;
-- (NSString *) hexStringForRGB:(GLfloat *)components;
-- (BOOL) scanHexString:(NSScanner *)hexScanner intoRGB:(GLfloat *)components;
-- (id)fullCopyWithZone:(NSZone *)zone;
+- (NSComparisonResult) HSVACompare:(null_unspecified LDrawColor *)otherColor;
+- (null_unspecified NSString *) hexStringForRGB:(null_unspecified GLfloat *)components;
+- (BOOL) scanHexString:(null_unspecified NSScanner *)hexScanner intoRGB:(null_unspecified GLfloat *)components;
+- (null_unspecified id)fullCopyWithZone:(null_unspecified NSZone *)zone;
 
 @end
 
-extern void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
-extern void HSVtoRGB( float h, float s, float v, float *r, float *g, float *b );
+NS_ASSUME_NONNULL_END
+
+extern void RGBtoHSV( float r, float g, float b, float * _Null_unspecified h, float * _Null_unspecified s, float * _Null_unspecified v );
+extern void HSVtoRGB( float h, float s, float v, float * _Null_unspecified r, float * _Null_unspecified g, float * _Null_unspecified b );

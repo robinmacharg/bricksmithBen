@@ -81,6 +81,12 @@ def process(path):
             line = code + ('//' + comment if comment else '')
         out.append(line)
     text = '\n'.join(out)
+    # C prototypes ("extern T f(...);") anywhere in the header: annotate bare pointer parameters/returns too,
+    # otherwise -Wnullability-completeness fires for them (L51).
+    def c_proto(m):
+        params = re.sub(r'(\w+)\s*\*\s*(?!_N|\*)(\w+)', r'\1 * _Null_unspecified \2', m.group(2))
+        return m.group(1) + params + m.group(3)
+    text = re.sub(r'(^extern\s[^(;]*\()([^;]*)(\)\s*;)', c_proto, text, flags=re.M)
     first = re.search(r'^@(interface|protocol)\b(?!.*;\s*$)', text, re.M)
     # wrap from the first @interface/@protocol definition to the last @end
     start = first.start()
