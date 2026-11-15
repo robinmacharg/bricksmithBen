@@ -44,6 +44,7 @@ their own port phase.
 | P2 | UI smoke (row 17): `scripts/test.sh --ui`, 5 UI tests | 2026-11-15 | agent | No new goldens (reuses approved round-trip goldens). S26 noted. Test-mode focus-ring fix (L67) |
 | P2 | 🧑 Manual-only list complete (TESTING.md; checklist steps 14-17 added) | 2026-11-15 | maintainer | Signed off in conversation |
 | P2 | Coverage gate: `scripts/dev/coverage-tiers.py` exits 0 (22 tier A + 17 tier B classes at target; dead code in `docs/coverage-ledger.tsv`) | 2026-11-15 | agent | **Deviation for sign-off:** the ledger is per function (dead code), not per uncovered block; residual uncovered branches inside live methods are listed by `coverage-tiers.py --uncovered` but not individually justified |
+| P2 | 🧑 Coverage ledger granularity: per-function ledger accepted; residual uncovered branches inside live methods accepted at class level (all classes at target) | 2026-11-15 | maintainer | Signed off in conversation |
 | P2 | Mutation smoke: 30/30 killed (`scripts/mutation-smoke.sh`, patches from `scripts/dev/make-mutations.py`) | 2026-11-15 | agent | Two survivors on the first run: one revealed a missing test (untyped ROTSTEP), one targeted dead code (retargeted) |
 | P2 | Default suite time | 2026-11-15 | agent | 185 tests in ~31-60 s (limit 3 min) |
 | P2 | 🧑 Golden review: re-recorded render references (`golden/render/Mac15,7/*`, harness now fixes 1x and 625x691, L73) | **pending** | | Same renders, offset a few pixels |
