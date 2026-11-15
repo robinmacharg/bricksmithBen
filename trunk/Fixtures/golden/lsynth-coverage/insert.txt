@@ -1,0 +1,5 @@
+PNEUMATIC_HOSE: class 2, inserted icon LSynthHoseConstraint, determineIconName LSynthHoseConstraint, block still selected false, subdirectives 4
+RUBBER_BAND: class 3, inserted icon LSynthBandConstraint, determineIconName LSynthBandConstraint, block still selected false, subdirectives 4
+PLI_HOSE_FLEXIBLE_12L: class 1, inserted icon LSynthHoseConstraint, determineIconName LSynthHoseConstraint, block still selected false, subdirectives 4
+PLI_TECHNIC_TREAD: class 1, inserted icon LSynthBandConstraint, determineIconName LSynthBandConstraint, block still selected false, subdirectives 4
+NOT_A_TYPE: class 0, inserted icon Brick, determineIconName Brick, block still selected false, subdirectives 4

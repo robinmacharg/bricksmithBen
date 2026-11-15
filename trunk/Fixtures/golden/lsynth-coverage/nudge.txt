@@ -1,0 +1,25 @@
+displacement for nudge (1,0,0): 1.0 0.0 0.0
+displacement with no movable constraint: 0.0 0.0 0.0
+before:
+0 SYNTH BEGIN RUBBER_BAND 4
+0 SYNTH SHOW
+1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH OUTSIDE
+1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH SYNTHESIZED BEGIN
+1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 0 60 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 SYNTH SYNTHESIZED END
+0 SYNTH END
+after:
+0 SYNTH BEGIN RUBBER_BAND 4
+0 SYNTH SHOW
+1 4 -49 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH OUTSIDE
+1 4 51 0 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 SYNTH SYNTHESIZED BEGIN
+1 4 0 -40 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 0 60 0 1 0 0 0 1 0 0 0 1 3005.dat
+0 SYNTH SYNTHESIZED END
+0 SYNTH END
+resynthesized on next draw: true

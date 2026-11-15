@@ -1,0 +1,4 @@
+INSIDE: 'Inside' icon LSynthDirection write '0 SYNTH INSIDE'
+OUTSIDE: 'Outside' icon LSynthDirection write '0 SYNTH OUTSIDE'
+CROSS: 'Cross' icon LSynthDirection write '0 SYNTH CROSS'
+SIDEWAYS: 'Unknown LSynth Direction' icon LSynthDirection write '0 SYNTH SIDEWAYS'

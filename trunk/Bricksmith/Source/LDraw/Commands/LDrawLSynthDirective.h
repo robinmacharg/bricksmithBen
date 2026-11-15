@@ -12,6 +12,10 @@
 #import <Foundation/Foundation.h>
 #import "LDrawMetaCommand.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawLSynthDirective : LDrawMetaCommand
 
 @end
+
+NS_ASSUME_NONNULL_END

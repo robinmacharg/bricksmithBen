@@ -58,6 +58,8 @@ typedef NS_ENUM(int, LSynthParserStateT)
     PARSER_STATE_COUNT
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LDrawLSynth : LDrawContainer <LDrawColorable, LDrawMovableDirective>
 {
     NSMutableArray  *synthesizedParts;
@@ -73,11 +75,11 @@ typedef NS_ENUM(int, LSynthParserStateT)
 // Accessors
 - (void) setLsynthClass:(int)lsynthClass;
 - (int) lsynthClass;
-- (void) setLsynthType:(NSString *)lsynthType;
-- (NSString *) lsynthType;
+- (void) setLsynthType:(null_unspecified NSString *)lsynthType;
+- (null_unspecified NSString *) lsynthType;
 - (void) setHidden:(BOOL)flag;
 - (BOOL) isHidden;
-- (void) setLDrawColor:(LDrawColor *)color;
+- (void) setLDrawColor:(null_unspecified LDrawColor *)color;
 
 - (TransformComponents) transformComponents;
 - (Matrix4) transformationMatrix;
@@ -86,12 +88,14 @@ typedef NS_ENUM(int, LSynthParserStateT)
 // Utilities
 - (void) synthesize;
 - (void)colorSelectedSynthesizedParts:(BOOL)yesNo;
-- (NSString *)determineIconName:(LDrawDirective *)directive;
-- (NSMutableArray *)prepareAutoHullData;
+- (null_unspecified NSString *)determineIconName:(null_unspecified LDrawDirective *)directive;
+- (null_unspecified NSMutableArray *)prepareAutoHullData;
 -(int)synthesizedPartsCount;
 
 
-+ (BOOL) lineIsLSynthBeginning:(NSString*)line;
-+ (BOOL) lineIsLSynthTerminator:(NSString*)line;
++ (BOOL) lineIsLSynthBeginning:(null_unspecified NSString*)line;
++ (BOOL) lineIsLSynthTerminator:(null_unspecified NSString*)line;
 
 @end
+
+NS_ASSUME_NONNULL_END
