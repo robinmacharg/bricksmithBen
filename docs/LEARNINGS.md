@@ -275,3 +275,18 @@ section. Each entry says what happened and what to do instead.
   - Test preferences through the volatile argument domain, never a persistent domain.
   - Read private outlets by KVC name only where necessary. The port must keep those names (listed in
     `AppLogicCoverageTests`).
+- **L77. ARC conversion with ARCMT (P3).** Xcode 26's clang still contains Apple's ARC migrator, behind
+  `-Xclang -arcmt-action=modify`; the `-ccc-arcmt-*` driver flags are silently ignored. `scripts/dev/arcmt-migrate.py`
+  runs it with each file's real compile command. Review every diff, because ARCMT gets some things wrong or doesn't
+  decide them:
+  - It rewrites MRC `__block Foo *x = [[Foo alloc] init]` as `__weak`, which is **nil at once** under ARC. Make it
+    a plain strong local (`__block` only if the variable itself is reassigned inside the block).
+  - Plain object ivars become `__strong`. Back-pointers (parent, delegate, owner) that were deliberately unretained
+    under MRC need `__weak` or `__unsafe_unretained`, or they form retain cycles.
+  - `unsafe_unretained` properties that were assigned `[[X alloc] init]` and then released by hand: make them
+    `strong` and drop the release.
+  - The legacy `+[NSBundle loadNibNamed:owner:]` retains top-level objects. MRC code balanced that with
+    `autorelease`/`release`; under ARC that's no longer possible, so those objects leak (S36) until P4 moves to
+    `loadNibNamed:owner:topLevelObjects:`.
+  - `[self autorelease]` (singletons that drop themselves when their window closes): use an `__autoreleasing`
+    local to keep the same lifetime.

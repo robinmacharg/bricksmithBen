@@ -196,9 +196,7 @@ RotationPanelController *sharedRotationPanel = nil;
 //				a time to DIE!!!/(turn, turn, turn)/...
 //
 //==============================================================================
-- (void) dealloc
-{
-}//end dealloc
+//end dealloc
 
 
 @end

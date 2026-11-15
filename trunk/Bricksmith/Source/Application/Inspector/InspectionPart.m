@@ -87,9 +87,8 @@ typedef enum
 {
 	[super awakeFromNib];
 	
-	[_formatterBasic autorelease];
-	[_formatterAngle autorelease];
-	[_formatterScale autorelease];
+	// Under MRC these balanced the nib loader's retain of top-level objects. Under ARC the legacy
+	// loadNibNamed:owner: still retains them, so they now leak once per inspector (KNOWN-BUGS S36, P4).
 }
 
 
@@ -390,16 +389,7 @@ typedef enum
 // Purpose:		Abandon all hope ye who enter here.
 //
 //==============================================================================
-- (void) dealloc
-{
-	//Top level nib objects:
-	[_formatterBasic release];
-	[_formatterAngle release];
-	[_formatterScale release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

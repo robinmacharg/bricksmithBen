@@ -11,11 +11,11 @@
 
 @interface LDrawViewerContainer ()
 
-@property (nonatomic, unsafe_unretained) LDrawGLView* glView;
+@property (nonatomic, strong) LDrawGLView* glView;
 @property (nonatomic, strong) NSView* verticalPlacard;
 
-@property (nonatomic, unsafe_unretained) NSScroller* horizontalScroller;
-@property (nonatomic, unsafe_unretained) NSScroller* verticalScroller;
+@property (nonatomic, strong) NSScroller* horizontalScroller;
+@property (nonatomic, strong) NSScroller* verticalScroller;
 
 @property (nonatomic, assign) Box2 documentRect;
 @property (nonatomic, assign) Box2 scrollVisibleRect;
@@ -37,7 +37,6 @@
 	_glView = [[LDrawGLView alloc] initWithFrame:self.bounds];
 	[self addSubview:_glView];
 	
-	[_glView release];
 
 	return self;
 }
@@ -73,8 +72,6 @@
 			_verticalScroller.action = @selector(scrollerDidChange:);
 			[self addSubview:_verticalScroller];
 																				
-			[_horizontalScroller release];
-			[_verticalScroller release];
 		}
 		else
 		{
@@ -96,10 +93,8 @@
 //==============================================================================
 - (void) setVerticalPlacard:(NSView *)newPlacard
 {
-	[newPlacard retain];
 	
 	[_verticalPlacard removeFromSuperview];
-	[_verticalPlacard release];
 	
 	_verticalPlacard = newPlacard;
 	

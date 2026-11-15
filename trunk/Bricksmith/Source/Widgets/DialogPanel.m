@@ -104,9 +104,7 @@
 // Purpose:		Our goose is cooked.
 //
 //==============================================================================
-- (void) dealloc
-{
-}//end dealloc
+//end dealloc
 
 
 @end
