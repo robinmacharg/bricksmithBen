@@ -11,12 +11,16 @@
 
 @class LDrawMPDModel;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MinifigureDialogController : NSObject
 
 //Accessors
-- (LDrawMPDModel *) minifigure;
+- (null_unspecified LDrawMPDModel *) minifigure;
 
 //Actions
 - (NSInteger) runModal;
 
 @end
+
+NS_ASSUME_NONNULL_END

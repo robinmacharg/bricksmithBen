@@ -20,6 +20,8 @@ typedef NS_ENUM(int, LSynthClassT)
     LSYNTH_CLASSES_COUNT
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LSynthConfiguration : NSObject
 {
     NSMutableArray *parts;
@@ -39,42 +41,44 @@ typedef NS_ENUM(int, LSynthClassT)
 #pragma mark Class Methods
 #pragma mark -
 
-+(LSynthConfiguration*) sharedInstance;
++(null_unspecified LSynthConfiguration*) sharedInstance;
 
 #pragma mark -
 #pragma mark Instance Methods
 #pragma mark -
 
--(NSString *)defaultConfigPath;
--(void) parseLsynthConfig:(NSString *)lsynthConfigurationPath;
--(BOOL) isLSynthConstraint:(LDrawPart *)part;
+-(null_unspecified NSString *)defaultConfigPath;
+-(void) parseLsynthConfig:(null_unspecified NSString *)lsynthConfigurationPath;
+-(BOOL) isLSynthConstraint:(null_unspecified LDrawPart *)part;
 
 #pragma mark -
 #pragma mark CONSTANT ACCESSORS
 #pragma mark -
 
-+(NSString *) defaultHoseConstraint;
-+(NSString *) defaultBandConstraint;
-+(NSString *) defaultHoseType;
-+(NSString *) defaultBandType;
++(null_unspecified NSString *) defaultHoseConstraint;
++(null_unspecified NSString *) defaultBandConstraint;
++(null_unspecified NSString *) defaultHoseType;
++(null_unspecified NSString *) defaultBandType;
 
 #pragma mark -
 #pragma mark ACCESSORS
 #pragma mark -
 
--(NSMutableArray *) getParts;
--(NSMutableArray *) getHoseTypes;
--(NSMutableArray *) getBandTypes;
--(NSMutableArray *) getHoseConstraints;
--(NSMutableArray *) getBandConstraints;
--(NSMutableArray *) getQuickRefBands;
--(NSMutableArray *) getQuickRefHoses;
--(NSMutableArray *) getQuickRefParts;
--(NSMutableArray *) getQuickRefBandContstraints;
--(NSMutableArray *) getQuickRefHoseConstraints;
--(NSDictionary *)   constraintDefinitionForPart:(LDrawPart *)directive;
--(NSDictionary *)   typeForTypeName:(NSString *)typeName;
+-(null_unspecified NSMutableArray *) getParts;
+-(null_unspecified NSMutableArray *) getHoseTypes;
+-(null_unspecified NSMutableArray *) getBandTypes;
+-(null_unspecified NSMutableArray *) getHoseConstraints;
+-(null_unspecified NSMutableArray *) getBandConstraints;
+-(null_unspecified NSMutableArray *) getQuickRefBands;
+-(null_unspecified NSMutableArray *) getQuickRefHoses;
+-(null_unspecified NSMutableArray *) getQuickRefParts;
+-(null_unspecified NSMutableArray *) getQuickRefBandContstraints;
+-(null_unspecified NSMutableArray *) getQuickRefHoseConstraints;
+-(null_unspecified NSDictionary *)   constraintDefinitionForPart:(null_unspecified LDrawPart *)directive;
+-(null_unspecified NSDictionary *)   typeForTypeName:(null_unspecified NSString *)typeName;
 
--(void) setLSynthClassForDirective:(LDrawLSynth *)directive withType:(NSString *)type;
+-(void) setLSynthClassForDirective:(null_unspecified LDrawLSynth *)directive withType:(null_unspecified NSString *)type;
 
 @end
+
+NS_ASSUME_NONNULL_END

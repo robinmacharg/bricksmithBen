@@ -36,6 +36,7 @@ their own port phase.
 | P2 | 🧑 Golden review: row 9 (`golden/mpd/*`) | 2026-11-15 | maintainer | S21, S22 noted; peer-file contract (lower-case names) characterised |
 | P2 | 🧑 Golden review: row 10 (`golden/document/*`, 25 actions) | 2026-11-15 | maintainer | BUG-016 found; S23, S24 noted |
 | P2 | 🧑 Golden review: row 11 (`golden/export/*`) | **pending** | | BUG-011 user-visible effect confirmed (Export Steps); S25 noted |
+| P2 | 🧑 Golden review: row 12 (`golden/app/*`) | **pending** | | No new bugs |
 | P1 | 🧑 First UI-test run (macOS permission prompts) | 2026-11-14 | agent (user-requested) | `scripts/test.sh --ui`: 1 UI test passed, defaults unchanged |
 
 ## Accepted risks and coverage exceptions
@@ -58,6 +59,7 @@ their own port phase.
 | `LDrawMPDModel.h`, `LDrawModel.h`, `ModelManager.h` | 2026-11-15 | All except `+sharedModelManager` (nonnull). `+model` is pinned with `NS_SWIFT_NAME(model())` | `MPDTests` |
 | `LDrawDocument.h` | 2026-11-15 | All (tool) | `DocumentSpikeTests`, `DocumentActionTests` |
 | `PartReport.h` | 2026-11-15 | All (tool) | `ExportTests` |
+| `RelatedParts.h`, `LSynthConfiguration.h`, `PartBrowserDataSource.h`, `MinifigureDialogController.h` | 2026-11-15 | All (tool) | `AppLogicTests` |
 | `ColorLibrary.h` | 2026-11-14 | `LDrawColorable` `-LDrawColor` / `-setLDrawColor:` (protocol: implementations not yet reviewed) | `HarnessFixtureLibraryTests` |
 
 ## Uncovered-line ledger (tiers A and B)

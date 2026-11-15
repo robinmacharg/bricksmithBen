@@ -1,0 +1,5 @@
+parent	children	roles	related(role)	child placement for identity parent
+60596.dat	30178.dat,30178c01.dat,57895.dat,57895p01.dat,60616a.dat,60616b.dat,60621.dat,60623.dat	Door Left,Door Right,Glass	Door Left: 60616a.dat,60616b.dat,60621.dat,60623.dat | Door Right: 30178.dat,30178c01.dat,60616a.dat,60616b.dat,60621.dat,60623.dat | Glass: 57895.dat,57895p01.dat	T(-32.0000 0.0000 5.0000) R°(0.0000 0.0000 0.0000) S(1.0000 1.0000 1.0000)
+57894.dat	57895.dat,57895p01.dat	Glass	Glass: 57895.dat,57895p01.dat	T(0.0000 4.5000 -3.0000) R°(0.0000 0.0000 0.0000) S(1.0000 1.0000 1.0000)
+3001.dat				-
+missing.dat				-

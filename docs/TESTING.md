@@ -122,6 +122,7 @@ confirm the list is complete.
 | Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | (add) |
 | Split Model, Add Part (from browser), Add Submodel Reference, Insert Part, Add Minifigure | Present panels, alerts or menus (`canDeleteDirective`, part browser, minifig dialog) | 5, 7, 11 |
 | Export Steps | Save panel; the export logic itself is covered by row 11 | (add) |
+| Search panel (Find) | Its matching logic is bound to the panel's controls (scope/colour/part popups) | (add) |
 | Missing/moved pieces checks on open | Alerts | 2 |
 | Move and Rotation panels, Find, Dimensions, Piece Count | Panels; the underlying edits (`moveSelectionBy`, `rotateSelection`) are automated in row 10 | 5 |
 | View-only actions (zoom, view angle, step navigation, step display) | Don't change the model; the render snapshots (row 15) cover views | 3, 7 |

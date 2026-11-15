@@ -1,0 +1,5 @@
+query "plate 1": 4
+3023.dat
+3024.dat
+3794b.dat
+s\3023s01.dat

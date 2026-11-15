@@ -198,3 +198,7 @@ section. Each entry says what happened and what to do instead.
 - **L60. When logic is trapped in UI code (a save-panel completion block), mirror it in the test line for line and
   cite the source.** Record a P4 task to extract it, so the mirror can't drift for long. The mirror is how BUG-011's
   real user impact (backwards Export Steps files) was confirmed.
+- **L61. Never put Foundation `-description` output in a golden.** Its formatting of nested collections can change
+  between OS versions. → Serialise to compact sorted JSON (`JSONSerialization` with `.sortedKeys`).
+- **L62. Private ObjC actions can be driven from tests by selector** (`perform(NSSelectorFromString("generateMinifigure:"))`)
+  inside `ObjC.run`, mirroring the order the app calls them (`restoreFromPreferences` first, as `-runModal` does).
