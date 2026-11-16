@@ -1419,8 +1419,11 @@
 	BOOL		lineValidForHeader	= NO;
 	NSUInteger	firstNonHeaderIndex = index;
 	NSString	*payload			= nil;
+	NSUInteger	lineCount			= [lines count];
 	
-	@try
+	// Stop at the end of the lines. (Not at the end of the model's range: the 
+	// header scan has always been free to read on into the following lines.) 
+	if(index < lineCount)
 	{
 		//First line. Should be a description of the model.
 		currentLine = [lines objectAtIndex:index];
@@ -1436,6 +1439,10 @@
 		lineValidForHeader	= YES;
 		for(counter = firstNonHeaderIndex; counter < firstNonHeaderIndex + 3 && lineValidForHeader == YES; counter++)
 		{
+			//Ran out of lines in the file. Oh well. We got what we got.
+			if(counter >= lineCount)
+				break;
+			
 			currentLine         = [lines objectAtIndex:counter];
 			lineValidForHeader  = NO; // assume not, then disprove
 			payload				= nil;
@@ -1471,10 +1478,6 @@
 				firstNonHeaderIndex++;
 			}
 		}
-	}	
-	@catch(NSException *exception)
-	{
-		//Ran out of lines in the file. Oh well. We got what we got.
 	}
 		
 	return firstNonHeaderIndex;
