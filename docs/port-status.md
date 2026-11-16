@@ -82,6 +82,13 @@ their own port phase.
 | P6a | Recipe deviations: `respondsToSelector:` (LSynthDirective) and target/action `perform(_:with:)` (DragHandle) translated directly; undo registration sends the selector dynamically to `prepare(withInvocationTarget:)`'s result (never `responds(to:)`, never cast; L103); `TESSELATE_QUADS` hard-coded to its 0 branch (a C macro Swift can't test) | 2026-11-16 | agent | |
 | P6a | 🧑 Raises that Swift would turn into crashes (BUG-038..045): guarded so each site stops where the swallowed ObjC raise stopped, one guard per site, marked in code | 2026-11-16 | maintainer | **Decided 2026-11-16: keep the guards** (no traps). The underlying behaviour is for P12 |
 | P6a | Perf (`b1901fd`): first interleaved A/B vs `fa5a691` showed collect 168%, depth-test 116%, archive-primitives 122%. Fixed with `@exclusivity(unchecked)` on hot stored properties, a C helper reading `hidden`/`color` ivars for collect (`LDrawDrawableElementCollectorColor`, goes in P6c) and NSString-backed long coder keys (L102). Now: all 12 metrics pass on 3 runs (collect 114-115%, depth-test 109-110% of baseline); interleaved vs `fa5a691`: collect 119%, depth-test 116%, archive-primitives 116%, rest 85-106% | 2026-11-16 | agent | Remaining overhead is largely the @objc thunk on ObjC → Swift calls; recheck when LDrawStep/containers are Swift (P6b/c) |
+| P6b | Survey: subclasses all Swift already; ancestor ivars read only by Line/Part (`color`, `hidden`) and Step (`postsNotifications`); `-subdirectives` is `NSMutableArray` (unbridged); six importers given `Bricksmith-Swift.h`; placeholders (`6c34c24`) | 2026-11-16 | agent | Branch `20261116-p6-model-leaves` |
+| P6b | Three parallel streams integrated: drawables (`LDrawLine`, `LDrawPart`), meta (`LDrawMetaCommand`, `LDrawTexture`, `LDrawLSynth`), containers (`LDrawStep`, `LDrawModel`); tests first in each (66 added); stubs removed (`914df72`); baselines re-recorded (`e19d95d`, six warnings gone with the ported files) | 2026-11-16 | agent | 358 tests, 75 known issues. No golden changed |
+| P6b | `LDrawPart`'s catch-all `@try` removed: every call inside it was shown not to raise on reachable input (callee reading, probes, all parser-robustness cases parsed as library parts); the two explicit failure branches keep the same nil result and log lines (L87 discharged for LDrawPart; `readFromData:`'s stays for P10) | 2026-11-16 | agent | Pinned in `ObjectModelTests` "LDrawPart (P6b pins)" |
+| P6b | Integration crash fixed (`7d635d1`): a synthesized part outliving its LSynth block (autorelease pool) said goodbye to the freed block. The block now unregisters from the parts it registered with, in deinit and before resynthesis | 2026-11-16 | agent | Found only after all three streams were combined; diagnosed with `TEST_RUNNER_NSZombieEnabled=YES` (L106) |
+| P6b | Interface differences: `LDrawModel` `-steps`/`-draggingDirectives` hand ObjC the live array (`stepsArray()`/`draggingDirectivesArray()`), Swift keeps `steps()`/`draggingDirectives()`; `addStep()` is `@discardableResult`; LSynth's `int` API is `CInt` (an `Int32` prints as `int32_t` in the generated header and rewords a baseline warning) | 2026-11-16 | agent | |
+| P6b | Behaviour notes (guards, maintainer decision of P6a applied): BUG-046..068 (renumbered from the streams' placeholders). Two go beyond "stop where the raise stopped": a nested `!TEXMAP START` without END at the end of the lines used to crash and now parses to the end of the lines; LSynth's external-process I/O failures (bad executable path) now give 0 parts instead of raising. The BUG-029 known-issue test was rewritten to assert the whole correct outcome (its guard replaces a raise) | 2026-11-16 | agent | |
+| P6b | 🧑 `-[LDrawModel setMaximumStepIndexForStepDisplay:]` still raises `NSRangeException` deliberately, now from Swift (the golden `model-logic/steps.txt` records the raise). Plan §4.4 rule 3 deviation; unreachable from the app (its only caller fails first on the same index) | **pending** | maintainer | Options: accept as is, or guard it and re-record the golden (human gate) |
 | P5 | Header annotation: `StringCategory.h` (all, tool) before its port | 2026-11-16 | agent | `StringCategoryTests` |
 | P4 | 🧑 Manual smoke checklist (TESTING.md steps 1-18, incl. new step 18 for panels and menus) on the P4 Debug build | 2026-11-16 | maintainer | Signed off in conversation |
 | P4 | 🧑 Maintainer decisions at P4 exit | 2026-11-16 | maintainer | BUG-007's wider scope (other paths treat a malformed-ROTSTEP library/peer file as missing): evaluate after the port, P12. `NSDrawer` deprecation's extra declaration site (`LDrawDocument+Private.h`): stays in the baseline; address after the port. Attribution trailers removed from the P4 branch before merge |
@@ -197,19 +204,19 @@ sign-off here:
 | `Bricksmith/Source/LDraw/Commands/LDrawComment.m` | 123 | ARC | P6a | **Swift** (`LDrawComment.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m` | 446 | ARC | P6a | **Swift** (`LDrawConditionalLine.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m` | 511 | ARC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawLSynth.m` | 1487 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawLSynth.m` | 1487 | MRC | P6b | **Swift** (`LDrawLSynth.swift`); types-only `.h` remains (`LSynthParserStateT`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawLSynthDirective.m` | 84 | ARC | P6a | **Swift** (`LDrawLSynthDirective.swift`) |
-| `Bricksmith/Source/LDraw/Commands/LDrawLine.m` | 714 | ARC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawMetaCommand.m` | 374 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawPart.m` | 1790 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawLine.m` | 714 | ARC | P6b | **Swift** (`LDrawLine.swift`) |
+| `Bricksmith/Source/LDraw/Commands/LDrawMetaCommand.m` | 374 | MRC | P6b | **Swift** (`LDrawMetaCommand.swift`) |
+| `Bricksmith/Source/LDraw/Commands/LDrawPart.m` | 1790 | MRC | P6b | **Swift** (`LDrawPart.swift`); types-only `.h` remains (`PartTypeT`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m` | 1062 | MRC | P6a | **Swift** (`LDrawQuadrilateral.swift`) |
-| `Bricksmith/Source/LDraw/Commands/LDrawTexture.m` | 1178 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawTexture.m` | 1178 | MRC | P6b | **Swift** (`LDrawTexture.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawTriangle.m` | 873 | MRC | P6a | **Swift** (`LDrawTriangle.swift`) |
 | `Bricksmith/Source/LDraw/Files/LDrawContainer.m` | 530 | ARC | P6 | todo |
 | `Bricksmith/Source/LDraw/Files/LDrawFile.m` | 879 | MRC | P6a | **Swift** (`LDrawFile.swift`); types-only `.h` remains (the active-model notification macro) |
 | `Bricksmith/Source/LDraw/Files/LDrawMPDModel.m` | 537 | ARC | P6a | **Swift** (`LDrawMPDModel.swift`) |
-| `Bricksmith/Source/LDraw/Files/LDrawModel.m` | 1608 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Files/LDrawStep.m` | 1168 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Files/LDrawModel.m` | 1608 | MRC | P6b | **Swift** (`LDrawModel.swift`) |
+| `Bricksmith/Source/LDraw/Files/LDrawStep.m` | 1168 | MRC | P6b | **Swift** (`LDrawStep.swift`); types-only `.h` remains (notification macro, two enums) |
 | `Bricksmith/Source/LDraw/Renderer/LDrawBDPAllocator.m` | 150 | ARC | P8 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawDataStream.m` | 196 | (not compiled) | — | deleted in P0 (decision 7) |
 | `Bricksmith/Source/LDraw/Renderer/LDrawDisplayList.m` | 1443 | ARC | P8 | todo |

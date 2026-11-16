@@ -15,14 +15,14 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82, L94 |
-| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100, L105; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100, L105, L106, L108; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
@@ -509,3 +509,28 @@ topics that match your task rather than the whole log.
   other until they become stubs); `port-remove-stubs.rb` must read sources as binary (non-UTF-8 bytes). Refused
   writes (here: the editor was killed mid-run) stop every agent at once: they report and wait, and resume cleanly
   from their last commit after a rebase.
+- **L106. Streams that pass alone can crash together (P6b).** Drawables, containers and meta each passed their
+  gate on the ObjC versions of the others; combined, a synthesized `LDrawPart` outlived its Swift `LDrawLSynth`
+  in an autorelease pool and `-[LDrawDirective dealloc]` said goodbye to the freed block (signal 11 in
+  `LDrawPart.deinit`, in a later test, only in the full run). → Run the full suite after *each* integration;
+  for a crash in `deinit`/`dealloc`, rerun with `TEST_RUNNER_NSZombieEnabled=YES lockf … scripts/test.sh`,
+  which names the freed class. Observer registrations that ObjC never undid (relying on dealloc order) must be
+  undone explicitly in Swift, for exactly the objects registered (removing an unknown observer asserts).
+- **L107. More Swift interface traps (P6b):**
+  - A Swift superclass must declare `init!(lines:in:)` as *designated* (calling super) when a Swift subclass
+    overrides it with `override convenience init!` (LDrawLine/LDrawConditionalLine, LDrawModel/LDrawMPDModel,
+    LDrawMetaCommand/LDrawColor).
+  - `(self as NSObject.Type).init()` in a class method is `[[self class] alloc] init]`: it dispatches to the
+    subclass's `init()` without making it `required`.
+  - Swift `Int32` prints as `int32_t` in `Bricksmith-Swift.h`, which rewords warnings in ObjC importers and fails the
+    baseline; use `CInt` to keep `int`.
+  - Part names and other library keys use NSString `lowercaseString`/`isEqualToString:`: Swift `lowercased()` maps a
+    final sigma differently (`ΣΑΣ` → `σασ` vs NSString `σας`) and Swift `==` equates precomposed and decomposed é.
+  - `add(_:)`/`remove(_:)` on a container are ambiguous when the argument is itself a container (directive and
+    `LDrawObserver`): cast. `.map` on an `[Any]!` is `Optional.map`: unwrap first.
+  - Swift's `Process`/`FileHandle` (`run()`, `write(contentsOf:)`, `readToEnd()`) throw where the ObjC calls raised.
+  - A Swift array literal passed where ObjC calls `objectAtIndex:` traps ("Array index out of range") instead of
+    raising: wrap in `NSArray(array:)` in probes.
+  - A guard's return value can turn a crash into a hang: run the reachable input after porting.
+- **L108. `git stash` is shared by all worktrees** (one stack in the common `.git`): two P6b streams saw the main
+  checkout's entries. Agents use WIP commits or patch files, never bare `git stash pop`.
