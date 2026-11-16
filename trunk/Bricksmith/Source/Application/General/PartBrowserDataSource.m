@@ -35,6 +35,16 @@
 #import "TableViewCategory.h"
 
 
+@interface PartBrowserDataSource ()
+{
+	// The nib's top-level objects (the contextual menu). -loadNibNamed:owner:topLevelObjects: doesn't retain them
+	// and the outlet is __unsafe_unretained, so this keeps them for the data source's lifetime (MRC released
+	// the menu in -dealloc).
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation PartBrowserDataSource
 
 
@@ -183,7 +193,9 @@
 	self = [super init];
 	
 	// Load the accessories from our private nib file.
-	[NSBundle loadNibNamed:@"PartBrowserAccessories" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"PartBrowserAccessories" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	// Not displaying anything yet.
 	categoryList	= [NSArray array];
