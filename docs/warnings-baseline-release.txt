@@ -62,7 +62,6 @@ trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: variable 'ctr' set
 trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: variable 'total_after' set but not used [-Wunused-but-set-variable]
 trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: variable 'total_before' set but not used [-Wunused-but-set-variable]
 trunk/Bricksmith/Source/LDraw/Support/ComputationalGeometry.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'int' [-Wshorten-64-to-32]
-trunk/Bricksmith/Source/LDraw/Support/LDrawDragHandle.m: warning: performSelector may cause a leak because its selector is unknown [-Warc-performSelector-leaks]
 trunk/Bricksmith/Source/LDraw/Support/LDrawGLRenderer.m: warning: variable 'options' set but not used [-Wunused-but-set-variable]
 trunk/Bricksmith/Source/LDraw/Support/PartLibrary.m: warning: non-void function does not return a value [-Wreturn-type]
 trunk/Bricksmith/Source/Other/ArchiveSupport.m: warning: 'NSUnarchiver' is deprecated: first deprecated in macOS 10.13 - Use NSKeyedUnarchiver instead [-Wdeprecated-declarations]
