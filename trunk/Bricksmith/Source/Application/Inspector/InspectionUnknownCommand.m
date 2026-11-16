@@ -24,7 +24,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorUnknownCommand" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorUnknownCommand"] == NO) {
         NSLog(@"Couldn't load InspectorUnknownCommand.nib");
     }
 	

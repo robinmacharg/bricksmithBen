@@ -26,7 +26,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorMPDModel" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorMPDModel"] == NO) {
         NSLog(@"Couldn't load InspectorMPDModel.nib");
     }
 	

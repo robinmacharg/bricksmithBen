@@ -688,6 +688,21 @@ struct NibLifetimeTests {
 		}
 	}
 
+	/// The inspection window is held by the controller (its `window` outlet and the top-level objects array),
+	/// so it now goes away with the controller. Before P4 the legacy loader's extra retain leaked it (S36).
+	@Test("Inspection controllers: the nib's window is freed with its controller", arguments: inspectionClasses)
+	func inspectionWindowFreed(_ className: String) throws {
+		let type = try #require(NSClassFromString(className) as? NSObject.Type, "\(className)")
+		weak var window: NSWindow?
+		try ObjC.run {
+			autoreleasepool {
+				let controller = type.init()
+				window = controller.value(forKey: "window") as? NSWindow
+			}
+		}
+		#expect(window == nil, "\(className): the inspector window outlived its controller")
+	}
+
 	@Test("Inspector: its panel survives, and inspecting a part, nothing, a line, a part, the same part")
 	func inspector() throws {
 		let inspector = try Self.make("Inspector")

@@ -72,7 +72,7 @@ typedef enum
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorPart" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorPart"] == NO) {
         NSLog(@"Couldn't load InspectorPart.nib");
     }
 	
@@ -86,12 +86,6 @@ typedef enum
 - (void) awakeFromNib
 {
 	[super awakeFromNib];
-	
-	// Top-level nib objects get an extra retain from the legacy loadNibNamed:owner:; we hold them in strong
-	// properties, so balance it (was autorelease under MRC; L77).
-	CFRelease((__bridge CFTypeRef)_formatterBasic);
-	CFRelease((__bridge CFTypeRef)_formatterAngle);
-	CFRelease((__bridge CFTypeRef)_formatterScale);
 }
 
 
