@@ -439,6 +439,17 @@ struct LDrawColorPinTests {
 		#expect((([red, green] as NSArray).sortedArray(using: NSSelectorFromString("compare:")) as! [LDrawColor]).first === red)
 	}
 
+	@Test("BUG-P6A-color-1: HSVACompare: breaks a hue/saturation/value tie by alpha")
+	func bug_p6a_color_1_HSVACompareAlpha() {
+		let opaque = Self.colour(code: 1, rgba: [0.2, 0.4, 0.6, 1])
+		let clear = Self.colour(code: 2, rgba: [0.2, 0.4, 0.6, 0.5])
+		withKnownIssue("BUG-P6A-color-1: HSVACompare: compares the receiver's alpha with itself") {
+			#expect(opaque.hsvaCompare(clear) == .orderedDescending && clear.hsvaCompare(opaque) == .orderedAscending)
+		}
+		// Current behaviour (kept by the port): any alpha difference is ignored.
+		#expect(opaque.hsvaCompare(clear) == .orderedSame && clear.hsvaCompare(opaque) == .orderedSame)
+	}
+
 	@Test("write: C int conversions of ALPHA/LUMINANCE, missing fields, and MATERIAL edge cases")
 	func writeEdgeCases() {
 		let lines = [
