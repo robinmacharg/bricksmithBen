@@ -111,32 +111,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setGridOrientationMode:(gridOrientationModeT)newMode;
 - (void) setStepDisplay:(BOOL)showStepsFlag;
 
-// - Scope bar
-- (IBAction) viewAll:(null_unspecified id)sender;
-- (IBAction) viewSteps:(null_unspecified id)sender;
-- (IBAction) stepFieldChanged:(null_unspecified id)sender;
-- (IBAction) stepNavigatorClicked:(null_unspecified id)sender;
-
-// - View menu
-- (IBAction) zoomActual:(null_unspecified id)sender;
-- (IBAction) zoomIn:(null_unspecified id)sender;
-- (IBAction) zoomOut:(null_unspecified id)sender;
-- (IBAction) toggleStepDisplay:(null_unspecified id)sender;
-- (IBAction) advanceOneStep:(null_unspecified id)sender;
-- (IBAction) backOneStep:(null_unspecified id)sender;
-- (IBAction) useSelectionForRotationCenter:(null_unspecified id)sender;
-- (IBAction) clearRotationCenter:(null_unspecified id)sender;
-
 //Notifications
 - (void)partChanged:(null_unspecified NSNotification *)notification;
 - (void)docChanged:(null_unspecified NSNotification *)notification;
 - (void)stepChanged:(null_unspecified NSNotification *)notification;
 - (void)syntaxColorChanged:(null_unspecified NSNotification *)notification;
-
-//Menus
-- (void) addModelsToMenus;
-- (void) clearModelMenus;
-- (void) buildRelatedPartsMenus;
 
 // Utilities
 - (void) addModel:(null_unspecified LDrawMPDModel *)newModel atIndex:(NSInteger)insertAtIndex preventNameCollisions:(BOOL)renameModels;
@@ -280,6 +259,34 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) connectLDrawGLView:(null_unspecified LDrawGLView *)glView;
 - (null_unspecified LDrawGLView *) main3DViewport;
 - (void) updateViewportAutosaveNamesAndRestore:(BOOL)shouldRestore;
+
+@end
+
+
+
+@interface LDrawDocument (Menus)
+// LDrawDocument+Menus.m
+
+// - Scope bar
+- (IBAction) viewAll:(null_unspecified id)sender;
+- (IBAction) viewSteps:(null_unspecified id)sender;
+- (IBAction) stepFieldChanged:(null_unspecified id)sender;
+- (IBAction) stepNavigatorClicked:(null_unspecified id)sender;
+
+// - View menu
+- (IBAction) zoomActual:(null_unspecified id)sender;
+- (IBAction) zoomIn:(null_unspecified id)sender;
+- (IBAction) zoomOut:(null_unspecified id)sender;
+- (IBAction) toggleStepDisplay:(null_unspecified id)sender;
+- (IBAction) advanceOneStep:(null_unspecified id)sender;
+- (IBAction) backOneStep:(null_unspecified id)sender;
+- (IBAction) useSelectionForRotationCenter:(null_unspecified id)sender;
+- (IBAction) clearRotationCenter:(null_unspecified id)sender;
+
+//Menus
+- (void) addModelsToMenus;
+- (void) clearModelMenus;
+- (void) buildRelatedPartsMenus;
 
 @end
 

@@ -220,6 +220,7 @@
 		38700D566FC45CE272CAD839 /* StringConstants.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0A110152030C93F7121342 /* StringConstants.generated.swift */; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
 		41398AC3E7F9D645B04C7693 /* LDrawDocument+ModelsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 21089774D0D91240BD42D0C3 /* LDrawDocument+ModelsMenu.m */; };
+		442BCD3205CD4431B5D100B7 /* LDrawDocument+Menus.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D55E99A8FF0414FDB65388 /* LDrawDocument+Menus.m */; };
 		4988F532301C6C0B87751377 /* RecordingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBDF389EDB611A48BD761F7 /* RecordingRenderer.swift */; };
 		4FF35DF1C56BF625E1D2D98D /* PreferencesContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9043BD5BF5FF3A6F720BC4 /* PreferencesContractTests.swift */; };
 		5701DABC93A382AFA6BC4B71 /* ObjectModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */; };
@@ -371,6 +372,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07D55E99A8FF0414FDB65388 /* LDrawDocument+Menus.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LDrawDocument+Menus.m"; sourceTree = "<group>"; };
 		09E3A83323C43757A3923438 /* BricksmithTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B040CBD164F526D000CA89A /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../ThirdParty/Sparkle/Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		0B040CD6164F5511000CA89A /* Bricksmith_Sparkle_signature_public.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bricksmith_Sparkle_signature_public.pem; sourceTree = "<group>"; };
@@ -997,6 +999,7 @@
 				159A8E73EDAC58598A3C6B64 /* LDrawDocument+Undo.m */,
 				2D582C85181B758EA6CFAB28 /* LDrawDocument+Outline.m */,
 				60E9EEBC69ABDB6EA479E883 /* LDrawDocument+Viewers.m */,
+				07D55E99A8FF0414FDB65388 /* LDrawDocument+Menus.m */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -1711,6 +1714,7 @@
 				E3BBF616A473E128CF9D2F9F /* LDrawDocument+Undo.m in Sources */,
 				B9AD9675CFCB6814DEBEBC30 /* LDrawDocument+Outline.m in Sources */,
 				ABA4C18C6B95D88577BC396E /* LDrawDocument+Viewers.m in Sources */,
+				442BCD3205CD4431B5D100B7 /* LDrawDocument+Menus.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
