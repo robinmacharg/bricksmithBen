@@ -57,4 +57,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// P6a hot-path seam for Swift subclasses (removed when this class is ported, P6c).
+// Swift can't read `hidden`/`color`, and the getters cost two message sends and a retain per
+// primitive in -collectSelf:. Returns NO if the element is hidden. Otherwise sets *outColor to
+// the colour argument for the collector exactly as the ObjC primitives chose it: current colour
+// (16) -> LDrawRenderCurrentColor, edge colour (24) -> LDrawRenderComplimentColor, anything else
+// -> `scratch` filled by -getColorRGBA: (left untouched for a nil colour).
+FOUNDATION_EXPORT BOOL LDrawDrawableElementCollectorColor(LDrawDrawableElement *element, GLfloat *scratch,
+														  GLfloat * _Nullable * _Nonnull outColor);
+
 NS_ASSUME_NONNULL_END

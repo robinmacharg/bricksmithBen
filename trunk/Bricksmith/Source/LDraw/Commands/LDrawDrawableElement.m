@@ -16,9 +16,39 @@
 #import "LDrawContainer.h"
 #import "LDrawUtilities.h"
 #import "Bricksmith-Swift.h"
+#import "LDrawRenderer.h"
+
 
 
 @implementation LDrawDrawableElement
+
+//========== LDrawDrawableElementCollectorColor() ==============================
+//
+// Purpose:		See the header: the collector colour for a Swift primitive, read
+//				straight from the ivars as the ObjC primitives did. Defined inside
+//				@implementation so it may read the protected ivars.
+//
+//==============================================================================
+BOOL LDrawDrawableElementCollectorColor(LDrawDrawableElement *element, GLfloat *scratch, GLfloat **outColor)
+{
+	if(element->hidden == YES)
+		return NO;
+
+	// Unretained, as the ObjC primitives' `self->color` sends were: the element owns the colour.
+	__unsafe_unretained LDrawColor *color = element->color;
+	LDrawColorT colorCode = [color colorCode];
+	if(colorCode == LDrawCurrentColor)
+		*outColor = LDrawRenderCurrentColor;
+	else if(colorCode == LDrawEdgeColor)
+		*outColor = LDrawRenderComplimentColor;
+	else
+	{
+		[color getColorRGBA:scratch];
+		*outColor = scratch;
+	}
+	return YES;
+}
+
 
 #pragma mark -
 #pragma mark INITIALIZATION

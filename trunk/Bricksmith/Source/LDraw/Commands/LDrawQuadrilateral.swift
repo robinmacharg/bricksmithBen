@@ -40,23 +40,20 @@ private func readVertex(_ line: inout NSString?) -> Point3 {
 	return vertex
 }
 
-/// LDrawRenderComplimentColor is ((float *) -1); LDrawRenderCurrentColor is ((float *) 0), i.e. nil.
-/// Pointer-cast macros don't import into Swift.
-private let renderComplimentColor = UnsafeMutablePointer<GLfloat>(bitPattern: -1)
 
 
 @objc(LDrawQuadrilateral)
 final class LDrawQuadrilateral: LDrawDrawableElement {
 
 	// Storage. Named apart from the accessor methods, which keep their selectors.
-	private var v1: Point3 = ZeroPoint3
-	private var v2: Point3 = ZeroPoint3
-	private var v3: Point3 = ZeroPoint3
-	private var v4: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var v1: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var v2: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var v3: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var v4: Point3 = ZeroPoint3
 
-	private var normal: Vector3 = ZeroPoint3
+	@exclusivity(unchecked) private var normal: Vector3 = ZeroPoint3
 
-	private var dragHandles: [LDrawDragHandle]? = nil
+	@exclusivity(unchecked) private var dragHandles: [LDrawDragHandle]? = nil
 
 
 	// MARK: - INITIALIZATION
@@ -232,39 +229,27 @@ final class LDrawQuadrilateral: LDrawDrawableElement {
 	override func collectSelf(_ renderer: (any LDrawCollector)!) {
 		_ = self.revalCache(.DisplayList)
 
-		if self.isHidden() == false {
-			let (v1, v2, v3, v4) = (self.v1, self.v2, self.v3, self.v4)
-			var v: (GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat,
-					GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat) = (
-				v1.x, v1.y, v1.z,
-				v2.x, v2.y, v2.z,
-				v3.x, v3.y, v3.z,
-				v4.x, v4.y, v4.z)
+		// One C call reads `hidden` and `color` straight from the ObjC ivars (no getter sends, no
+		// retain per primitive; P6a perf). The colour choice is unchanged: 16 -> current, 24 ->
+		// complement, else the RGBA (zeros for a nil colour, where [nil colorCode] was 0).
+		var rgba: (GLfloat, GLfloat, GLfloat, GLfloat) = (0, 0, 0, 0)
+		withUnsafeMutablePointer(to: &rgba) { rp in
+			rp.withMemoryRebound(to: GLfloat.self, capacity: 4) { scratch in
+				var color: UnsafeMutablePointer<GLfloat>? = nil
+				guard LDrawDrawableElementCollectorColor(self, scratch, &color) else { return }
 
-			var n: (GLfloat, GLfloat, GLfloat) = (self.normal.x, self.normal.y, self.normal.z)
-
-			// Read the colour once ([nil colorCode] was 0: neither 16 nor 24).
-			let color		= self.lDrawColor()
-			let colorCode	= color?.colorCode()
-
-			withUnsafeMutablePointer(to: &v) { vp in
-				vp.withMemoryRebound(to: GLfloat.self, capacity: 12) { v in
-					withUnsafeMutablePointer(to: &n) { np in
-						np.withMemoryRebound(to: GLfloat.self, capacity: 3) { n in
-							if colorCode == LDrawCurrentColor {
-								renderer.drawQuad(v, normal: n, color: nil)
-							}
-							else if colorCode == LDrawEdgeColor {
-								renderer.drawQuad(v, normal: n, color: renderComplimentColor)
-							}
-							else {
-								var rgba: (GLfloat, GLfloat, GLfloat, GLfloat) = (0, 0, 0, 0)
-								withUnsafeMutablePointer(to: &rgba) {
-									$0.withMemoryRebound(to: GLfloat.self, capacity: 4) { rgba in
-										color?.getRGBA(rgba)
-										renderer.drawQuad(v, normal: n, color: rgba)
-									}
-								}
+				let (v1, v2, v3, v4) = (self.v1, self.v2, self.v3, self.v4)
+				var v: (GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat) = (
+					v1.x, v1.y, v1.z,
+					v2.x, v2.y, v2.z,
+					v3.x, v3.y, v3.z,
+					v4.x, v4.y, v4.z)
+				var n: (GLfloat, GLfloat, GLfloat) = (self.normal.x, self.normal.y, self.normal.z)
+				withUnsafeMutablePointer(to: &v) { vp in
+					vp.withMemoryRebound(to: GLfloat.self, capacity: 12) { v in
+						withUnsafeMutablePointer(to: &n) { np in
+							np.withMemoryRebound(to: GLfloat.self, capacity: 3) { n in
+								renderer.drawQuad(v, normal: n, color: color)
 							}
 						}
 					}

@@ -46,14 +46,26 @@ private func cInt(_ value: Float) -> Int32 {
 // Class:	LDrawColor
 //
 ////////////////////////////////////////////////////////////////////////////////
+/// Coder keys longer than 15 ASCII bytes. A Swift string literal that long bridges to a freshly
+/// allocated NSString on every NSCoder call (shorter ones bridge to tagged pointers); a String
+/// wrapping an NSString bridges back to that same object, as the ObjC @"" constants did (P6a perf).
+private enum CoderKey {
+	static let edgeColorRGBARed		= NSString(string: "edgeColorRGBARed") as String
+	static let edgeColorRGBAGreen	= NSString(string: "edgeColorRGBAGreen") as String
+	static let edgeColorRGBABlue	= NSString(string: "edgeColorRGBABlue") as String
+	static let edgeColorRGBAAlpha	= NSString(string: "edgeColorRGBAAlpha") as String
+	static let hasExplicitAlpha		= NSString(string: "hasExplicitAlpha") as String
+	static let materialParameters	= NSString(string: "materialParameters") as String
+}
+
 @objc(LDrawColor)
 final class LDrawColor: LDrawMetaCommand {
 
 	// Defaults are what -[LDrawColor init] set.
-	private var code: LDrawColorT			= LDrawColorBogus
-	private var rgba: RGBA					= (0, 0, 0, 1)		// range [0.0 - 1.0]
-	private var edgeCode: LDrawColorT		= LDrawColorBogus	// == LDrawColorBogus if not used
-	private var edgeRGBA: RGBA				= (0, 0, 0, 0)
+	@exclusivity(unchecked) private var code: LDrawColorT			= LDrawColorBogus
+	@exclusivity(unchecked) private var rgba: RGBA					= (0, 0, 0, 1)		// range [0.0 - 1.0]
+	@exclusivity(unchecked) private var edgeCode: LDrawColorT		= LDrawColorBogus	// == LDrawColorBogus if not used
+	@exclusivity(unchecked) private var edgeRGBA: RGBA				= (0, 0, 0, 0)
 	private var hasExplicitAlpha			= false
 	private var hasLuminance				= false
 	private var luminanceValue: UInt8		= 0
@@ -134,15 +146,15 @@ final class LDrawColor: LDrawMetaCommand {
 		rgba.2				= decoder.decodeFloat(forKey: "colorRGBABlue")
 		rgba.3				= decoder.decodeFloat(forKey: "colorRGBAAlpha")
 		edgeCode			= LDrawColorT(rawValue: decoder.decodeCInt(forKey: "edgeColorCode"))
-		edgeRGBA.0			= decoder.decodeFloat(forKey: "edgeColorRGBARed")
-		edgeRGBA.1			= decoder.decodeFloat(forKey: "edgeColorRGBAGreen")
-		edgeRGBA.2			= decoder.decodeFloat(forKey: "edgeColorRGBABlue")
-		edgeRGBA.3			= decoder.decodeFloat(forKey: "edgeColorRGBAAlpha")
-		hasExplicitAlpha	= decoder.decodeBool(forKey: "hasExplicitAlpha")
+		edgeRGBA.0			= decoder.decodeFloat(forKey: CoderKey.edgeColorRGBARed)
+		edgeRGBA.1			= decoder.decodeFloat(forKey: CoderKey.edgeColorRGBAGreen)
+		edgeRGBA.2			= decoder.decodeFloat(forKey: CoderKey.edgeColorRGBABlue)
+		edgeRGBA.3			= decoder.decodeFloat(forKey: CoderKey.edgeColorRGBAAlpha)
+		hasExplicitAlpha	= decoder.decodeBool(forKey: CoderKey.hasExplicitAlpha)
 		hasLuminance		= decoder.decodeBool(forKey: "hasLuminance")
 		luminanceValue		= UInt8(truncatingIfNeeded: decoder.decodeCInt(forKey: "luminance"))
 		materialValue		= LDrawColorMaterialT(rawValue: decoder.decodeCInt(forKey: "material")) ?? .none
-		materialParams		= decoder.decodeObject(forKey: "materialParameters") as? String
+		materialParams		= decoder.decodeObject(forKey: CoderKey.materialParameters) as? String
 		colorName			= decoder.decodeObject(forKey: "name") as? String
 	}
 
@@ -163,15 +175,15 @@ final class LDrawColor: LDrawMetaCommand {
 		encoder.encode(rgba.2,							forKey: "colorRGBABlue")
 		encoder.encode(rgba.3,							forKey: "colorRGBAAlpha")
 		encoder.encodeCInt(edgeCode.rawValue,			forKey: "edgeColorCode")
-		encoder.encode(edgeRGBA.0,						forKey: "edgeColorRGBARed")
-		encoder.encode(edgeRGBA.1,						forKey: "edgeColorRGBAGreen")
-		encoder.encode(edgeRGBA.2,						forKey: "edgeColorRGBABlue")
-		encoder.encode(edgeRGBA.3,						forKey: "edgeColorRGBAAlpha")
-		encoder.encode(hasExplicitAlpha,				forKey: "hasExplicitAlpha")
+		encoder.encode(edgeRGBA.0,						forKey: CoderKey.edgeColorRGBARed)
+		encoder.encode(edgeRGBA.1,						forKey: CoderKey.edgeColorRGBAGreen)
+		encoder.encode(edgeRGBA.2,						forKey: CoderKey.edgeColorRGBABlue)
+		encoder.encode(edgeRGBA.3,						forKey: CoderKey.edgeColorRGBAAlpha)
+		encoder.encode(hasExplicitAlpha,				forKey: CoderKey.hasExplicitAlpha)
 		encoder.encode(hasLuminance,					forKey: "hasLuminance")
 		encoder.encodeCInt(Int32(luminanceValue),		forKey: "luminance")
 		encoder.encodeCInt(materialValue.rawValue,		forKey: "material")
-		encoder.encode(materialParams as NSString?,		forKey: "materialParameters")
+		encoder.encode(materialParams as NSString?,		forKey: CoderKey.materialParameters)
 		encoder.encode(colorName as NSString?,			forKey: "name")
 	}
 

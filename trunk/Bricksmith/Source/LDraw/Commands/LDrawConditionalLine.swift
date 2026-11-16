@@ -47,8 +47,8 @@ private func readVertex(_ line: inout NSString?) -> Point3 {
 final class LDrawConditionalLine: LDrawLine {
 
 	// Storage. Named apart from the accessor methods, which keep their selectors.
-	private var control1: Point3 = ZeroPoint3
-	private var control2: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var control1: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var control2: Point3 = ZeroPoint3
 
 
 	// MARK: - INITIALIZATION

@@ -25,8 +25,8 @@ final class LDrawDragHandle: LDrawDrawableElement {
 	// Storage. Named apart from the accessor methods (-tag, -position, ...),
 	// which keep their ObjC selectors.
 	private var handleTag: Int = 0
-	private var handlePosition: Point3 = ZeroPoint3
-	private var handleInitialPosition: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var handlePosition: Point3 = ZeroPoint3
+	@exclusivity(unchecked) private var handleInitialPosition: Point3 = ZeroPoint3
 
 	private var handleTarget: AnyObject?	// strong, as the ARC ivar was
 	private var handleAction: Selector?
