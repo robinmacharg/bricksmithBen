@@ -25,6 +25,10 @@
 
 @interface MinifigureDialogController ()
 {
+	// The nib's top-level objects (panel, controllers, formatter); the strong properties below hold them too.
+	// -loadNibNamed:owner:topLevelObjects: doesn't retain them, so this keeps them for the controller's lifetime.
+	NSArray *nibTopLevelObjects;
+	
 	MLCadIni		*iniFile;
 	NSString		*minifigureName;
 	LDrawMPDModel	*minifigure;
@@ -118,28 +122,6 @@
 	[_minifigurePreview.glView	setAutosaveName:@"MinifigureGeneratorView"];
 	[_minifigurePreview.glView	restoreConfiguration];
 	
-	// Top-level nib objects get an extra retain from the legacy loadNibNamed:owner:. We hold them in strong
-	// properties, so balance that retain here (was autorelease under MRC; L77).
-	CFRelease((__bridge CFTypeRef)_objectController);
-	CFRelease((__bridge CFTypeRef)_degreesFormatter);
-	CFRelease((__bridge CFTypeRef)_hatsController);
-	CFRelease((__bridge CFTypeRef)_headsController);
-	CFRelease((__bridge CFTypeRef)_necksController);
-	CFRelease((__bridge CFTypeRef)_torsosController);
-	CFRelease((__bridge CFTypeRef)_rightArmsController);
-	CFRelease((__bridge CFTypeRef)_rightHandsController);
-	CFRelease((__bridge CFTypeRef)_rightHandAccessoriesController);
-	CFRelease((__bridge CFTypeRef)_leftArmsController);
-	CFRelease((__bridge CFTypeRef)_leftHandsController);
-	CFRelease((__bridge CFTypeRef)_leftHandAccessoriesController);
-	CFRelease((__bridge CFTypeRef)_hipsController);
-	CFRelease((__bridge CFTypeRef)_rightLegsController);
-	CFRelease((__bridge CFTypeRef)_rightLegAccessoriesController);
-	CFRelease((__bridge CFTypeRef)_leftLegsController);
-	CFRelease((__bridge CFTypeRef)_leftLegAccessoriesController);
-
-	CFRelease((__bridge CFTypeRef)_minifigureGeneratorPanel);
-	
 }//end awakeFromNib
 
 
@@ -162,7 +144,9 @@
 	//we'll call -generateMinifigure: when the dialog is ready and loaded with 
 	// all its values.
 	
-	[NSBundle loadNibNamed:@"MinifigureGenerator" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"MinifigureGenerator" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	return self;
 	
