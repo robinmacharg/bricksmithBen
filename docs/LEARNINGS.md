@@ -19,7 +19,7 @@ topics that match your task rather than the whole log.
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
-| Performance | L65 (and TESTING.md "Performance") |
+| Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82 |
 | Agents and review | L17, L18, L75, L85; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |

@@ -120,6 +120,25 @@ isn't present.
     `BRICKSMITH_PERF`. Debug timings are meaningless for comparing Swift with ObjC.
   - Each metric is the best of 15 runs after 2 warm-ups, on a 20,000-part synthetic model (L65).
   - The baseline belongs to the machine recorded in it; comparisons on other machines fail with a message.
+  - **Noise band** (Mac15,7, five back-to-back runs on a quiet machine, commit `0af1bc4`, 2026-11-16), as % of
+    baseline:
+
+    | Metric | Runs | Spread | Coefficient of variation |
+    |---|---|---|---|
+    | `archive_20000_parts` | 84-96% | 12 pt | 5.1% |
+    | `copy_20000_parts` | 89-113% | 24 pt | 10.7% |
+    | `draw_20000_parts_x20` | 82-93% | 11 pt | 5.1% |
+    | `parse_20000_parts` | 92-100% | 8 pt | 3.3% |
+    | `write_20000_parts` | 91-96% | 5 pt | 2.0% |
+
+    How to read a result:
+    - A single run moving by less than the spread above is noise. `copy` (12 ms) is the noisiest: one quiet run
+      reached 113%, close to the 120% budget, so a single `copy` failure needs a rerun before it means anything.
+    - To claim a real change (faster or slower), run at least three times and compare medians; a change smaller than
+      about 10 points (25 for `copy`) isn't distinguishable from noise.
+    - Other load on the machine (builds, other agents' test runs) widens the band. Measure on a quiet machine.
+    - In this measurement every metric ran below its baseline. Don't read that as a speed-up from P4: the baseline
+      was recorded on a working desktop (L65). Re-baselining is a deliberate decision (`--update-baseline`).
 - **Randomised tests** use a fixed seed, and they print it when they fail.
 - **Render snapshots** (`RenderSnapshotTests`) render fixtures in the real `LDrawGLView` from a fixed orthographic camera
   (zoom 400%, centred), capture with `-saveImageToPath:` after an explicit `-draw` (L64), and flip the image upright.
