@@ -38,7 +38,6 @@
 #import "LDrawUtilities.h"
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"
-#import "OverlayViewCategory.h"
 #import "UserDefaultsCategory.h"
 
 // Macros for pref-based UI tricks.

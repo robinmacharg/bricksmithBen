@@ -31,7 +31,14 @@
 //==============================================================================
 #import "OverlayHelperWindow.h"
 
-#import "OverlayViewCategory.h"
+// Optional hooks an overlay view may implement; this file calls them through -respondsToSelector:.
+// Declaration only, so NSView itself doesn't respond to them. (Declared in OverlayViewCategory.h until P5.)
+@interface NSView (OverlayViewHooks)
+- (void)viewWillBecomeOverlay;
+- (void)viewDidBecomeOverlay;
+- (void)viewWillResignOverlay;
+- (void)viewDidResignOverlay;
+@end
 
 
 @implementation OverlayHelperWindow

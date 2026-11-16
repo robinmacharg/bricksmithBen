@@ -72,6 +72,7 @@
 #import "LDrawColorWell.h"
 #import "LDrawColorBar.h"
 #import "BackgroundColorView.h"
+#import "OverlayHelperView.h"	// for OverlayViewCategory.swift (P5)
 
 // --- Test support (group 3) ---
 #import "BricksmithTestSupport.h"
