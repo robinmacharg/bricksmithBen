@@ -22,7 +22,7 @@ topics that match your task rather than the whole log.
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82 |
-| Agents and review | L17, L18, L75, L85; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+| Agents and review | L17, L18, L75, L85, L93; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
@@ -396,3 +396,7 @@ topics that match your task rather than the whole log.
 - **L92. To find every outside reader of a class's ivars in one pass,** move the ivar blocks into the `.m`, then
   re-run each file's compile command from `build/build.log` with `-fsyntax-only -ferror-limit=0` (xcodebuild stops
   at the first failing file). Revert the experiment afterwards.
+- **L93. macOS clears `/private/tmp` on restart.** A reboot during the P4 split wiped the agent's worktree (under the
+  session scratchpad) with ~30 minutes of uncommitted work, plus the scratch tools and the test lock. The main
+  checkout was untouched; `git worktree prune` cleaned up. → Put worktrees and the test lock under the repo's ignored
+  `build/` (`build/worktrees/`, `build/test.lock`), and have agents commit each gated step at once.

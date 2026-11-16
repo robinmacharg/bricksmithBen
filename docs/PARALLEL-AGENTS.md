@@ -15,12 +15,14 @@ First used for P4 (four streams). The reasons behind each rule are in LEARNINGS 
 ## Setting up
 
 ```zsh
-S=<scratchpad>                      # outside the repo; worktrees under /tmp are fine since e66adfa (L84)
+W=build/worktrees                   # inside the repo's ignored build/, so it survives a reboot (L93)
 BASE=$(git rev-parse --short HEAD)  # the commit every stream starts from
-git worktree add -b p4-<stream> $S/p4-<stream> $BASE
+git worktree add -b p4-<stream> $W/p4-<stream> $BASE
 ```
 
-Each worktree gets its own `build/`, so builds run in parallel. Tests do not (see the lock below).
+Each worktree gets its own `build/`, so builds run in parallel. Tests do not (see the lock below). The shared test
+lock is `build/test.lock` in the main checkout. Tell agents to commit early: uncommitted work in a worktree is lost if
+the machine restarts mid-run.
 
 ## The brief
 
@@ -40,7 +42,7 @@ The brief is all the agent knows. Every brief states:
    - no bug fixes: record new bugs in KNOWN-BUGS with a `withKnownIssue` test, or report them if borderline.
 6. **The gate,** with the test run under the shared lock, and the commit as a separate command (L74):
    ```zsh
-   setopt pipefail; scripts/build.sh 2>&1 | tail -3 && lockf -k $S/test.lock scripts/test.sh 2>&1 | tail -8
+   setopt pipefail; scripts/build.sh 2>&1 | tail -3 && lockf -k <main checkout>/build/test.lock scripts/test.sh 2>&1 | tail -8
    ```
    The lock is mandatory: every test run snapshots and restores the same Debug preferences domain (L75).
 7. **Never `scripts/test.sh --ui`** (it takes over the user's screen), and never launch Bricksmith.app. The
