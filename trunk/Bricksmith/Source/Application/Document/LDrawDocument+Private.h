@@ -97,3 +97,8 @@
 	NSArray	*markedSelection;
 }
 @end
+
+
+@interface LDrawDocument (ViewersInternal)
+- (NSArray<LDrawGLView*> *) all3DViewports;
+@end

@@ -251,6 +251,7 @@
 		95D893CB16569CFD00AA055B /* LDrawLSynth.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D893C916569CFD00AA055B /* LDrawLSynth.m */; };
 		96086D628B53E1A36B54CE92 /* LDrawKeywords.m in Sources */ = {isa = PBXBuildFile; fileRef = 145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */; };
 		9F1C14D454CFFAF514B70278 /* ModelLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852F4EEE5381CB836060A724 /* ModelLogicTests.swift */; };
+		ABA4C18C6B95D88577BC396E /* LDrawDocument+Viewers.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E9EEBC69ABDB6EA479E883 /* LDrawDocument+Viewers.m */; };
 		AF95CB7016D813469C14BB98 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB8369002EE06CEE9EA9CB5 /* PerformanceTests.swift */; };
 		B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */; };
 		B9AD9675CFCB6814DEBEBC30 /* LDrawDocument+Outline.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D582C85181B758EA6CFAB28 /* LDrawDocument+Outline.m */; };
@@ -600,6 +601,7 @@
 		513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = BricksmithTestSupport.m; sourceTree = "<group>"; };
 		54CB6AA59CAB7F29C9AABC02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		5D19A96774CDADD19C441D18 /* ColourTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColourTests.swift; sourceTree = "<group>"; };
+		60E9EEBC69ABDB6EA479E883 /* LDrawDocument+Viewers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LDrawDocument+Viewers.m"; sourceTree = "<group>"; };
 		63A406D4241F2596FDC7B48C /* HarnessSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessSmokeTests.swift; sourceTree = "<group>"; };
 		652ABD1FF9647D810C8CEB2C /* Bricksmith-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Bricksmith-Bridging-Header.h"; sourceTree = "<group>"; };
 		737720E867742FB944EB62C7 /* LDrawLSynthDirective.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawLSynthDirective.m; sourceTree = "<group>"; };
@@ -994,6 +996,7 @@
 				21089774D0D91240BD42D0C3 /* LDrawDocument+ModelsMenu.m */,
 				159A8E73EDAC58598A3C6B64 /* LDrawDocument+Undo.m */,
 				2D582C85181B758EA6CFAB28 /* LDrawDocument+Outline.m */,
+				60E9EEBC69ABDB6EA479E883 /* LDrawDocument+Viewers.m */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -1707,6 +1710,7 @@
 				41398AC3E7F9D645B04C7693 /* LDrawDocument+ModelsMenu.m in Sources */,
 				E3BBF616A473E128CF9D2F9F /* LDrawDocument+Undo.m in Sources */,
 				B9AD9675CFCB6814DEBEBC30 /* LDrawDocument+Outline.m in Sources */,
+				ABA4C18C6B95D88577BC396E /* LDrawDocument+Viewers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

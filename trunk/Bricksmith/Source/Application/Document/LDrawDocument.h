@@ -138,11 +138,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) clearModelMenus;
 - (void) buildRelatedPartsMenus;
 
-// Viewport Management
-- (void) connectLDrawGLView:(null_unspecified LDrawGLView *)glView;
-- (null_unspecified LDrawGLView *) main3DViewport;
-- (void) updateViewportAutosaveNamesAndRestore:(BOOL)shouldRestore;
-
 // Utilities
 - (void) addModel:(null_unspecified LDrawMPDModel *)newModel atIndex:(NSInteger)insertAtIndex preventNameCollisions:(BOOL)renameModels;
 - (void) addStep:(null_unspecified LDrawStep *)newStep parent:(null_unspecified LDrawMPDModel*)selectedModel index:(NSInteger)insertAtIndex;
@@ -273,6 +268,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setElement:(null_unspecified LDrawDrawableElement *)element toHidden:(BOOL)hideFlag;
 - (void) setObject:(null_unspecified LDrawDirective <LDrawColorable>*)object toColor:(null_unspecified LDrawColor *)newColor;
 - (void) setTransformation:(TransformComponents)newComponents forPart:(null_unspecified LDrawPart *)part;
+
+@end
+
+
+
+@interface LDrawDocument (Viewers)
+// LDrawDocument+Viewers.m
+
+// Viewport Management
+- (void) connectLDrawGLView:(null_unspecified LDrawGLView *)glView;
+- (null_unspecified LDrawGLView *) main3DViewport;
+- (void) updateViewportAutosaveNamesAndRestore:(BOOL)shouldRestore;
 
 @end
 
