@@ -28,7 +28,7 @@
 #import "LDrawUtilities.h"
 #import "MacLDraw.h"
 #import "PartCatalogBuilder.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 
 
 //The part catalog was regenerated from disk.

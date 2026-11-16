@@ -10,7 +10,7 @@
 //==============================================================================
 
 #import "ModelManager.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 #import "LDrawFile.h"
 #import "LDrawMPDModel.h"
 #import "LDrawUtilities.h"

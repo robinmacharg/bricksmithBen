@@ -27,7 +27,7 @@
 #import "LDrawUtilities.h"
 
 #import "MacLDraw.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 
 //---------- Section Headers ---------------------------------------------------
 // a section header in MLCad.ini is enclosed in brackets (i.e., [HATS])

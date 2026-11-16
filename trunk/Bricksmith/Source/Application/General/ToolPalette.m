@@ -26,7 +26,7 @@
 #import "LDrawColorPanelController.h"
 #import "LDrawColorWell.h"
 #import "MacLDraw.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 
 ToolPalette *sharedToolPalette = nil;
 

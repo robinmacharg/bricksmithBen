@@ -12,7 +12,7 @@
 
 #import "RelatedParts.h"
 #import "LDrawUtilities.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 #import "PartLibrary.h"
 
 

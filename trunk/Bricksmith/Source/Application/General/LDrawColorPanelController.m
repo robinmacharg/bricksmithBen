@@ -17,7 +17,6 @@
 #import "LDrawColorCell.h"
 #import "LDrawColorWell.h"
 #import "MacLDraw.h"
-#import "StringCategory.h"
 
 typedef enum
 {

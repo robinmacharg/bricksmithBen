@@ -29,7 +29,7 @@
 #import "LDrawPart.h"
 #import "LDrawTriangle.h"
 #import "LDrawUtilities.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 #import "LDrawLSynthDirective.h"
 
 // This disables culling and box approximations for small bricks.  Normally
