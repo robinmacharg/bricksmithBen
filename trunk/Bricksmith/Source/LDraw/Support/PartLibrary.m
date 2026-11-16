@@ -22,6 +22,7 @@
 #import "LDrawPart.h"
 #import "LDrawPathNames.h"
 #import "LDrawPaths.h"
+#import "LDrawShaderRenderer.h"
 #import "LDrawStep.h"
 #import "LDrawTexture.h"
 #import "LDrawUtilities.h"
@@ -67,6 +68,10 @@ NSString	*Category_Alias 			= @"Alias";
 NSString	*Category_Moved 			= @"Moved";
 NSString	*Category_Primitives		= @"Primitives";
 NSString	*Category_Subparts			= @"Subparts";
+
+@interface PartLibrary ()
+- (LDrawModel *) readModelAtPath:(NSString *)partPath parseFailed:(BOOL *)parseFailed;
+@end
 
 @implementation PartLibrary
 
@@ -123,11 +128,6 @@ static PartLibrary *SharedPartLibrary = nil;
 	optimizedTextures			= [[NSMutableDictionary alloc] init];
 	
 	favorites                   = [[NSMutableArray alloc] init];
-	
-#if USE_BLOCKS
-	catalogAccessQueue          = dispatch_queue_create("com.AllenSmith.Bricksmith.CatalogAccess", NULL);
-#endif
-	parsingGroups               = [[NSMutableDictionary alloc] init];
 	
 	[self setPartCatalog:[NSDictionary dictionary]];
 	
@@ -599,11 +599,6 @@ static PartLibrary *SharedPartLibrary = nil;
 {
 	// Determine if the model needs to be parsed.
 	// Dispatch to a serial queue to effectively mutex the query
-#if USE_BLOCKS
-	dispatch_group_async(parentGroup, self->catalogAccessQueue,
-	^{
-		NSMutableArray  *requestingGroups   = nil;
-#endif
 		CGImageRef      image              = NULL;
 		BOOL            alreadyParsing      = NO;	// another thread is already parsing partName
 	
@@ -611,79 +606,20 @@ static PartLibrary *SharedPartLibrary = nil;
 		image = (__bridge CGImageRef)[self->loadedImages objectForKey:imageName];
 		if(image == nil)
 		{
-#if USE_BLOCKS
-			// Is it being parsed? If so, all we need to do is wait for whoever 
-			// is parsing it to finish. 
-			requestingGroups    = [self->parsingGroups objectForKey:imageName];
-			alreadyParsing      = (requestingGroups != nil);
-			
-			if(alreadyParsing == NO)
-			{
-				// Start a registry for all the dispatch groups which attempt to 
-				// load the same model. When parsing is complete, they will all 
-				// be signaled. 
-				requestingGroups = [[NSMutableArray alloc] init];
-				[self->parsingGroups setObject:requestingGroups forKey:imageName];
-				[requestingGroups release];
-			}
-				
-			// Register the calling group as having also requested a parse 
-			// for this file. This ensures the calling group cannot complete 
-			// until the parse is complete on whatever thread is actually 
-			// doing it. 
-			dispatch_group_enter(parentGroup);
-			[requestingGroups addObject:[NSValue valueWithPointer:parentGroup]];
-#endif
 			
 			// Nobody has started parsing it yet, so we win! Parse from disk.
 			if(alreadyParsing == NO)
 			{
-#if USE_BLOCKS
-				dispatch_group_async(parentGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-				^{
-#endif
 					NSString    *imagePath   = [[LDrawPaths sharedPaths] pathForTextureName:imageName];
 						
-#if USE_BLOCKS //------------------------------------------------------
-					[self readImageAtPath:imagePath asynchronously:YES completionHandler:^(CGImageRef image)
-					{
-						if(image) CFRetain(image);
-						
-						// Register new image in the library (serial queue "mutex" protected)
-						dispatch_group_async(parentGroup, self->catalogAccessQueue,
-						^{
-							if(image != nil)
-							{
-								[self->loadedImages setObject:(__bridge id)image forKey:imageName];
-							}
-							
-							// Notify waiting threads we are finished parsing this part.
-							for(NSValue *waitingGroupPtr in requestingGroups)
-							{
-								dispatch_group_t waitingGroup = [waitingGroupPtr pointerValue];
-								dispatch_group_leave(waitingGroup);
-							}
-							[self->parsingGroups removeObjectForKey:imageName];
-							
-							if(image) CFRelease(image);
-						});
-					}];
-#else //------------------------------------------------------------------------
 					// **** Non-multithreaded fallback code ****
 					image = (CGImageRef)[self readImageAtPath:imagePath asynchronously:NO completionHandler:NULL];
 					if(image != nil)
 					{
 						[self->loadedImages setObject:(__bridge id)image forKey:imageName];
 					}
-#endif //-----------------------------------------------------------------------
-#if USE_BLOCKS
-				});
-#endif
 			}
 		}
-#if USE_BLOCKS
-	});
-#endif
 	
 }//end loadImageForName:
 
@@ -693,17 +629,18 @@ static PartLibrary *SharedPartLibrary = nil;
 // Purpose:		This is a thread-safe method which causes the model of the given 
 //				name to be loaded out of the LDraw folder. 
 //
+//				Returns NO only when the part's file has lines that could not be 
+//				parsed (a malformed final ROTSTEP, BUG-007): the caller fails as it 
+//				did when that parse threw. A part that isn't in the library, or 
+//				whose file yields no lines (empty, unreadable, a directory), is not 
+//				a failure here; it is drawn as missing, as before. 
+//
 //==============================================================================
-- (void) loadModelForName:(NSString *)partName
+- (BOOL) loadModelForName:(NSString *)partName
 				  inGroup:(dispatch_group_t)parentGroup
 {
 	// Determine if the model needs to be parsed.
 	// Dispatch to a serial queue to effectively mutex the query
-#if USE_BLOCKS
-	dispatch_group_async(parentGroup, self->catalogAccessQueue,
-	^{
-		NSMutableArray  *requestingGroups   = nil;
-#endif
 		LDrawModel      *model              = nil;
 		BOOL            alreadyParsing      = NO;	// another thread is already parsing partName
 	
@@ -711,75 +648,28 @@ static PartLibrary *SharedPartLibrary = nil;
 		model = [self->loadedFiles objectForKey:partName];
 		if(model == nil)
 		{
-#if USE_BLOCKS
-			// Is it being parsed? If so, all we need to do is wait for whoever 
-			// is parsing it to finish. 
-			requestingGroups    = [self->parsingGroups objectForKey:partName];
-			alreadyParsing      = (requestingGroups != nil);
-			
-			if(alreadyParsing == NO)
-			{
-				// Start a registry for all the dispatch groups which attempt to 
-				// load the same model. When parsing is complete, they will all 
-				// be signaled. 
-				requestingGroups = [[NSMutableArray alloc] init];
-				[self->parsingGroups setObject:requestingGroups forKey:partName];
-				[requestingGroups release];
-			}
-				
-			// Register the calling group as having also requested a parse 
-			// for this file. This ensures the calling group cannot complete 
-			// until the parse is complete on whatever thread is actually 
-			// doing it. 
-			dispatch_group_enter(parentGroup);
-			[requestingGroups addObject:[NSValue valueWithPointer:parentGroup]];
-#endif
 			
 			// Nobody has started parsing it yet, so we win! Parse from disk.
 			if(alreadyParsing == NO)
 			{
-#if USE_BLOCKS
-				dispatch_group_async(parentGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-				^{
-#endif
 					NSString    *partPath   = [[LDrawPaths sharedPaths] pathForPartName:partName];
 						
-#if USE_BLOCKS //------------------------------------------------------
-					[self readModelAtPath:partPath asynchronously:YES completionHandler:^(LDrawModel *model)
-					{
-						// Register new model in the library (serial queue "mutex" protected)
-						dispatch_group_async(parentGroup, self->catalogAccessQueue,
-						^{
-							if(model != nil)
-							{
-								[self->loadedFiles setObject:model forKey:partName];
-							}
-							
-							// Notify waiting threads we are finished parsing this part.
-							for(NSValue *waitingGroupPtr in requestingGroups)
-							{
-								dispatch_group_t waitingGroup = [waitingGroupPtr pointerValue];
-								dispatch_group_leave(waitingGroup);
-							}
-							[self->parsingGroups removeObjectForKey:partName];
-						});
-					}];
-#else //------------------------------------------------------------------------
 					// **** Non-multithreaded fallback code ****
-					model = [self readModelAtPath:partPath asynchronously:NO completionHandler:NULL];
+					BOOL	parseFailed	= NO;
+					
+					model = [self readModelAtPath:partPath parseFailed:&parseFailed];
 					if(model != nil)
 					{
 						[self->loadedFiles setObject:model forKey:partName];
 					}
-#endif //-----------------------------------------------------------------------
-#if USE_BLOCKS
-				});
-#endif
+					else if(parseFailed)
+					{
+						return NO;
+					}
 			}
 		}
-#if USE_BLOCKS
-	});
-#endif
+	
+	return YES;
 	
 }//end loadModelForName:
 
@@ -994,13 +884,7 @@ static PartLibrary *SharedPartLibrary = nil;
 {
 	__block LDrawModel	*model		= nil;
 
-#if USE_BLOCKS
-	dispatch_sync(self->catalogAccessQueue, ^{
-#endif	
 		model = [self->loadedFiles objectForKey:imageName];
-#if USE_BLOCKS		
-	});
-#endif	
 	
 	return model;
 }
@@ -1075,35 +959,11 @@ static PartLibrary *SharedPartLibrary = nil;
 //			CGImageDestinationFinalize(myImageDest);
 //			CFRelease(myImageDest);
 			
-			// Generate a tag for the texture we're about to generate, then set it as 
-			// the active texture. 
-			// Note: We are using non-rectangular textures here, which started as an 
-			//		 extension (_EXT) and is now ratified by the review board (_ARB) 
-			glGenTextures(1, &textureTag);
-			glBindTexture(GL_TEXTURE_2D, textureTag);
-			
-			// Generate Texture!
-			glPixelStorei(GL_PACK_ROW_LENGTH,	canvasRect.size.width * 4);
-			glPixelStorei(GL_PACK_ALIGNMENT,	1); // byte alignment
-			
-			glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8,			// texture type params
-						 canvasRect.size.width, canvasRect.size.height, 0,	// source image (w, h)
-						 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,				// source storage format
-						 imageBuffer );
-						// see function notes about the source storage format.
-			
-			// This requires GL_EXT_framebuffer_object, available on all renderers on 10.6.8 and beyond.
-			// Build mipmaps so we can use linear-mipmap-linear
-			glGenerateMipmapEXT(GL_TEXTURE_2D);
-
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// This enables mip-mapping - makes textures look good when small.
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.0);				// Max anisotropic filtering of all renderers on 10.6.8 is 16.0.
-																							// This keeps texture res high when looking at a tile from a low angle.
-
-			glBindTexture(GL_TEXTURE_2D, 0);
+			// Upload it (renderer side). The bitmap's storage format is 
+			// GL_BGRA / GL_UNSIGNED_INT_8_8_8_8_REV; see the renderer's notes. 
+			textureTag = [LDrawShaderRenderer textureTagForBitmap:imageBuffer
+															width:canvasRect.size.width
+														   height:canvasRect.size.height];
 			
 			[self->optimizedTextures setObject:[NSNumber numberWithUnsignedInt:textureTag] forKey:name];
 			
@@ -1191,37 +1051,10 @@ static PartLibrary *SharedPartLibrary = nil;
 				asynchronously:(BOOL)asynchronous
 			 completionHandler:(void (^)(CGImageRef))completionBlock
 {
-#if USE_BLOCKS
-	dispatch_group_t    group           = NULL;
-	__block
-#endif
 	CGImageRef			image          = nil;
 	
-#if USE_BLOCKS
-	group           = dispatch_group_create();
-#endif
 	
-#if USE_BLOCKS
-	if(asynchronous == NO)
-	{
-		dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-#endif
 		image = [LDrawUtilities imageAtPath:imagePath];
-#if USE_BLOCKS
-	}
-	else
-	{
-		dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-							  ^{
-								  image = [LDrawUtilities imageAtPath:imagePath];
-								  
-								  if(completionBlock)
-									  completionBlock(image);
-							  });
-	}
-	
-	dispatch_release(group);
-#endif
 	
 	return image;
 	
@@ -1242,18 +1075,29 @@ static PartLibrary *SharedPartLibrary = nil;
 				  asynchronously:(BOOL)asynchronous
 			   completionHandler:(void (^)(LDrawModel *))completionBlock
 {
+	return [self readModelAtPath:partPath parseFailed:NULL];
+	
+}//end readModelAtPath:asynchronously:completionHandler:
+
+
+//========== readModelAtPath:parseFailed: ======================================
+//
+// Purpose:		Parses the model found at the given path and returns it. 
+//
+//				*parseFailed (if given) is YES only when the file had lines that 
+//				could not be parsed (BUG-007's malformed ROTSTEP), as opposed to nil 
+//				for a missing path or a file with no lines. 
+//
+//==============================================================================
+- (LDrawModel *) readModelAtPath:(NSString *)partPath
+					 parseFailed:(BOOL *)parseFailed
+{
 	NSString            *fileContents   = nil;
 	NSArray             *lines          = nil;
 	LDrawFile           *parsedFile     = nil;
 	dispatch_group_t    group           = NULL;
-#if USE_BLOCKS
-	__block
-#endif
 			LDrawModel  *model          = nil;
 	
-#if USE_BLOCKS
-	group           = dispatch_group_create();
-#endif
 
 	if(partPath != nil)
 	{
@@ -1267,11 +1111,9 @@ static PartLibrary *SharedPartLibrary = nil;
 											   parentGroup:group];
 	}
 	
-#if USE_BLOCKS
-	if(asynchronous == NO)
-	{
-		dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-#endif
+	if(parseFailed != NULL)
+		*parseFailed = (parsedFile == nil && [lines count] > 0);
+	
 		[parsedFile optimizeStructure];
 		model = [[parsedFile submodels] objectAtIndex:0];
 		// We are "leaking" the enclosing file, but returning an internal model 
@@ -1280,28 +1122,10 @@ static PartLibrary *SharedPartLibrary = nil;
 		// itself, or perhaps removing the model from its file (since everything 
 		// is theoretically flattened). 
 //		[parsedFile release];
-#if USE_BLOCKS
-	}
-	else
-	{
-		dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-							  ^{
-								  [parsedFile optimizeStructure];
-								  model = [[[[parsedFile submodels] objectAtIndex:0] retain] autorelease];
-								  
-								  if(completionBlock)
-									  completionBlock(model);
-								  
-								  //			[parsedFile release]; // see notes above
-							  });
-	}
-	
-	dispatch_release(group);
-#endif
 	
 	return model;
 	
-}//end readModelAtPath:
+}//end readModelAtPath:parseFailed:
 
 
 #pragma mark -

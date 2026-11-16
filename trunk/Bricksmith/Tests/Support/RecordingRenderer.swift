@@ -79,6 +79,12 @@ final class RecordingRenderer: NSObject, LDrawRenderer, LDrawCollector {
 	}
 	func drawDL(_ dl: LDrawDLHandle!) { emit("drawDL #\(Int(bitPattern: dl))") }
 
+	// MARK: LDrawRenderer and LDrawCollector
+
+	/// Texture names come from the same place LDrawShaderRenderer gets them (PartLibrary's per-image cache, a
+	/// real GL upload), so the shared cache stays valid for later real renders. Not logged: it isn't drawing.
+	func textureTag(for texture: LDrawTexture!) -> GLuint { PartLibrary.shared().textureTag(for: texture) }
+
 	// MARK: LDrawCollector
 
 	func drawQuad(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) {

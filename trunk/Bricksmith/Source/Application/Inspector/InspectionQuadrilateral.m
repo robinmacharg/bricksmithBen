@@ -79,7 +79,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorQuadrilateral" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorQuadrilateral"] == NO) {
         NSLog(@"Couldn't load InspectorQuadrilateral.nib");
     }
 	

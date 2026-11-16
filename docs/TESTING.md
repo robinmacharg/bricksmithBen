@@ -120,6 +120,25 @@ isn't present.
     `BRICKSMITH_PERF`. Debug timings are meaningless for comparing Swift with ObjC.
   - Each metric is the best of 15 runs after 2 warm-ups, on a 20,000-part synthetic model (L65).
   - The baseline belongs to the machine recorded in it; comparisons on other machines fail with a message.
+  - **Noise band** (Mac15,7, five back-to-back runs on a quiet machine, commit `1ee0869`, 2026-11-16), as % of
+    baseline:
+
+    | Metric | Runs | Spread | Coefficient of variation |
+    |---|---|---|---|
+    | `archive_20000_parts` | 84-96% | 12 pt | 5.1% |
+    | `copy_20000_parts` | 89-113% | 24 pt | 10.7% |
+    | `draw_20000_parts_x20` | 82-93% | 11 pt | 5.1% |
+    | `parse_20000_parts` | 92-100% | 8 pt | 3.3% |
+    | `write_20000_parts` | 91-96% | 5 pt | 2.0% |
+
+    How to read a result:
+    - A single run moving by less than the spread above is noise. `copy` (12 ms) is the noisiest: one quiet run
+      reached 113%, close to the 120% budget, so a single `copy` failure needs a rerun before it means anything.
+    - To claim a real change (faster or slower), run at least three times and compare medians; a change smaller than
+      about 10 points (25 for `copy`) isn't distinguishable from noise.
+    - Other load on the machine (builds, other agents' test runs) widens the band. Measure on a quiet machine.
+    - In this measurement every metric ran below its baseline. Don't read that as a speed-up from P4: the baseline
+      was recorded on a working desktop (L65). Re-baselining is a deliberate decision (`--update-baseline`).
 - **Randomised tests** use a fixed seed, and they print it when they fail.
 - **Render snapshots** (`RenderSnapshotTests`) render fixtures in the real `LDrawGLView` from a fixed orthographic camera
   (zoom 400%, centred), capture with `-saveImageToPath:` after an explicit `-draw` (L64), and flip the image upright.
@@ -142,9 +161,9 @@ confirm the list is complete.
 
 | Feature or action | Why it's manual | Covered by checklist step |
 |---|---|---|
-| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | 14 |
+| Randomize Colors (the menu action only) | The shuffle logic is tested with an injected random source (`LDrawDocument.randomSource`; `DocumentActionTests.randomizeColorsScripted`/`Seeded`); the shipping app still uses unseeded `rand()` | 14 |
 | Split Model, Add Part (from browser), Add Submodel Reference, Insert Part, Add Minifigure | Present panels, alerts or menus (`canDeleteDirective`, part browser, minifig dialog) | 5, 7, 11 |
-| Export Steps | Save panel; the export logic itself is covered by row 11 (note BUG-011: files come out in reverse order) | 15 |
+| Export Steps (the save panel only) | The export itself is `-[LDrawDocument exportStepsToURL:]`, tested in `ExportTests` (note BUG-011: files come out in reverse order). The goldens use parsed-file input; opening a real document first adds `.ldr` to extensionless model names, so folder names differ | 15 |
 | Search panel (Find) | Its matching logic is bound to the panel's controls (scope/colour/part popups) | 16 |
 | Missing/moved pieces checks on open | Alerts | 2 |
 | Move and Rotation panels, Find, Dimensions, Piece Count | Panels; the underlying edits (`moveSelectionBy`, `rotateSelection`) are automated in row 10 | 5 |
@@ -185,3 +204,12 @@ things automation covers poorly. Record the sign-off in port-status.md.
 15. Export Steps to a temporary folder. One file per step is written (they come out in reverse order: BUG-011).
 16. Open Find, search by part and by colour; matching parts are selected.
 17. Hide a part, then Show All. Use Add Related Part from a part's context menu; the related part is added and Undo removes it.
+18. Panels and menus open, close and reopen without crashing (P4 changed how their nib objects are kept alive):
+    - Inspector with every kind of selection (part, line, triangle, quad, conditional line, comment, unknown
+      command, step, MPD model, LSynth), fast selection changes, nothing selected, several selected, and editing a
+      field then changing the selection.
+    - Dimensions and Piece Count: open, OK, reopen several times, then keep working in the document.
+    - Move panel twice; Minifigure generator open, OK, reopen; tool palette show and hide.
+    - Preferences: every tab, the LDraw folder and LSynth executable/config choosers; close, reopen, repeat.
+    - Context menus: add and remove a favourite in the parts table; use the 3D view's menu, close the document,
+      open another, use the menu again.

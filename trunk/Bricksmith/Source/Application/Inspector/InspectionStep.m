@@ -44,7 +44,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorStep" owner:self] == NO)
+    if ([self loadInspectorNibNamed:@"InspectorStep"] == NO)
 	{
         NSLog(@"Couldn't load InspectorStep.nib");
     }

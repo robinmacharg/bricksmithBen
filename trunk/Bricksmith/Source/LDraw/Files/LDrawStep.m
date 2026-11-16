@@ -27,9 +27,6 @@
 //==============================================================================
 #import "LDrawStep.h"
 
-#if USE_BLOCKS
-#import <dispatch/dispatch.h>
-#endif
 
 #import "LDrawKeywords.h"
 #import "LDrawModel.h"
@@ -118,20 +115,6 @@
 	cachedBounds = InvalidBox;
 	
 	dispatch_group_t    stepDispatchGroup   = NULL;
-#if USE_BLOCKS
-	dispatch_queue_t    queue               = NULL;	
-	
-	// Create a group for the multithreaded parsing of the step contents.
-	queue               = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);	
-	stepDispatchGroup   = dispatch_group_create();
-	
-	// Prevent the owning group from completing until the step is finished 
-	// asynchronously parsing its contents. 
-	if(parentGroup != NULL)
-	{
-		dispatch_group_enter(parentGroup);
-	}
-#endif	
 
 	// Parse out the STEP command
 	if(range.length > 0)
@@ -148,9 +131,14 @@
 		}
 		else if([[self class] lineIsRotationStepTerminator:currentLine])
 		{
-			// Parse the rotation step.
+			// Parse the rotation step. A malformed one fails the whole step, and 
+			// with it the model and file being parsed (it used to throw; BUG-007). 
+			// Nothing has been parsed into the step yet. 
 			if([self parseRotationStepFromLine:currentLine] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad rotstep syntax" userInfo:nil];
+			{
+				free(directives);
+				return nil;
+			}
 			
 			range.length -= 1;
 		}
@@ -168,24 +156,16 @@
 			commandRange = [CommandClass rangeOfDirectiveBeginningAtIndex:lineIndex
 																  inLines:lines
 																 maxIndex:NSMaxRange(range) - 1];
-#if USE_BLOCKS
-			// Parse (multithreaded)
-			dispatch_group_async(stepDispatchGroup, queue,
-			^{
-#endif
 				// Parse but disallow multithreading for subparsing. LDraw 
 				// objects be be deeply recursive, which means we would pile 
 				// up a lot of dispatch_group_wait calls, resulting in so 
 				// many threads we run out of stack space. 
-				LDrawDirective *newDirective = [[CommandClass alloc] initWithLines:lines inRange:commandRange parentGroup:stepDispatchGroup];
+				LDrawDirective *newDirective = [CommandClass directiveWithLines:lines inRange:commandRange parentGroup:stepDispatchGroup];
 				
 				// Store non-retaining, but *thread-safe* container 
 				// (NSMutableArray is NOT). Since it doesn't retain, we mustn't 
 				// autorelease newDirective. 
 				directives[insertIndex] = newDirective;
-#if USE_BLOCKS
-			});
-#endif
 			lineIndex     = NSMaxRange(commandRange);
 			insertIndex += 1;
 		}
@@ -196,10 +176,6 @@
 
 	}
 	
-#if USE_BLOCKS
-	dispatch_group_notify(stepDispatchGroup, queue,
-	^{
-#endif
 		NSUInteger      counter             = 0;
 		LDrawDirective  *currentDirective   = nil;
 
@@ -213,16 +189,6 @@
 		}
 		free(directives);
 		
-#if USE_BLOCKS
-		// Now that the step is complete, we can release our lock on the 
-		// parent group and allow it to finish. 
-		if(parentGroup != NULL)
-		{
-			dispatch_group_leave(parentGroup);
-		}
-	});
-	dispatch_release(stepDispatchGroup);
-#endif
 	
 	return self;
 	
@@ -407,27 +373,6 @@
 	}
 	[self revalCache:DisplayList];
 }//end collectSelf:
-
-//========== debugDrawboundingBox ==============================================
-//
-// Purpose:		Draw a translucent visualization of our bounding box to test
-//				bounding box caching.
-//
-//==============================================================================
-- (void) debugDrawboundingBox
-{
-	NSArray         *commandsInStep     = [self subdirectives];
-	LDrawDirective  *currentDirective   = nil;
-	
-	//Draw each element in the step.
-	for(currentDirective in commandsInStep)
-	{
-		[currentDirective debugDrawboundingBox];
-	}
-	
-	[super debugDrawboundingBox];	
-}//end debugDrawboundingBox
-
 
 //========== hitTest:transform:viewScale:boundsOnly:creditObject:hits: =======
 //
@@ -1071,64 +1016,56 @@
 {
 	NSScanner	*scanner	= [NSScanner scannerWithString:rotstep];
 	Tuple3		 angles		= ZeroPoint3;
-	BOOL		 success	= YES;
 	
-	@try
+	if([scanner scanString:@"0" intoString:NULL] == NO)
+		return NO;
+
+	if([scanner scanString:LDRAW_ROTATION_STEP_TERMINATOR intoString:NULL] == NO)
+		return NO;
+
+	// Is it an end rotation?
+	if([scanner scanString:LDRAW_ROTATION_END intoString:NULL] == YES)
 	{
-		if([scanner scanString:@"0" intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
+		[self setStepRotationType:LDrawStepRotationEnd];
+	}
+	else
+	{
+		//---------- Angles ------------------------------------------------
+		
+		if([scanner scanFloat:&(angles.x)] == NO)
+			return NO;
 
-		if([scanner scanString:LDRAW_ROTATION_STEP_TERMINATOR intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
+		if([scanner scanFloat:&(angles.y)] == NO)
+			return NO;
 
-		// Is it an end rotation?
-		if([scanner scanString:LDRAW_ROTATION_END intoString:NULL] == YES)
-		{
-			[self setStepRotationType:LDrawStepRotationEnd];
-		}
+		if([scanner scanFloat:&(angles.z)] == NO)
+			return NO;
+	
+	
+		//---------- Rotation Type -----------------------------------------
+		
+		if( [scanner scanString:LDRAW_ROTATION_ABSOLUTE intoString:NULL] == YES )
+			[self setStepRotationType:LDrawStepRotationAbsolute];
+		
+		else if( [scanner scanString:LDRAW_ROTATION_ADDITIVE intoString:NULL] == YES )
+			[self setStepRotationType:LDrawStepRotationAdditive];
+
+		else if( [scanner scanString:LDRAW_ROTATION_RELATIVE intoString:NULL] == YES )
+			[self setStepRotationType:LDrawStepRotationRelative];
+		
+		// if no type is explicitly specified, it is a relative rotation.
+		else if( [scanner isAtEnd] == YES )
+			[self setStepRotationType:LDrawStepRotationRelative];
+		
+		// there is some syntax we don't recognize. Abort parsing attempt.
 		else
-		{
-			//---------- Angles ------------------------------------------------
+			return NO;
 			
-			if([scanner scanFloat:&(angles.x)] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-
-			if([scanner scanFloat:&(angles.y)] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-
-			if([scanner scanFloat:&(angles.z)] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-		
-		
-			//---------- Rotation Type -----------------------------------------
-			
-			if( [scanner scanString:LDRAW_ROTATION_ABSOLUTE intoString:NULL] == YES )
-				[self setStepRotationType:LDrawStepRotationAbsolute];
-			
-			else if( [scanner scanString:LDRAW_ROTATION_ADDITIVE intoString:NULL] == YES )
-				[self setStepRotationType:LDrawStepRotationAdditive];
-
-			else if( [scanner scanString:LDRAW_ROTATION_RELATIVE intoString:NULL] == YES )
-				[self setStepRotationType:LDrawStepRotationRelative];
-			
-			// if no type is explicitly specified, it is a relative rotation.
-			else if( [scanner isAtEnd] == YES )
-				[self setStepRotationType:LDrawStepRotationRelative];
-			
-			// there is some syntax we don't recognize. Abort parsing attempt.
-			else
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-				
-			// Set the parsed angles if we successfully got the type.
-			[self setRotationAngleZYX:angles];
-		}
-	}
-	@catch(NSException *exception)
-	{
-		success = NO;
+		// Set the parsed angles if we successfully got the type.
+		[self setRotationAngleZYX:angles];
 	}
 	
-	return success;
+	return YES;
 	
 }//end parseRotationStepFromLine:
 

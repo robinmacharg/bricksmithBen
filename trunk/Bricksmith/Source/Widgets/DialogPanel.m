@@ -15,6 +15,15 @@
 #import "DialogPanel.h"
 
 
+@interface DialogPanel ()
+{
+	// The nib's other top-level objects (object controller, formatters), owned by the panel the nib made.
+	// The new nib loader doesn't retain them, and objectController is an __unsafe_unretained outlet.
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation DialogPanel
 
 #pragma mark -
@@ -39,7 +48,20 @@
 //==============================================================================
 - (id) init
 {
-	[NSBundle loadNibNamed:[self panelNibName] owner:self];
+	NSArray			*topLevelObjects	= nil;
+	NSMutableArray	*panelOwns			= nil;
+	
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:[self panelNibName] owner:self topLevelObjects:&topLevelObjects];
+	
+	// The receiver is thrown away, so the panel it loaded owns the other top-level objects (under MRC the 
+	// panel released objectController in -dealloc). The panel itself is left out: the caller owns it, and 
+	// listing it here would make a cycle.
+	if(dialogPanel != nil)
+	{
+		panelOwns = [NSMutableArray arrayWithArray:topLevelObjects];
+		[panelOwns removeObjectIdenticalTo:dialogPanel];
+		dialogPanel->nibTopLevelObjects = panelOwns;
+	}
 	
 	//this don't look good, but it works.
 	//this takes the place of calling [super init]

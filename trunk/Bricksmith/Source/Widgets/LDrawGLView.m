@@ -68,6 +68,15 @@ static Box2 NSRectToBox2(NSRect rect)
 }
 
 
+@interface LDrawGLView ()
+{
+	// The accessories nib's top-level objects (the contextual menu, also held as the view's menu).
+	// -loadNibNamed:owner:topLevelObjects: doesn't retain them, so this keeps them for the view's lifetime.
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation LDrawGLView
 
 #pragma mark -
@@ -107,7 +116,9 @@ static Box2 NSRectToBox2(NSRect rect)
 	//---------- Load UI -------------------------------------------------------
 	
 	// Yes, we have a nib file. Don't laugh. This view has accessories.
-	[NSBundle loadNibNamed:@"LDrawGLViewAccessories" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"LDrawGLViewAccessories" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	self->focusRingView = [[FocusRingView alloc] initWithFrame:[self bounds]];
 	[focusRingView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
@@ -148,7 +159,7 @@ static Box2 NSRectToBox2(NSRect rect)
 	// Prevent "tearing"
 	GLint   swapInterval    = 1;
 	[[self openGLContext] setValues: &swapInterval
-					   forParameter: NSOpenGLCPSwapInterval ];
+					   forParameter: NSOpenGLContextParameterSwapInterval ];
 	
 	// GL surface should be under window to allow Cocoa overtop.
 	// Huge FPS hit--over 40%! Don't do it!
@@ -1348,8 +1359,8 @@ static Box2 NSRectToBox2(NSRect rect)
 			// movement along the z-axis. Note that move "in" to the screen (up 
 			// arrow, left arrow?) is a movement along the screen's negative 
 			// z-axis. 
-			isZMovement	= ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
-			isFastNudge = ([theEvent modifierFlags] & NSShiftKeyMask) != 0;
+			isZMovement	= ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+			isFastNudge = ([theEvent modifierFlags] & NSEventModifierFlagShift) != 0;
 			isNudge		= NO;
 			
 			
@@ -1750,14 +1761,14 @@ static Box2 NSRectToBox2(NSRect rect)
 //==============================================================================
 - (NSMenu *) menuForEvent:(NSEvent *)theEvent
 {
-	NSUInteger modifiers = [theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+	NSUInteger modifiers = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
 	
 	// Only display contextual menus for pure control- or right-clicks. By 
 	// default, the system permits control+<any other modifiers> to trigger 
 	// contextual menus. We want to use control/modifier combos to activate 
 	// other mouse tools, so we filter out those events. 
-	if(		modifiers == NSControlKeyMask // and nothing else!
-	   ||	[theEvent type] == NSRightMouseDown )
+	if(		modifiers == NSEventModifierFlagControl // and nothing else!
+	   ||	[theEvent type] == NSEventTypeRightMouseDown )
 		return [self menu];
 	else
 		return nil;
@@ -1835,9 +1846,9 @@ static Box2 NSRectToBox2(NSRect rect)
 //==============================================================================
 - (void)scrollWheel:(NSEvent *)theEvent
 {
-	NSUInteger modifiers = [theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+	NSUInteger modifiers = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
 
-	if(modifiers == NSAlternateKeyMask || USE_ZOOM_WHEEL)
+	if(modifiers == NSEventModifierFlagOption || USE_ZOOM_WHEEL)
 	{
 		// Zoom in
 		[[self openGLContext] makeCurrentContext];
@@ -1950,7 +1961,7 @@ static Box2 NSRectToBox2(NSRect rect)
 	   &&	[self->delegate respondsToSelector:@selector(LDrawGLView:writeDirectivesToPasteboard:asCopy:)] )
 	{
 		pasteboard		= [NSPasteboard pasteboardWithName:NSDragPboard];
-		beginCopy		= ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
+		beginCopy		= ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
 	
 		okayToDrag		= [self->delegate LDrawGLView:self writeDirectivesToPasteboard:pasteboard asCopy:beginCopy];
 		
@@ -2042,7 +2053,7 @@ static Box2 NSRectToBox2(NSRect rect)
 	NSPoint viewPoint			= [self convertPoint:dragPointInWindow fromView:nil];
 	BOOL	constrainDragAxis	= NO;
 
-	constrainDragAxis   = ([theEvent modifierFlags] & NSShiftKeyMask) != 0;
+	constrainDragAxis   = ([theEvent modifierFlags] & NSEventModifierFlagShift) != 0;
 	
 	[[self openGLContext] makeCurrentContext];
 
@@ -2076,7 +2087,7 @@ static Box2 NSRectToBox2(NSRect rect)
 	
 	[[self openGLContext] makeCurrentContext];
 		
-	if([theEvent type] == NSLeftMouseDragged)
+	if([theEvent type] == NSEventTypeLeftMouseDragged)
 	{
 
 		[self->renderer mouseSelectionDragToPoint:V2Make(viewPoint.x, viewPoint.y)
@@ -2093,16 +2104,16 @@ static Box2 NSRectToBox2(NSRect rect)
 	// -- We desperately need simple modifiers for rotating the view. Otherwise, 
 	// I doubt people would discover it. 
 
-	if (([theEvent modifierFlags] & NSShiftKeyMask) != 0)
+	if (([theEvent modifierFlags] & NSEventModifierFlagShift) != 0)
 	{
-		if(([theEvent modifierFlags] & NSAlternateKeyMask) != 0)
+		if(([theEvent modifierFlags] & NSEventModifierFlagOption) != 0)
 			selectionMode = SelectionIntersection;
 		else
 			selectionMode = SelectionExtend;			
 	}
 	else 
 	{
-		if(([theEvent modifierFlags] & NSAlternateKeyMask) != 0)
+		if(([theEvent modifierFlags] & NSEventModifierFlagOption) != 0)
 			selectionMode = SelectionSubtract;		
 		else
 			selectionMode = SelectionReplace;
@@ -2209,7 +2220,7 @@ static Box2 NSRectToBox2(NSRect rect)
 {
 	NSView * view = self;
 	NSEvent * event = [NSApp currentEvent];
-	if ([event type] == NSLeftMouseDragged )
+	if ([event type] == NSEventTypeLeftMouseDragged )
 	{
 		[view autoscroll:event];
 	}
@@ -2462,7 +2473,7 @@ static Box2 NSRectToBox2(NSRect rect)
 	// If the shift key is down, only allow dragging along one axis as is 
 	// conventional in graphics programs. Cocoa gives us no way to get at 
 	// the event that initiated this call, so we have to hack. 
-	constrainDragAxis = ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) != 0;
+	constrainDragAxis = ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagShift) != 0;
 	
 	[self->renderer updateDragWithPosition:V2Make(viewPoint.x, viewPoint.y)
 							 constrainAxis:constrainDragAxis];
@@ -2625,9 +2636,9 @@ static Box2 NSRectToBox2(NSRect rect)
 	if([menuItem action] == @selector(viewOrientationSelected:))
 	{
 		if([menuItem tag] == [self->renderer viewOrientation])
-			[menuItem setState:NSOnState];
+			[menuItem setState:NSControlStateValueOn];
 		else
-			[menuItem setState:NSOffState];
+			[menuItem setState:NSControlStateValueOff];
 	}
 	
 	return YES;

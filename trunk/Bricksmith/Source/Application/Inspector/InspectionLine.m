@@ -41,7 +41,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorLine" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorLine"] == NO) {
         NSLog(@"Couldn't load InspectorLine.nib");
     }
     return self;

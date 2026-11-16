@@ -114,44 +114,6 @@
 #pragma mark DIRECTIVES
 #pragma mark -
 
-//========== draw:viewScale:parentColor: =======================================
-//
-// Purpose:		Draws the part. This is a wrapper method that just sets up the 
-//				drawing context (the color), then calls a subroutine which 
-//				actually draws the element.
-//
-//==============================================================================
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor
-
-{
-	//[super draw]; //does nothing anyway; don't call it.
-	
-	if(self->hidden == NO)
-	{
-		// Resolve color and draw
-		
-		switch([self->color colorCode])
-		{
-			case LDrawCurrentColor:
-				// Just draw; don't fool with colors. A significant portion of our 
-				// drawing code probably falls into this category.
-				[self drawElement:optionsMask viewScale:scaleFactor withColor:parentColor];
-				break;
-				
-			case LDrawEdgeColor:
-				[self drawElement:optionsMask viewScale:scaleFactor withColor:[self->color complimentColor]];
-				break;
-			
-			case LDrawColorCustomRGB:
-			default:
-				[self drawElement:optionsMask viewScale:scaleFactor withColor:self->color];
-				break;
-		}
-	}
-	
-}//end draw:optionsMask:
-
-
 //========== writeToVertexBuffer:parentColor: ==================================
 //
 // Purpose:		Resolve the correct color
@@ -192,20 +154,6 @@
 	return endPointer;
 	
 }//end writeToVertexBuffer:parentColor:
-
-
-//========== drawElement:viewScale:withColor: ==================================
-//
-// Purpose:		Draws the actual drawable stuff (polygons, etc.) of the element. 
-//				This is a subroutine of the -draw: method, which wraps some 
-//				shared functionality such as setting colors.
-//
-//==============================================================================
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(LDrawColor *)drawingColor
-{
-	//implemented by subclasses.
-	
-}//end drawElement:withColor:
 
 
 //========== writeElementToVertexBuffer:withColor:wireframe: ===================

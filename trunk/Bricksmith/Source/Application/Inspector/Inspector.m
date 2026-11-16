@@ -23,6 +23,15 @@
 #import "ObjectInspectionController.h"
 
 
+@interface Inspector ()
+{
+	// The nib's top-level objects (the inspector panel). -loadNibNamed:owner:topLevelObjects: doesn't retain
+	// them and the outlets are __unsafe_unretained, so this keeps them for the inspector's lifetime.
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation Inspector
 
 
@@ -39,9 +48,11 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"Inspector" owner:self] == NO) {
+	NSArray *topLevelObjects = nil;
+    if ([[NSBundle bundleForClass:[self class]] loadNibNamed:@"Inspector" owner:self topLevelObjects:&topLevelObjects] == NO) {
         NSLog(@"Can't load Inspector nib file");
     }
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	//When the Nib first loads, it contains the view we intend to use for an 
 	// empty inspector. 

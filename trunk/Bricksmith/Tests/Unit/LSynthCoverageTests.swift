@@ -539,7 +539,7 @@ struct LSynthCoverageTests {
 	@Test("A block has no transform of its own; its transform components decompose to the identity")
 	func transform() throws {
 		// LDrawDocument uses the last selected part's transformComponents for a newly added part or LSynth
-		// constraint, and an LDrawLSynth can be that part (LDrawDocument.m ~4017, ~3172).
+		// constraint, and an LDrawLSynth can be that part (LDrawDocument+Outline.m drag and drop, LDrawDocument+ModelsMenu.m LSynth insertion).
 		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
 		let c = synth.transformComponents()
 		let f = { (v: Point3) in [v.x, v.y, v.z] }
@@ -580,5 +580,109 @@ struct LSynthCoverageTests {
 		}
 		#expect(custom > 0)
 		#expect(custom == synth.synthesizedPartsCount())
+	}
+
+	// MARK: Regex semantics (P4: RegexKitLite -> NSRegularExpression must not change them)
+
+	@Test("Line patterns: unanchored search, case-sensitive, ICU \\s (tabs, runs of spaces, no-break space)")
+	func linePatterns() throws {
+		let beginnings: [(String, Bool)] = [
+			("0 SYNTH BEGIN RUBBER_BAND 4", true),
+			("0\tSYNTH  BEGIN \t RUBBER_BAND   4 trailing words", true),
+			("0 SYNTH BEGIN RUBBER_BAND", false),          // no colour token
+			("0 SYNTH BEGIN RUBBER_BAND ", false),
+			("0 synth begin RUBBER_BAND 4", false),        // case-sensitive
+			("10 SYNTH BEGIN A 4", true),                  // unanchored: found inside the line
+			("0 // 0 SYNTH BEGIN A 4", true),
+			("0 SYNTH BEGINNER A 4", false),
+			("0 SYNTH BEGIN A\u{00A0}4", true),            // U+00A0 is \p{Z}, so \s
+			("0SYNTH BEGIN A 4", false),
+			("", false),
+		]
+		let terminators: [(String, Bool)] = [
+			("0 SYNTH END", true),
+			("0  SYNTH\tEND", true),
+			("0 SYNTH ENDING", true),                       // no word boundary in the pattern
+			("10 SYNTH END", true),
+			("0 SYNTH SYNTHESIZED END", false),
+			("0 synth end", false),
+			("0 SYNTH", false),
+			("", false),
+		]
+		var mismatches: [String] = []
+		for (line, expected) in beginnings where LDrawLSynth.lineIsLSynthBeginning(line) != expected {
+			mismatches.append("lineIsLSynthBeginning(\(line.debugDescription)) != \(expected)")
+		}
+		for (line, expected) in terminators where LDrawLSynth.lineIsLSynthTerminator(line) != expected {
+			mismatches.append("lineIsLSynthTerminator(\(line.debugDescription)) != \(expected)")
+		}
+		#expect(mismatches.isEmpty, "\(mismatches.joined(separator: "\n"))")
+
+		// Range of a block: from BEGIN through the first terminator match.
+		let lines = ["0 SYNTH BEGIN A 4", "0 SYNTH SHOW", "0 SYNTH ENDING", "0 SYNTH END"]
+		let range = LDrawLSynth.rangeOfDirectiveBeginning(at: 0, inLines: lines, maxIndex: UInt(lines.count - 1))
+		#expect(range == NSRange(location: 0, length: 3), "\(range)")
+		let notABlock = LDrawLSynth.rangeOfDirectiveBeginning(at: 0, inLines: ["0 SYNTH BEGIN A", "0 SYNTH END"], maxIndex: 1)
+		#expect(notABlock == NSRange(location: 0, length: 0), "\(notABlock)")
+	}
+
+	@Test("Parsing: capture groups for type and colour, direction words, SHOW/HIDE prefixes, part lines")
+	func parsePatterns() throws {
+		// Tabs are deliberate here (SynthKit.load strips them), so parse through RoundTrip directly.
+		func load(_ body: [String]) throws -> LDrawLSynth {
+			let text = SynthKit.header + body.joined(separator: "\n") + "\n"
+			let file = try #require(RoundTrip.load(Data(text.utf8)))
+			return try #require(ObjectModel.all(file).compactMap { $0 as? LDrawLSynth }.first)
+		}
+		func summary(_ synth: LDrawLSynth) -> String {
+			let children = (synth.subdirectives() as? [LDrawDirective]) ?? []
+			let described = children.map { child -> String in
+				if let d = child as? LDrawLSynthDirective { return "dir:\(d.stringValue() ?? "nil")" }
+				return "\(type(of: child))"
+			}
+			return "type \(synth.lsynthType() ?? "nil") colour \(synth.lDrawColor()?.colorCode().rawValue ?? -1)"
+				+ " children [\(described.joined(separator: " "))] synthesized \(synth.synthesizedPartsCount())"
+		}
+		let part = "1 4 0 0 0 1 0 0 0 1 0 0 0 1 3003.dat"
+		let cases: [([String], String)] = [
+			(["0 SYNTH BEGIN  RUBBER_BAND\t4 extra", "0 SYNTH SHOW", part, "0 SYNTH END"],
+			 "type RUBBER_BAND colour 4 children [LDrawPart] synthesized 0"),
+			(["0 SYNTH BEGIN RUBBER_BAND 4x", "0 SYNTH SHOW", part, "0 SYNTH END"],
+			 "type RUBBER_BAND colour 4 children [LDrawPart] synthesized 0"),
+			// HIDES starts with HIDE: the unanchored (?:SHOW|HIDE) accepts it, so the part is a constraint.
+			(["0 SYNTH BEGIN RUBBER_BAND 4", "0 SYNTH HIDES", part, "0 SYNTH END"],
+			 "type RUBBER_BAND colour 4 children [LDrawPart] synthesized 0"),
+			// HIDDEN doesn't match, so the block stays in its BEGIN state and the part is dropped (BUG-004).
+			(["0 SYNTH BEGIN RUBBER_BAND 4", "0 SYNTH HIDDEN", part, "0 SYNTH END"],
+			 "type RUBBER_BAND colour 4 children [] synthesized 0"),
+			// The direction is the first INSIDE/OUTSIDE/CROSS anywhere in the line (no word boundaries).
+			(["0 SYNTH BEGIN RUBBER_BAND 4", "0 SYNTH SHOW", part, "0 SYNTH  OUTSIDE INSIDE", "0 SYNTH INSIDEOUT",
+			  "0 SYNTH\tCROSS", "0 SYNTH inside", part, "0 SYNTH END"],
+			 "type RUBBER_BAND colour 4 children [LDrawPart dir:OUTSIDE dir:INSIDE dir:CROSS LDrawPart] synthesized 0"),
+			(["0 SYNTH BEGIN RUBBER_BAND 4", "0 SYNTH SHOW", part,
+			  "0 SYNTH SYNTHESIZED  BEGIN", part, "0 SYNTH\tSYNTHESIZED END", "0 SYNTH END"],
+			 "type RUBBER_BAND colour 4 children [LDrawPart] synthesized 1"),
+		]
+		var mismatches: [String] = []
+		for (body, expected) in cases {
+			let got = summary(try load(body))
+			if got != expected { mismatches.append("\(body):\n  expected \(expected)\n  got      \(got)") }
+		}
+		#expect(mismatches.isEmpty, "\(mismatches.joined(separator: "\n"))")
+	}
+
+	@Test("A whitespace-only executable or config path (tab, newline, U+3000) means the bundled lsynthcp")
+	func whitespaceOnlyPaths() throws {
+		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/08b-lsynth-show.ldr"))
+		let synth = try #require(ObjectModel.all(file).compactMap { $0 as? LDrawLSynth }.first)
+		try ObjC.run { synth.synthesize() }
+		let bundled = synth.synthesizedPartsCount()
+		#expect(bundled > 0)
+		for blank in ["\t", " \n", "\u{3000}"] {
+			try ArgumentPrefs.with([LSYNTH_EXECUTABLE_PATH_KEY: blank, LSYNTH_CONFIGURATION_PATH_KEY: blank]) {
+				try ObjC.run { synth.synthesize() }
+			}
+			#expect(synth.synthesizedPartsCount() == bundled, "path \(blank.debugDescription)")
+		}
 	}
 }

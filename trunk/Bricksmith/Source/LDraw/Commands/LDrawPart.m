@@ -199,15 +199,30 @@ int floatNearGrid(float v, float grid, float epsi)
 			//Read Part Name
 			// (part.dat) -- It can have spaces (for MPD models), so we just use the whole 
 			// rest of the line.
+			// (This is -setDisplayName:parse:YES inGroup:, split so that a library 
+			// part that fails to parse fails this part, as when that parse threw.) 
 			[self setDisplayName:[workingLine stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-						   parse:YES
+						   parse:NO
 						 inGroup:parentGroup];
+			if(		[self->displayName length] > 0
+			   &&	[[PartLibrary sharedPartLibrary] loadModelForName:self->referenceName inGroup:NULL] == NO )
+			{
+				NSLog(@"the part %@ was fatally invalid", [lines objectAtIndex:range.location]);
+				NSLog(@" raised exception %@", @"BricksmithParseException");
+				return nil;
+			}
 			
 			// Debug check: full part resolution isn't thread-safe so make sure we haven't run it by accident here!
 			assert(cacheType == PartTypeUnresolved);
 		}
 		else
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad part syntax" userInfo:nil];
+		{
+			// Not a type-1 line. (This used to throw to the @catch below; it 
+			// cannot happen from a file, because the line type chose this class.) 
+			NSLog(@"the part %@ was fatally invalid", [lines objectAtIndex:range.location]);
+			NSLog(@" raised exception %@", @"BricksmithParseException");
+			self = nil;
+		}
 	}
 	@catch(NSException *exception)
 	{
@@ -291,76 +306,6 @@ int floatNearGrid(float v, float grid, float epsi)
 #pragma mark -
 #pragma mark DIRECTIVES
 #pragma mark -
-
-//========== drawElement:viewScale:withColor: ==================================
-//
-// Purpose:		Draws the graphic of the element represented. This call is a 
-//				subroutine of -draw: in LDrawDrawableElement.
-//
-//==============================================================================
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(LDrawColor *)drawingColor
-{
-	LDrawDirective  *drawable       = nil;
-	BOOL            drawBoundsOnly  = ((optionsMask & DRAW_BOUNDS_ONLY) != 0);
-	
-	// If the part is selected, we need to give some indication. We do this 
-	// by drawing it as a wireframe instead of a filled color. This setting 
-	// also conveniently applies to all referenced parts herein. 
-	if([self isSelected] == YES)
-	{
-#if (USE_AUTOMATIC_WIREFRAMES)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-#else
-		optionsMask = optionsMask | DRAW_WIREFRAME;
-#endif
-	}
-
-	// Multithreading finally works with one display list per displayed part 
-	// AND mutexes around the glCallList. But the mutex contention causes a 
-	// 50% increase in drawing time. Gah! 
-	
-	glPushMatrix();
-	{
-		glMultMatrixf(glTransformation);
-		
-		[self resolvePart];
-
-		drawable = cacheDrawable;
-
-		if (cacheType == PartTypeLibrary && cacheDrawable == nil)
-		{
-			// Parts assigned to LDrawCurrentColor may get drawn in many 
-			// different colors in one draw, so we can't cache their 
-			// optimized drawable. We have to retrieve their optimized 
-			// drawable on-the-fly. 
-			
-			// Parts that have a SPECIFIC color have been linked DIRECTLY to 
-			// their specific colored VBO during -optimizeOpenGL. 
-			
-			drawable = [[PartLibrary sharedPartLibrary] optimizedDrawableForPart:self color:drawingColor];
-		}
-		
-		if(drawBoundsOnly == NO)
-		{
-			[drawable draw:optionsMask viewScale:scaleFactor parentColor:drawingColor];
-		}
-		else
-		{
-			[self drawBoundsWithColor:drawingColor];
-		}
-	}
-	glPopMatrix();
-
-	// Done drawing a selected part? Then switch back to normal filled drawing. 
-	if([self isSelected] == YES)
-	{
-#if (USE_AUTOMATIC_WIREFRAMES)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-#endif
-	}
-
-}//end drawElement:parentColor:
-
 
 //========== drawSelf: ===========================================================
 //
@@ -453,45 +398,6 @@ int floatNearGrid(float v, float grid, float epsi)
 		}	
 	}
 }//end drawSelf:
-
-
-//========== drawBoundsWithColor: ==============================================
-//
-// Purpose:		Draws the part's bounds as a solid box. Nonrecursive.
-//
-//==============================================================================
-- (void) drawBoundsWithColor:(LDrawColor *)drawingColor
-{
-	assert(!"Deprecated draw path.");
-	//Pull the bounds directly from the model; we can't use the part's because 
-	// it mangles them based on rotation. In this case, we want to do a raw 
-	// draw and let the model matrix transform our drawing appropriately.
-	[self resolvePart];
-}//end drawBounds
-
-
-//========== debugDrawboundingBox ==============================================
-//
-// Purpose:		Draw a translucent visualization of our bounding box to test
-//				bounding box caching.
-//
-//==============================================================================
-- (void) debugDrawboundingBox
-{
-	[self resolvePart];
-	LDrawModel	*modelToDraw	= cacheModel;
-	
-	//If the model can't be found, we can't draw good bounds for it!
-	if(modelToDraw != nil)
-	{
-		glPushMatrix();
-		glMultMatrixf(glTransformation);
-		[modelToDraw debugDrawboundingBox];
-		glPopMatrix();
-	}
-	
-	[super debugDrawboundingBox];	
-}//end debugDrawboundingBox
 
 
 //========== hitTest:transform:viewScale:boundsOnly:creditObject:hits: =======
@@ -971,22 +877,8 @@ To work, this needs to multiply the modelViewGLMatrix by the part transform.
 	// here - resolving later prevents thrash.
 	if(shouldParse == YES && newPartName != nil && [newPartName length] > 0)
 	{
-#if USE_BLOCKS
-		// Create a parsing group if needed.
-		if(parentGroup == NULL)
-			parseGroup = dispatch_group_create();
-		else
-			parseGroup = parentGroup;
-#endif
 		[[PartLibrary sharedPartLibrary] loadModelForName:referenceName inGroup:parseGroup];
 		
-#if USE_BLOCKS
-		if(parentGroup == NULL)
-		{
-			dispatch_group_wait(parseGroup, DISPATCH_TIME_FOREVER);
-			dispatch_release(parseGroup);
-		}
-#endif	
 	}
 	
 }//end setDisplayName:

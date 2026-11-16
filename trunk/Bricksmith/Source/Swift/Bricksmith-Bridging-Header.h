@@ -67,6 +67,8 @@
 // --- Application classes driven by characterisation tests (group 2) ---
 #import "LDrawApplication.h"
 #import "LDrawDocument.h"
+#import "DocumentToolbarController.h"
+#import "LDrawFileOutlineView.h"
 #import "PartLibraryController.h"
 #import "LSynthConfiguration.h"
 #import "MinifigureDialogController.h"

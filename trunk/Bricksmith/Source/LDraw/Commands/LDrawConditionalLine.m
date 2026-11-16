@@ -56,82 +56,75 @@
 	// call -[super initWithLines:inRange:] 
 	self = [self init];
 	
-	//A malformed part could easily cause a string indexing error, which would 
-	// raise an exception. We don't want this to happen here.
-	@try
+	//Read in the line code and advance past it.
+	parsedField = [LDrawUtilities readNextField:  workingLine
+									  remainder: &workingLine ];
+	//Only attempt to create the part if this is a valid line.
+	if([parsedField integerValue] == 5)
 	{
-		//Read in the line code and advance past it.
+		//Read in the color code.
+		// (color)
 		parsedField = [LDrawUtilities readNextField:  workingLine
 										  remainder: &workingLine ];
-		//Only attempt to create the part if this is a valid line.
-		if([parsedField integerValue] == 5)
-		{
-			//Read in the color code.
-			// (color)
-			parsedField = [LDrawUtilities readNextField:  workingLine
-											  remainder: &workingLine ];
-			parsedColor = [LDrawUtilities parseColorFromField:parsedField];
-			[self setLDrawColor:parsedColor];
+		parsedColor = [LDrawUtilities parseColorFromField:parsedField];
+		[self setLDrawColor:parsedColor];
+		
+		//Read Vertex 1.
+		// (x1)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.x = [parsedField floatValue];
+		// (y1)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.y = [parsedField floatValue];
+		// (z1)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.z = [parsedField floatValue];
+		
+		[self setVertex1:workingVertex];
 			
-			//Read Vertex 1.
-			// (x1)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.x = [parsedField floatValue];
-			// (y1)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.y = [parsedField floatValue];
-			// (z1)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.z = [parsedField floatValue];
-			
-			[self setVertex1:workingVertex];
-				
-			//Read Vertex 2.
-			// (x2)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.x = [parsedField floatValue];
-			// (y2)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.y = [parsedField floatValue];
-			// (z2)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.z = [parsedField floatValue];
-			
-			[self setVertex2:workingVertex];
-			
-			//Read Conditonal Vertex 1.
-			// (x3)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.x = [parsedField floatValue];
-			// (y3)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.y = [parsedField floatValue];
-			// (z3)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.z = [parsedField floatValue];
-			
-			[self setConditionalVertex1:workingVertex];
-			
-			//Read Conditonal Vertex 2.
-			// (x4)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.x = [parsedField floatValue];
-			// (y4)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.y = [parsedField floatValue];
-			// (z4)
-			parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
-			workingVertex.z = [parsedField floatValue];
-			
-			[self setConditionalVertex2:workingVertex];
-		}
-		else
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad conditional line syntax" userInfo:nil];
-	}	
-	@catch(NSException *exception)
+		//Read Vertex 2.
+		// (x2)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.x = [parsedField floatValue];
+		// (y2)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.y = [parsedField floatValue];
+		// (z2)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.z = [parsedField floatValue];
+		
+		[self setVertex2:workingVertex];
+		
+		//Read Conditonal Vertex 1.
+		// (x3)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.x = [parsedField floatValue];
+		// (y3)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.y = [parsedField floatValue];
+		// (z3)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.z = [parsedField floatValue];
+		
+		[self setConditionalVertex1:workingVertex];
+		
+		//Read Conditonal Vertex 2.
+		// (x4)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.x = [parsedField floatValue];
+		// (y4)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.y = [parsedField floatValue];
+		// (z4)
+		parsedField = [LDrawUtilities readNextField:workingLine  remainder: &workingLine ];
+		workingVertex.z = [parsedField floatValue];
+		
+		[self setConditionalVertex2:workingVertex];
+	}
+	else
 	{
 		NSLog(@"the conditional line primitive %@ was fatally invalid", [lines objectAtIndex:range.location]);
-		NSLog(@" raised exception %@", [exception name]);
+		NSLog(@" raised exception %@", @"BricksmithParseException");
 		self = nil;
 	}
 	
@@ -202,36 +195,6 @@
 #pragma mark -
 #pragma mark DIRECTIVES
 #pragma mark -
-
-//========== draw:optionsMask: =================================================
-//
-// Purpose:		We have completely disabled these conditional lines. They add 
-//				little to the modern shaded LDraw experience, and they would 
-//				absolutely kill performance. 
-//
-//==============================================================================
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor
-
-{
-	//do nothing.
-	
-}//end draw:optionsMask:
-
-
-//========== drawElement:viewScale:withColor: ==================================
-//
-// Purpose:		Draws the graphic of the element represented. This call is a 
-//				subroutine of -draw: in LDrawDrawableElement.
-//
-// Note:		DISABLED. See -draw:parentColor:
-//
-//==============================================================================
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(LDrawColor *)drawingColor
-{
-	[super drawElement:optionsMask viewScale:scaleFactor withColor:drawingColor];
-	
-}//end drawElement:withColor:
-
 
 //========== write =============================================================
 //

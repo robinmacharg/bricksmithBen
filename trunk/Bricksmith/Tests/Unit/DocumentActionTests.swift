@@ -169,4 +169,70 @@ struct DocumentActionTests {
 		try DocHarness.action(doc) { doc.randomizeLDrawColors(nil) }
 		#expect(DocHarness.text(doc) == before)
 	}
+
+	/// Randomize Colors through its injectable random source (`randomSource`, P4): the action draws one number per
+	/// colourable part, `r % colourCount`, and draws again while `r` equals the previous part's index. Which colour an
+	/// index means depends on NSSet order, so the checks compare parts with each other, never with a fixed colour.
+	@Test("Randomize Colors: a scripted random source decides the colours, retrying a repeated index")
+	func randomizeColorsScripted() throws {
+		let doc = try DocHarness.open("03-colours.ldr")
+		defer { DocHarness.close(doc) }
+		let parts = DocOps.parts(doc)
+		let before = DocHarness.text(doc)
+		try DocOps.select(doc, parts)
+		let selected = try ObjC.run { doc.selectedObjects() as? [AnyObject] } ?? []
+		let colourables = selected.filter { $0 is LDrawColorable }
+		#expect(colourables.count == 5, "fixture has five parts")
+		let palette = NSSet(array: colourables.map { ($0 as! LDrawColorable).lDrawColor()! as NSObject })
+		// Four distinct colours under LDrawColor isEqual/hash (two of the five parts compare equal); the script below
+		// only uses indices 0 and 1, so it needs at least two.
+		#expect(palette.count >= 2, "fixture should offer several colours")
+
+		// 0 | 0 (repeat, so draw again) 1 | 0 | 1 | 1 (repeat) 0  ->  indices 0 1 0 1 0, seven draws.
+		let script: [Int32] = [0, 0, 1, 0, 1, 1, 0]
+		var draws = 0
+		doc.randomSource = {
+			defer { draws += 1 }
+			return draws < script.count ? script[draws] : Int32(draws)   // never constant: a constant would loop forever
+		}
+		defer { doc.randomSource = nil }
+		try DocHarness.action(doc) { doc.randomizeLDrawColors(nil) }
+
+		#expect(draws == script.count, "draws \(draws), expected \(script.count)")
+		let now = colourables.map { ($0 as! LDrawColorable).lDrawColor()! as NSObject }
+		let expectedIndex = [0, 1, 0, 1, 0]
+		for i in now.indices {
+			#expect(palette.contains(now[i]))
+			for j in now.indices where j > i {
+				#expect(now[i].isEqual(now[j]) == (expectedIndex[i] == expectedIndex[j]),
+						"parts \(i) and \(j): \(now[i]) vs \(now[j]), indices \(expectedIndex[i]) and \(expectedIndex[j])")
+			}
+		}
+
+		while doc.undoManager?.canUndo == true { try ObjC.run { doc.undoManager?.undo() } }
+		#expect(DocHarness.text(doc) == before, "undo did not restore")
+	}
+
+	@Test("Randomize Colors: the same seeded random source gives the same result (seed 0x20261116)")
+	func randomizeColorsSeeded() throws {
+		let seed: UInt64 = 0x2026_1116
+		let doc = try DocHarness.open("03-colours.ldr")
+		defer { DocHarness.close(doc) }
+		let before = DocHarness.text(doc)
+		try DocOps.select(doc, DocOps.parts(doc))
+		defer { doc.randomSource = nil }
+
+		func randomize() throws -> String {
+			var rng = SeededRNG(seed: seed)
+			doc.randomSource = { Int32(truncatingIfNeeded: rng.next() >> 33) }   // non-negative, like rand()
+			try DocHarness.action(doc) { doc.randomizeLDrawColors(nil) }
+			return DocHarness.text(doc)
+		}
+		let first = try randomize()
+		#expect(first != before, "seed \(seed): the colours did not change")
+		while doc.undoManager?.canUndo == true { try ObjC.run { doc.undoManager?.undo() } }
+		#expect(DocHarness.text(doc) == before, "seed \(seed): undo did not restore")
+		let second = try randomize()
+		#expect(second == first, "seed \(seed): \(Golden.firstDifference(Data(first.utf8), Data(second.utf8)))")
+	}
 }

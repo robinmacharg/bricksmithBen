@@ -12,6 +12,9 @@
 #import "LDrawBDPAllocator.h"
 #import "ColorLibrary.h"
 #import "GLMatrixMath.h"
+#import "PartLibrary.h"
+
+#import <OpenGL/glext.h>
 
 // This list of attribute names matches the text of the GLSL attribute declarations - 
 // and its order must match the attr_position...array in the .h.
@@ -653,6 +656,71 @@ static void set_color4fv(GLfloat * c, GLfloat storage[4])
 	glEnable(GL_TEXTURE_2D);
 
 }//end drawDragHandleImm:
+
+
+//========== textureTagForTexture: ===============================================
+//
+// Purpose:	Returns the GL texture name for a texture directive's image.
+//
+// Notes:	PartLibrary finds the image and caches one texture name per image;
+//			the upload itself is +textureTagForBitmap:width:height:.
+//
+//================================================================================
+- (GLuint) textureTagForTexture:(LDrawTexture *)texture
+{
+	return [[PartLibrary sharedPartLibrary] textureTagForTexture:texture];
+
+}//end textureTagForTexture:
+
+
+//---------- textureTagForBitmap:width:height: -----------------------[static]--
+//
+// Purpose:	Generates a GL texture from a bitmap and returns its name.
+//
+// Notes:	The source storage format is GL_BGRA / GL_UNSIGNED_INT_8_8_8_8_REV,
+//			matching a CGBitmapContext created with
+//			kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst.
+//
+//			(Moved verbatim from -[PartLibrary textureTagForTexture:]; that
+//			includes leaving the GL_PACK_* pixel-store state set.)
+//
+//------------------------------------------------------------------------------
++ (GLuint) textureTagForBitmap:(void *)imageBuffer width:(GLsizei)width height:(GLsizei)height
+{
+	GLuint		textureTag	= 0;
+	
+	// Generate a tag for the texture we're about to generate, then set it as 
+	// the active texture. 
+	// Note: We are using non-rectangular textures here, which started as an 
+	//		 extension (_EXT) and is now ratified by the review board (_ARB) 
+	glGenTextures(1, &textureTag);
+	glBindTexture(GL_TEXTURE_2D, textureTag);
+	
+	// Generate Texture!
+	glPixelStorei(GL_PACK_ROW_LENGTH,	width * 4);
+	glPixelStorei(GL_PACK_ALIGNMENT,	1); // byte alignment
+	
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8,			// texture type params
+				 width, height, 0,						// source image (w, h)
+				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,	// source storage format
+				 imageBuffer );
+	
+	// This requires GL_EXT_framebuffer_object, available on all renderers on 10.6.8 and beyond.
+	// Build mipmaps so we can use linear-mipmap-linear
+	glGenerateMipmapEXT(GL_TEXTURE_2D);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// This enables mip-mapping - makes textures look good when small.
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.0);				// Max anisotropic filtering of all renderers on 10.6.8 is 16.0.
+																					// This keeps texture res high when looking at a tile from a low angle.
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	
+	return textureTag;
+
+}//end textureTagForBitmap:width:height:
 
 
 //========== beginDL: ============================================================

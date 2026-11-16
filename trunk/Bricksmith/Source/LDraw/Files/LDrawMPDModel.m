@@ -121,6 +121,8 @@
 
 	// Create a basic model.
 	self = [super initWithLines:lines inRange:nonMPDRange parentGroup:parentGroup]; //parses model into header and steps.
+	if(self == nil)
+		return nil;		// a step could not be parsed
 	
 	// If it wasn't MPD, we still need a model name. We can get that via the 
 	// parsed model.

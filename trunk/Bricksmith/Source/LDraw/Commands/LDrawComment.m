@@ -31,7 +31,7 @@
 
 //========== finishParsing: ====================================================
 //
-// Purpose:		-[LDrawMetaCommand initWithLines:inRange:] is 
+// Purpose:		+[LDrawMetaCommand directiveWithLines:inRange:parentGroup:] is 
 //				responsible for parsing out the line code and comment command 
 //				(i.e., "0 //"); now we just have to finish the comment-command 
 //				specific syntax. As it happens, that is everything after the 

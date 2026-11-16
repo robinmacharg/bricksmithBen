@@ -24,7 +24,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorComment" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorComment"] == NO) {
         NSLog(@"Couldn't load InspectorComment.nib");
     }
 	

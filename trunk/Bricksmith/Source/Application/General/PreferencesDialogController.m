@@ -57,9 +57,13 @@
 #import "LSynthConfiguration.h"
 #import "UserDefaultsCategory.h"
 #import "WindowCategory.h"
-#import "RegexKitLite.h"
 
 @interface PreferencesDialogController ()
+{
+	// The nib's top-level objects (the window and the tab and accessory views). -loadNibNamed:owner:topLevelObjects:
+	// doesn't retain them and the outlets are __unsafe_unretained, so this keeps them for the controller's lifetime.
+	NSArray *nibTopLevelObjects;
+}
 
 // General Tab
 @property (nonatomic, unsafe_unretained) IBOutlet NSTextField*			gridSpacingFineField;
@@ -78,6 +82,30 @@
 // we can simply bring the window to the front when it is already onscreen, 
 // rather than accidentally creating a whole new one.
 PreferencesDialogController *preferencesDialog = nil;
+
+
+//---------- IsWhitespaceOnly() -----------------------------------[static]--
+//
+// Purpose:		Was -[NSString isMatchedByRegex:@"^\\s+$"] (RegexKitLite): the same ICU
+//				pattern with no options, searched over the whole string. nil gives NO,
+//				as messaging nil did.
+//
+//------------------------------------------------------------------------------
+static BOOL IsWhitespaceOnly(NSString *string)
+{
+	static NSRegularExpression	*whitespaceOnly	= nil;
+	static dispatch_once_t		once;
+	
+	if(string == nil)
+		return NO;
+	
+	dispatch_once(&once, ^{
+		whitespaceOnly = [NSRegularExpression regularExpressionWithPattern:@"^\\s+$" options:0 error:NULL];
+	});
+	return [whitespaceOnly rangeOfFirstMatchInString:string
+											 options:0
+											   range:NSMakeRange(0, [string length])].location != NSNotFound;
+}
 
 
 //========== awakeFromNib ======================================================
@@ -136,7 +164,9 @@ PreferencesDialogController *preferencesDialog = nil;
 {
 	self = [super init];
 	
-	[NSBundle loadNibNamed:@"Preferences" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"Preferences" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	return self;
 	
@@ -1226,7 +1256,7 @@ PreferencesDialogController *preferencesDialog = nil;
         }
 
         // No path - it's been deleted
-        else if (([[executablePathAsURL path] length] == 0 || [[executablePathAsURL path] isMatchedByRegex:@"^\\s+$"])
+        else if (([[executablePathAsURL path] length] == 0 || IsWhitespaceOnly([executablePathAsURL path]))
                 && executablePathAsURL
                 && ![currentExecutable isEqualToString:[executablePathAsURL path]]) {
             [userDefaults setObject:@"" forKey:LSYNTH_EXECUTABLE_PATH_KEY];

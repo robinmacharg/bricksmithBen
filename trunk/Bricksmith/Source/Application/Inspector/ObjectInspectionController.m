@@ -17,6 +17,15 @@
 #import "MacLDraw.h"
 
 
+@interface ObjectInspectionController ()
+{
+	// The subclass nib's top-level objects (the inspector window, formatters). The new nib loader doesn't
+	// retain them, so this keeps them for the inspector's lifetime.
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation ObjectInspectionController
 
 //========== init ==============================================================
@@ -30,16 +39,38 @@
 	self = [super init];
 	
 	//Subclasses need to do something like this:
-//	if(window == nil){
-//		if ([NSBundle loadNibNamed:@"Inspector" owner:self] == NO) {
-//			NSLog(@"Can't load Inspector nib file");
-//		}
-//		
+//	if ([self loadInspectorNibNamed:@"Inspector"] == NO) {
+//		NSLog(@"Can't load Inspector nib file");
 //	}
 //	
 	return self;
 	
 }//end init
+
+
+//========== loadInspectorNibNamed: ============================================
+//
+// Purpose:		Loads the subclass's nib with the receiver as its owner, and keeps 
+//				the nib's top-level objects (the window whose content view is the 
+//				inspector, plus any formatters) for as long as the receiver lives. 
+//				Returns NO if the nib couldn't be loaded.
+//
+// Notes:		This replaces the deprecated +[NSBundle loadNibNamed:owner:], 
+//				which retained the top-level objects itself.
+//
+//==============================================================================
+- (BOOL) loadInspectorNibNamed:(NSString *)nibName
+{
+	NSArray	*topLevelObjects	= nil;
+	BOOL	 loaded				= [[NSBundle bundleForClass:[self class]] loadNibNamed:nibName
+																			owner:self
+																  topLevelObjects:&topLevelObjects];
+	
+	self->nibTopLevelObjects = topLevelObjects;
+	
+	return loaded;
+	
+}//end loadInspectorNibNamed:
 
 
 #pragma mark -

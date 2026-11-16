@@ -32,7 +32,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorLSynth" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorLSynth"] == NO) {
         NSLog(@"Couldn't load InspectorLSynth.xib");
     }
 

@@ -7,8 +7,8 @@
 //  their transform and colour, selected primitives draw drag handles. RecordingRenderer logs that call
 //  stream as text, so it is characterised without GL. Goldens: golden/drawing/*.txt.
 //
-//  (The fixed-function -draw:viewScale:parentColor: path is compiled out by NEW_RENDERER 1; see the
-//  coverage ledger.)
+//  (The fixed-function draw path was deleted in P4; -draw:viewScale:parentColor: now only walks the
+//  LDConfig file so LDrawColor directives register themselves with ColorLibrary.)
 //
 
 import AppKit

@@ -101,24 +101,167 @@ struct ParserRobustnessTests {
 		try Golden.check(Data(out.utf8), against: "robustness/cases.txt")
 	}
 
+	@Test("Meta-command factory: subclass per command; half-parsed !COLOUR (S1); nil for a nonzero line type (S6)")
+	func metaCommandFactory() throws {
+		func make(_ line: String) -> LDrawDirective? {
+			LDrawMetaCommand.directive(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		}
+		let comment = try #require(make("0 // hello") as? LDrawComment)
+		#expect(comment.stringValue() == "hello")
+		let colour = try #require(make("0 !COLOUR Red CODE 4 VALUE #C91A09 EDGE #333333") as? LDrawColor)
+		#expect(colour.colorCode().rawValue == 4)
+		// S1: a malformed !COLOUR still comes back, with the fields parsed before the error.
+		let broken = try #require(make("0 !COLOUR Broken CODE 901") as? LDrawColor)
+		#expect(broken.name() == "Broken")
+		#expect(broken.colorCode().rawValue == 901)
+		let generic = try #require(make("0 UNKNOWN meta"))
+		#expect(type(of: generic) == LDrawMetaCommand.self)
+		#expect((generic as? LDrawMetaCommand)?.stringValue() == "UNKNOWN meta")
+		let blank = try #require(make("   "))
+		#expect(type(of: blank) == LDrawMetaCommand.self)
+		#expect((blank as? LDrawMetaCommand)?.stringValue() == "   ")
+		// S6: a nonzero line type gives no directive at all.
+		#expect(make("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat") == nil)
+	}
+
+	@Test("readFromData: a malformed-ROTSTEP parse failure gives a bare corrupt-file error (S9 path)")
+	@MainActor
+	func documentReadOfMalformedRotstep() throws {
+		// Before P4 the parse threw (BUG-007) and -readFromData:ofType:error: caught it, writing *outError
+		// without a NULL check (S9). Pinned before the conversion; the parse now reports the failure instead.
+		let doc = LDrawDocument()
+		let before = doc.documentContents()
+		var caught: Error?
+		try ObjC.run {
+			do { try doc.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n".utf8), ofType: "LDraw Document") }
+			catch { caught = error }
+		}
+		let error = try #require(caught) as NSError
+		#expect(error.domain == NSCocoaErrorDomain)
+		#expect(error.code == NSFileReadCorruptFileError)
+		#expect(error.userInfo.isEmpty, "\(error.userInfo)")
+		#expect(doc.documentContents() === before, "the document's contents must not be replaced")
+	}
+
+	@Test("Document read: a library part whose last line is a malformed ROTSTEP")
+	@MainActor func documentReadOfPartWithMalformedRotstep() throws {
+		// The part is parsed while the document line referencing it is parsed (-[LDrawPart setDisplayName:parse:]),
+		// so the part fails and the document read fails. Pinned before P4 converted the ROTSTEP throw (BUG-007),
+		// which used to unwind through the part's @try and the document's. Unique name: PartLibrary caches models
+		// for the process.
+		let library = try #require(FixtureLibrary.current)
+		let name = "p4pin-rotstep-\(UUID().uuidString.prefix(8)).dat".lowercased()
+		try Data("0 Part with a malformed ROTSTEP\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n".utf8)
+			.write(to: library.appendingPathComponent("parts/\(name)"))
+		let doc = LDrawDocument()
+		let before = doc.documentContents()
+		var caught: Error?
+		try ObjC.run {
+			do { try doc.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 \(name)\n".utf8), ofType: "LDraw Document") }
+			catch { caught = error }
+		}
+		let parts = DocOps.parts(doc).map { "\($0.referenceName() ?? "nil") missing=\($0.partIsMissing())" }
+		let error = try #require(caught, "read succeeded: \(parts)") as NSError
+		#expect(error.domain == NSCocoaErrorDomain)
+		#expect(error.code == NSFileReadCorruptFileError)
+		#expect(doc.documentContents() === before, "the document's contents must not be replaced")
+
+		// Control: the same part without the bad ROTSTEP is found and the document opens.
+		let goodName = "p4pin-good-\(UUID().uuidString.prefix(8)).dat".lowercased()
+		try Data("0 Good part\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n".utf8)
+			.write(to: library.appendingPathComponent("parts/\(goodName)"))
+		let good = LDrawDocument()
+		try ObjC.run { try? good.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 \(goodName)\n".utf8), ofType: "LDraw Document") }
+		let goodParts = DocOps.parts(good)
+		#expect(goodParts.count == 1)
+		#expect(goodParts.first?.partIsMissing() == false, "control part not found: the pin above would prove nothing")
+	}
+
+	@Test("Document read: a library part file with no lines (empty file, or a name that is a directory) is just missing")
+	@MainActor func documentReadOfPartWithNoLines() throws {
+		// Unlike a parse failure, a part file that yields no lines leaves the part unresolved and the document opens
+		// (as before P4). Unique names: PartLibrary caches models for the process.
+		let library = try #require(FixtureLibrary.current)
+		let empty = "p4pin-empty-\(UUID().uuidString.prefix(8)).dat".lowercased()
+		try Data().write(to: library.appendingPathComponent("parts/\(empty)"))
+		let folder = "p4pin-dir-\(UUID().uuidString.prefix(8))".lowercased()
+		try FileManager.default.createDirectory(at: library.appendingPathComponent("parts/\(folder)"), withIntermediateDirectories: false)
+		for name in [empty, folder] {
+			let doc = LDrawDocument()
+			var caught: Error?
+			try ObjC.run {
+				do { try doc.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 \(name)\n".utf8), ofType: "LDraw Document") }
+				catch { caught = error }
+			}
+			#expect(caught == nil, "\(name): \(String(describing: caught))")
+			#expect(DocOps.parts(doc).map { $0.referenceName() } == [name])
+		}
+	}
+
 	// MARK: Crashers, each confirmed IN ISOLATION (heap corruption can surface in a later case).
 
-	@Test("Isolated: malformed ROTSTEP angles crash today (BUG-007)")
-	func rotstepMalformedCrashesInIsolation() async {
-		await #expect(processExitsWith: .failure) {
+	@Test("BUG-007 (fixed in P4): a malformed ROTSTEP line does not crash the parser")
+	func bug007RotstepShouldNotCrash() async {
+		// Still in a child process: if this regresses, it aborts.
+		await #expect(processExitsWith: .success) {
 			_ = Robustness.roundTrip("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n")
 			exit(EXIT_SUCCESS)
 		}
 	}
 
-	@Test("BUG-007: a malformed ROTSTEP line should not crash the parser")
-	func bug007RotstepShouldNotCrash() async {
-		await withKnownIssue("BUG-007: '0 ROTSTEP x y' crashes") {
+	@Test("A malformed ROTSTEP makes the parse return nil and say so; empty text is nil without failing")
+	func rotstepParseFailed() {
+		var failed: ObjCBool = false
+		#expect(LDrawFile.parse(fromFileContents: "1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n", parseFailed: &failed) == nil)
+		#expect(failed.boolValue)
+		// Only the last step of a model can fail, but it fails the whole file, later models included.
+		failed = false
+		#expect(LDrawFile.parse(fromFileContents: "0 FILE a.ldr\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n0 FILE b.ldr\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n", parseFailed: &failed) == nil)
+		#expect(failed.boolValue)
+		failed = true
+		#expect(LDrawFile.parse(fromFileContents: "", parseFailed: &failed) == nil)
+		#expect(!failed.boolValue, "empty text is not a parse failure (readFromData: must not report one)")
+		failed = true
+		#expect(LDrawFile.parse(fromFileContents: "1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP 0 90 0\n", parseFailed: &failed) != nil)
+		#expect(!failed.boolValue)
+	}
+
+	// MARK: BUG-034 - a TEXMAP image name ending in \" at end of line hangs the parser
+
+	/// `"abc\"` with nothing after it: `+[LDrawUtilities scanQuotableToken:]` un-escapes the `\"`, finds no more
+	/// text, keeps the previous `temp` (`abc\`), appends it again and loops forever. `QuotableTokenIsMissing()`
+	/// doesn't stop it: the first scan does find a token.
+	/// The header lines matter: a model's first lines are read as its description, name and author, so a
+	/// TEXMAP line there is never parsed as a texture.
+	static let bug034Text = "0 Texmap\n0 Name: t.ldr\n0 Author: Fixture Author\n0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 \"abc\\\"\n3 16 0 0 0 1 0 0 0 1 0\n0 !TEXMAP END\n"
+
+	@Test("BUG-034: a TEXMAP image name ending in \\\" at end of line hangs the parse today")
+	func bug034TexmapTrailingEscapedQuoteHangs() async {
+		// The child arms an alarm first, so the hang ends in SIGALRM (not a crash, not a timeout of the run).
+		await #expect(processExitsWith: .signal(SIGALRM)) {
+			alarm(3)
+			_ = LDrawFile.parse(fromFileContents: ParserRobustnessTests.bug034Text)
+			exit(EXIT_SUCCESS)
+		}
+	}
+
+	@Test("BUG-034: parsing a TEXMAP image name ending in \\\" should finish")
+	func bug034TexmapTrailingEscapedQuoteShouldFinish() async {
+		await withKnownIssue("BUG-034: scanQuotableToken: loops forever on \"abc\\\" at end of line") {
 			await #expect(processExitsWith: .success) {
-				_ = Robustness.roundTrip("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n")
+				alarm(3)
+				_ = LDrawFile.parse(fromFileContents: ParserRobustnessTests.bug034Text)
 				exit(EXIT_SUCCESS)
 			}
 		}
+	}
+
+	@Test("Control for BUG-034: an escaped quote inside a TEXMAP image name parses in process")
+	func bug034Control() throws {
+		let text = Self.bug034Text.replacingOccurrences(of: "\"abc\\\"", with: "\"a\\\"b.png\"")
+		let file = try #require(LDrawFile.parse(fromFileContents: text))
+		let texture = try #require(ObjectModel.all(file).compactMap { $0 as? LDrawTexture }.first)
+		#expect(texture.imageDisplayName() == "a\"b.png")
 	}
 
 	@Test("Isolated: unknown line type 6 crashes today (BUG-001 family)")

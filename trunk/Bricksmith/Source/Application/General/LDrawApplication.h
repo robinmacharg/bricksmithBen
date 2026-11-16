@@ -46,6 +46,9 @@
 - (IBAction) showMouseTools:(id)sender;
 - (IBAction) hideMouseTools:(id)sender;
 
+//Launch
++ (void) registerValueTransformers;
+
 //Accessors
 + (BOOL) isRunningTests;
 + (LDrawApplication *) shared;

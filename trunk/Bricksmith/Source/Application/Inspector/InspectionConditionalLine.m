@@ -48,7 +48,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorConditionalLine" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorConditionalLine"] == NO) {
         NSLog(@"Couldn't load InspectorConditionalLine.nib");
     }
 	

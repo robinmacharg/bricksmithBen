@@ -9,7 +9,7 @@
 //  Copyright (c) 2005. All rights reserved.
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import "BricksmithBuildConfig.h"   // dispatch_group_t (see USE_BLOCKS)
+#import "BricksmithBuildConfig.h"
 #import <OpenGL/gl.h>
 
 #import "ColorLibrary.h"
@@ -55,7 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 //Directives
-- (void) drawBoundsWithColor:(null_unspecified LDrawColor *)drawingColor;
 - (null_unspecified NSString *) write;
 
 //Accessors

@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class LDrawTexture;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // TEXTURE DEFINITIONS
@@ -84,6 +86,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) drawTri:(null_unspecified GLfloat *) vertices normal:(null_unspecified GLfloat *) normal color:(null_unspecified GLfloat *)color;
 - (void) drawLine:(null_unspecified GLfloat *) vertices normal:(null_unspecified GLfloat *) normal color:(null_unspecified GLfloat *)color;
 
+// Texture objects - returns the renderer's texture name for the texture directive's image (0 if the image
+// can't be found), creating it on first use.  Directives call this while collecting, before pushTexture.
+- (GLuint) textureTagForTexture:(null_unspecified LDrawTexture *)texture;
+
 @end
 
 
@@ -131,6 +137,10 @@ NS_ASSUME_NONNULL_BEGIN
 // Draw drag handle at a given location (3 floats).  The coordinates are within the current
 // transform.  The size is in screen pixels.
 - (void) drawDragHandle:(null_unspecified GLfloat *)xyz withSize:(GLfloat)size;
+
+// Texture objects - returns the renderer's texture name for the texture directive's image (0 if the image
+// can't be found), creating it on first use.  Directives call this while drawing, before pushTexture.
+- (GLuint) textureTagForTexture:(null_unspecified LDrawTexture *)texture;
 
 // Begin/end for a display list.  Multiple display lists can be "open" for recording at one time;
 // each one returns its own collector object.  However, only the most recently (innermost)

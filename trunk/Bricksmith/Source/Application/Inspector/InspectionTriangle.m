@@ -74,7 +74,7 @@
 {
     self = [super init];
 	
-    if ([NSBundle loadNibNamed:@"InspectorTriangle" owner:self] == NO) {
+    if ([self loadInspectorNibNamed:@"InspectorTriangle"] == NO) {
         NSLog(@"Couldn't load InspectorTriangle.nib");
     }
 	

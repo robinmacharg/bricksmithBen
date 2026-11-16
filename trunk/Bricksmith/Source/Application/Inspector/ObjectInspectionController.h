@@ -29,6 +29,9 @@
 		
 }
 
+// Initialization
+- (BOOL) loadInspectorNibNamed:(NSString *)nibName;
+
 //Accessors
 - (id) object; //returns the object being edited
 - (void) setObject:(id)newObject;

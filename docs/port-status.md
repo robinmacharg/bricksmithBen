@@ -53,6 +53,23 @@ their own port phase.
 | P3 | UI smoke on the ARC build (`scripts/test.sh --ui-only`): 5/5 passed, twice | 2026-11-15 | agent | Outline-expansion race in the UI helper hardened (wait + one retry) |
 | P3 | 🧑 Manual smoke checklist (TESTING.md steps 1-17) on the ARC Debug build | 2026-11-16 | maintainer | First run 2026-11-15: 1-3, 5, 6, 8, 9, 12, 13, 15, 17 OK. 4, 11, 16 (panels painted over) were BUG-033, present before P3, fixed in `d030b04`. 14 works as designed (test added; checklist wording fixed). 7 (earlier parts shift slightly when stepping) is by design: camera distance follows the bounds of the steps shown; no logic change vs master; checklist note added. Build-warning false alarm was a locale bug in build.sh (`1f4b6b1`). Re-check 2026-11-16: build clean, 4, 11, 14, 16 OK. Signed off |
 | P3 | UI smoke after the BUG-033 fix (`scripts/test.sh --ui-only`): 5/5 passed; real and Debug defaults unchanged | 2026-11-16 | agent | |
+| P3 | Merged to master as 4.0.3 (`015d40b`): Debug/Release no new warnings, 189 tests (73 known), UI 5/5 | 2026-11-16 | agent | |
+| P4 | `USE_BLOCKS`, its dead branches and the dispatch typedef hack removed (`21fcd5a`) | 2026-11-16 | agent | Branch `20261116-p4-objc-prep` |
+| P4 | D: GL out of the model. Texture upload behind `-textureTagForTexture:` (`LDrawRenderer`/`LDrawCollector`), drag-handle sphere built lazily on the dead legacy path (`59a8664`, `5465226`) | 2026-11-16 | agent | Remaining GL in model files is on dead fixed-function paths (coverage ledger rows 16, 29, 33) plus the `glTransformation` ivar name. Perf 78-93% of baseline |
+| P4 | C: Randomize Colors `randomSource`, `-exportStepsToURL:` (mirror deleted), `+registerValueTransformers` from `main.m` (`1dd8704`, `ebc9c85`, `64b7d78`) | 2026-11-16 | agent | 192 tests, 73 known |
+| P4 | A: parse errors return BOOL/nil instead of throwing (`!COLOUR`, ROTSTEP-local, TEXMAP, line types 2-5, model header, RelatedParts); `+[LDrawDirective directiveWithLines:inRange:parentGroup:]` replaces LDrawMetaCommand's substitute-self init (`eec52ed`..`c6eb6e2`, 11 commits) | 2026-11-16 | agent | 194 tests, 73 known. **Open:** the malformed-final-ROTSTEP throw chain (`LDrawStep` → `LDrawPart`/`readFromData:` `@try`) is still exceptions; maintainer decision pending. No `NSError **` (no consumer reads error detail) |
+| P4 | Dead fixed-function draw path deleted (maintainer decision; `217c755`) | 2026-11-16 | agent | `-draw:viewScale:parentColor:` kept only for LDConfig colour registration; 15 coverage-ledger rows removed |
+| P4 | Malformed-ROTSTEP throw chain converted; BUG-007 fixed (maintainer decision) | 2026-11-16 | agent | Step/model/file return nil; `-[PartLibrary loadModelForName:inGroup:]` returns NO for an unparseable part; `+[LDrawFile parseFromFileContents:parseFailed:]`. Pinned first (`fa3f9fa`). 72 known issues. The catch-all `@try`s in `LDrawPart` and `readFromData:` stay: they also catch Foundation raises (L87); P6b/P10 must list every raising call before removing them |
+| P2 | 🧑 Golden review: add the "ROTSTEP malformed angles" case to `golden/robustness/cases.txt` (now that it no longer crashes, it can leave `Robustness.crashing`; output would be `<parse returned nil>`) | **pending** | | Proposed after the BUG-007 fix; not done, because adding a case edits the golden |
+| P4 | B: 17 `loadNibNamed:owner:` calls → `-loadNibNamed:owner:topLevelObjects:` with the array kept by the owner (S36 resolved); RegexKitLite out of LDrawLSynth and Preferences (`eca1df9`..`f5196ef`) | 2026-11-16 | agent | 208 tests, 72 known; 17 deprecation warnings gone, baselines re-recorded (`e428317`). Leaked nib objects are now freed with their owner; manual checklist step 18 added. Perf: parse 102%, others 82-95% (agent's run) |
+| P4 | Ivars → properties: all 27 `LDrawDocument` outlets and state (`@synthesize name = name`, ownership kept); `LDrawContainer.postsNotifications` readonly; `DocumentToolbarController.h`, `LDrawFileOutlineView.h` added to the bridging header (L91) | 2026-11-16 | agent | Outside readers found mechanically (L92). `documentContents` stays an ivar behind its accessors (a property would change the tests' `documentContents()` spelling). **P6 note:** `color`/`hidden` (`LDrawDrawableElement`) and `vertex1`/`vertex2` (`LDrawLine`) stay `@protected` ivars; Swift reads them through the existing getters, so the ported leaves' collect/draw/hit-test loops become message sends: perf-gate them. Agent's perf runs were on a loaded machine, inconclusive; P4 exit reruns on a quiet one |
+| P4 | S37 confirmed through a real TEXMAP parse → **BUG-034** (hang; `6fb7f1c`); exit-test pair plus an in-process control | 2026-11-16 | agent | 211 tests, **73** known issues (BUG-034 added, after BUG-007's removal) |
+| P4 | `LDrawDocument.m` split into a core and 8 categories with `LDrawDocument+Private.h` (`3fda126`..`666cf1c`, 10 commits) | 2026-11-16 | agent | Verbatim checker: 0 missing lines, 206 boilerplate; `nm` symbol list identical to before. Warnings re-recorded only for moved ones, plus one new declaration site of the existing `NSDrawer` deprecation (explicit ivar in the private header) |
+| P4 | 🧑 Manual smoke checklist (TESTING.md steps 1-18, incl. new step 18 for panels and menus) on the P4 Debug build | 2026-11-16 | maintainer | Signed off in conversation |
+| P4 | 🧑 Maintainer decisions at P4 exit | 2026-11-16 | maintainer | BUG-007's wider scope (other paths treat a malformed-ROTSTEP library/peer file as missing): evaluate after the port, P12. `NSDrawer` deprecation's extra declaration site (`LDrawDocument+Private.h`): stays in the baseline; address after the port. Attribution trailers removed from the P4 branch before merge |
+| P4 | UI smoke on the P4 tip (`scripts/test.sh --ui-only` at `d89f4c2`): 5/5 passed; real and Debug defaults unchanged | 2026-11-16 | agent | |
+| P4 | Exit perf: 3 runs at `c58015d`, quiet machine; medians archive 81%, copy 80%, draw 77%, parse 83%, write 80% of baseline (all runs pass) | 2026-11-16 | agent | At or below the noise band's floor: no regression; not claimed as a speed-up (baseline recorded under load, L65) |
+| P4 | All P4 code items done (streams A-D, RegexKitLite deleted, ivars → properties, enum aliases, LDrawDocument split); regression from `bf8eee4` fixed in `4e4fce2` after adversarial review | 2026-11-16 | agent | Exit gate complete: UI 5/5, perf medians 77-83%, manual checklist signed off; ready to merge as 4.0.4 |
 | P2 | Mutation smoke: 30/30 killed (`scripts/mutation-smoke.sh`, patches from `scripts/dev/make-mutations.py`) | 2026-11-15 | agent | Two survivors on the first run: one revealed a missing test (untyped ROTSTEP), one targeted dead code (retargeted) |
 | P2 | Default suite time | 2026-11-15 | agent | 185 tests in ~31-60 s (limit 3 min) |
 | P2 | 🧑 Golden review: re-recorded render references (`golden/render/Mac15,7/*`, harness now fixes 1x and 625x691, L73) | **pending** | | Same renders, offset a few pixels |
@@ -115,7 +132,15 @@ sign-off here:
 | `AMSProgressBar/main.c` | 3 | C | stays C | todo |
 | `Bricksmith/Source/Application/Document/DimensionsPanel.m` | 326 | MRC | P9 | todo |
 | `Bricksmith/Source/Application/Document/DocumentToolbarController.m` | 794 | MRC | P9 | todo |
-| `Bricksmith/Source/Application/Document/LDrawDocument.m` | 6455 | MRC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument.m` | 875 | ARC | P10 | todo (P4 split: core only; categories below) |
+| `Bricksmith/Source/Application/Document/LDrawDocument+FileIO.m` | 507 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Editing.m` | 1329 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+ModelsMenu.m` | 664 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Undo.m` | 288 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Outline.m` | 480 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Viewers.m` | 777 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Menus.m` | 845 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Utilities.m` | 816 | ARC | P10 | todo |
 | `Bricksmith/Source/Application/Document/MovePanel.m` | 97 | ARC | P9 | todo |
 | `Bricksmith/Source/Application/Document/PieceCountPanel.m` | 452 | MRC | P9 | todo |
 | `Bricksmith/Source/Application/Document/RotationPanelController.m` | 204 | MRC | P9 | todo |
@@ -190,7 +215,7 @@ sign-off here:
 | `Bricksmith/Source/LDraw/Support/PartReport.m` | 415 | MRC | P7 | todo |
 | `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/MLCadIni.m` | 666 | ARC | P5 | todo |
-| `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | todo |
+| `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | **deleted** (P4; users moved to NSRegularExpression in stream B, `libicucore` link removed) |
 | `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/main.m` | 15 | ARC | P10 | todo |

@@ -54,6 +54,24 @@
 }//end init
 
 
+//---------- directiveWithLines:inRange:parentGroup: ----------------[static]--
+//
+// Purpose:		Returns a directive parsed from the given lines. 
+//
+//				Subclasses whose syntax decides the class of the result (such 
+//				as LDrawMetaCommand) override this method; inits always return 
+//				an instance of the class they were sent to. 
+//
+//------------------------------------------------------------------------------
++ (LDrawDirective *) directiveWithLines:(NSArray *)lines
+								inRange:(NSRange)range
+							parentGroup:(dispatch_group_t)parentGroup
+{
+	return [[self alloc] initWithLines:lines inRange:range parentGroup:parentGroup];
+	
+}//end directiveWithLines:inRange:parentGroup:
+
+
 //========== initWithLines:inRange: ============================================
 //
 // Purpose:		Convenience method to perform a blocking parse operation
@@ -65,16 +83,9 @@
 	LDrawDirective      *directive  = nil;
 	dispatch_group_t    group       = NULL;
 	
-#if USE_BLOCKS
-	group = dispatch_group_create();
-#endif
 
 	directive = [self initWithLines:lines inRange:range parentGroup:group];
 	
-#if USE_BLOCKS
-	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-	dispatch_release(group);
-#endif
 	
 	return directive;
 	
@@ -229,64 +240,6 @@
 	//subclasses should override this with OpenGL code to draw the line.
 	
 }//end draw:viewScale:parentColor:
-
-
-//========== debugDrawboundingBox ==============================================
-//
-// Purpose:		Draw a translucent visualization of our bounding box to test
-//				bounding box caching.
-//
-// Notes:		The base class draws the geometry; derived classes can add 
-//				iteration to sub-directives and transforms.
-//
-//				The calling code gets us into our GL state ahead of time.
-//
-//==============================================================================
-- (void) debugDrawboundingBox
-{
-	Box3	my_bounds = [self boundingBox3];
-	if(my_bounds.min.x <= my_bounds.max.x &&
-	   my_bounds.min.y <= my_bounds.max.y &&
-	   my_bounds.min.z <= my_bounds.max.z)
-	{
-		GLfloat	verts[6*4*3] = {
-			my_bounds.min.x,	my_bounds.min.y,	my_bounds.min.z,
-			my_bounds.min.x,	my_bounds.min.y,	my_bounds.max.z,
-			my_bounds.min.x,	my_bounds.max.y,	my_bounds.max.z,
-			my_bounds.min.x,	my_bounds.max.y,	my_bounds.min.z,
-
-			my_bounds.max.x,	my_bounds.min.y,	my_bounds.min.z,
-			my_bounds.max.x,	my_bounds.min.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.max.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.max.y,	my_bounds.min.z,
-
-
-			my_bounds.min.x,	my_bounds.min.y,	my_bounds.min.z,
-			my_bounds.min.x,	my_bounds.max.y,	my_bounds.min.z,
-			my_bounds.max.x,	my_bounds.max.y,	my_bounds.min.z,
-			my_bounds.max.x,	my_bounds.min.y,	my_bounds.min.z,
-
-			my_bounds.min.x,	my_bounds.min.y,	my_bounds.max.z,
-			my_bounds.min.x,	my_bounds.max.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.max.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.min.y,	my_bounds.max.z,
-
-
-			my_bounds.min.x,	my_bounds.min.y,	my_bounds.min.z,
-			my_bounds.min.x,	my_bounds.min.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.min.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.min.y,	my_bounds.min.z,
-
-			my_bounds.min.x,	my_bounds.max.y,	my_bounds.min.z,
-			my_bounds.min.x,	my_bounds.max.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.max.y,	my_bounds.max.z,
-			my_bounds.max.x,	my_bounds.max.y,	my_bounds.min.z };
-		
-		glVertexPointer(3, GL_FLOAT, 0, verts);
-		glDrawArrays(GL_QUADS,0,24);
-	}
-}//end debugDrawboundingBox
-
 
 
 //========== boundingBox3 ======================================================

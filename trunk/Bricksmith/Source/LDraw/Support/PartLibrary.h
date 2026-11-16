@@ -9,7 +9,7 @@
 //  Copyright 2005. All rights reserved.
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import "BricksmithBuildConfig.h"   // dispatch_group_t (see USE_BLOCKS)
+#import "BricksmithBuildConfig.h"
 
 #import "ColorLibrary.h"
 
@@ -61,8 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 	NSMutableDictionary		*loadedImages;
 	NSMutableDictionary		*optimizedTextures;			// GLuint texture tags
 	NSMutableDictionary     *optimizedRepresentations;	// access stored vertex objects by part name, then color.
-	dispatch_queue_t        catalogAccessQueue;			// serial queue to mutex changes to the part catalog
-	NSMutableDictionary     *parsingGroups;				// arrays of dispatch_group_t's which have requested each file currently being parsed
 }
 
 // Initialization
@@ -95,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Finding Parts
 - (void) loadImageForName:(null_unspecified NSString *)imageName inGroup:(null_unspecified dispatch_group_t)parentGroup;
-- (void) loadModelForName:(null_unspecified NSString *)name inGroup:(null_unspecified dispatch_group_t)parentGroup;
+- (BOOL) loadModelForName:(null_unspecified NSString *)name inGroup:(null_unspecified dispatch_group_t)parentGroup; // NO: the file exists but could not be parsed
 - (null_unspecified CGImageRef) imageForTextureName:(null_unspecified NSString *)imageName;
 - (null_unspecified CGImageRef) imageForTexture:(null_unspecified LDrawTexture *)texture;
 - (null_unspecified CGImageRef) imageFromNeighboringFileForTexture:(null_unspecified LDrawTexture *)texture;

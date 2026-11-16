@@ -37,4 +37,17 @@ struct HarnessExitTests {
 			exit(LDrawApplication.isRunningTests() ? EXIT_SUCCESS : EXIT_FAILURE)
 		}
 	}
+
+	@Test("Launch registers the value transformers that nibs name, before anything looks them up")
+	func valueTransformersRegisteredAtLaunch() async {
+		// main() calls +[LDrawApplication registerValueTransformers] before NSApplicationMain (it was +initialize,
+		// which Swift can't define). Checked in a fresh child process before any lookup: a lookup by name would
+		// itself instantiate and register a class of that name (NSValueTransformer's fallback), so a lookup alone
+		// can't tell whether launch registered it.
+		await #expect(processExitsWith: .success) {
+			let name = NSValueTransformerName("TransformerIntMinus1")
+			let registered = ValueTransformer.valueTransformerNames().contains(name)
+			exit(registered && ValueTransformer(forName: name) is TransformerIntMinus1 ? EXIT_SUCCESS : EXIT_FAILURE)
+		}
+	}
 }

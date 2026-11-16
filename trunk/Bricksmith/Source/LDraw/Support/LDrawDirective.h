@@ -9,7 +9,7 @@
 //  Copyright 2005. All rights reserved.
 //==============================================================================
 #import <Foundation/Foundation.h>
-#import "BricksmithBuildConfig.h"   // dispatch_group_t (see USE_BLOCKS)
+#import "BricksmithBuildConfig.h"
 
 #import "MatrixMath.h"
 #import "LDrawFastSet.h"
@@ -196,6 +196,10 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invo
 // Initialization
 - (null_unspecified id) initWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range;
 - (null_unspecified id) initWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup;
+// Parses lines into a directive of the receiving class, or of whatever class the lines call for
+// (LDrawMetaCommand returns LDrawComment, LDrawColor, ...). Use this, not -initWithLines:..., when the
+// class comes from +[LDrawUtilities classForDirectiveBeginningWithLine:].
++ (nullable LDrawDirective *) directiveWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup NS_SWIFT_NAME(directive(lines:in:parentGroup:));
 + (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index inLines:(null_unspecified NSArray *)lines maxIndex:(NSUInteger)maxIndex;
 
 // Directives
@@ -203,7 +207,6 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invo
 - (void) drawSelf:(null_unspecified id<LDrawRenderer>)renderer;
 - (void) collectSelf:(null_unspecified id<LDrawCollector>)renderer;
 - (Box3) boundingBox3;
-- (void) debugDrawboundingBox;
 
 // Hit testing primitives
 - (void) hitTest:(Ray3)pickRay transform:(Matrix4)transform viewScale:(float)scaleFactor boundsOnly:(BOOL)boundsOnly creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableDictionary *)hits;

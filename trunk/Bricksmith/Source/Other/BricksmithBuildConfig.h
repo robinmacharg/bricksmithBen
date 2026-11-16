@@ -8,10 +8,6 @@
 //				prefix header) can import it and see exactly the same types and
 //				flags the Objective-C code was compiled with.
 //
-// Notes:		USE_BLOCKS 0 redefines dispatch_queue_t/dispatch_group_t as
-//				void *. That hack is removed in P4 (see docs/swift-port-plan.md);
-//				until then every header that uses those types must import this.
-//
 //==============================================================================
 #ifndef BRICKSMITH_BUILD_CONFIG_H
 #define BRICKSMITH_BUILD_CONFIG_H
@@ -20,17 +16,6 @@
 // This used to come via <Carbon/Carbon.h>; Carbon was removed with 3Dconnexion support (P0).
 // P1 makes headers self-contained so this implicit dependency can go.
 #import <ApplicationServices/ApplicationServices.h>
-
-
-//#define USE_BLOCKS				NS_BLOCKS_AVAILABLE
-#define USE_BLOCKS				0
-
-// P3: only for files still built without ARC. Under ARC, dispatch objects are managed ObjC objects and must
-// keep their real types (P4 removes USE_BLOCKS and this hack).
-#if !USE_BLOCKS && !__has_feature(objc_arc)
-	#define dispatch_queue_t    void *
-	#define dispatch_group_t    void *
-#endif
 
 
 ////////////////////////////////////////////////////////////////////////////////

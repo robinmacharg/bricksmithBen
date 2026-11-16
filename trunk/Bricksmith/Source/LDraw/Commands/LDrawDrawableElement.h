@@ -38,7 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Directives
 - (null_unspecified VBOVertexData *) writeToVertexBuffer:(null_unspecified VBOVertexData *)vertexBuffer parentColor:(null_unspecified LDrawColor *)parentColor wireframe:(BOOL)wireframe;
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(null_unspecified LDrawColor *)drawingColor;
 - (null_unspecified VBOVertexData *) writeElementToVertexBuffer:(null_unspecified VBOVertexData *)vertexBuffer withColor:(null_unspecified LDrawColor *)drawingColor wireframe:(BOOL)wireframe;
 
 
