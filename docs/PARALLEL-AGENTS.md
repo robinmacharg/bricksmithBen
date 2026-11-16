@@ -20,7 +20,9 @@ BASE=$(git rev-parse --short HEAD)  # the commit every stream starts from
 git worktree add -b p4-<stream> $W/p4-<stream> $BASE
 ```
 
-Each worktree gets its own `build/`, so builds run in parallel. Tests do not (see the lock below). The shared test
+Each worktree gets its own `build/`, so builds run in parallel. Give each agent its own scratch subdirectory
+(`<scratchpad>/<stream>/`): P5 streams overwrote each other's files in a shared one (L97). For ports, register
+placeholder files first so agents never edit `project.pbxproj` (L99). Tests do not (see the lock below). The shared test
 lock is `build/test.lock` in the main checkout. Tell agents to commit early: uncommitted work in a worktree is lost if
 the machine restarts mid-run.
 

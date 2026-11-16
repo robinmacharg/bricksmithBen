@@ -460,9 +460,11 @@ locators. Keep the xibs and bindings; there is no SwiftUI rewrite.
 4. **Write `Foo.swift`:**
    - `@objc(Foo) class Foo`, with `final` only if nothing subclasses it, and the selectors kept.
    - `required` inits, and `@objc dynamic` where needed.
-   - **Signatures match the header's generated Swift interface** (§4.4.11).
+   - **Signatures match the header's generated Swift interface** (§4.4.11); capture it first with
+     `xcrun swift-synthesize-interface` (LEARNINGS L97) and pin every selector with `@objc(...)` (L98).
    - Keep the original algorithms.
-5. **Remove `Foo.m`** and its header from the bridging header.
+5. **Remove `Foo.m`** and its header from the bridging header. (If the header also declares C enums or types that
+   ObjC headers use, keep it as a types-only header: L98. For parallel ports, use placeholders and stubs: L99.)
    - ObjC importers switch to `#import "Bricksmith-Swift.h"` in `.m` files and `@class Foo;` in headers.
 6. **Build and test.**
    - Goldens and known issues are unchanged.

@@ -15,14 +15,14 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82, L94 |
-| Agents and review | L17, L18, L75, L85, L93; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+| Agents and review | L17, L18, L75, L85, L93, L97, L99; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
@@ -422,3 +422,34 @@ topics that match your task rather than the whole log.
   quoted hashes through `map` (`build/msgfilter.sh` pattern), then update the tip's docs from an old→new table
   built by pairing `rev-list --reverse` of the backup and the rewritten branch (check the subjects match). Keep a
   backup branch until the merge.
+- **L97. Capturing a header's generated Swift interface (rule 11) works with `xcrun swift-synthesize-interface`.**
+  Write a scratch `module.modulemap` per header (absolute `header` path), then
+  `xcrun swift-synthesize-interface -module-name X -I <scratch> -I <dirs of its imports> -sdk $(xcrun --show-sdk-path)
+  -target arm64-apple-macos14.0 -module-cache-path <scratch>/mc`. A header that isn't self-contained needs a wrapper
+  that imports AppKit first. Each parallel agent needs its own scratch subdirectory: P5 streams overwrote each
+  other's `module.modulemap` in a shared one.
+- **L98. Porting gotchas from P5:**
+  - Pin every selector with `@objc(...)`: Swift derives `nextCopyNameFor:`, `crlf`, `ams_contains:options:`, and when
+    no ObjC caller exists only a runtime `NSSelectorFromString` test catches it.
+  - Swift imports an ObjC class factory as an init (`init!(rect:radiusPercentage:)`); a Swift `class func` can't
+    reproduce that. Pair an `@objc(...)` class func with a `@nonobjc convenience init!` sharing one helper.
+  - A category that declares methods it never implements (optional hooks called via `respondsToSelector:`) can't be
+    a Swift extension: move the declarations to a declaration-only category next to the caller.
+  - A ported class's header may have to survive when it also declares C enums or types that ObjC headers use (rule
+    8 keeps those headers off `Bricksmith-Swift.h`): `BricksmithUtilities.h` is now enum-only.
+  - Xcode 26's `Bricksmith-Swift.h` imports the bridging header itself, so ObjC types it uses are always declared.
+  - swiftc words deprecations differently from clang, so a deprecation moving from `.m` to `.swift` always looks new
+    to `build.sh`: re-baseline deliberately and say so.
+  - Some Foundation APIs are deprecated only for Swift (`NSScanner.scanLocation`, `scanInteger:`); `currentIndex` and
+    `scanInt()` matched them in a 300k-case fuzz.
+  - Fidelity traps: `NSMinX`/`NSHeight` don't standardise negative sizes but `.minX`/`.height` do; `MAX` and `max()`
+    disagree on -0.0 and NaN; NSSortDescriptor passes nil to its comparison selector (a `String!` would trap);
+    Swift can't pass nil to `archivedData(withRootObject:)` and `Optional` as `Any` archives NSNull.
+  - An exception a Swift port would let through (NSUnarchiver on bad data) needs an ObjC shim that catches it
+    (`ArchiveSupport.m`): rule 3. Converting the raise into a value is a behaviour change: maintainer decision.
+- **L99. Parallel ports without project-file conflicts (P5):** commit an empty placeholder `X.swift` for every class
+  first (`scripts/dev/p5-placeholders.rb`); each agent fills its file and empties the old `.h`/`.m` to a one-line
+  "Ported to" stub; the integrator then deletes the stubs, their project refs and bridging-header lines in one edit
+  (`scripts/dev/p5-remove-ported.rb`, which refuses anything but a stub). Agents never touch `project.pbxproj` or the
+  bridging header. Remaining conflicts were only adjacent `#import` lines and parallel KNOWN-BUGS numbers (renumber
+  at integration).
