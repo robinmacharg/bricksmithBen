@@ -261,7 +261,7 @@ class LDrawModel: LDrawContainer {
 	//==============================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied = super.copy(with: zone) as! LDrawModel
+		let copied = (super.copy(with: zone) as AnyObject) as! LDrawModel	// (a class cast: `as!` from Any is a slow existential cast)
 		copied.cachedBounds = cachedBounds
 
 		copied.setModelDescription(modelDescription())

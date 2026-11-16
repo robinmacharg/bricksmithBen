@@ -299,10 +299,14 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 	//==========================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied			= super.copy(with: zone) as! LDrawPart
+		let copied			= (super.copy(with: zone) as AnyObject) as! LDrawPart	// (a class cast: `as!` from Any is a slow existential cast)
 		var transformation	= self.transformationMatrix()
 
-		copied.setDisplayName(self.displayName())
+		// As -setDisplayName:, with the reference name carried over rather than
+		// lowercased again: it is always -lowercaseString of the display name
+		// (both are only set together, here and in the redirect migration), and
+		// this skips bridging both names through NSString per copied part.
+		copied.setDisplayName(self.displayNameStorage, referenceName: self.referenceNameStorage, parse: true, in: nil)
 		copied.setTransformationMatrix(&transformation)
 
 		return copied
@@ -765,6 +769,18 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 	@objc(setDisplayName:parse:inGroup:)
 	func setDisplayName(_ newPartName: String!, parse shouldParse: Bool, in parentGroup: dispatch_group_t!) {
 		let newReferenceName			= (newPartName as NSString?)?.lowercased
+
+		setDisplayName(newPartName, referenceName: newReferenceName, parse: shouldParse, in: parentGroup)
+	}
+
+
+	//---------- setDisplayName(_:referenceName:parse:in:) ---------------------
+	//
+	// Purpose:		The body of -setDisplayName:parse:inGroup:, given the
+	//				reference name (the display name's -lowercaseString).
+	//
+	//--------------------------------------------------------------------------
+	private func setDisplayName(_ newPartName: String!, referenceName newReferenceName: String?, parse shouldParse: Bool, in parentGroup: dispatch_group_t!) {
 		let parseGroup: dispatch_group_t? = nil
 
 		self.displayNameStorage = newPartName

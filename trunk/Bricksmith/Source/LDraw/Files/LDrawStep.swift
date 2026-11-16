@@ -422,7 +422,7 @@ final class LDrawStep: LDrawContainer {
 	//==============================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied = super.copy(with: zone) as! LDrawStep
+		let copied = (super.copy(with: zone) as AnyObject) as! LDrawStep	// (a class cast: `as!` from Any is a slow existential cast)
 
 		copied.setStepFlavor(self.stepFlavorValue)
 		copied.setStepRotationType(self.stepRotationTypeValue)

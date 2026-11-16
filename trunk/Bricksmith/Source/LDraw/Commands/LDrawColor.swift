@@ -211,7 +211,7 @@ final class LDrawColor: LDrawMetaCommand {
 	//==============================================================================
 	@objc(fullCopyWithZone:)
 	func fullCopy(with zone: NSZone!) -> Any! {
-		let copied = super.copy(with: zone) as! LDrawColor
+		let copied = (super.copy(with: zone) as AnyObject) as! LDrawColor	// (a class cast: `as!` from Any is a slow existential cast)
 
 		copied.code				= self.code
 		copied.rgba				= self.rgba

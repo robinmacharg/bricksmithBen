@@ -296,7 +296,7 @@ final class LDrawTexture: LDrawContainer {
 	//==============================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied = super.copy(with: zone) as! LDrawTexture
+		let copied = (super.copy(with: zone) as AnyObject) as! LDrawTexture	// (a class cast: `as!` from Any is a slow existential cast)
 
 		copied.fallback = fallback?.copy() as? NSArray
 		copied.setImageDisplayName(imageDisplayName())

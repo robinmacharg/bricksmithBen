@@ -169,7 +169,7 @@ final class LDrawConditionalLine: LDrawLine {
 	//==========================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied = super.copy(with: zone) as! LDrawConditionalLine
+		let copied = (super.copy(with: zone) as AnyObject) as! LDrawConditionalLine	// (a class cast: `as!` from Any is a slow existential cast)
 
 		copied.setConditionalVertex1(self.conditionalVertex1())
 		copied.setConditionalVertex2(self.conditionalVertex2())
