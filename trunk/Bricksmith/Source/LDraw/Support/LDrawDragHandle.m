@@ -40,8 +40,6 @@ static const float HandleDiameter	= 7.0;
 		tag             = tagIn;
 		position        = positionIn;
 		initialPosition = positionIn;
-		
-		[LDrawDragHandle makeSphereWithLongitudinalCount:8 latitudinalCount:8];
 	}
 	
 	return self;
@@ -161,11 +159,18 @@ static const float HandleDiameter	= 7.0;
 //
 // Purpose:		Draw the drag handle.
 //
+// Notes:		Fixed-function path (its caller is compiled out by NEW_RENDERER 1). It is the 
+//				only user of the shared sphere, so the sphere is built here on 
+//				first use rather than in -initWithTag:position:. The live path, 
+//				-drawSelf:, has the renderer draw its own sphere. 
+//
 //==============================================================================
 - (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor
 {
 	float   handleScale = 0.0;
 	float   drawRadius  = 0.0;
+	
+	[LDrawDragHandle makeSphereWithLongitudinalCount:8 latitudinalCount:8];
 	
 	handleScale = 1.0 / scaleFactor;
 	drawRadius  = HandleDiameter/2 * handleScale;
