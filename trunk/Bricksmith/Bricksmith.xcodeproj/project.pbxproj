@@ -50,8 +50,6 @@
 		0B25F041093D5F960099D85E /* BricksmithApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B25F03F093D5F960099D85E /* BricksmithApplication.m */; };
 		0B2700870981FCEA0058A7BE /* ToolPalette.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2700850981FCEA0058A7BE /* ToolPalette.h */; };
 		0B2700880981FCEA0058A7BE /* ToolPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B2700860981FCEA0058A7BE /* ToolPalette.m */; };
-		0B27CFAA1318AA0F005C7E1A /* LDrawDragHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B27CFA81318AA0F005C7E1A /* LDrawDragHandle.h */; };
-		0B27CFAB1318AA0F005C7E1A /* LDrawDragHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B27CFA91318AA0F005C7E1A /* LDrawDragHandle.m */; };
 		0B2DD14A0CD810DC0093E8E5 /* PartBrowserTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2DD1480CD810DC0093E8E5 /* PartBrowserTableView.h */; };
 		0B2DD14B0CD810DC0093E8E5 /* PartBrowserTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B2DD1490CD810DC0093E8E5 /* PartBrowserTableView.m */; };
 		0B2FADD310196C2E007BA948 /* DonationDialogController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2FADD110196C2E007BA948 /* DonationDialogController.h */; };
@@ -79,12 +77,9 @@
 		0B6F384407C82025007B1075 /* LDrawMPDModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384207C82025007B1075 /* LDrawMPDModel.m */; };
 		0B6F384807C8207B007B1075 /* LDrawModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F384607C8207B007B1075 /* LDrawModel.m */; };
 		0B6F3A8F07C9934E007B1075 /* LDrawStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3A8D07C9934E007B1075 /* LDrawStep.m */; };
-		0B6F3FB807CB0253007B1075 /* LDrawConditionalLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */; };
 		0B6F3FBC07CB0253007B1075 /* LDrawLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FAE07CB0253007B1075 /* LDrawLine.m */; };
 		0B6F3FBE07CB0253007B1075 /* LDrawMetaCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FB007CB0253007B1075 /* LDrawMetaCommand.m */; };
 		0B6F3FC007CB0253007B1075 /* LDrawPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FB207CB0253007B1075 /* LDrawPart.m */; };
-		0B6F3FC207CB0253007B1075 /* LDrawQuadrilateral.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FB407CB0253007B1075 /* LDrawQuadrilateral.m */; };
-		0B6F3FC407CB0253007B1075 /* LDrawTriangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6F3FB607CB0253007B1075 /* LDrawTriangle.m */; };
 		0B7588D80D8DC4DD00357703 /* ColorLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B7588D60D8DC4DD00357703 /* ColorLibrary.h */; };
 		0B7588D90D8DC4DD00357703 /* ColorLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B7588D70D8DC4DD00357703 /* ColorLibrary.m */; };
 		0B76F2F90E74CC1700349D03 /* InspectionStep.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B76F2F70E74CC1700349D03 /* InspectionStep.h */; };
@@ -139,15 +134,12 @@
 		0B9FE56608AD97280046511D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 0B9FE56408AD97280046511D /* Credits.rtf */; };
 		0BA3BE5E1772B3E10087579B /* LDraw in Resources */ = {isa = PBXBuildFile; fileRef = 0BA3BE421772B3E10087579B /* LDraw */; };
 		0BC6992B08B5719000DAF996 /* LDrawMPDModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F384107C82025007B1075 /* LDrawMPDModel.h */; };
-		0BC6992C08B5719100DAF996 /* LDrawConditionalLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3FA907CB0253007B1075 /* LDrawConditionalLine.h */; };
 		0BC6992D08B5719100DAF996 /* LDrawLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3FAD07CB0253007B1075 /* LDrawLine.h */; };
 		0BC6992E08B5719200DAF996 /* LDrawModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F384507C8207B007B1075 /* LDrawModel.h */; };
 		0BC6992F08B5719300DAF996 /* LDrawPart.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3FB107CB0253007B1075 /* LDrawPart.h */; };
 		0BC6993108B5719500DAF996 /* LDrawFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F383D07C81FEF007B1075 /* LDrawFile.h */; };
 		0BC6993208B5719600DAF996 /* LDrawMetaCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3FAF07CB0253007B1075 /* LDrawMetaCommand.h */; };
 		0BC6993408B5719800DAF996 /* MacLDraw.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2AAA4407C1D22A00085145 /* MacLDraw.h */; };
-		0BC6993608B5719D00DAF996 /* LDrawTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3FB507CB0253007B1075 /* LDrawTriangle.h */; };
-		0BC6993708B571A000DAF996 /* LDrawQuadrilateral.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3FB307CB0253007B1075 /* LDrawQuadrilateral.h */; };
 		0BC6993808B571A000DAF996 /* LDrawStep.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6F3A8C07C9934E007B1075 /* LDrawStep.h */; };
 		0BC699CD08B93A0500DAF996 /* DimensionsPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BC699CB08B93A0500DAF996 /* DimensionsPanel.h */; };
 		0BC699CE08B93A0500DAF996 /* DimensionsPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BC699CC08B93A0500DAF996 /* DimensionsPanel.m */; };
@@ -416,8 +408,6 @@
 		0B25F03F093D5F960099D85E /* BricksmithApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BricksmithApplication.m; sourceTree = "<group>"; };
 		0B2700850981FCEA0058A7BE /* ToolPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPalette.h; sourceTree = "<group>"; };
 		0B2700860981FCEA0058A7BE /* ToolPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPalette.m; sourceTree = "<group>"; };
-		0B27CFA81318AA0F005C7E1A /* LDrawDragHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawDragHandle.h; sourceTree = "<group>"; };
-		0B27CFA91318AA0F005C7E1A /* LDrawDragHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawDragHandle.m; sourceTree = "<group>"; };
 		0B2AAA4407C1D22A00085145 /* MacLDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacLDraw.h; sourceTree = "<group>"; };
 		0B2DD1480CD810DC0093E8E5 /* PartBrowserTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartBrowserTableView.h; sourceTree = "<group>"; };
 		0B2DD1490CD810DC0093E8E5 /* PartBrowserTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartBrowserTableView.m; sourceTree = "<group>"; };
@@ -450,18 +440,12 @@
 		0B6F384607C8207B007B1075 /* LDrawModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LDrawModel.m; path = Source/LDraw/Files/LDrawModel.m; sourceTree = SOURCE_ROOT; };
 		0B6F3A8C07C9934E007B1075 /* LDrawStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LDrawStep.h; path = Source/LDraw/Files/LDrawStep.h; sourceTree = SOURCE_ROOT; };
 		0B6F3A8D07C9934E007B1075 /* LDrawStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LDrawStep.m; path = Source/LDraw/Files/LDrawStep.m; sourceTree = SOURCE_ROOT; };
-		0B6F3FA907CB0253007B1075 /* LDrawConditionalLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawConditionalLine.h; sourceTree = "<group>"; };
-		0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawConditionalLine.m; sourceTree = "<group>"; };
 		0B6F3FAD07CB0253007B1075 /* LDrawLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawLine.h; sourceTree = "<group>"; };
 		0B6F3FAE07CB0253007B1075 /* LDrawLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawLine.m; sourceTree = "<group>"; };
 		0B6F3FAF07CB0253007B1075 /* LDrawMetaCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawMetaCommand.h; sourceTree = "<group>"; };
 		0B6F3FB007CB0253007B1075 /* LDrawMetaCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawMetaCommand.m; sourceTree = "<group>"; };
 		0B6F3FB107CB0253007B1075 /* LDrawPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawPart.h; sourceTree = "<group>"; };
 		0B6F3FB207CB0253007B1075 /* LDrawPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawPart.m; sourceTree = "<group>"; };
-		0B6F3FB307CB0253007B1075 /* LDrawQuadrilateral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawQuadrilateral.h; sourceTree = "<group>"; };
-		0B6F3FB407CB0253007B1075 /* LDrawQuadrilateral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawQuadrilateral.m; sourceTree = "<group>"; };
-		0B6F3FB507CB0253007B1075 /* LDrawTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawTriangle.h; sourceTree = "<group>"; };
-		0B6F3FB607CB0253007B1075 /* LDrawTriangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawTriangle.m; sourceTree = "<group>"; };
 		0B7588D60D8DC4DD00357703 /* ColorLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorLibrary.h; sourceTree = "<group>"; };
 		0B7588D70D8DC4DD00357703 /* ColorLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorLibrary.m; sourceTree = "<group>"; };
 		0B7588DA0D8DC4EF00357703 /* LDrawColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawColor.h; sourceTree = "<group>"; };
@@ -746,8 +730,6 @@
 				D6191B9B17F277B600B5DF44 /* GLMatrixMath.h */,
 				0B1DA5A213172DA700E14960 /* LDrawDirective.h */,
 				0B1DA5A313172DA700E14960 /* LDrawDirective.m */,
-				0B27CFA81318AA0F005C7E1A /* LDrawDragHandle.h */,
-				0B27CFA91318AA0F005C7E1A /* LDrawDragHandle.m */,
 				D6FC72121604EBB8005A404E /* LDrawFastSet.h */,
 				D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */,
 				D619130017F004A300B5DF44 /* LDrawGLCamera.m */,
@@ -807,8 +789,6 @@
 			children = (
 				0B7588DA0D8DC4EF00357703 /* LDrawColor.h */,
 				0B7588DB0D8DC4EF00357703 /* LDrawColor.m */,
-				0B6F3FA907CB0253007B1075 /* LDrawConditionalLine.h */,
-				0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */,
 				0B6771A8081764E60044A0E0 /* LDrawDrawableElement.h */,
 				0B6771A9081764E60044A0E0 /* LDrawDrawableElement.m */,
 				0B6F3FAD07CB0253007B1075 /* LDrawLine.h */,
@@ -817,12 +797,8 @@
 				0B6F3FB007CB0253007B1075 /* LDrawMetaCommand.m */,
 				0B6F3FB107CB0253007B1075 /* LDrawPart.h */,
 				0B6F3FB207CB0253007B1075 /* LDrawPart.m */,
-				0B6F3FB307CB0253007B1075 /* LDrawQuadrilateral.h */,
-				0B6F3FB407CB0253007B1075 /* LDrawQuadrilateral.m */,
 				0B6122EB153516600085F944 /* LDrawTexture.h */,
 				0B6122EC153516600085F944 /* LDrawTexture.m */,
-				0B6F3FB507CB0253007B1075 /* LDrawTriangle.h */,
-				0B6F3FB607CB0253007B1075 /* LDrawTriangle.m */,
 				95D893C816569CFD00AA055B /* LDrawLSynth.h */,
 				95D893C916569CFD00AA055B /* LDrawLSynth.m */,
 				73772CF1E56647D450E6AAA1 /* LDrawLSynthDirective.h */,
@@ -1295,7 +1271,6 @@
 				0BF729C008AD849300E3DA53 /* PartBrowserDataSource.h in Headers */,
 				0BF729C608AD849300E3DA53 /* PreferencesDialogController.h in Headers */,
 				0BC6992B08B5719000DAF996 /* LDrawMPDModel.h in Headers */,
-				0BC6992C08B5719100DAF996 /* LDrawConditionalLine.h in Headers */,
 				0BE49CD025AAB7FF00E96C96 /* LDrawViewerContainer.h in Headers */,
 				0BC6992D08B5719100DAF996 /* LDrawLine.h in Headers */,
 				0BC6992E08B5719200DAF996 /* LDrawModel.h in Headers */,
@@ -1303,8 +1278,6 @@
 				0BC6993108B5719500DAF996 /* LDrawFile.h in Headers */,
 				0BC6993208B5719600DAF996 /* LDrawMetaCommand.h in Headers */,
 				0BC6993408B5719800DAF996 /* MacLDraw.h in Headers */,
-				0BC6993608B5719D00DAF996 /* LDrawTriangle.h in Headers */,
-				0BC6993708B571A000DAF996 /* LDrawQuadrilateral.h in Headers */,
 				0BC6993808B571A000DAF996 /* LDrawStep.h in Headers */,
 				0BC699CD08B93A0500DAF996 /* DimensionsPanel.h in Headers */,
 				0B356AF108D385B900695EEB /* PieceCountPanel.h in Headers */,
@@ -1349,7 +1322,6 @@
 				0BE84A1F1300F91F004E7626 /* BricksmithUtilities.h in Headers */,
 				0B1DA5A813172DA700E14960 /* LDrawDirective.h in Headers */,
 				0B1DA5AA13172DA700E14960 /* LDrawUtilities.h in Headers */,
-				0B27CFAA1318AA0F005C7E1A /* LDrawDragHandle.h in Headers */,
 				0BED4743136D30C10098D353 /* LDrawKeywords.h in Headers */,
 				0BC75339136FC878002568B8 /* PartLibrary.h in Headers */,
 				0BDE0EEA1371063600FDB8DB /* LDrawPathNames.h in Headers */,
@@ -1607,12 +1579,9 @@
 				0B6F384407C82025007B1075 /* LDrawMPDModel.m in Sources */,
 				0B6F384807C8207B007B1075 /* LDrawModel.m in Sources */,
 				0B6F3A8F07C9934E007B1075 /* LDrawStep.m in Sources */,
-				0B6F3FB807CB0253007B1075 /* LDrawConditionalLine.m in Sources */,
 				0B6F3FBC07CB0253007B1075 /* LDrawLine.m in Sources */,
 				0B6F3FBE07CB0253007B1075 /* LDrawMetaCommand.m in Sources */,
 				0B6F3FC007CB0253007B1075 /* LDrawPart.m in Sources */,
-				0B6F3FC207CB0253007B1075 /* LDrawQuadrilateral.m in Sources */,
-				0B6F3FC407CB0253007B1075 /* LDrawTriangle.m in Sources */,
 				0B491DA507F5555B00AC0C10 /* MatrixMath.c in Sources */,
 				0BCD0C6607FD0BA10066A536 /* LDrawContainer.m in Sources */,
 				0B6771AB081764E60044A0E0 /* LDrawDrawableElement.m in Sources */,
@@ -1664,7 +1633,6 @@
 				0B8C097410BA550500BEB111 /* OverlayHelperWindow.m in Sources */,
 				0B1DA5A913172DA700E14960 /* LDrawDirective.m in Sources */,
 				0B1DA5AB13172DA700E14960 /* LDrawUtilities.m in Sources */,
-				0B27CFAB1318AA0F005C7E1A /* LDrawDragHandle.m in Sources */,
 				0BC7533A136FC878002568B8 /* PartLibrary.m in Sources */,
 				0BDE0EF21371070600FDB8DB /* LDrawPaths.m in Sources */,
 				0BE524021373C26200E21FBC /* PartReport.m in Sources */,

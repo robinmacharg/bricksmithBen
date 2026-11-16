@@ -23,7 +23,6 @@
 
 #import "LDrawColor.h"
 #import "LDrawDirective.h"
-#import "LDrawDragHandle.h"
 #import "LDrawFile.h"
 #import "LDrawModel.h"
 #import "LDrawMPDModel.h"

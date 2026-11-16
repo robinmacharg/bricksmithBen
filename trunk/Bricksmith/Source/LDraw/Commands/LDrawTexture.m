@@ -10,7 +10,6 @@
 #import "LDrawTexture.h"
 #import "LDrawStep.h"
 
-#import "LDrawDragHandle.h"
 #import "LDrawKeywords.h"
 #import "LDrawUtilities.h"
 #import "PartLibrary.h"

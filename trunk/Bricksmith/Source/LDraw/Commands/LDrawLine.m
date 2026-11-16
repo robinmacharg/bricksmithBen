@@ -20,7 +20,6 @@
 #import "LDrawLine.h"
 
 #import "LDrawColor.h"
-#import "LDrawDragHandle.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"
 #import "Bricksmith-Swift.h"

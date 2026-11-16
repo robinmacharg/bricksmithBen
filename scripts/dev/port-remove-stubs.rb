@@ -26,14 +26,14 @@ names.each do |n|
   ref.remove_from_project
   File.delete(path) if File.exist?(path)
   if n.end_with?('.h')
-    import = /^#import "#{Regexp.escape(n)}"[^\n]*\n/
-    b = File.read(bridge); nb = b.gsub(import, '')
+    import = Regexp.new("^#import \"#{Regexp.escape(n)}\"[^\n]*\n".b, Regexp::NOENCODING)
+    b = File.binread(bridge); nb = b.gsub(import, '')
     File.write(bridge, nb) if nb != b
     Dir.glob('Source/**/*.{h,m}').each do |f|
       next if f == bridge
-      s = File.read(f)
+      s = File.binread(f)   # binary: some sources aren't valid UTF-8/ASCII
       next unless s =~ import
-      s2 = f.end_with?('.h') ? s.gsub(import, forward.map { |l| l + "\n" }.join) : s.gsub(import, '')
+      s2 = f.end_with?('.h') ? s.gsub(import, forward.map { |l| l + "\n" }.join.b) : s.gsub(import, '')
       File.write(f, s2)
       puts "  #{f}: #{f.end_with?('.h') ? (forward.empty? ? 'import dropped' : 'import -> ' + forward.join(' ')) : 'import dropped'}"
     end

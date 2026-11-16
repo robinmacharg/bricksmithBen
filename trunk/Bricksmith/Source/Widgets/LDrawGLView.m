@@ -29,7 +29,6 @@
 #import "LDrawColor.h"
 #import "LDrawDirective.h"
 #import "LDrawDocument.h"
-#import "LDrawDragHandle.h"
 #import "LDrawFile.h"
 #import "LDrawGLRenderer.h"
 #import "LDrawModel.h"

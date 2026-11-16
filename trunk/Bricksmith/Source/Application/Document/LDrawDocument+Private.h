@@ -22,11 +22,11 @@
 #import "LDrawApplication.h"
 #import "LDrawColor.h"
 #import "LDrawColorPanelController.h"
-#import "LDrawConditionalLine.h"
+@class LDrawConditionalLine;
 #import "LDrawContainer.h"
 #import "LDrawDirective.h"
 #import "LDrawDocumentWindow.h"
-#import "LDrawDragHandle.h"
+@class LDrawDragHandle;
 #import "LDrawDrawableElement.h"
 #import "LDrawFile.h"
 #import "LDrawFileOutlineView.h"
@@ -37,9 +37,9 @@
 #import "LDrawModel.h"
 #import "LDrawMPDModel.h"
 #import "LDrawPart.h"
-#import "LDrawQuadrilateral.h"
+@class LDrawQuadrilateral;
 #import "LDrawStep.h"
-#import "LDrawTriangle.h"
+@class LDrawTriangle;
 #import "LDrawUtilities.h"
 #import "LDrawViewerContainer.h"
 #import "LSynthConfiguration.h"
