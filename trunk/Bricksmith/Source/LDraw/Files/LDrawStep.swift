@@ -52,25 +52,18 @@ func ldrawDirective(at index: Int, in array: NSArray) -> LDrawDirective {
 
 //---------- LDrawDirectiveSends ---------------------------------------------
 //
-// Purpose:		The messages a container's per-child loops send, with the same
-//				selectors as LDrawDirective's but with `id` arguments typed
-//				AnyObject? rather than imported as Any!. Passing an Any! on
-//				copies and bridges the existential for every child; an
-//				AnyObject? goes through objc_msgSend as is, as in the ObjC.
-//				Nothing conforms: a child is reinterpreted as this protocol
-//				(withLDrawDirective(at:in:_:)), and every LDrawDirective
-//				implements these selectors.
+// Purpose:		The hit-test messages a container's per-child loops send, with
+//				the same selectors as LDrawDirective's but with the `id`
+//				credit object typed AnyObject? rather than Any!. Passing an
+//				Any! on builds an existential for every child; an AnyObject?
+//				goes through objc_msgSend as is, as in the ObjC. Nothing
+//				conforms: a child is reinterpreted as this protocol
+//				(withLDrawDirectiveSends(at:in:_:)), and every LDrawDirective
+//				implements these selectors. The other per-child messages are
+//				direct calls through LDrawDirective (withLDrawDirective).
 //
 //------------------------------------------------------------------------------
 @objc protocol LDrawDirectiveSends {
-	@objc(draw:viewScale:parentColor:)
-	func draw(_ optionsMask: UInt, viewScale scaleFactor: Float, parentColor: LDrawColor?)
-	@objc(drawSelf:)
-	func drawSelf(_ renderer: (any LDrawRenderer)?)
-	@objc(collectSelf:)
-	func collectSelf(_ renderer: (any LDrawCollector)?)
-	@objc(boundingBox3)
-	func boundingBox3() -> Box3
 	@objc(hitTest:transform:viewScale:boundsOnly:creditObject:hits:)
 	func hitTest(_ pickRay: Ray3, transform: Matrix4, viewScale scaleFactor: Float, boundsOnly: Bool,
 				 creditObject: AnyObject?, hits: NSMutableDictionary?)
@@ -84,16 +77,32 @@ func ldrawDirective(at index: Int, in array: NSArray) -> LDrawDirective {
 
 //---------- withLDrawDirective(at:in:_:) ------------------------------------
 //
-// Purpose:		Calls body with the child at index of a container's children,
-//				for sending it one of LDrawDirectiveSends. The child is read
-//				with CFArrayGetValueAtIndex and used unretained (the array
-//				holds it, as in the ObjC's fast enumeration), so a loop costs
-//				no retain/release and no cast per child. Out of range raises,
-//				as -objectAtIndex: did.
+// Purpose:		Calls body with the child at index of a container's children.
+//				The child is read with CFArrayGetValueAtIndex and used
+//				unretained (the array holds it, as in the ObjC's fast
+//				enumeration), so a loop costs no retain/release and no checked
+//				cast per child; LDrawDirective's methods are then called
+//				through the class (vtable dispatch: every subclass is Swift and
+//				overrides in its class body). Out of range raises, as
+//				-objectAtIndex: did.
 //
 //------------------------------------------------------------------------------
 @inline(__always)
-func withLDrawDirective<Result>(at index: Int, in array: NSArray, _ body: (LDrawDirectiveSends) -> Result) -> Result {
+func withLDrawDirective<Result>(at index: Int, in array: NSArray, _ body: (LDrawDirective) -> Result) -> Result {
+	withUnretainedChild(at: index, in: array) {
+		body(unsafeDowncast($0, to: LDrawDirective.self))
+	}
+}
+
+
+//---------- withLDrawDirectiveSends(at:in:_:) -------------------------------
+//
+// Purpose:		As withLDrawDirective(at:in:_:), for sending the child one of
+//				LDrawDirectiveSends.
+//
+//------------------------------------------------------------------------------
+@inline(__always)
+func withLDrawDirectiveSends<Result>(at index: Int, in array: NSArray, _ body: (LDrawDirectiveSends) -> Result) -> Result {
 	withUnretainedChild(at: index, in: array) {
 		body(unsafeBitCast($0, to: LDrawDirectiveSends.self))
 	}
@@ -551,7 +560,7 @@ final class LDrawStep: LDrawContainer {
 					case .triangle:			unsafeDowncast(child, to: LDrawTriangle.self).collectPrimitive(renderer)
 					case .quadrilateral:	unsafeDowncast(child, to: LDrawQuadrilateral.self).collectPrimitive(renderer)
 					case .line:				unsafeDowncast(child, to: LDrawLine.self).collectPrimitive(renderer)
-					case .other:			unsafeBitCast(child, to: LDrawDirectiveSends.self).collectSelf(renderer)
+					case .other:			unsafeDowncast(child, to: LDrawDirective.self).collectSelf(renderer)
 					}
 				}
 			}
@@ -576,7 +585,7 @@ final class LDrawStep: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0..<commandCount {
-			withLDrawDirective(at: counter, in: commandsInStep) { $0.hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }
+			withLDrawDirectiveSends(at: counter, in: commandsInStep) { $0.hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }
 		}
 
 	}//end hitTest:transform:viewScale:boundsOnly:creditObject:hits:

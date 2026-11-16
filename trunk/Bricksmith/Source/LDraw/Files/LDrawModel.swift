@@ -534,7 +534,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			withLDrawDirective(at: counter, in: output.steps) { $0.hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }
+			withLDrawDirectiveSends(at: counter, in: output.steps) { $0.hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }
 		}
 
 	}//end hitTest:transform:viewScale:boundsOnly:creditObject:hits:
@@ -562,7 +562,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			if withLDrawDirective(at: counter, in: output.steps, { $0.boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }) {
+			if withLDrawDirectiveSends(at: counter, in: output.steps, { $0.boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }) {
 				if creditObject != nil {
 					return true
 				}
@@ -597,7 +597,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			withLDrawDirective(at: counter, in: output.steps) { $0.depthTest(pt, inBox: bounds, transform: transform, creditObject: credit, bestObject: bestObject, bestDepth: bestDepth) }
+			withLDrawDirectiveSends(at: counter, in: output.steps) { $0.depthTest(pt, inBox: bounds, transform: transform, creditObject: credit, bestObject: bestObject, bestDepth: bestDepth) }
 		}
 
 	}//end depthTest:inBox:transform:creditObject:bestObject:bestDepth:
