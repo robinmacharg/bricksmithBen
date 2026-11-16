@@ -235,21 +235,10 @@ struct PreferenceColourCategoryTests {
 		#expect(returned.description == "not a colour")
 	}
 
-	@Test("A truncated NSArchiver blob raises NSArchiverArchiveInconsistency (current behaviour)")
-	func truncatedBlobRaises() throws {
-		let data = ArgumentPrefs.archivedColour(NSColor(calibratedRed: 1, green: 0.5, blue: 0, alpha: 1)).prefix(20)
-		do {
-			_ = try read(Data(data))
-			Issue.record("expected an Objective-C exception")
-		} catch let error as ObjCException {
-			#expect(error.name == "NSArchiverArchiveInconsistency", "\(error)")
-		}
-	}
-
-	@Test("BUG-035: a truncated colour blob should read as nil instead of raising")
+	@Test("BUG-035 (fixed in P5): a truncated or corrupt colour blob reads as nil instead of raising")
 	func bug035TruncatedBlobShouldReadNil() throws {
-		let data = Data(ArgumentPrefs.archivedColour(NSColor.red).prefix(20))
-		withKnownIssue("BUG-035: colorForKey: raises NSArchiverArchiveInconsistency on a truncated archive") {
+		for data in [Data(ArgumentPrefs.archivedColour(NSColor.red).prefix(20)),
+					 Data(ArgumentPrefs.archivedColour(NSColor(calibratedRed: 1, green: 0.5, blue: 0, alpha: 1)).prefix(20))] {
 			let colour = try read(data)
 			#expect(colour == nil)
 		}

@@ -44,8 +44,9 @@ extension UserDefaults {
 	//
 	// Notes:		nil if absent or not a non-keyed NSArchiver blob (BUG-002).
 	//				Whatever object the archive holds is returned unchecked, as
-	//				the ObjC cast did. A truncated archive still raises
-	//				NSArchiverArchiveInconsistency (BUG-035).
+	//				the ObjC cast did. A truncated or corrupt archive reads as nil:
+	//				BricksmithUnarchiveObject() catches NSUnarchiver's exception in
+	//				ObjC (BUG-035, fixed in P5 by maintainer decision).
 	//
 	//==========================================================================
 	@objc(colorForKey:)
@@ -56,7 +57,7 @@ extension UserDefaults {
 		let theData = self.data(forKey: aKey)
 
 		if let theData {
-			if let object = NSUnarchiver.unarchiveObject(with: theData) {
+			if let object = BricksmithUnarchiveObject(theData) {
 				// Unchecked, like (NSColor *) in ObjC: a checked cast would turn a
 				// non-colour object into nil.
 				theColor = unsafeBitCast(object as AnyObject, to: NSColor.self)

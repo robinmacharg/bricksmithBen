@@ -72,6 +72,7 @@
 #import "LDrawColorWell.h"
 #import "LDrawColorBar.h"
 #import "BackgroundColorView.h"
+#import "ArchiveSupport.h"	// ObjC-only exception catching for Swift callers (P5, BUG-035)
 #import "OverlayHelperView.h"	// for OverlayViewCategory.swift (P5)
 
 // --- Test support (group 3) ---

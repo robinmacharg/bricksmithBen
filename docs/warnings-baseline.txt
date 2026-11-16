@@ -49,7 +49,6 @@ trunk/Bricksmith/Source/Application/Inspector/InspectionPart.m: warning: implici
 trunk/Bricksmith/Source/Application/Inspector/InspectionStep.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LDrawStepRotationT' (aka 'enum LDrawStepRotationT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/Application/Inspector/InspectionStep.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'ViewOrientationT' (aka 'enum ViewOrientationT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/Categories/UserDefaultsCategory.swift: warning: 'NSArchiver' was deprecated in macOS 10.13: Use NSKeyedArchiver instead
-trunk/Bricksmith/Source/Categories/UserDefaultsCategory.swift: warning: 'NSUnarchiver' was deprecated in macOS 10.13: Use NSKeyedUnarchiver instead
 trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LSynthClassT' (aka 'enum LSynthClassT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LSynthSelectionModeT' [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'int' [-Wshorten-64-to-32]
@@ -63,6 +62,7 @@ trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: variable 'total_be
 trunk/Bricksmith/Source/LDraw/Support/ComputationalGeometry.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'int' [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Support/LDrawDragHandle.m: warning: performSelector may cause a leak because its selector is unknown [-Warc-performSelector-leaks]
 trunk/Bricksmith/Source/LDraw/Support/LDrawGLRenderer.m: warning: variable 'options' set but not used [-Wunused-but-set-variable]
+trunk/Bricksmith/Source/Other/ArchiveSupport.m: warning: 'NSUnarchiver' is deprecated: first deprecated in macOS 10.13 - Use NSKeyedUnarchiver instead [-Wdeprecated-declarations]
 trunk/Bricksmith/Source/Widgets/LDrawDocumentWindow.m: warning: 'NSDisableScreenUpdates' is deprecated: first deprecated in macOS 10.11 - As of 10.11 it is not generally necessary to take explicit action to achieve visual atomicity. +[NSAnimationContext runAnimationGroup:] and other similar methods can be used when a stronger than normal need for visual atomicity is required. The NSAnimationContext methods do not suffer from the same performance problems as NSDisableScreenUpdates. [-Wdeprecated-declarations]
 trunk/Bricksmith/Source/Widgets/LDrawGLView.m: warning: 'NSDragPboard' is deprecated: first deprecated in macOS 10.13 [-Wdeprecated-declarations]
 trunk/Bricksmith/Source/Widgets/LDrawGLView.m: warning: 'colorUsingColorSpaceName:' is deprecated: first deprecated in macOS 10.14 - Use -colorUsingType: or -colorUsingColorSpace: instead [-Wdeprecated-declarations]
