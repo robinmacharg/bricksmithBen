@@ -172,7 +172,7 @@ sign-off here:
 | `Bricksmith/Source/Application/Inspector/Inspector.m` | 268 | MRC | P9 | todo |
 | `Bricksmith/Source/Application/Inspector/ObjectInspectionController.m` | 261 | ARC | P9 | todo |
 | `Bricksmith/Source/Categories/BezierPathCategory.m` | 77 | ARC | P5 | **Swift** (`BezierPathCategory.swift`) |
-| `Bricksmith/Source/Categories/OverlayViewCategory.m` | 113 | ARC | P5 | todo |
+| `Bricksmith/Source/Categories/OverlayViewCategory.m` | 113 | ARC | P5 | **Swift** (`OverlayViewCategory.swift`; hooks declared in `OverlayHelperWindow.m`) |
 | `Bricksmith/Source/Categories/StringCategory.m` | 163 | ARC | P5 | **Swift** (`StringCategory.swift`) |
 | `Bricksmith/Source/Categories/TableViewCategory.m` | 42 | ARC | P5 | **Swift** (`TableViewCategory.swift`) |
 | `Bricksmith/Source/Categories/UserDefaultsCategory.m` | 48 | ARC | P5 | todo |

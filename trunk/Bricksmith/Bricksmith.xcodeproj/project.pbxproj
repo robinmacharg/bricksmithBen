@@ -64,7 +64,6 @@
 		0B356AF008D385B900695EEB /* PieceCountPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B356AEE08D385B900695EEB /* PieceCountPanel.m */; };
 		0B356AF108D385B900695EEB /* PieceCountPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B356AEF08D385B900695EEB /* PieceCountPanel.h */; };
 		0B3B76AC13DB86AE007CCC5D /* LDrawGLRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B3B76AA13DB86AE007CCC5D /* LDrawGLRenderer.h */; };
-		0B3E7BA010AF9E5A00AFBCF4 /* OverlayViewCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B3E7B9F10AF9E5A00AFBCF4 /* OverlayViewCategory.m */; };
 		0B491DA407F5555B00AC0C10 /* MatrixMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B491DA207F5555B00AC0C10 /* MatrixMath.h */; };
 		0B491DA507F5555B00AC0C10 /* MatrixMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 0B491DA307F5555B00AC0C10 /* MatrixMath.c */; };
 		0B491FF707F64B5800AC0C10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B491FF607F64B5800AC0C10 /* OpenGL.framework */; };
@@ -97,7 +96,6 @@
 		0B8C096910BA532F00BEB111 /* OverlayHelperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C096710BA532F00BEB111 /* OverlayHelperView.m */; };
 		0B8C097310BA550500BEB111 /* OverlayHelperWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8C097110BA550500BEB111 /* OverlayHelperWindow.h */; };
 		0B8C097410BA550500BEB111 /* OverlayHelperWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C097210BA550500BEB111 /* OverlayHelperWindow.m */; };
-		0B8C0A2610BA623700BEB111 /* OverlayViewCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8C0A2510BA623700BEB111 /* OverlayViewCategory.h */; };
 		0B8EBE51093C0FAD00D87E0C /* InspectionComment.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE3D093C0FAC00D87E0C /* InspectionComment.h */; };
 		0B8EBE52093C0FAD00D87E0C /* InspectionComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE3E093C0FAC00D87E0C /* InspectionComment.m */; };
 		0B8EBE53093C0FAD00D87E0C /* InspectionConditionalLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE3F093C0FAC00D87E0C /* InspectionConditionalLine.h */; };
@@ -427,7 +425,6 @@
 		0B356AEF08D385B900695EEB /* PieceCountPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PieceCountPanel.h; sourceTree = "<group>"; };
 		0B3B76AA13DB86AE007CCC5D /* LDrawGLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawGLRenderer.h; sourceTree = "<group>"; };
 		0B3B76AB13DB86AE007CCC5D /* LDrawGLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawGLRenderer.m; sourceTree = "<group>"; };
-		0B3E7B9F10AF9E5A00AFBCF4 /* OverlayViewCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewCategory.m; sourceTree = "<group>"; };
 		0B491DA207F5555B00AC0C10 /* MatrixMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixMath.h; sourceTree = "<group>"; };
 		0B491DA307F5555B00AC0C10 /* MatrixMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatrixMath.c; sourceTree = "<group>"; };
 		0B491FF607F64B5800AC0C10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -470,7 +467,6 @@
 		0B8C096710BA532F00BEB111 /* OverlayHelperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayHelperView.m; sourceTree = "<group>"; };
 		0B8C097110BA550500BEB111 /* OverlayHelperWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayHelperWindow.h; sourceTree = "<group>"; };
 		0B8C097210BA550500BEB111 /* OverlayHelperWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayHelperWindow.m; sourceTree = "<group>"; };
-		0B8C0A2510BA623700BEB111 /* OverlayViewCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewCategory.h; sourceTree = "<group>"; };
 		0B8EBE3D093C0FAC00D87E0C /* InspectionComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectionComment.h; sourceTree = "<group>"; };
 		0B8EBE3E093C0FAC00D87E0C /* InspectionComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InspectionComment.m; sourceTree = "<group>"; };
 		0B8EBE3F093C0FAC00D87E0C /* InspectionConditionalLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectionConditionalLine.h; sourceTree = "<group>"; };
@@ -841,8 +837,6 @@
 		0B6F38FD07C84E79007B1075 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				0B8C0A2510BA623700BEB111 /* OverlayViewCategory.h */,
-				0B3E7B9F10AF9E5A00AFBCF4 /* OverlayViewCategory.m */,
 				0B8EBE9A093C102E00D87E0C /* UserDefaultsCategory.h */,
 				0B8EBE9B093C102E00D87E0C /* UserDefaultsCategory.m */,
 				D2694B38A7FA3EA5B394849C /* StringCategory.swift */,
@@ -1331,7 +1325,6 @@
 				0B04EF3710A6A38E00E201EE /* FocusRingView.h in Headers */,
 				0B8C096810BA532F00BEB111 /* OverlayHelperView.h in Headers */,
 				0B8C097310BA550500BEB111 /* OverlayHelperWindow.h in Headers */,
-				0B8C0A2610BA623700BEB111 /* OverlayViewCategory.h in Headers */,
 				0BE84A1F1300F91F004E7626 /* BricksmithUtilities.h in Headers */,
 				0B1DA5A813172DA700E14960 /* LDrawDirective.h in Headers */,
 				0B1DA5AA13172DA700E14960 /* LDrawUtilities.h in Headers */,
@@ -1648,7 +1641,6 @@
 				0B2FAE3010196F8C007BA948 /* BackgroundColorView.m in Sources */,
 				0BFC4CFE1076F61900293B60 /* ViewportArranger.m in Sources */,
 				0B04EF3810A6A38E00E201EE /* FocusRingView.m in Sources */,
-				0B3E7BA010AF9E5A00AFBCF4 /* OverlayViewCategory.m in Sources */,
 				0B8C096910BA532F00BEB111 /* OverlayHelperView.m in Sources */,
 				0B8C097410BA550500BEB111 /* OverlayHelperWindow.m in Sources */,
 				0B1DA5A913172DA700E14960 /* LDrawDirective.m in Sources */,
