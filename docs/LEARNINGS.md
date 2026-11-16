@@ -448,8 +448,8 @@ topics that match your task rather than the whole log.
   - An exception a Swift port would let through (NSUnarchiver on bad data) needs an ObjC shim that catches it
     (`ArchiveSupport.m`): rule 3. Converting the raise into a value is a behaviour change: maintainer decision.
 - **L99. Parallel ports without project-file conflicts (P5):** commit an empty placeholder `X.swift` for every class
-  first (`scripts/dev/p5-placeholders.rb`); each agent fills its file and empties the old `.h`/`.m` to a one-line
+  first (`scripts/dev/port-placeholders.rb`, then named `p5-placeholders.rb`); each agent fills its file and empties the old `.h`/`.m` to a one-line
   "Ported to" stub; the integrator then deletes the stubs, their project refs and bridging-header lines in one edit
-  (`scripts/dev/p5-remove-ported.rb`, which refuses anything but a stub). Agents never touch `project.pbxproj` or the
+  (`scripts/dev/port-remove-stubs.rb`, then `p5-remove-ported.rb`, which refuses anything but a stub). Agents never touch `project.pbxproj` or the
   bridging header. Remaining conflicts were only adjacent `#import` lines and parallel KNOWN-BUGS numbers (renumber
   at integration).

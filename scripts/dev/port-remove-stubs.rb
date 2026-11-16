@@ -1,5 +1,5 @@
 # Remove emptied (ported) ObjC files from the Bricksmith project, delete them from disk, and drop their
-# bridging-header imports. Usage (from trunk/Bricksmith): bundle exec ruby ../../scripts/dev/p5-remove-ported.rb X.h X.m ...
+# bridging-header imports. Usage (from trunk/Bricksmith): bundle exec ruby ../../scripts/dev/port-remove-stubs.rb X.h X.m ...
 # Refuses a file that isn't a one-line "Ported to ..." stub. Idempotent (L12).
 require 'xcodeproj'
 names = ARGV
