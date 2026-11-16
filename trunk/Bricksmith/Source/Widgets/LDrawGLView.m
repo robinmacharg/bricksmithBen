@@ -68,6 +68,15 @@ static Box2 NSRectToBox2(NSRect rect)
 }
 
 
+@interface LDrawGLView ()
+{
+	// The accessories nib's top-level objects (the contextual menu, also held as the view's menu).
+	// -loadNibNamed:owner:topLevelObjects: doesn't retain them, so this keeps them for the view's lifetime.
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation LDrawGLView
 
 #pragma mark -
@@ -107,7 +116,9 @@ static Box2 NSRectToBox2(NSRect rect)
 	//---------- Load UI -------------------------------------------------------
 	
 	// Yes, we have a nib file. Don't laugh. This view has accessories.
-	[NSBundle loadNibNamed:@"LDrawGLViewAccessories" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"LDrawGLViewAccessories" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	self->focusRingView = [[FocusRingView alloc] initWithFrame:[self bounds]];
 	[focusRingView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
