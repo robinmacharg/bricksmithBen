@@ -81,7 +81,7 @@ final class LDrawQuadrilateral: LDrawDrawableElement {
 	//
 	//==========================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init?(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init?(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		var workingLine: NSString?	= lines[range.location] as? NSString
 		var parsedField: NSString?	= nil
 
@@ -120,7 +120,7 @@ final class LDrawQuadrilateral: LDrawDrawableElement {
 	//
 	//==========================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init?(lines: [Any]!, in range: NSRange) {
+	override convenience init?(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 	}
 

@@ -159,7 +159,7 @@ final class LDrawFile: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init!(lines: [Any]!, in range: NSRange) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 	}
 
@@ -171,7 +171,7 @@ final class LDrawFile: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		super.init(lines: lines, in: range, parentGroup: parentGroup)
 
 		let maxIndex					= UInt(bitPattern: NSMaxRange(range) &- 1)

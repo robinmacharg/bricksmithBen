@@ -172,7 +172,7 @@ enum P6a {
 	static func p(_ v: Point3) -> String { "(\(RecordingRenderer.fmt(v.x)), \(RecordingRenderer.fmt(v.y)), \(RecordingRenderer.fmt(v.z)))" }
 
 	static func line<T: LDrawDirective>(_ type: T.Type, _ text: String) -> T? {
-		T(lines: [text], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		T(lines: ldrawLines([text]), in: NSRange(location: 0, length: 1), parentGroup: nil)
 	}
 
 	/// The objects registered in a hit dictionary or set (keys are NSValue-wrapped pointers).
@@ -312,11 +312,11 @@ struct P6aGeometryPinTests {
 		#expect(P6a.line(LDrawTriangle.self, "4 16 0 0 0 1 0 0 1 1 0 0 1 0") == nil)
 		#expect(P6a.line(LDrawQuadrilateral.self, P6a.tri) == nil)
 		#expect(P6a.line(LDrawConditionalLine.self, "2 24 0 0 0 1 0 0") == nil)
-		let tri = try #require(LDrawTriangle(lines: ["0 // skipped", "3 4 1 2 3 4 5 6 7 8 9"], in: NSRange(location: 1, length: 1), parentGroup: nil))
+		let tri = try #require(LDrawTriangle(lines: ldrawLines(["0 // skipped", "3 4 1 2 3 4 5 6 7 8 9"]), in: NSRange(location: 1, length: 1), parentGroup: nil))
 		#expect(Prim.write(tri) == "3 4 1 2 3 4 5 6 7 8 9")
-		let quad = try #require(LDrawQuadrilateral(lines: ["0 // skipped", P6a.quad], in: NSRange(location: 1, length: 1), parentGroup: nil))
+		let quad = try #require(LDrawQuadrilateral(lines: ldrawLines(["0 // skipped", P6a.quad]), in: NSRange(location: 1, length: 1), parentGroup: nil))
 		#expect(Prim.write(quad) == P6a.quad)
-		let cond = try #require(LDrawConditionalLine(lines: ["0 // skipped", "5 24 1 2 3 4 5 6 7 8 9 10 11 12"], in: NSRange(location: 1, length: 1), parentGroup: nil))
+		let cond = try #require(LDrawConditionalLine(lines: ldrawLines(["0 // skipped", "5 24 1 2 3 4 5 6 7 8 9 10 11 12"]), in: NSRange(location: 1, length: 1), parentGroup: nil))
 		#expect(Prim.write(cond) == "5 24 1 2 3 4 5 6 7 8 9 10 11 12")
 		#expect(P6a.p(cond.conditionalVertex1()) == "(7, 8, 9)")
 		#expect(P6a.p(cond.conditionalVertex2()) == "(10, 11, 12)")
@@ -496,15 +496,15 @@ struct P6bLinePinTests {
 	@Test("Parsing: wrong line type gives nil through both parse inits; the parse reads the line at range.location")
 	func parse() throws {
 		#expect(P6a.line(LDrawLine.self, "3 16 0 0 0 1 0 0 0 1 0") == nil)
-		#expect(LDrawLine(lines: ["5 24 0 0 0 1 0 0 0 1 0 0 -1 0"], in: NSRange(location: 0, length: 1)) == nil)
-		#expect(LDrawConditionalLine(lines: ["2 24 0 0 0 1 0 0"], in: NSRange(location: 0, length: 1)) == nil)
+		#expect(LDrawLine(lines: ldrawLines(["5 24 0 0 0 1 0 0 0 1 0 0 -1 0"]), in: NSRange(location: 0, length: 1)) == nil)
+		#expect(LDrawConditionalLine(lines: ldrawLines(["2 24 0 0 0 1 0 0"]), in: NSRange(location: 0, length: 1)) == nil)
 		// No lines at all: nil (the ObjC messaged nil and logged the failure).
 		#expect(LDrawLine(lines: nil, in: NSRange(location: 0, length: 1), parentGroup: nil) == nil)
-		let line = try #require(LDrawLine(lines: ["0 // skipped", "2 4 1 2 3 4 5 6"], in: NSRange(location: 1, length: 1), parentGroup: nil))
+		let line = try #require(LDrawLine(lines: ldrawLines(["0 // skipped", "2 4 1 2 3 4 5 6"]), in: NSRange(location: 1, length: 1), parentGroup: nil))
 		#expect(Prim.write(line) == "2 4 1 2 3 4 5 6")
-		let viaShort = try #require(LDrawLine(lines: ["0 // skipped", "2 4 1 2 3 4 5 6"], in: NSRange(location: 1, length: 1)))
+		let viaShort = try #require(LDrawLine(lines: ldrawLines(["0 // skipped", "2 4 1 2 3 4 5 6"]), in: NSRange(location: 1, length: 1)))
 		#expect(type(of: viaShort) == LDrawLine.self && Prim.write(viaShort) == "2 4 1 2 3 4 5 6")
-		let cond = try #require(LDrawConditionalLine(lines: ["5 24 1 2 3 4 5 6 7 8 9 10 11 12"], in: NSRange(location: 0, length: 1)))
+		let cond = try #require(LDrawConditionalLine(lines: ldrawLines(["5 24 1 2 3 4 5 6 7 8 9 10 11 12"]), in: NSRange(location: 0, length: 1)))
 		#expect(type(of: cond) == LDrawConditionalLine.self && Prim.write(cond) == "5 24 1 2 3 4 5 6 7 8 9 10 11 12")
 		// Missing fields read as 0; extra fields are ignored.
 		#expect(Prim.write(try #require(P6a.line(LDrawLine.self, "2 4 1 2"))) == "2 4 1 2 0 0 0 0")

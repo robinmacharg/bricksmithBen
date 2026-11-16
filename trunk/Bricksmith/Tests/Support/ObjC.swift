@@ -26,3 +26,7 @@ enum ObjC {
 		return result!
 	}
 }
+
+/// The LDraw parse API takes its lines as `[NSObject]` (`NSArray<NSObject *> *`), which crosses between Swift
+/// and ObjC without copying; `[Any]` was converted in full at every crossing. Swift strings need wrapping.
+func ldrawLines(_ lines: [String]) -> [NSObject] { lines.map { $0 as NSString } }

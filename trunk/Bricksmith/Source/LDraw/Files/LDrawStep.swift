@@ -158,7 +158,7 @@ final class LDrawStep: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init!(lines: [Any]!, in range: NSRange) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 	}
 
@@ -171,7 +171,7 @@ final class LDrawStep: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		let rangeLocation						= UInt(bitPattern: range.location)
 		var rangeLength							= UInt(bitPattern: range.length)
 		var lineIndex: UInt						= 0
@@ -346,7 +346,7 @@ final class LDrawStep: LDrawContainer {
 	//
 	//------------------------------------------------------------------------------
 	@objc(rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:)
-	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [Any]!, maxIndex: UInt) -> NSRange {
+	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [NSObject]!, maxIndex: UInt) -> NSRange {
 		let lineArray			= lines as NSArray?
 		let testLength: UInt	= maxIndex &- index &+ 1
 		let testMax: UInt		= index &+ testLength	// NSMaxRange(testRange)

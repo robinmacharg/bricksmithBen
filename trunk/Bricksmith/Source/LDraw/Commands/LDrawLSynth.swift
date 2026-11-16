@@ -183,7 +183,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init!(lines: [Any]!, in range: NSRange) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 
 	}//end initWithLines:inRange:
@@ -216,7 +216,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		var parserState: LSynthParserStateT	= .PARSER_READY_TO_PARSE
 		// NSRange's fields are NSUInteger in ObjC: unsigned, wrapping arithmetic.
 		var lineIndex: UInt					= UInt(bitPattern: range.location)
@@ -403,7 +403,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 	//
 	//------------------------------------------------------------------------------
 	@objc(rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:)
-	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [Any]!, maxIndex: UInt) -> NSRange {
+	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [NSObject]!, maxIndex: UInt) -> NSRange {
 		let lineArray			= lines as NSArray?
 		var counter: UInt		= 0
 		let testMax: UInt		= index &+ (maxIndex &- index &+ 1)	// NSMaxRange(testRange)
@@ -1240,7 +1240,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 			if extract == true && partRange.length > 0 && partRange.location == 0 {
 				// (A Nil class, for an unknown line type such as "10", answered a nil directive.)
 				let CommandClass = LDrawUtilities.classForDirectiveBeginning(withLine: line) as? LDrawDirective.Type
-				let newDirective = CommandClass?.directive(lines: [line],
+				let newDirective = CommandClass?.directive(lines: [nsLine],
 														   in: NSMakeRange(0, 1),
 														   parentGroup: nil)
 				// P6b: ObjC raised here (-addObject:nil: an output line that didn't

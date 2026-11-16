@@ -353,7 +353,7 @@ struct TextureCoverageTests {
 		weak var weakChild: LDrawDirective?
 		try autoreleasepool {
 			let lines = [Tex.start, "0 !: \(Tex.triA)", "0 !TEXMAP END"]
-			let texture = try #require(try ObjC.run { LDrawTexture(lines: lines, in: NSRange(location: 0, length: 3), parentGroup: nil) })
+			let texture = try #require(try ObjC.run { LDrawTexture(lines: ldrawLines(lines), in: NSRange(location: 0, length: 3), parentGroup: nil) })
 			#expect(Tex.children(texture).count == 1)
 			weakTexture = texture
 			weakChild = Tex.children(texture).first as? LDrawDirective
@@ -382,7 +382,7 @@ extension Tex {
 enum Meta {
 	/// One line through +[LDrawMetaCommand directiveWithLines:inRange:parentGroup:].
 	static func make(_ line: String) -> LDrawDirective? {
-		LDrawMetaCommand.directive(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		LDrawMetaCommand.directive(lines: ldrawLines([line]), in: NSRange(location: 0, length: 1), parentGroup: nil)
 	}
 
 	/// Class, stringValue and written form, with every non-ASCII scalar escaped.
@@ -469,12 +469,12 @@ struct MetaCommandTests {
 	@Test("The range picks the line; a subclass receiver still makes generic commands of its own class")
 	func rangeAndReceiver() throws {
 		let lines = ["0 FIRST", "0 SECOND", "0 // third"]
-		let second = LDrawMetaCommand.directive(lines: lines, in: NSRange(location: 1, length: 1), parentGroup: nil)
+		let second = LDrawMetaCommand.directive(lines: ldrawLines(lines), in: NSRange(location: 1, length: 1), parentGroup: nil)
 		#expect(Meta.describe(second) == "LDrawMetaCommand value=[SECOND] write=[0 SECOND]")
-		let third = LDrawMetaCommand.directive(lines: lines, in: NSRange(location: 2, length: 1), parentGroup: nil)
+		let third = LDrawMetaCommand.directive(lines: ldrawLines(lines), in: NSRange(location: 2, length: 1), parentGroup: nil)
 		#expect(Meta.describe(third) == "LDrawComment value=[third] write=[0 // third]")
 		// +directiveWithLines: allocates [self alloc] for an unrecognised command.
-		let viaComment = LDrawComment.directive(lines: ["0 NOT A COMMENT"], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		let viaComment = LDrawComment.directive(lines: ldrawLines(["0 NOT A COMMENT"]), in: NSRange(location: 0, length: 1), parentGroup: nil)
 		#expect(Meta.describe(viaComment) == "LDrawComment value=[NOT A COMMENT] write=[0 // NOT A COMMENT]")
 	}
 
@@ -494,8 +494,8 @@ struct MetaCommandTests {
 		// Drawing does nothing (and doesn't need GL).
 		command.draw(0, viewScale: 1, parentColor: nil)
 		// The other init paths keep the empty string; no lines gives nil.
-		#expect((LDrawMetaCommand(lines: ["0 IGNORED"], in: NSRange(location: 0, length: 1)) as LDrawMetaCommand?)?.stringValue() == "")
-		#expect((LDrawMetaCommand(lines: ["0 IGNORED"], in: NSRange(location: 0, length: 1), parentGroup: nil) as LDrawMetaCommand?)?.stringValue() == "")
+		#expect((LDrawMetaCommand(lines: ldrawLines(["0 IGNORED"]), in: NSRange(location: 0, length: 1)) as LDrawMetaCommand?)?.stringValue() == "")
+		#expect((LDrawMetaCommand(lines: ldrawLines(["0 IGNORED"]), in: NSRange(location: 0, length: 1), parentGroup: nil) as LDrawMetaCommand?)?.stringValue() == "")
 		#expect((LDrawMetaCommand(lines: [], in: NSRange(location: 0, length: 0), parentGroup: nil) as LDrawMetaCommand?) == nil)
 	}
 
@@ -585,7 +585,7 @@ struct TexturePortTests {
 	]
 
 	static func texture(_ lines: [String] = full) throws -> LDrawTexture {
-		try #require(try ObjC.run { LDrawTexture(lines: lines, in: NSRange(location: 0, length: lines.count), parentGroup: nil) })
+		try #require(try ObjC.run { LDrawTexture(lines: ldrawLines(lines), in: NSRange(location: 0, length: lines.count), parentGroup: nil) })
 	}
 
 	@Test("A new texture: zero plane points and bounds, nil names, written form")
@@ -756,7 +756,7 @@ struct TexturePortTests {
 			(["0 // not a texture", tri], 0, 1, NSRange(location: 0, length: 0)),
 		]
 		for (lines, index, maxIndex, expected) in cases {
-			let range = LDrawTexture.rangeOfDirectiveBeginning(at: UInt(index), inLines: lines, maxIndex: UInt(maxIndex))
+			let range = LDrawTexture.rangeOfDirectiveBeginning(at: UInt(index), inLines: ldrawLines(lines), maxIndex: UInt(maxIndex))
 			#expect(range == expected, "\(lines) from \(index) to \(maxIndex): \(range)")
 		}
 	}

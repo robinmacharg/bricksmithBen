@@ -63,7 +63,7 @@
 //				an instance of the class they were sent to. 
 //
 //------------------------------------------------------------------------------
-+ (LDrawDirective *) directiveWithLines:(NSArray *)lines
++ (LDrawDirective *) directiveWithLines:(NSArray<NSObject *> *)lines
 								inRange:(NSRange)range
 							parentGroup:(dispatch_group_t)parentGroup
 {
@@ -77,7 +77,7 @@
 // Purpose:		Convenience method to perform a blocking parse operation
 //
 //==============================================================================
-- (id) initWithLines:(NSArray *)lines
+- (id) initWithLines:(NSArray<NSObject *> *)lines
 			 inRange:(NSRange)range
 {
 	LDrawDirective      *directive  = nil;
@@ -109,7 +109,7 @@
 //				// Then initialize whatever subclass we came up with for this line.
 //
 //==============================================================================
-- (id) initWithLines:(NSArray *)lines
+- (id) initWithLines:(NSArray<NSObject *> *)lines
 			 inRange:(NSRange)range
 		 parentGroup:(dispatch_group_t)parentGroup
 {
@@ -213,7 +213,7 @@
 //
 //------------------------------------------------------------------------------
 + (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index
-									 inLines:(NSArray *)lines
+									 inLines:(NSArray<NSObject *> *)lines
 									maxIndex:(NSUInteger)maxIndex
 {
 	// Most LDraw directives are only one line. For those that aren't the 

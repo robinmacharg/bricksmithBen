@@ -148,7 +148,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 	//
 	//==========================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init?(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init?(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		// No lines: the ObjC messaged nil all the way to its "not a type-1 line"
 		// failure.
 		guard let lines else {
@@ -243,7 +243,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 	//
 	//==========================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init?(lines: [Any]!, in range: NSRange) {
+	override convenience init?(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 	}
 

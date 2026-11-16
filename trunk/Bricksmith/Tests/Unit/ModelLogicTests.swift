@@ -389,11 +389,11 @@ struct ContainerPinTests {
 	static let cond = "5 24 0 0 0 10 0 0 0 5 0 0 -5 0"
 
 	private func step(_ lines: [String]) -> LDrawStep? {
-		LDrawStep(lines: lines, in: NSRange(location: 0, length: lines.count))
+		LDrawStep(lines: ldrawLines(lines), in: NSRange(location: 0, length: lines.count))
 	}
 
 	private func model(_ lines: [String], _ range: NSRange? = nil) -> LDrawModel? {
-		LDrawModel(lines: lines, in: range ?? NSRange(location: 0, length: lines.count))
+		LDrawModel(lines: ldrawLines(lines), in: range ?? NSRange(location: 0, length: lines.count))
 	}
 
 	private func box(_ b: Box3) -> String { "\(ModelLogic.t(b.min))-\(ModelLogic.t(b.max))" }
@@ -437,7 +437,7 @@ struct ContainerPinTests {
 	func stepRange() {
 		let lines = [Self.line, "0 STEP", Self.tri, "0 ROTSTEP END", Self.quad]
 		func r(_ at: UInt, _ max: UInt) -> String {
-			let range = LDrawStep.rangeOfDirectiveBeginning(at: at, inLines: lines, maxIndex: max)
+			let range = LDrawStep.rangeOfDirectiveBeginning(at: at, inLines: ldrawLines(lines), maxIndex: max)
 			return "\(range.location),\(range.length)"
 		}
 		#expect(r(0, 4) == "0,2")
@@ -512,7 +512,7 @@ struct ContainerPinTests {
 
 		#expect(step([Self.line, "0 ROTSTEP 1 2"]) == nil)
 		#expect(step([Self.line, "0 ROTSTEP 1 2 3 SIDEWAYS"]) == nil)
-		let empty = try #require(LDrawStep(lines: [Self.line], in: NSRange(location: 1, length: 0)))
+		let empty = try #require(LDrawStep(lines: ldrawLines([Self.line]), in: NSRange(location: 1, length: 0)))
 		#expect(children(empty).isEmpty)
 	}
 
@@ -748,10 +748,10 @@ struct ContainerPinTests {
 	@Test("parseHeaderFromLines: and line:isValidForHeader:info:")
 	func headerHelpers() {
 		let m = LDrawModel()
-		#expect(m.parseHeader(fromLines: ["0 D", "0 Name: n"], beginningAt: 2) == 2)
-		#expect(m.parseHeader(fromLines: ["x", "0 D", "0 Name: n", "0 Author: a", "0 Author: b", "0 x"], beginningAt: 1) == 5)
+		#expect(m.parseHeader(fromLines: ldrawLines(["0 D", "0 Name: n"]), beginningAt: 2) == 2)
+		#expect(m.parseHeader(fromLines: ldrawLines(["x", "0 D", "0 Name: n", "0 Author: a", "0 Author: b", "0 x"]), beginningAt: 1) == 5)
 		#expect(m.author() == "b")
-		#expect(m.parseHeader(fromLines: [Self.line], beginningAt: 0) == 0)
+		#expect(m.parseHeader(fromLines: ldrawLines([Self.line]), beginningAt: 0) == 0)
 
 		var info: NSString? = "unset"
 		#expect(m.line("0 Name:  foo bar \t", isValidForHeader: "Name:", info: &info))

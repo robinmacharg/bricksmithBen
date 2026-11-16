@@ -194,13 +194,13 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invo
 +(null_unspecified NSString *)defaultIconName;
 
 // Initialization
-- (null_unspecified id) initWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range;
-- (null_unspecified id) initWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup;
+- (null_unspecified id) initWithLines:(null_unspecified NSArray<NSObject *> *)lines inRange:(NSRange)range;
+- (null_unspecified id) initWithLines:(null_unspecified NSArray<NSObject *> *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup;
 // Parses lines into a directive of the receiving class, or of whatever class the lines call for
 // (LDrawMetaCommand returns LDrawComment, LDrawColor, ...). Use this, not -initWithLines:..., when the
 // class comes from +[LDrawUtilities classForDirectiveBeginningWithLine:].
-+ (nullable LDrawDirective *) directiveWithLines:(null_unspecified NSArray *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup NS_SWIFT_NAME(directive(lines:in:parentGroup:));
-+ (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index inLines:(null_unspecified NSArray *)lines maxIndex:(NSUInteger)maxIndex;
++ (nullable LDrawDirective *) directiveWithLines:(null_unspecified NSArray<NSObject *> *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup NS_SWIFT_NAME(directive(lines:in:parentGroup:));
++ (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index inLines:(null_unspecified NSArray<NSObject *> *)lines maxIndex:(NSUInteger)maxIndex;
 
 // Directives
 - (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(null_unspecified LDrawColor *)parentColor;

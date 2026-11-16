@@ -76,7 +76,7 @@ class LDrawLine: LDrawDrawableElement {
 	//
 	//==========================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init?(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init?(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		// No lines: the ObjC messaged nil all the way to its failure branch.
 		guard let lines else {
 			NSLog("the line primitive %@ was fatally invalid", "(null)")
@@ -129,7 +129,7 @@ class LDrawLine: LDrawDrawableElement {
 	//
 	//==========================================================================
 	@objc(initWithLines:inRange:)
-	override init?(lines: [Any]!, in range: NSRange) {
+	override init?(lines: [NSObject]!, in range: NSRange) {
 		super.init(lines: lines, in: range)
 	}
 

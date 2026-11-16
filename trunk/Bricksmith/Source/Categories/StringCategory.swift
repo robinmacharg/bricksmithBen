@@ -80,7 +80,7 @@ extension NSString {
 	//
 	//==========================================================================
 	@objc(separateByLine)
-	func separateByLine() -> [Any]! {
+	func separateByLine() -> [NSObject]! {
 		let lines               = NSMutableArray()
 		let stringLength        = self.length
 
@@ -101,7 +101,9 @@ extension NSString {
 			lines.add(isolatedLine)
 		}
 
-		return lines as? [Any]
+		// [NSObject], not [Any]: a class element type bridges to and from ObjC
+		// without copying, so the parse can pass these lines across freely.
+		return lines as? [NSObject]
 	}
 
 

@@ -80,7 +80,7 @@ final class LDrawMPDModel: LDrawModel {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init!(lines: [Any]!, in range: NSRange) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 	}
 
@@ -97,7 +97,7 @@ final class LDrawMPDModel: LDrawModel {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		let lineArray						= lines as NSArray?
 		var mpdSubmodelName: NSString?		= ""
 		var isMPDModel						= false
@@ -214,7 +214,7 @@ final class LDrawMPDModel: LDrawModel {
 	//
 	//------------------------------------------------------------------------------
 	@objc(rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:)
-	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [Any]!, maxIndex: UInt) -> NSRange {
+	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [NSObject]!, maxIndex: UInt) -> NSRange {
 		let lineArray					= lines as NSArray?
 		var isMPDModel					= false
 		let testLocation: UInt			= index

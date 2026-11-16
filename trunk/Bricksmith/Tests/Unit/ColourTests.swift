@@ -252,7 +252,7 @@ struct PreferenceColourCategoryTests {
 struct LDrawColorPinTests {
 
 	static func parse(_ line: String) -> LDrawColor? {
-		LDrawMetaCommand.directive(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil) as? LDrawColor
+		LDrawMetaCommand.directive(lines: ldrawLines([line]), in: NSRange(location: 0, length: 1), parentGroup: nil) as? LDrawColor
 	}
 
 	static func colour(code: Int32, rgba: [GLfloat], name: String? = nil) -> LDrawColor {
@@ -282,9 +282,9 @@ struct LDrawColorPinTests {
 		#expect(c.stringValue() == "")
 		#expect(LDrawColor(lines: [], in: NSRange(location: 0, length: 0)) == nil)
 		#expect(LDrawColor(lines: [], in: NSRange(location: 0, length: 0), parentGroup: nil) == nil)
-		let fromLines = try #require(LDrawColor(lines: ["0 !COLOUR X CODE 1 VALUE #000000 EDGE #000000"], in: NSRange(location: 0, length: 1)))
+		let fromLines = try #require(LDrawColor(lines: ldrawLines(["0 !COLOUR X CODE 1 VALUE #000000 EDGE #000000"]), in: NSRange(location: 0, length: 1)))
 		#expect(Self.fields(fromLines) == Self.fields(LDrawColor()), "the line-based init only calls -init")
-		let fromLines2 = try #require(LDrawColor(lines: ["x"], in: NSRange(location: 0, length: 1), parentGroup: nil))
+		let fromLines2 = try #require(LDrawColor(lines: ldrawLines(["x"]), in: NSRange(location: 0, length: 1), parentGroup: nil))
 		#expect(Self.fields(fromLines2) == Self.fields(LDrawColor()))
 	}
 

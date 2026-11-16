@@ -117,7 +117,7 @@ final class LDrawColor: LDrawMetaCommand {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override convenience init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		self.init()
 		if (lines?.count ?? 0) == 0 {
 			return nil
@@ -125,7 +125,7 @@ final class LDrawColor: LDrawMetaCommand {
 	}
 
 	@objc(initWithLines:inRange:)
-	override convenience init!(lines: [Any]!, in range: NSRange) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 	}
 

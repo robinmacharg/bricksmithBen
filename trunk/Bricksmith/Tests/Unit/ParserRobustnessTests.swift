@@ -104,7 +104,7 @@ struct ParserRobustnessTests {
 	@Test("Meta-command factory: subclass per command; half-parsed !COLOUR (S1); nil for a nonzero line type (S6)")
 	func metaCommandFactory() throws {
 		func make(_ line: String) -> LDrawDirective? {
-			LDrawMetaCommand.directive(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil)
+			LDrawMetaCommand.directive(lines: ldrawLines([line]), in: NSRange(location: 0, length: 1), parentGroup: nil)
 		}
 		let comment = try #require(make("0 // hello") as? LDrawComment)
 		#expect(comment.stringValue() == "hello")

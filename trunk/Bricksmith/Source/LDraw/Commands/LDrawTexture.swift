@@ -103,7 +103,7 @@ final class LDrawTexture: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override convenience init!(lines: [Any]!, in range: NSRange) {
+	override convenience init!(lines: [NSObject]!, in range: NSRange) {
 		self.init(lines: lines, in: range, parentGroup: nil)
 
 	}//end initWithLines:inRange:
@@ -117,7 +117,7 @@ final class LDrawTexture: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		// NSRange's fields are NSUInteger in ObjC: unsigned, wrapping arithmetic.
 		let rangeLocation				= UInt(bitPattern: range.location)
 		var rangeLength					= UInt(bitPattern: range.length)
@@ -198,7 +198,7 @@ final class LDrawTexture: LDrawContainer {
 		// Interpret geometry
 		// (Bridged once to an immutable array: each child parse gets this same
 		// NSArray back, O(1), as the ObjC passed strippedLines itself.)
-		let parsedLines		= strippedLines.copy() as! [Any]
+		let parsedLines		= strippedLines.copy() as! [NSObject]
 		let strippedCount	= UInt(strippedLines.count)
 		lineIndex = 0
 		while lineIndex < strippedCount {
@@ -319,7 +319,7 @@ final class LDrawTexture: LDrawContainer {
 	//
 	//------------------------------------------------------------------------------
 	@objc(rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:)
-	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [Any]!, maxIndex: UInt) -> NSRange {
+	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [NSObject]!, maxIndex: UInt) -> NSRange {
 		var ranPastEnd = false
 		return textureRange(at: index, inLines: lines, maxIndex: maxIndex, ranPastEnd: &ranPastEnd)
 
@@ -343,7 +343,7 @@ final class LDrawTexture: LDrawContainer {
 	//				BUG-P6B-meta-13.)
 	//
 	//------------------------------------------------------------------------------
-	private class func textureRange(at index: UInt, inLines lines: [Any]!, maxIndex: UInt, ranPastEnd: inout Bool) -> NSRange {
+	private class func textureRange(at index: UInt, inLines lines: [NSObject]!, maxIndex: UInt, ranPastEnd: inout Bool) -> NSRange {
 		let lineArray					= lines as NSArray?
 		var counter: UInt				= 0
 		let testLocation: UInt			= index

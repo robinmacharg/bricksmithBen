@@ -569,7 +569,7 @@ struct LSynthCoverageTests {
 		weak var weakSynth: LDrawLSynth?
 		autoreleasepool {
 			let lines = SynthKit.block("RUBBER_BAND").components(separatedBy: "\n")
-			let synth = LDrawLSynth(lines: lines, in: NSRange(location: 0, length: lines.count), parentGroup: nil)
+			let synth = LDrawLSynth(lines: ldrawLines(lines), in: NSRange(location: 0, length: lines.count), parentGroup: nil)
 			#expect(synth?.synthesizedPartsCount() == 2)
 			weakSynth = synth
 		}
@@ -631,9 +631,9 @@ struct LSynthCoverageTests {
 
 		// Range of a block: from BEGIN through the first terminator match.
 		let lines = ["0 SYNTH BEGIN A 4", "0 SYNTH SHOW", "0 SYNTH ENDING", "0 SYNTH END"]
-		let range = LDrawLSynth.rangeOfDirectiveBeginning(at: 0, inLines: lines, maxIndex: UInt(lines.count - 1))
+		let range = LDrawLSynth.rangeOfDirectiveBeginning(at: 0, inLines: ldrawLines(lines), maxIndex: UInt(lines.count - 1))
 		#expect(range == NSRange(location: 0, length: 3), "\(range)")
-		let notABlock = LDrawLSynth.rangeOfDirectiveBeginning(at: 0, inLines: ["0 SYNTH BEGIN A", "0 SYNTH END"], maxIndex: 1)
+		let notABlock = LDrawLSynth.rangeOfDirectiveBeginning(at: 0, inLines: ldrawLines(["0 SYNTH BEGIN A", "0 SYNTH END"]), maxIndex: 1)
 		#expect(notABlock == NSRange(location: 0, length: 0), "\(notABlock)")
 	}
 
@@ -743,7 +743,7 @@ struct LSynthCoverageTests {
 		let (_, parsed) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
 		#expect(try Self.displayObserverCount(parsed) == 2)
 		let lines = SynthKit.block("PNEUMATIC_HOSE").components(separatedBy: "\n")
-		let direct = try #require(LDrawLSynth(lines: lines, in: NSRange(location: 0, length: lines.count), parentGroup: nil))
+		let direct = try #require(LDrawLSynth(lines: ldrawLines(lines), in: NSRange(location: 0, length: lines.count), parentGroup: nil))
 		#expect(try Self.displayObserverCount(direct) == 2)
 		let copied = try #require(parsed.copy() as? LDrawLSynth)
 		#expect(try Self.displayObserverCount(copied) == 1)

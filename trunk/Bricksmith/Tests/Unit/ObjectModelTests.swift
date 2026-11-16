@@ -204,7 +204,7 @@ struct ObjectModelTests {
 enum P6bPart {
 	/// -[LDrawPart initWithLines:inRange:parentGroup:] on one line, as the step parser calls it.
 	static func make(_ line: String) -> LDrawPart? {
-		LDrawPart(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		LDrawPart(lines: ldrawLines([line]), in: NSRange(location: 0, length: 1), parentGroup: nil)
 	}
 
 	static func write(_ d: LDrawDirective?) -> String {
@@ -299,7 +299,7 @@ struct P6bPartPinTests {
 		#expect(out == expected, "\(out.joined(separator: "\n"))")
 		// No lines at all: nil (the ObjC messaged nil and logged the failure).
 		#expect(LDrawPart(lines: nil, in: NSRange(location: 0, length: 1), parentGroup: nil) == nil)
-		#expect(LDrawPart(lines: ["1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"], in: NSRange(location: 0, length: 1)) != nil)
+		#expect(LDrawPart(lines: ldrawLines(["1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat"]), in: NSRange(location: 0, length: 1)) != nil)
 	}
 
 	@Test("Parsing a reference to a library file: a malformed one fails the part; an empty, unreadable or directory one is just missing")

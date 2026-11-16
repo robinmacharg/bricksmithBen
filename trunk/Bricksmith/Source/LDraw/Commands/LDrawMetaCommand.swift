@@ -66,7 +66,7 @@ class LDrawMetaCommand: LDrawDirective {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override init!(lines: [Any]!, in range: NSRange) {
+	override init!(lines: [NSObject]!, in range: NSRange) {
 		super.init(lines: lines, in: range)
 
 	}//end initWithLines:inRange:
@@ -81,7 +81,7 @@ class LDrawMetaCommand: LDrawDirective {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		super.init(lines: lines, in: range, parentGroup: parentGroup)
 
 	}//end initWithLines:inRange:parentGroup:
@@ -105,7 +105,7 @@ class LDrawMetaCommand: LDrawDirective {
 	//
 	//------------------------------------------------------------------------------
 	@objc(directiveWithLines:inRange:parentGroup:)
-	override class func directive(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) -> LDrawDirective? {
+	override class func directive(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) -> LDrawDirective? {
 		let lineArray						= lines as NSArray?
 		var directive: LDrawMetaCommand?	= nil
 		var parsedField: NSString?			= nil

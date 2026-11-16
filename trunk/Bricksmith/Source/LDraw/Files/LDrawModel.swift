@@ -136,7 +136,7 @@ class LDrawModel: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:)
-	override init!(lines: [Any]!, in range: NSRange) {
+	override init!(lines: [NSObject]!, in range: NSRange) {
 		super.init(lines: lines, in: range)
 	}
 
@@ -163,7 +163,7 @@ class LDrawModel: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(initWithLines:inRange:parentGroup:)
-	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
+	override init!(lines: [NSObject]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		let rangeLocation			= UInt(bitPattern: range.location)
 		let rangeMax				= rangeLocation &+ UInt(bitPattern: range.length)	// NSMaxRange(range)
 		var contentStartIndex: UInt	= 0
@@ -1532,7 +1532,7 @@ class LDrawModel: LDrawContainer {
 	//
 	//==============================================================================
 	@objc(parseHeaderFromLines:beginningAtIndex:)
-	func parseHeader(fromLines lines: [Any]!, beginningAt index: UInt) -> UInt {
+	func parseHeader(fromLines lines: [NSObject]!, beginningAt index: UInt) -> UInt {
 		let lineArray						= lines as NSArray?
 		var currentLine: String?			= nil
 		var counter: UInt					= 0
