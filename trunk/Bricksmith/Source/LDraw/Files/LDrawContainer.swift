@@ -20,7 +20,7 @@
 //  the ObjC.
 //
 //  Where the ObjC raised, the port has a guard that stops at the same point,
-//  marked "P6c: ObjC raised here"; see KNOWN-BUGS BUG-P6C-container-1.
+//  marked "P6c: ObjC raised here"; see KNOWN-BUGS BUG-069.
 //==============================================================================
 
 import Foundation
@@ -448,7 +448,7 @@ class LDrawContainer: LDrawDirective, LDrawObserver {
 		if let containedObjects {
 			// P6c: ObjC raised here (-insertObject:atIndex: with a nil directive
 			// or an index outside 0...count, before anything changed); see
-			// KNOWN-BUGS BUG-P6C-container-1
+			// KNOWN-BUGS BUG-069
 			guard let directive, index >= 0, index <= containedObjects.count else {
 				return
 			}
@@ -494,7 +494,7 @@ class LDrawContainer: LDrawDirective, LDrawObserver {
 		if let containedObjects {
 			// P6c: ObjC raised here (-objectAtIndex: with an index outside
 			// 0..<count, before anything changed); see KNOWN-BUGS
-			// BUG-P6C-container-1
+			// BUG-069
 			guard index >= 0, index < containedObjects.count else {
 				return
 			}

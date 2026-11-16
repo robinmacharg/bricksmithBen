@@ -9,7 +9,7 @@
 // Modified:	02/25/2011 Allen Smith. Creation Date.
 //
 //				Ported to Swift in P6a. The superclass (LDrawDrawableElement) is
-//				still ObjC.
+//				Swift since P6c.
 //==============================================================================
 
 import Foundation

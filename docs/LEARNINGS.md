@@ -15,7 +15,7 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107, L109, L111 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107, L109, L111, L112 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
@@ -560,3 +560,7 @@ topics that match your task rather than the whole log.
   matches an observed instance, and a direct Swift call then bypasses KVO's overrides. That is harmless for collect
   and hit-test (KVO overrides setters only), but never take a direct-call fast path to a *setter* this way. Found when
   P6c's first test expected the opposite (`StepDirectCollectTests`).
+- **L112. A getter that comes from an ObjC protocol imports with Swift's lower-casing** (`LDrawColorable`'s
+  `-LDrawColor` is `lDrawColor()`), and the P6c brief got it wrong. Take spellings from the generated interface (L97),
+  never from a brief or memory. Also: `try` inside an `#expect(a && b === (try f()))` operand doesn't compile; bind
+  the value to a local first (as L104's operand note).
