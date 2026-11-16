@@ -856,3 +856,73 @@ struct NibLifetimeTests {
 		#expect(weakController == nil, "\(className): object controller leaked")
 	}
 }
+
+// MARK: - P5 leaf utilities: TransformerIntMinus1, BricksmithUtilities
+
+@Suite("P5 utilities: TransformerIntMinus1 (MinifigureGenerator.xib stepper maxValue)")
+struct TransformerIntMinus1Tests {
+	@Test("Class methods: one-way, outputs NSNumber")
+	func classMethods() {
+		#expect(TransformerIntMinus1.allowsReverseTransformation() == false)
+		#expect(TransformerIntMinus1.transformedValueClass() == NSNumber.self)
+	}
+
+	/// -transformedValue: is `[value integerValue] - 1`: NSString responds to -integerValue, nil messaging gives 0,
+	/// a fraction truncates, and the result is NSInteger-wide (not cut to 32 bits).
+	static let cases: [(Any?, Int)] = [
+		(NSNumber(value: 1), 0), ("7" as NSString, 6), (nil, -1), (NSNumber(value: 2.9), 1),
+		(NSNumber(value: 1 << 40), (1 << 40) - 1),
+	]
+
+	@Test("transformedValue: integerValue minus one", arguments: 0..<cases.count)
+	func transformed(_ index: Int) {
+		let (input, expected) = Self.cases[index]
+		let output = TransformerIntMinus1().transformedValue(input) as? NSNumber
+		#expect(output?.intValue == expected, "\(String(describing: input)) -> \(String(describing: output))")
+	}
+}
+
+@MainActor
+@Suite("P5 utilities: BricksmithUtilities (grid spacing, drag image)", .fixtureLibrary, .serialized)
+struct BricksmithUtilitiesTests {
+	@Test("gridSpacingForMode: reads the user's spacing for each mode; an unknown mode gives 0")
+	func gridSpacing() {
+		ArgumentPrefs.with([GRID_SPACING_FINE: 1.5, GRID_SPACING_MEDIUM: 10.25, GRID_SPACING_COARSE: 40.5]) {
+			#expect(BricksmithUtilities.gridSpacing(forMode: .modeFine) == 1.5)
+			#expect(BricksmithUtilities.gridSpacing(forMode: .modeMedium) == 10.25)
+			#expect(BricksmithUtilities.gridSpacing(forMode: .modeCoarse) == 40.5)
+			// The toolbar passes raw segment tags; anything else falls through the switch.
+			#expect(BricksmithUtilities.gridSpacing(forMode: gridSpacingModeT(rawValue: 7)!) == 0)
+		}
+	}
+
+	@Test("dragImageWithOffset: brick plus a 3-point border; offset moves the image beside the arrow cursor")
+	func dragImage() throws {
+		let brick = try #require(NSImage(named: "Brick"))
+		let arrow = NSCursor.arrow.image.size
+
+		var offset = NSPoint(x: 10, y: 20)
+		let image = try #require(BricksmithUtilities.dragImage(withOffset: &offset))
+		#expect(image.size == NSSize(width: brick.size.width + 6, height: brick.size.height + 6))
+		#expect(offset == NSPoint(x: 10 + arrow.width / 2, y: 20 - (arrow.height / 2 + image.size.height / 2)),
+				"offset \(offset), arrow \(arrow), image \(image.size)")
+
+		let noOffset = try #require(BricksmithUtilities.dragImage(withOffset: nil))
+		#expect(noOffset.size == image.size)
+
+		// Pixels at 1x: the rounded corner is clear; the border shows the 0.6-white, 0.75-alpha background.
+		let width = Int(image.size.width), height = Int(image.size.height)
+		let rep = try #require(NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height,
+												bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+												colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+		NSGraphicsContext.saveGraphicsState()
+		NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+		image.draw(in: NSRect(x: 0, y: 0, width: width, height: height))
+		NSGraphicsContext.restoreGraphicsState()
+		let corner = try #require(rep.colorAt(x: 0, y: 0))
+		#expect(corner.alphaComponent < 0.05, "corner \(corner)")
+		let border = try #require(rep.colorAt(x: 1, y: height / 2)?.usingColorSpace(.deviceGray))
+		#expect(abs(border.alphaComponent - 0.75) < 0.05, "border \(border)")
+		#expect(abs(border.whiteComponent - 0.6) < 0.05, "border \(border)")
+	}
+}
