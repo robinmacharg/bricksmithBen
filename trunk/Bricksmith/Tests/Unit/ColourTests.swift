@@ -507,6 +507,16 @@ struct LDrawColorPinTests {
 		], "\(out.joined(separator: "\n"))")
 	}
 
+	@Test("finishParsing: scans by UTF-16 unit (NSScanner), not by grapheme cluster, around combining marks")
+	func combiningMarks() {
+		// Swift's newer Scanner API scans whole grapheme clusters, so " \u{301}" (a space and a combining accent)
+		// or "ALPHA\u{200D}" (a zero-width joiner) scan differently there. These pin NSScanner's behaviour.
+		#expect(Self.parse("0 !COLOUR A CODE 1 VALUE #102030 EDGE #405060 ALPHA\u{200D} 128").map { Self.fields($0) } == "code 1 rgba [0.0627451, 0.1254902, 0.1882353, 0.0] edge -1 edgeRGBA [0.2509804, 0.3137255, 0.3764706, 1.0] lum 0 mat 0 params nil name A | 0 !COLOUR A CODE 1 VALUE #102030 EDGE #405060 ALPHA 0")
+		#expect(Self.parse("0 !COLOUR A CODE 1 VALUE #102030 EDGE #405060 MATERIAL \u{301}x y").map { Self.fields($0) } == "code 1 rgba [0.0627451, 0.1254902, 0.1882353, 1.0] edge -1 edgeRGBA [0.2509804, 0.3137255, 0.3764706, 1.0] lum 0 mat 6 params \u{301}x y name A | 0 !COLOUR A CODE 1 VALUE #102030 EDGE #405060 MATERIAL \u{301}x y")
+		#expect(Self.parse("0 !COLOUR A \u{301}CODE 1 VALUE #102030 EDGE #405060").map { Self.fields($0) } == "code -1 rgba [0.0, 0.0, 0.0, 1.0] edge -1 edgeRGBA [0.0, 0.0, 0.0, 0.0] lum 0 mat 0 params nil name A | 0 !COLOUR A CODE -1 VALUE #000000 EDGE #000000")
+		#expect(Self.parse("0 !COLOUR A CODE 1 VALUE #102030 EDGE \u{301}#405060 LUMINANCE 5").map { Self.fields($0) } == "code 1 rgba [0.0627451, 0.1254902, 0.1882353, 1.0] edge -1 edgeRGBA [0.0, 0.0, 0.0, 0.0] lum 0 mat 0 params nil name A | 0 !COLOUR A CODE 1 VALUE #102030 EDGE #000000")
+	}
+
 	@Test("Setters: luminance and custom material without parameters")
 	func setters() throws {
 		let c = Self.colour(code: 7, rgba: [0.5, 0.25, 1, 1], name: "S")
