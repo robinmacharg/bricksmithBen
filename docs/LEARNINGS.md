@@ -15,14 +15,14 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82, L94 |
-| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100, L105; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
@@ -475,5 +475,37 @@ topics that match your task rather than the whole log.
   stream: 4051 of 400k fuzzed `!COLOUR` lines; confirmed with `charactersToBeSkipped = nil`: " \u{301}abc" keeps the
   space under the new API). The Swift spellings that reach the ObjC methods are deprecated (warning gate). → Ports
   of NSScanner code use `scanner.utf16` (`Source/Other/ScannerUTF16.swift`), which sends the original selectors.
-  L98's "matched in a 300k fuzz" held for ASCII only; `MLCadIni.swift` and `StringUtilities.swift` (P5) still use
-  the modern API and are re-checked separately.
+  L98's "matched in a 300k fuzz" held for ASCII only; `MLCadIni.swift` and `StringUtilities.swift` (P5) used the
+  modern API and were switched in `9229c8c`.
+- **L102. Swift on the per-primitive hot path (P6a perf, profiled with `sample`):**
+  - **Exclusivity checks:** every read of a `var` stored property of a class calls `swift_beginAccess`, a real cost
+    per vertex. `@exclusivity(unchecked)` on hot properties that are only mutated through their own setters removed
+    most of it; whole-module optimisation alone didn't help.
+  - **Superclass ivars:** a Swift subclass reaches an ObjC superclass's ivars only through getters: a message send
+    plus a retain per object return. For a hot path, a C function defined *inside* the ObjC class's
+    `@implementation` can read the protected ivars (a plain C function can't), with an `__unsafe_unretained` local
+    to avoid ARC's retain.
+  - **NSCoder keys:** Swift string literals over 15 ASCII bytes bridge to a newly allocated NSString on every call
+    (shorter ones are tagged pointers). Use `NSString(string:) as String` constants, which bridge back for free.
+  - **Measure with an interleaved A/B against the pre-port commit:** machine noise moved unchanged metrics by 10-15
+    points between batches.
+- **L103. Undo with Swift (P6a):** `prepare(withInvocationTarget:)` returns a proxy (or the undo manager). Send the
+  selector dynamically: `(proxy as AnyObject).setVertex3(v)` or `(proxy as! NSObject).perform(sel, with:)`.
+  Asking it `responds(to:)` returns false and consumes the prepared target, so the next message raises; casting it
+  to a `final` class dispatches statically and records nothing.
+- **L104. Swift interface traps found in P6a:**
+  - Omit-needless-words: `-[LDrawMPDModel writeModel]` imports as `write()`, colliding with the inherited `write()`; a
+    Swift port can't reproduce that name. Check the generated interface for such renames first.
+  - `-[LDrawDirective initWithLines:inRange:parentGroup:]` sends `[self init]`, so a Swift subclass's `init()` runs
+    again mid-`super.init(lines:…)`: keep stored-property defaults trivial (nil/literals).
+  - A factory-style ObjC init (`initWithTag:position:`) can be a Swift `convenience init!`: the class then keeps
+    inheriting every superclass init (no "unimplemented initializer" traps).
+  - `remove(_:)` on any `LDrawContainer` is ambiguous (`-removeDirective:` vs `LDrawObservable`'s
+    `-removeObserver:`): cast in tests. Pointer-cast macros (`LDrawRenderComplimentColor`) don't import: use
+    `UnsafeMutablePointer(bitPattern: -1)`. `#expect(try f() == x)` prints no operands: bind to a local first.
+  - `-[NSDictionary initWithObjects:forKeys:]` keeps the first of duplicate keys; `Dictionary(uniqueKeysWithValues:)`
+    traps. NDEBUG is set for Release and Perf, so `assert` maps to `assertionFailure`.
+- **L105. P6a process notes:** the importer sweep must include the ported classes' own `.m` files (they import each
+  other until they become stubs); `port-remove-stubs.rb` must read sources as binary (non-UTF-8 bytes). Refused
+  writes (here: the editor was killed mid-run) stop every agent at once: they report and wait, and resume cleanly
+  from their last commit after a rebase.

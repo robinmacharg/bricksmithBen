@@ -107,7 +107,7 @@ final class LDrawMPDModel: LDrawModel {
 		// (Messaging a nil array answered nil, which is not an MPD line.)
 		if let lineArray {
 			// P6a: ObjC raised here (-objectAtIndex: past the end of the lines, before
-			// any parsing); see KNOWN-BUGS BUG-P6A-files-1
+			// any parsing); see KNOWN-BUGS BUG-038
 			guard range.location >= 0, range.location < lineArray.count else {
 				return nil
 			}
@@ -121,7 +121,7 @@ final class LDrawMPDModel: LDrawModel {
 				// Strip out the first line and the NOFILE command, if there is one.
 				// P6a: ObjC raised here (-objectAtIndex: past the end of the lines; an
 				// empty range wrapped and raised later, in the parse); see KNOWN-BUGS
-				// BUG-P6A-files-1
+				// BUG-038
 				guard range.length >= 1, NSMaxRange(range) <= lineArray.count else {
 					return nil
 				}
@@ -227,7 +227,7 @@ final class LDrawMPDModel: LDrawModel {
 
 		if testLength > 1, let lineArray {
 			// P6a: ObjC raised here (-objectAtIndex: past the end of the lines while
-			// looking for the model's end); see KNOWN-BUGS BUG-P6A-files-2
+			// looking for the model's end); see KNOWN-BUGS BUG-039
 			guard testLocation < testMax, testMax <= UInt(lineArray.count) else {
 				return modelRange
 			}

@@ -76,6 +76,12 @@ their own port phase.
 | P6a | Survey: only Triangle, Quadrilateral, ConditionalLine (`color`, `hidden`; `vertex1`/`vertex2`) and LDrawFile (`postsNotifications`) read ancestor ivars; every one has a plain getter. Nothing outside the nine classes reads their ivars. All 24 importers of `Bricksmith-Swift.h` see every P6a superclass (probe subclasses) | 2026-11-16 | agent | Found with `@private` probes and `-IDEBuildingContinueBuildingAfterErrors=YES` (L100) |
 | P6a | Placeholders for the nine classes (`288e01d`); pilot `LDrawComment` → Swift by the integrator | 2026-11-16 | agent | Branch `20261116-p6-model-leaves`. First Swift subclass of an app ObjC class |
 | P6a | Recipe §6 deviation: `respondsToSelector:` (LDrawLSynthDirective) and target/action `performSelector:withObject:` (LDrawDragHandle) are translated directly (`responds(to:)`, `perform(_:with:)` with the result discarded) instead of being removed in ObjC first | 2026-11-16 | agent | Neither can raise or return a retained object; nothing to fix in ObjC |
+| P6a | Scanner fix: `ScannerUTF16.swift` shim (`ac90ef2`); `LDrawComment` (`ac90ef2`) and P5's `MLCadIni`/`StringUtilities` (`9229c8c`) scan with NSScanner's own UTF-16 methods (L101) | 2026-11-16 | agent | Found by the colour stream's 400k fuzz; ASCII behaviour unchanged |
+| P6a | Three parallel streams integrated: colour (`LDrawColor`), geometry (`LDrawDragHandle`, `LDrawTriangle`, `LDrawQuadrilateral`, `LDrawConditionalLine`), files (`LDrawLSynthDirective`, `LDrawMPDModel`, `LDrawFile`); tests first in each (43 pinning tests); stubs removed (`dcd5ebd`, `61a6a82`); baselines re-recorded (`943f7f9`, only the `performSelector` leak warning went) | 2026-11-16 | agent | 292 tests, **75** known issues (BUG-037 added). No golden changed. Every stream was interrupted once by refused writes (editor killed) and resumed |
+| P6a | Interface differences forced by Swift: `-[LDrawMPDModel writeModel]` is `writeModel()` (Swift imported it as `write()`, clashing with the override); `-[LDrawFile submodels]` returns the live `NSArray` to ObjC, `submodels()` stays `[Any]!` for Swift; `LDrawFile(fromContentsAtPath:)` is a Swift convenience init beside `+fileFromContentsAtPath:` (L98) | 2026-11-16 | agent | No caller relied on the old Swift spelling of `writeModel` |
+| P6a | Recipe deviations: `respondsToSelector:` (LSynthDirective) and target/action `perform(_:with:)` (DragHandle) translated directly; undo registration sends the selector dynamically to `prepare(withInvocationTarget:)`'s result (never `responds(to:)`, never cast; L103); `TESSELATE_QUADS` hard-coded to its 0 branch (a C macro Swift can't test) | 2026-11-16 | agent | |
+| P6a | 🧑 Raises that Swift would turn into crashes (BUG-038..045): guarded so each site stops where the swallowed ObjC raise stopped, one guard per site, marked in code | 2026-11-16 | agent | **Pending maintainer decision** (guard as now, or trap) |
+| P6a | Perf (`b1901fd`): first interleaved A/B vs `fa5a691` showed collect 168%, depth-test 116%, archive-primitives 122%. Fixed with `@exclusivity(unchecked)` on hot stored properties, a C helper reading `hidden`/`color` ivars for collect (`LDrawDrawableElementCollectorColor`, goes in P6c) and NSString-backed long coder keys (L102). Now: all 12 metrics pass on 3 runs (collect 114-115%, depth-test 109-110% of baseline); interleaved vs `fa5a691`: collect 119%, depth-test 116%, archive-primitives 116%, rest 85-106% | 2026-11-16 | agent | Remaining overhead is largely the @objc thunk on ObjC → Swift calls; recheck when LDrawStep/containers are Swift (P6b/c) |
 | P5 | Header annotation: `StringCategory.h` (all, tool) before its port | 2026-11-16 | agent | `StringCategoryTests` |
 | P4 | 🧑 Manual smoke checklist (TESTING.md steps 1-18, incl. new step 18 for panels and menus) on the P4 Debug build | 2026-11-16 | maintainer | Signed off in conversation |
 | P4 | 🧑 Maintainer decisions at P4 exit | 2026-11-16 | maintainer | BUG-007's wider scope (other paths treat a malformed-ROTSTEP library/peer file as missing): evaluate after the port, P12. `NSDrawer` deprecation's extra declaration site (`LDrawDocument+Private.h`): stays in the baseline; address after the port. Attribution trailers removed from the P4 branch before merge |
@@ -187,21 +193,21 @@ sign-off here:
 | `Bricksmith/Source/Categories/TableViewCategory.m` | 42 | ARC | P5 | **Swift** (`TableViewCategory.swift`) |
 | `Bricksmith/Source/Categories/UserDefaultsCategory.m` | 48 | ARC | P5 | **Swift** (`UserDefaultsCategory.swift`; unarchiving through ObjC `ArchiveSupport.m`, BUG-035) |
 | `Bricksmith/Source/Categories/WindowCategory.m` | 60 | ARC | P5 | **Swift** (`WindowCategory.swift`) |
-| `Bricksmith/Source/LDraw/Commands/LDrawColor.m` | 1095 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawColor.m` | 1095 | MRC | P6a | **Swift** (`LDrawColor.swift`); types-only `.h` (enums, `@class`) and a C-only `.m` (`RGBtoHSV`/`HSVtoRGB`) remain |
 | `Bricksmith/Source/LDraw/Commands/LDrawComment.m` | 123 | ARC | P6a | **Swift** (`LDrawComment.swift`) |
-| `Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m` | 446 | ARC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m` | 446 | ARC | P6a | **Swift** (`LDrawConditionalLine.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m` | 511 | ARC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawLSynth.m` | 1487 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawLSynthDirective.m` | 84 | ARC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawLSynthDirective.m` | 84 | ARC | P6a | **Swift** (`LDrawLSynthDirective.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawLine.m` | 714 | ARC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawMetaCommand.m` | 374 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawPart.m` | 1790 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m` | 1062 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawQuadrilateral.m` | 1062 | MRC | P6a | **Swift** (`LDrawQuadrilateral.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawTexture.m` | 1178 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawTriangle.m` | 873 | MRC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawTriangle.m` | 873 | MRC | P6a | **Swift** (`LDrawTriangle.swift`) |
 | `Bricksmith/Source/LDraw/Files/LDrawContainer.m` | 530 | ARC | P6 | todo |
-| `Bricksmith/Source/LDraw/Files/LDrawFile.m` | 879 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Files/LDrawMPDModel.m` | 537 | ARC | P6 | todo |
+| `Bricksmith/Source/LDraw/Files/LDrawFile.m` | 879 | MRC | P6a | **Swift** (`LDrawFile.swift`); types-only `.h` remains (the active-model notification macro) |
+| `Bricksmith/Source/LDraw/Files/LDrawMPDModel.m` | 537 | ARC | P6a | **Swift** (`LDrawMPDModel.swift`) |
 | `Bricksmith/Source/LDraw/Files/LDrawModel.m` | 1608 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Files/LDrawStep.m` | 1168 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Renderer/LDrawBDPAllocator.m` | 150 | ARC | P8 | todo |
@@ -214,7 +220,7 @@ sign-off here:
 | `Bricksmith/Source/LDraw/Support/ComputationalGeometry.m` | 360 | ARC | P7 | todo |
 | `Bricksmith/Source/LDraw/Support/GLMatrixMath.c` | 639 | C | stays C | todo |
 | `Bricksmith/Source/LDraw/Support/LDrawDirective.m` | 1020 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Support/LDrawDragHandle.m` | 408 | ARC | P6 | todo |
+| `Bricksmith/Source/LDraw/Support/LDrawDragHandle.m` | 408 | ARC | P6a | **Swift** (`LDrawDragHandle.swift`) |
 | `Bricksmith/Source/LDraw/Support/LDrawGLCamera.m` | 1020 | ARC | P8 | todo |
 | `Bricksmith/Source/LDraw/Support/LDrawGLRenderer.m` | 2585 | MRC | P8 | todo |
 | `Bricksmith/Source/LDraw/Support/LDrawPaths.m` | 486 | ARC | P7 | todo |

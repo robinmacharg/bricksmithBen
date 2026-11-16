@@ -18,7 +18,7 @@
 //
 //  Where the ObjC raised (and a caller's @try or AppKit swallowed it), the
 //  port has a guard that abandons the operation at the same point, marked
-//  "P6a: ObjC raised here"; see KNOWN-BUGS BUG-P6A-files-n.
+//  "P6a: ObjC raised here"; see KNOWN-BUGS BUG-038..045.
 //==============================================================================
 
 import Foundation
@@ -32,7 +32,7 @@ final class LDrawFile: LDrawContainer {
 	private var activeModelRef: LDrawMPDModel?
 	private var filePath: String?				//where this file came from on disk.
 	// Set when the last lookup-table rebuild hit a place where the ObjC raised
-	// (BUG-P6A-files-6), so Swift callers further up stop as the raise did.
+	// (BUG-043), so Swift callers further up stop as the raise did.
 	private var lookupRebuildAbandoned = false
 
 
@@ -200,7 +200,7 @@ final class LDrawFile: LDrawContainer {
 		for currentModel in submodels {
 			addSubmodel(currentModel)
 			// P6a: ObjC raised inside (see updateModelLookupTable), out of the
-			// init; see KNOWN-BUGS BUG-P6A-files-6
+			// init; see KNOWN-BUGS BUG-043
 			if lookupRebuildAbandoned {
 				return nil
 			}
@@ -229,7 +229,7 @@ final class LDrawFile: LDrawContainer {
 		// (A missing array answered nil, so no active model.)
 		let models = subdirectives()
 		// P6a: ObjC raised here (-objectAtIndex:0 on a file archived with no
-		// models); see KNOWN-BUGS BUG-P6A-files-3
+		// models); see KNOWN-BUGS BUG-040
 		if let models, models.count == 0 {
 			return nil
 		}
@@ -237,7 +237,7 @@ final class LDrawFile: LDrawContainer {
 		setActiveModel(firstModel)
 
 		// P6a: ObjC raised inside (see updateModelLookupTable); see KNOWN-BUGS
-		// BUG-P6A-files-6
+		// BUG-043
 		guard updateModelLookupTable() else {
 			return nil
 		}
@@ -260,7 +260,7 @@ final class LDrawFile: LDrawContainer {
 		}
 		// P6a: ObjC raised here (-objectAtIndex:NSNotFound when the active model
 		// is nil or no longer in the file); the copy is returned without an active
-		// model; see KNOWN-BUGS BUG-P6A-files-4
+		// model; see KNOWN-BUGS BUG-041
 		guard let copiedModels = copiedFile.subdirectives(),
 			  indexOfActiveModel >= 0, indexOfActiveModel < copiedModels.count else {
 			return copiedFile
@@ -389,7 +389,7 @@ final class LDrawFile: LDrawContainer {
 		// So write out the single model without the MPD FILE/NOFILE wrapper.
 		if numberModels == 1 {
 			// P6a: ObjC raised here (-writeModel sent to a non-MPD child, or a nil
-			// string appended); see KNOWN-BUGS BUG-P6A-files-7
+			// string appended); see KNOWN-BUGS BUG-044
 			guard let currentModel = modelsInFile?.object(at: 0) as? LDrawMPDModel,
 				  let text = currentModel.writeModel() else {
 				return nil
@@ -401,7 +401,7 @@ final class LDrawFile: LDrawContainer {
 			//Write out each MPD submodel, one after another.
 			for counter in 0 ..< numberModels {
 				// P6a: ObjC raised here (a nil string appended); see KNOWN-BUGS
-				// BUG-P6A-files-7
+				// BUG-044
 				guard let currentModel = modelsInFile?.object(at: counter) as? LDrawDirective,
 					  let text = currentModel.write() else {
 					return nil
@@ -444,7 +444,7 @@ final class LDrawFile: LDrawContainer {
 			return nil
 		}
 		// P6a: ObjC raised here (-objectAtIndex:0 on a file with no models); see
-		// KNOWN-BUGS BUG-P6A-files-5
+		// KNOWN-BUGS BUG-042
 		guard models.count > 0 else {
 			return nil
 		}
@@ -479,7 +479,7 @@ final class LDrawFile: LDrawContainer {
 
 		for counter in 0 ..< numberModels {
 			// P6a: ObjC raised here (a nil model name, or -modelName sent to a
-			// non-MPD child); see KNOWN-BUGS BUG-P6A-files-6
+			// non-MPD child); see KNOWN-BUGS BUG-043
 			guard let currentModel = submodels?.object(at: counter) as? LDrawMPDModel,
 				  let name = currentModel.modelName() else {
 				return nil
@@ -646,7 +646,7 @@ final class LDrawFile: LDrawContainer {
 		super.remove(doomedDirective)
 
 		// P6a: ObjC raised inside (see updateModelLookupTable), before the active
-		// model was reset; see KNOWN-BUGS BUG-P6A-files-6
+		// model was reset; see KNOWN-BUGS BUG-043
 		if lookupRebuildAbandoned {
 			return
 		}
@@ -688,14 +688,14 @@ final class LDrawFile: LDrawContainer {
 	override func insert(_ directive: LDrawDirective!, at index: Int) {
 		// P6a: ObjC raised here (-[NSMutableArray insertObject:atIndex:] in
 		// LDrawContainer, for a nil directive or an index past the end, before
-		// anything changed); see KNOWN-BUGS BUG-P6A-files-8
+		// anything changed); see KNOWN-BUGS BUG-045
 		guard directive != nil, index >= 0, index <= (subdirectives()?.count ?? 0) else {
 			return
 		}
 
 		super.insert(directive, at: index)
 		// P6a: ObjC raised inside (see updateModelLookupTable): the model stays
-		// inserted, nothing is posted; see KNOWN-BUGS BUG-P6A-files-6
+		// inserted, nothing is posted; see KNOWN-BUGS BUG-043
 		guard updateModelLookupTable() else {
 			return
 		}
@@ -715,13 +715,13 @@ final class LDrawFile: LDrawContainer {
 	@objc(removeDirectiveAtIndex:)
 	override func removeDirective(at index: Int) {
 		// P6a: ObjC raised here (-objectAtIndex: in LDrawContainer for an index
-		// past the end, before anything changed); see KNOWN-BUGS BUG-P6A-files-8
+		// past the end, before anything changed); see KNOWN-BUGS BUG-045
 		guard index >= 0, index < (subdirectives()?.count ?? 0) else {
 			return
 		}
 
 		super.removeDirective(at: index)
-		// P6a: a raise inside left the table stale; see KNOWN-BUGS BUG-P6A-files-6
+		// P6a: a raise inside left the table stale; see KNOWN-BUGS BUG-043
 		updateModelLookupTable()
 
 	}//end removeDirectiveAtIndex:
@@ -791,7 +791,7 @@ final class LDrawFile: LDrawContainer {
 		//Write out each MPD submodel, one after another.
 		for counter in 0 ..< numberModels {
 			// P6a: ObjC raised here (-optimizeStructure sent to a non-model child);
-			// see KNOWN-BUGS BUG-P6A-files-7
+			// see KNOWN-BUGS BUG-044
 			guard let currentModel = modelsInFile?.object(at: counter) as? LDrawModel else {
 				return
 			}
@@ -878,7 +878,7 @@ final class LDrawFile: LDrawContainer {
 		for model in submodels {
 			// always use lowercase for comparison
 			// P6a: ObjC raised here (-addObject:nil for a nil model name, or
-			// -modelName sent to a non-MPD child); see KNOWN-BUGS BUG-P6A-files-6
+			// -modelName sent to a non-MPD child); see KNOWN-BUGS BUG-043
 			guard let name = (model as? LDrawMPDModel)?.modelName() as NSString? else {
 				lookupRebuildAbandoned = true
 				return false
@@ -904,7 +904,7 @@ final class LDrawFile: LDrawContainer {
 	override func receiveMessage(_ msg: MessageT, who observable: (any LDrawObservable)!) {
 		if msg == .nameChanged {
 			// P6a: ObjC raised inside (see updateModelLookupTable), before super;
-			// see KNOWN-BUGS BUG-P6A-files-6
+			// see KNOWN-BUGS BUG-043
 			guard updateModelLookupTable() else {
 				return
 			}

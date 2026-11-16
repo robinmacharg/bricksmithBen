@@ -759,7 +759,7 @@ final class LDrawColor: LDrawMetaCommand {
 	//				Brightness.
 	//
 	// Notes:		Both alphas are taken from the receiver, so alpha never breaks a
-	//				tie (BUG-P6A-color-1, kept as found).
+	//				tie (BUG-037, kept as found).
 	//
 	//==============================================================================
 	@objc(HSVACompare:)
