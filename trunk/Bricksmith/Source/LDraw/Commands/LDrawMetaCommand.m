@@ -60,7 +60,7 @@ static void LogFatallyInvalidMetaCommand(NSString *line)
 }//end init
 
 
-//========== initWithLines:inRange:parentGroup: ================================
+//---------- directiveWithLines:inRange:parentGroup: ----------------[static]--
 //
 // Purpose:		Returns the LDraw directive based on lineFromFile, a single line 
 //				of LDraw code from a file.
@@ -70,17 +70,17 @@ static void LogFatallyInvalidMetaCommand(NSString *line)
 //				0 command... 
 //
 //				This method determines and returns a subclass instance for known 
-//				meta-commands. As such, the instance returned will always be of 
-//				a different class, and thus will always be a different instance 
-//				than the receiver. 
+//				meta-commands (LDrawComment, LDrawColor). Anything else becomes 
+//				a generic instance of the receiving class that records the text. 
 //
-//==============================================================================
-- (id) initWithLines:(NSArray *)lines
-			 inRange:(NSRange)range
-		 parentGroup:(dispatch_group_t)parentGroup
+// Notes:		This replaces -initWithLines:inRange:parentGroup:, which used to 
+//				return a substitute object. 
+//
+//------------------------------------------------------------------------------
++ (LDrawDirective *) directiveWithLines:(NSArray *)lines
+								inRange:(NSRange)range
+							parentGroup:(dispatch_group_t)parentGroup
 {
-	self = [super init];
-
 	LDrawMetaCommand	*directive		= nil;
 	NSString			*parsedField	= nil;
 	NSString			*firstLine		= [lines objectAtIndex:range.location];
@@ -134,7 +134,7 @@ static void LogFatallyInvalidMetaCommand(NSString *line)
 		{
 			// Didn't specifically recognize this metacommand. Create a 
 			// non-functional generic command to record its existence. 
-			directive = self;
+			directive = [[self alloc] init];
 			NSString *command = [[scanner string] substringFromIndex:metaLineStart];
 	
 			[directive setStringValue:command];
@@ -144,7 +144,7 @@ static void LogFatallyInvalidMetaCommand(NSString *line)
 	{
 		// This is presumably an empty line, and the following will 
 		// incorrectly add a 0 linetype to it. 
-		directive = self;
+		directive = [[self alloc] init];
 		NSString *command = [scanner string];
 
 		[directive setStringValue:command];
@@ -155,12 +155,9 @@ static void LogFatallyInvalidMetaCommand(NSString *line)
 		LogFatallyInvalidMetaCommand([lines objectAtIndex:range.location]);
 	}
 	
-	// The new directive should replace the receiver!
-	self = nil;
-	
 	return directive;
 	
-}//end initWithLines:inRange:
+}//end directiveWithLines:inRange:parentGroup:
 
 
 //========== initWithCoder: ====================================================
@@ -216,7 +213,7 @@ static void LogFatallyInvalidMetaCommand(NSString *line)
 //========== finishParsing: ====================================================
 //
 // Purpose:		Subclasses override this method to finish parsing their specific 
-//				syntax once -[LDrawMetaCommand initWithLines:inRange:] 
+//				syntax once +[LDrawMetaCommand directiveWithLines:inRange:parentGroup:] 
 //				has determined which subclass to instantiate. 
 //
 // Returns:		YES on success; NO on a syntax error.

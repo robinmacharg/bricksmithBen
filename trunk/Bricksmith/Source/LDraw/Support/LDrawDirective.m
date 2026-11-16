@@ -54,6 +54,24 @@
 }//end init
 
 
+//---------- directiveWithLines:inRange:parentGroup: ----------------[static]--
+//
+// Purpose:		Returns a directive parsed from the given lines. 
+//
+//				Subclasses whose syntax decides the class of the result (such 
+//				as LDrawMetaCommand) override this method; inits always return 
+//				an instance of the class they were sent to. 
+//
+//------------------------------------------------------------------------------
++ (LDrawDirective *) directiveWithLines:(NSArray *)lines
+								inRange:(NSRange)range
+							parentGroup:(dispatch_group_t)parentGroup
+{
+	return [[self alloc] initWithLines:lines inRange:range parentGroup:parentGroup];
+	
+}//end directiveWithLines:inRange:parentGroup:
+
+
 //========== initWithLines:inRange: ============================================
 //
 // Purpose:		Convenience method to perform a blocking parse operation

@@ -179,7 +179,7 @@
                                                                       inLines:lines
                                                                      maxIndex:NSMaxRange(range) - 1];
 
-                LDrawDirective *newDirective = [[CommandClass alloc] initWithLines:lines inRange:commandRange parentGroup:parentGroup];
+                LDrawDirective *newDirective = [CommandClass directiveWithLines:lines inRange:commandRange parentGroup:parentGroup];
                 [newDirective setEnclosingDirective:self];
                 [newDirective addObserver:self];
 
@@ -1018,9 +1018,9 @@
 
         if (extract == YES && partRange.length > 0 && partRange.location == 0) {
             CommandClass = [LDrawUtilities classForDirectiveBeginningWithLine:line];
-            LDrawDirective *newDirective = [[CommandClass alloc] initWithLines:[NSArray arrayWithObject:line]
-                                                                       inRange:NSMakeRange(0, 1)
-                                                                   parentGroup:nil];
+            LDrawDirective *newDirective = [CommandClass directiveWithLines:[NSArray arrayWithObject:line]
+                                                                   inRange:NSMakeRange(0, 1)
+                                                               parentGroup:nil];
             [synthesizedParts addObject:newDirective];
         } else if (extract == NO && startRange.length > 0)  {
             extract = YES;

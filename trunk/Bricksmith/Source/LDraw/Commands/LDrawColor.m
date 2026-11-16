@@ -181,7 +181,7 @@ void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
 
 //========== finishParsing: ====================================================
 //
-// Purpose:		-[LDrawMetaCommand initWithLines:inRange:] is 
+// Purpose:		+[LDrawMetaCommand directiveWithLines:inRange:parentGroup:] is 
 //				responsible for parsing out the line code and color command 
 //				(i.e., "0 !COLOUR"); now we just have to finish the 
 //				color-command specific syntax. 

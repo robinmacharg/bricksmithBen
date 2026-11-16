@@ -106,7 +106,7 @@
 			commandRange = [CommandClass rangeOfDirectiveBeginningAtIndex:lineIndex
 																  inLines:strippedLines
 																 maxIndex:[strippedLines count] - 1];
-			LDrawDirective *newDirective = [[CommandClass alloc] initWithLines:strippedLines inRange:commandRange parentGroup:parentGroup];
+			LDrawDirective *newDirective = [CommandClass directiveWithLines:strippedLines inRange:commandRange parentGroup:parentGroup];
 			[self addDirective:newDirective];
 			
 			lineIndex     = NSMaxRange(commandRange);

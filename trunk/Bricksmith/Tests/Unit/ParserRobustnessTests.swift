@@ -101,6 +101,29 @@ struct ParserRobustnessTests {
 		try Golden.check(Data(out.utf8), against: "robustness/cases.txt")
 	}
 
+	@Test("Meta-command factory: subclass per command; half-parsed !COLOUR (S1); nil for a nonzero line type (S6)")
+	func metaCommandFactory() throws {
+		func make(_ line: String) -> LDrawDirective? {
+			LDrawMetaCommand.directive(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		}
+		let comment = try #require(make("0 // hello") as? LDrawComment)
+		#expect(comment.stringValue() == "hello")
+		let colour = try #require(make("0 !COLOUR Red CODE 4 VALUE #C91A09 EDGE #333333") as? LDrawColor)
+		#expect(colour.colorCode().rawValue == 4)
+		// S1: a malformed !COLOUR still comes back, with the fields parsed before the error.
+		let broken = try #require(make("0 !COLOUR Broken CODE 901") as? LDrawColor)
+		#expect(broken.name() == "Broken")
+		#expect(broken.colorCode().rawValue == 901)
+		let generic = try #require(make("0 UNKNOWN meta"))
+		#expect(type(of: generic) == LDrawMetaCommand.self)
+		#expect((generic as? LDrawMetaCommand)?.stringValue() == "UNKNOWN meta")
+		let blank = try #require(make("   "))
+		#expect(type(of: blank) == LDrawMetaCommand.self)
+		#expect((blank as? LDrawMetaCommand)?.stringValue() == "   ")
+		// S6: a nonzero line type gives no directive at all.
+		#expect(make("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat") == nil)
+	}
+
 	// MARK: Crashers, each confirmed IN ISOLATION (heap corruption can surface in a later case).
 
 	@Test("Isolated: malformed ROTSTEP angles crash today (BUG-007)")
