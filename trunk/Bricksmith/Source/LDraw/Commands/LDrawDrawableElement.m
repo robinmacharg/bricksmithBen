@@ -29,7 +29,7 @@
 //				@implementation so it may read the protected ivars.
 //
 //==============================================================================
-BOOL LDrawDrawableElementCollectorColor(LDrawDrawableElement *element, GLfloat *scratch, GLfloat **outColor)
+BOOL LDrawDrawableElementCollectorColor(__unsafe_unretained LDrawDrawableElement *element, GLfloat *scratch, GLfloat **outColor)
 {
 	if(element->hidden == YES)
 		return NO;

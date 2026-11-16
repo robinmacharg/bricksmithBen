@@ -50,6 +50,57 @@ func ldrawDirective(at index: Int, in array: NSArray) -> LDrawDirective {
 }
 
 
+//---------- LDrawDirectiveSends ---------------------------------------------
+//
+// Purpose:		The messages a container's per-child loops send, with the same
+//				selectors as LDrawDirective's but with `id` arguments typed
+//				AnyObject? rather than imported as Any!. Passing an Any! on
+//				copies and bridges the existential for every child; an
+//				AnyObject? goes through objc_msgSend as is, as in the ObjC.
+//				Nothing conforms: a child is reinterpreted as this protocol
+//				(withLDrawDirective(at:in:_:)), and every LDrawDirective
+//				implements these selectors.
+//
+//------------------------------------------------------------------------------
+@objc protocol LDrawDirectiveSends {
+	@objc(draw:viewScale:parentColor:)
+	func draw(_ optionsMask: UInt, viewScale scaleFactor: Float, parentColor: LDrawColor?)
+	@objc(drawSelf:)
+	func drawSelf(_ renderer: (any LDrawRenderer)?)
+	@objc(collectSelf:)
+	func collectSelf(_ renderer: (any LDrawCollector)?)
+	@objc(boundingBox3)
+	func boundingBox3() -> Box3
+	@objc(hitTest:transform:viewScale:boundsOnly:creditObject:hits:)
+	func hitTest(_ pickRay: Ray3, transform: Matrix4, viewScale scaleFactor: Float, boundsOnly: Bool,
+				 creditObject: AnyObject?, hits: NSMutableDictionary?)
+	@objc(boxTest:transform:boundsOnly:creditObject:hits:)
+	func boxTest(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: AnyObject?, hits: NSMutableSet?) -> Bool
+	@objc(depthTest:inBox:transform:creditObject:bestObject:bestDepth:)
+	func depthTest(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: AnyObject?,
+				   bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>?, bestDepth: UnsafeMutablePointer<Float>?)
+}
+
+
+//---------- withLDrawDirective(at:in:_:) ------------------------------------
+//
+// Purpose:		Calls body with the child at index of a container's children,
+//				for sending it one of LDrawDirectiveSends. The child is read
+//				with CFArrayGetValueAtIndex and used unretained (the array
+//				holds it, as in the ObjC's fast enumeration), so a loop costs
+//				no retain/release and no cast per child. Out of range raises,
+//				as -objectAtIndex: did.
+//
+//------------------------------------------------------------------------------
+@inline(__always)
+func withLDrawDirective<Result>(at index: Int, in array: NSArray, _ body: (LDrawDirectiveSends) -> Result) -> Result {
+	let child = CFArrayGetValueAtIndex(unsafeBitCast(array, to: CFArray.self), index)!
+	return Unmanaged<AnyObject>.fromOpaque(child)._withUnsafeGuaranteedRef {
+		body(unsafeBitCast($0, to: LDrawDirectiveSends.self))
+	}
+}
+
+
 //---------- ldrawBoundingBox3(forDirectives:) ---------------------------------
 //
 // Purpose:		+[LDrawUtilities boundingBox3ForDirectives:], inlined so that a
@@ -63,7 +114,7 @@ func ldrawBoundingBox3(forDirectives directives: NSArray?) -> Box3 {
 
 	if let directives {
 		for counter in 0..<numberOfDirectives {
-			let partBounds = ldrawDirective(at: counter, in: directives).boundingBox3()
+			let partBounds = withLDrawDirective(at: counter, in: directives) { $0.boundingBox3() }
 			bounds = V3UnionBox(bounds, partBounds)
 		}
 	}
@@ -400,7 +451,7 @@ final class LDrawStep: LDrawContainer {
 
 		//Draw each element in the step.
 		for counter in 0..<commandsInStep.count {
-			ldrawDirective(at: counter, in: commandsInStep).draw(optionsMask, viewScale: scaleFactor, parentColor: parentColor)
+			withLDrawDirective(at: counter, in: commandsInStep) { $0.draw(optionsMask, viewScale: scaleFactor, parentColor: parentColor) }
 		}
 
 	}//end draw:viewScale:parentColor:
@@ -424,7 +475,7 @@ final class LDrawStep: LDrawContainer {
 
 		//Draw each element in the step.
 		for counter in 0..<commandsInStep.count {
-			ldrawDirective(at: counter, in: commandsInStep).drawSelf(renderer)
+			withLDrawDirective(at: counter, in: commandsInStep) { $0.drawSelf(renderer) }
 		}
 
 	}//end drawSelf:
@@ -445,7 +496,7 @@ final class LDrawStep: LDrawContainer {
 		if let commandsInStep = subdirectives() {
 			//Draw each element in the step.
 			for counter in 0..<commandsInStep.count {
-				ldrawDirective(at: counter, in: commandsInStep).collectSelf(renderer)
+				withLDrawDirective(at: counter, in: commandsInStep) { $0.collectSelf(renderer) }
 			}
 		}
 		_ = revalCache(.DisplayList)
@@ -460,6 +511,7 @@ final class LDrawStep: LDrawContainer {
 	//==============================================================================
 	@objc(hitTest:transform:viewScale:boundsOnly:creditObject:hits:)
 	override func hitTest(_ pickRay: Ray3, transform: Matrix4, viewScale scaleFactor: Float, boundsOnly: Bool, creditObject: Any!, hits: NSMutableDictionary!) {
+		let credit = creditObject as AnyObject?	// (once, not per child: LDrawDirectiveSends)
 		guard let commandsInStep = subdirectives() else {
 			return
 		}
@@ -467,7 +519,7 @@ final class LDrawStep: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0..<commandCount {
-			ldrawDirective(at: counter, in: commandsInStep).hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+			withLDrawDirective(at: counter, in: commandsInStep) { $0.hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }
 		}
 
 	}//end hitTest:transform:viewScale:boundsOnly:creditObject:hits:
@@ -480,6 +532,7 @@ final class LDrawStep: LDrawContainer {
 	//==============================================================================
 	@objc(boxTest:transform:boundsOnly:creditObject:hits:)
 	override func boxTest(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: Any!, hits: NSMutableSet!) -> Bool {
+		let credit = creditObject as AnyObject?	// (once, not per child: LDrawDirectiveSends)
 		if !VolumeCanIntersectBox(boundingBox3(), transform, bounds) {
 			return false
 		}
@@ -491,7 +544,7 @@ final class LDrawStep: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0..<commandCount {
-			if ldrawDirective(at: counter, in: commandsInStep).boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits) {
+			if withLDrawDirective(at: counter, in: commandsInStep, { $0.boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }) {
 				if creditObject != nil {
 					return true
 				}
@@ -511,6 +564,7 @@ final class LDrawStep: LDrawContainer {
 	//==============================================================================
 	@objc(depthTest:inBox:transform:creditObject:bestObject:bestDepth:)
 	override func depthTest(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: Any!, bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>!, bestDepth: UnsafeMutablePointer<Float>!) {
+		let credit = creditObject as AnyObject?	// (once, not per child: LDrawDirectiveSends)
 		if !VolumeCanIntersectPoint(boundingBox3(), transform, bounds, bestDepth.pointee) {
 			return
 		}
@@ -522,7 +576,7 @@ final class LDrawStep: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0..<commandCount {
-			ldrawDirective(at: counter, in: commandsInStep).depthTest(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+			withLDrawDirective(at: counter, in: commandsInStep) { $0.depthTest(pt, inBox: bounds, transform: transform, creditObject: credit, bestObject: bestObject, bestDepth: bestDepth) }
 		}
 
 	}//end depthTest:inBox:transform:creditObject:bestObject:bestDepth:

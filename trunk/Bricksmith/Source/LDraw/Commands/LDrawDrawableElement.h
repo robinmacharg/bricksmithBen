@@ -62,8 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 // primitive in -collectSelf:. Returns NO if the element is hidden. Otherwise sets *outColor to
 // the colour argument for the collector exactly as the ObjC primitives chose it: current colour
 // (16) -> LDrawRenderCurrentColor, edge colour (24) -> LDrawRenderComplimentColor, anything else
-// -> `scratch` filled by -getColorRGBA: (left untouched for a nil colour).
-FOUNDATION_EXPORT BOOL LDrawDrawableElementCollectorColor(LDrawDrawableElement *element, GLfloat *scratch,
+// -> `scratch` filled by -getColorRGBA: (left untouched for a nil colour). The element is not
+// retained: the caller holds it.
+FOUNDATION_EXPORT BOOL LDrawDrawableElementCollectorColor(__unsafe_unretained LDrawDrawableElement *element, GLfloat *scratch,
 														  GLfloat * _Nullable * _Nonnull outColor);
 
 NS_ASSUME_NONNULL_END

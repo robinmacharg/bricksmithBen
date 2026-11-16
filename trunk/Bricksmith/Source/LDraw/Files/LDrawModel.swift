@@ -325,7 +325,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			ldrawDirective(at: counter, in: output.steps).draw(optionsMask, viewScale: scaleFactor, parentColor: parentColor)
+			withLDrawDirective(at: counter, in: output.steps) { $0.draw(optionsMask, viewScale: scaleFactor, parentColor: parentColor) }
 		}
 
 		// Draw Drag-and-Drop pieces if we've got 'em.
@@ -447,7 +447,7 @@ class LDrawModel: LDrawContainer {
 			}
 
 			for counter in 0...output.maxIndex {
-				ldrawDirective(at: counter, in: output.steps).drawSelf(renderer)
+				withLDrawDirective(at: counter, in: output.steps) { $0.drawSelf(renderer) }
 			}
 
 			// And: if we are currently dragging directives, those
@@ -514,7 +514,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			ldrawDirective(at: counter, in: output.steps).collectSelf(renderer)
+			withLDrawDirective(at: counter, in: output.steps) { $0.collectSelf(renderer) }
 		}
 		return true
 	}
@@ -527,13 +527,14 @@ class LDrawModel: LDrawContainer {
 	//==============================================================================
 	@objc(hitTest:transform:viewScale:boundsOnly:creditObject:hits:)
 	override func hitTest(_ pickRay: Ray3, transform: Matrix4, viewScale scaleFactor: Float, boundsOnly: Bool, creditObject: Any!, hits: NSMutableDictionary!) {
+		let credit = creditObject as AnyObject?	// (once, not per child: LDrawDirectiveSends)
 		guard let output = stepsToOutput() else {
 			return
 		}
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			ldrawDirective(at: counter, in: output.steps).hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+			withLDrawDirective(at: counter, in: output.steps) { $0.hitTest(pickRay, transform: transform, viewScale: scaleFactor, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }
 		}
 
 	}//end hitTest:transform:viewScale:boundsOnly:creditObject:hits:
@@ -546,6 +547,7 @@ class LDrawModel: LDrawContainer {
 	//==============================================================================
 	@objc(boxTest:transform:boundsOnly:creditObject:hits:)
 	override func boxTest(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: Any!, hits: NSMutableSet!) -> Bool {
+		let credit = creditObject as AnyObject?	// (once, not per child: LDrawDirectiveSends)
 		// (-boundingBox3, minus the dispatch; nil where it raised.)
 		guard let myBounds = checkedBoundingBox3() else {
 			return false
@@ -560,7 +562,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			if ldrawDirective(at: counter, in: output.steps).boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits) {
+			if withLDrawDirective(at: counter, in: output.steps, { $0.boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }) {
 				if creditObject != nil {
 					return true
 				}
@@ -580,6 +582,7 @@ class LDrawModel: LDrawContainer {
 	//==============================================================================
 	@objc(depthTest:inBox:transform:creditObject:bestObject:bestDepth:)
 	override func depthTest(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: Any!, bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>!, bestDepth: UnsafeMutablePointer<Float>!) {
+		let credit = creditObject as AnyObject?	// (once, not per child: LDrawDirectiveSends)
 		// (-boundingBox3, minus the dispatch; nil where it raised.)
 		guard let myBounds = checkedBoundingBox3() else {
 			return
@@ -594,7 +597,7 @@ class LDrawModel: LDrawContainer {
 
 		// Draw all the steps in the model
 		for counter in 0...output.maxIndex {
-			ldrawDirective(at: counter, in: output.steps).depthTest(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+			withLDrawDirective(at: counter, in: output.steps) { $0.depthTest(pt, inBox: bounds, transform: transform, creditObject: credit, bestObject: bestObject, bestDepth: bestDepth) }
 		}
 
 	}//end depthTest:inBox:transform:creditObject:bestObject:bestDepth:
@@ -718,7 +721,7 @@ class LDrawModel: LDrawContainer {
 			}
 			// Draw all the steps in the model
 			for counter in 0...output.maxIndex {
-				cachedBounds = V3UnionBox(cachedBounds, ldrawDirective(at: counter, in: output.steps).boundingBox3())
+				cachedBounds = V3UnionBox(cachedBounds, withLDrawDirective(at: counter, in: output.steps) { $0.boundingBox3() })
 			}
 		}
 		totalBounds = cachedBounds
