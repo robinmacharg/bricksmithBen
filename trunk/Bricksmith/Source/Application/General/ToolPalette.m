@@ -30,6 +30,15 @@
 
 ToolPalette *sharedToolPalette = nil;
 
+@interface ToolPalette ()
+{
+	// The nib's top-level objects (the palette's contents view). -loadNibNamed:owner:topLevelObjects: doesn't
+	// retain them, so this keeps them for the palette's lifetime.
+	NSArray *nibTopLevelObjects;
+}
+@end
+
+
 @implementation ToolPalette
 
 //========== awakeFromNib ======================================================
@@ -100,7 +109,9 @@ ToolPalette *sharedToolPalette = nil;
 	currentKeyCharacters	= @"";
 	currentKeyModifiers		= 0;
 	
-	[NSBundle loadNibNamed:@"ToolPalette" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"ToolPalette" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	//---------- Create the tool window ----------------------------------------
 	
