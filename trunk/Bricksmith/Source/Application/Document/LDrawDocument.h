@@ -117,28 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stepChanged:(null_unspecified NSNotification *)notification;
 - (void)syntaxColorChanged:(null_unspecified NSNotification *)notification;
 
-// Utilities
-- (void) addModel:(null_unspecified LDrawMPDModel *)newModel atIndex:(NSInteger)insertAtIndex preventNameCollisions:(BOOL)renameModels;
-- (void) addStep:(null_unspecified LDrawStep *)newStep parent:(null_unspecified LDrawMPDModel*)selectedModel index:(NSInteger)insertAtIndex;
-- (void) addPartNamed:(null_unspecified NSString *)partName;
-- (void) addStepComponent:(null_unspecified LDrawDirective *)newDirective parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
 
-- (BOOL) canDeleteDirective:(null_unspecified LDrawDirective *)directive displayErrors:(BOOL)errorFlag;
-- (BOOL) elementsAreSelectedOfVisibility:(BOOL)visibleFlag;
-- (null_unspecified NSAttributedString *) formatDirective:(null_unspecified LDrawDirective *)item withStringRepresentation:(null_unspecified NSString *)representation;
-- (void) loadDataIntoDocumentUI;
-- (null_unspecified LDrawContainer *) selectedContainer;
-- (null_unspecified NSArray *) selectedObjects;
-- (null_unspecified LDrawMPDModel *) selectedModel;
-- (null_unspecified LDrawStep *) selectedStep;
-- (null_unspecified LDrawDirective *) selectedStepComponent;
-- (null_unspecified LDrawPart *) selectedPart;
-- (void) updateInspector;
-- (void) updateViewingAngleToMatchStep;
-- (void) writeDirectives:(null_unspecified NSArray *)directives toPasteboard:(null_unspecified NSPasteboard *)pasteboard;
-- (null_unspecified NSArray *) pasteFromPasteboard:(null_unspecified NSPasteboard *) pasteboard preventNameCollisions:(BOOL)renameModels parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
-
-- (void) flushDocChangesAndSelect:(null_unspecified NSArray*)directives;
 
 @end
 
@@ -287,6 +266,34 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) addModelsToMenus;
 - (void) clearModelMenus;
 - (void) buildRelatedPartsMenus;
+
+@end
+
+
+
+@interface LDrawDocument (Utilities)
+// LDrawDocument+Utilities.m
+
+// Utilities
+- (void) addModel:(null_unspecified LDrawMPDModel *)newModel atIndex:(NSInteger)insertAtIndex preventNameCollisions:(BOOL)renameModels;
+- (void) addStep:(null_unspecified LDrawStep *)newStep parent:(null_unspecified LDrawMPDModel*)selectedModel index:(NSInteger)insertAtIndex;
+- (void) addPartNamed:(null_unspecified NSString *)partName;
+- (void) addStepComponent:(null_unspecified LDrawDirective *)newDirective parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
+- (BOOL) canDeleteDirective:(null_unspecified LDrawDirective *)directive displayErrors:(BOOL)errorFlag;
+- (BOOL) elementsAreSelectedOfVisibility:(BOOL)visibleFlag;
+- (null_unspecified NSAttributedString *) formatDirective:(null_unspecified LDrawDirective *)item withStringRepresentation:(null_unspecified NSString *)representation;
+- (void) loadDataIntoDocumentUI;
+- (null_unspecified LDrawContainer *) selectedContainer;
+- (null_unspecified NSArray *) selectedObjects;
+- (null_unspecified LDrawMPDModel *) selectedModel;
+- (null_unspecified LDrawStep *) selectedStep;
+- (null_unspecified LDrawDirective *) selectedStepComponent;
+- (null_unspecified LDrawPart *) selectedPart;
+- (void) updateInspector;
+- (void) updateViewingAngleToMatchStep;
+- (void) writeDirectives:(null_unspecified NSArray *)directives toPasteboard:(null_unspecified NSPasteboard *)pasteboard;
+- (null_unspecified NSArray *) pasteFromPasteboard:(null_unspecified NSPasteboard *) pasteboard preventNameCollisions:(BOOL)renameModels parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
+- (void) flushDocChangesAndSelect:(null_unspecified NSArray*)directives;
 
 @end
 
