@@ -48,8 +48,8 @@ trunk/Bricksmith/Source/Application/Inspector/InspectionLSynth.m: warning: impli
 trunk/Bricksmith/Source/Application/Inspector/InspectionPart.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'RotationT' [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/Application/Inspector/InspectionStep.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LDrawStepRotationT' (aka 'enum LDrawStepRotationT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/Application/Inspector/InspectionStep.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'ViewOrientationT' (aka 'enum ViewOrientationT') [-Wshorten-64-to-32]
-trunk/Bricksmith/Source/Categories/UserDefaultsCategory.m: warning: 'NSArchiver' is deprecated: first deprecated in macOS 10.13 - Use NSKeyedArchiver instead [-Wdeprecated-declarations]
-trunk/Bricksmith/Source/Categories/UserDefaultsCategory.m: warning: 'NSUnarchiver' is deprecated: first deprecated in macOS 10.13 - Use NSKeyedUnarchiver instead [-Wdeprecated-declarations]
+trunk/Bricksmith/Source/Categories/UserDefaultsCategory.swift: warning: 'NSArchiver' was deprecated in macOS 10.13: Use NSKeyedArchiver instead
+trunk/Bricksmith/Source/Categories/UserDefaultsCategory.swift: warning: 'NSUnarchiver' was deprecated in macOS 10.13: Use NSKeyedUnarchiver instead
 trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LSynthClassT' (aka 'enum LSynthClassT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LSynthSelectionModeT' [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'int' [-Wshorten-64-to-32]

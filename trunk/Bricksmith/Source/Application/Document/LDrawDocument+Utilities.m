@@ -13,6 +13,7 @@
 //  Copyright (c) 2005. All rights reserved.
 //==============================================================================
 #import "LDrawDocument+Private.h"
+#import "Bricksmith-Swift.h"
 
 #import "Bricksmith-Swift.h"
 

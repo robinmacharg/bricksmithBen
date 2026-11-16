@@ -38,7 +38,6 @@
 #import "LDrawUtilities.h"
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"
-#import "UserDefaultsCategory.h"
 
 // Macros for pref-based UI tricks.
 #define USE_TURNTABLE				([[NSUserDefaults standardUserDefaults] integerForKey:ROTATE_MODE_KEY] == RotateModeTurntable)

@@ -55,7 +55,6 @@
 #import "PartLibrary.h"
 #import "PartLibraryController.h"
 #import "LSynthConfiguration.h"
-#import "UserDefaultsCategory.h"
 #import "Bricksmith-Swift.h"
 
 @interface PreferencesDialogController ()
