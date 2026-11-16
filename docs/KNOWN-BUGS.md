@@ -60,6 +60,9 @@
 
 ## Suspected (not yet confirmed by a test)
 
+`S<n>` IDs here are suspected bugs. The plan's review log (Appendix A) reuses `S<n>` for review findings; those are
+unrelated.
+
 "Row" refers to the P2 test-table rows in [swift-port-plan.md](swift-port-plan.md).
 
 | ID | Found | Area | Suspicion | Where | Confirm in |

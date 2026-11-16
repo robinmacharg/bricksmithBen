@@ -6,6 +6,7 @@
 | Date | 2026-11-14 |
 | Toolchain | Xcode 26.3 (17C529), built-in Swift 6.2.4. No external toolchains |
 | Out of scope | OpenGL → Metal (a later project; this plan prepares the seam) |
+| Line references | Every `file:line` in this plan refers to tag `snapshot-20261114-pre-swift-plan` (`git show snapshot-20261114-pre-swift-plan:<path>`); later commits move lines. New text cites methods (`-[Class selector]`) instead |
 | Related | [ARCHITECTURE.md](ARCHITECTURE.md) · [TESTING.md](TESTING.md) · [port-status.md](port-status.md) · [KNOWN-BUGS.md](KNOWN-BUGS.md) |
 
 **How to read this.** §1–4 give the goals, the facts that constrain the plan, the workflow, and the technical
@@ -52,7 +53,7 @@ Steps marked **🧑 HUMAN GATE** need a person to sign off: an agent stops there
 | `PartCatalogBuilder` writes `parts.plist` into the LDraw folder | `PartCatalogBuilder.m:209` | Each run gets its own temp copy of the fixture library. |
 | `write` emits **CRLF**. Inputs may be UTF-8 with a BOM, Latin-1 or MacRoman, and output is always UTF-8 | `LDrawModel.m:571`; `LDrawUtilities.m:376-387`; `LDrawDocument.m:534` | Fixtures and goldens are protected with `.gitattributes`, and tests compare **bytes**. |
 | Document edit actions read the outline view's selection | `LDrawDocument.m:6050-6065`, `:858-875` | Document tests load the nib (the window isn't shown). |
-| `+initialize` registers value transformers | `LDrawApplication.m:41` (before P4) | Swift can't define `+initialize`, so P4 moves it (done: `+registerValueTransformers`, called from `main.m`). |
+| `+initialize` registers value transformers | `LDrawApplication.m:53` | Swift can't define `+initialize`, so P4 moves it (done: `+registerValueTransformers`, called from `main.m`). |
 | Colours in preferences are archived with non-keyed `NSArchiver` | `UserDefaultsCategory.m:22,41` | Tests cover both the reader **and** the writer format. |
 | Info.plist hard-codes `LSMinimumSystemVersion` to `10.11.0`. Sparkle points at the live SourceForge appcast in every configuration | `Info.plist` | Debug and dev builds could update themselves to the release build. P0 fixes this. |
 | `LDrawDataStream.m` isn't compiled; only its header is in the project | `project.pbxproj` | Excluded from porting. Delete it or leave it, at the maintainer's choice. |
@@ -342,7 +343,8 @@ This comes after the tests, because the remaining MRC files are the riskiest one
 ### P4: ObjC prep refactors, no behaviour change (L)
 Goldens and known issues **must not change**.
 - **Parse errors:** `@throw`/`@catch` becomes `BOOL` + `NSError **`, keeping every current outcome. That includes the
-  half-parsed `!COLOUR` (S1), the nil directive (S6), and `readFromData:`'s unchecked `*outError` (S9).
+  half-parsed `!COLOUR` (S1), the nil directive (S6), and `readFromData:`'s unchecked `*outError` (S9); these are
+  KNOWN-BUGS [suspected entries](KNOWN-BUGS.md#suspected-not-yet-confirmed-by-a-test).
 - **Factory:** `+[LDrawDirective directiveWithLines:inRange:parentGroup:]` replaces the substitute-self init.
 - **Ivars → properties:**
   - Every ivar read by another class or by a category, including **all `LDrawDocument` ivars and outlets** (needed
@@ -504,7 +506,9 @@ locators. Keep the xibs and bindings; there is no SwiftUI rewrite.
 
 ## Appendix A: adversarial review log
 
-Every finding was spot-checked against the code before it was accepted.
+Every finding was spot-checked against the code before it was accepted. The IDs in these tables (`F6`, `S1`, ...) are
+review-finding numbers. They are **not** the `S`-entries in [KNOWN-BUGS.md](KNOWN-BUGS.md#suspected-not-yet-confirmed-by-a-test),
+which are suspected bugs; everywhere else in this plan, `S<n>` means the KNOWN-BUGS entry.
 
 ### Round 1 (on draft v1)
 

@@ -4,6 +4,26 @@ Mistakes we've made, gotchas we've hit, and facts we've confirmed during the Swi
 starting work, and add to it the moment something bites**: one entry per lesson, newest at the bottom of its
 section. Each entry says what happened and what to do instead.
 
+## Index by topic
+
+Entries are numbered in the order they were learned; the numbers are cited elsewhere and never change. Read the
+topics that match your task rather than the whole log.
+
+| Topic | Entries |
+|---|---|
+| Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84 |
+| Build and warnings | L5-L10, L20, L21, L66, L84, L86 |
+| Xcode project editing | L11, L12 |
+| App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86 |
+| ARC | L54, L67, L77, L79 |
+| Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
+| Rendering, GL and snapshots | L64, L70, L73, L78 |
+| Performance | L65 (and TESTING.md "Performance") |
+| UI tests and manual smoke | L34, L68, L80, L82 |
+| Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82 |
+| Agents and review | L17, L18, L75, L85; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
   failed: zsh returns the exit status of `tail`. → Run `setopt pipefail` first, or don't pipe a command whose
