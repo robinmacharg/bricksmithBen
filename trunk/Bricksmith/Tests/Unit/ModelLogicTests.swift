@@ -933,3 +933,507 @@ struct ContainerPinTests {
 		#expect(m.steps()[1] as AnyObject === mine)
 	}
 }
+
+
+// MARK: - LDrawDirective (P6c pins)
+
+/// An LDrawObserver whose callbacks append to a shared log and may run a hook (to add or remove observers
+/// while the observable is notifying). The doomed object of a goodbye is recorded by address only.
+final class HookObserver: NSObject, LDrawObserver {
+	final class Log { var lines: [String] = [] }
+	let label: String
+	let log: Log
+	var onNotify: ((HookObserver) -> Void)?
+	init(_ label: String, _ log: Log) { self.label = label; self.log = log }
+
+	static func address(_ o: Any?) -> UInt {
+		guard let o else { return 0 }
+		return UInt(bitPattern: Unmanaged.passUnretained(o as AnyObject).toOpaque())
+	}
+
+	func observableSaysGoodbyeCruelWorld(_ doomedObservable: (any LDrawObservable)!) {
+		log.lines.append("\(label) goodbye \(Self.address(doomedObservable))")
+		onNotify?(self)
+	}
+	func statusInvalidated(_ flags: CacheFlagsT, who observable: (any LDrawObservable)!) {
+		log.lines.append("\(label) inval \(flags.rawValue)")
+		onNotify?(self)
+	}
+	func receiveMessage(_ msg: MessageT, who observable: (any LDrawObservable)!) {
+		log.lines.append("\(label) message \(msg.rawValue)")
+		onNotify?(self)
+	}
+}
+
+/// An observer that keeps no strong reference to its observable and stops observing when it dies
+/// (the observer-dies-first rule in LDrawDirective.h).
+final class SelfRemovingObserver: NSObject, LDrawObserver {
+	unowned(unsafe) let target: LDrawDirective
+	init(_ target: LDrawDirective) { self.target = target; super.init(); target.add(self) }
+	deinit { target.remove(self as LDrawObserver) }
+	func observableSaysGoodbyeCruelWorld(_ doomedObservable: (any LDrawObservable)!) {}
+	func statusInvalidated(_ flags: CacheFlagsT, who observable: (any LDrawObservable)!) {}
+	func receiveMessage(_ msg: MessageT, who observable: (any LDrawObservable)!) {}
+}
+
+/// Pins the base class's behaviour before it moves to Swift: the observer set (LDrawFastSet: 0, 1, 2 and 3+
+/// observers, duplicates, mutation during notification, the goodbye from dealloc), cache flags, the ancestor
+/// accessors, the factory and parse initialisers, icon, selection, NSCoding and copying, and the no-op
+/// defaults. Iteration order over 3+ observers is NSMutableSet hash order, so only membership is pinned there.
+@Suite("LDrawDirective (P6c pins)", .fixtureLibrary, .serialized)
+struct DirectivePinTests {
+
+	private func observers(_ labels: [String], _ log: HookObserver.Log) -> [HookObserver] {
+		labels.map { HookObserver($0, log) }
+	}
+
+	/// Who receives a message now, sorted when order isn't deterministic.
+	private func reached(_ d: LDrawDirective, _ log: HookObserver.Log, sorted: Bool = false) -> [String] {
+		log.lines = []
+		d.sendMessage(toObservers: .nameChanged)
+		let who = log.lines.map { String($0.prefix { $0 != " " }) }
+		return sorted ? who.sorted() : who
+	}
+
+	// MARK: Observer set
+
+	@Test("Observer set: add and remove through 0, 1, 2, 3+, 2, 1, 0; one or two observers are told in insertion order")
+	func observerCounts() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let o = observers(["a", "b", "c", "d"], log)
+		#expect(reached(d, log).isEmpty)
+		d.add(o[0])
+		#expect(reached(d, log) == ["a"])
+		d.add(o[1])
+		#expect(reached(d, log) == ["a", "b"])
+		d.add(o[2])
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
+		d.add(o[3])
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c", "d"])
+		d.remove(o[3] as LDrawObserver)
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
+		d.remove(o[0] as LDrawObserver)	// 3 -> 2: back to two pointers (order from the set)
+		#expect(reached(d, log, sorted: true) == ["b", "c"])
+		d.remove(o[2] as LDrawObserver)
+		#expect(reached(d, log) == ["b"])
+		d.remove(o[1] as LDrawObserver)
+		#expect(reached(d, log).isEmpty)
+
+		// Two pointers: removing the first moves the second up; a new one goes after it.
+		d.add(o[0]); d.add(o[1])
+		d.remove(o[0] as LDrawObserver)
+		d.add(o[2])
+		#expect(reached(d, log) == ["b", "c"])
+		d.remove(o[1] as LDrawObserver); d.remove(o[2] as LDrawObserver)
+		#expect(reached(d, log).isEmpty)
+	}
+
+	@Test("Observer set: a duplicate add is ignored at every size, and one remove then drops the observer")
+	func duplicateAdds() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let o = observers(["a", "b", "c"], log)
+		d.add(o[0]); d.add(o[0])
+		#expect(reached(d, log) == ["a"])
+		d.add(o[1]); d.add(o[1]); d.add(o[0])
+		#expect(reached(d, log) == ["a", "b"])
+		d.add(o[2]); d.add(o[2]); d.add(o[0])
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
+		d.remove(o[2] as LDrawObserver)
+		#expect(reached(d, log, sorted: true) == ["a", "b"])
+		d.remove(o[0] as LDrawObserver)
+		#expect(reached(d, log) == ["b"])
+		d.remove(o[1] as LDrawObserver)
+		#expect(reached(d, log).isEmpty)
+	}
+
+	@Test("Observer set holds observers unretained")
+	func observersUnretained() {
+		let d = LDrawDirective()
+		weak var weakObserver: SelfRemovingObserver?
+		autoreleasepool {
+			let o = SelfRemovingObserver(d)
+			weakObserver = o
+		}
+		#expect(weakObserver == nil)
+		let log = HookObserver.Log()
+		#expect(reached(d, log).isEmpty)
+	}
+
+	@Test("Two observers: the first removing the second skips it; removing itself still reaches the second")
+	func mutationDuringNotificationTwo() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let o = observers(["a", "b"], log)
+		d.add(o[0]); d.add(o[1])
+		o[0].onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.remove(o[1] as LDrawObserver) }
+		#expect(reached(d, log) == ["a"])
+		#expect(reached(d, log) == ["a"], "b stays removed")
+		d.add(o[1])
+		o[0].onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.remove(me as LDrawObserver) }
+		#expect(reached(d, log) == ["a", "b"])
+		o[0].onNotify = nil
+		#expect(reached(d, log) == ["b"])
+		d.remove(o[1] as LDrawObserver)
+	}
+
+	@Test("Two observers: one added during notification (the set grows to 3) is not told this time; the second still is")
+	func addDuringNotification() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let o = observers(["a", "b", "c", "d"], log)
+		d.add(o[0]); d.add(o[1])
+		o[0].onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.add(o[2]) }
+		#expect(reached(d, log) == ["a", "b"])
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
+		// 3+: an observer added during notification is not told either (the set was snapshotted).
+		o[1].onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.add(o[3]) }
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c", "d"])
+		for x in o { d.remove(x as LDrawObserver) }
+		#expect(reached(d, log).isEmpty)
+	}
+
+	@Test("Three observers: each removing itself is still told (all three); removing all others leaves exactly one told")
+	func mutationDuringNotificationThree() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let o = observers(["a", "b", "c"], log)
+		for x in o { d.add(x); x.onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.remove(me as LDrawObserver) } }
+		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
+		#expect(reached(d, log).isEmpty, "all removed")
+
+		for x in o {
+			d.add(x)
+			x.onNotify = { [unowned(unsafe) d] me in
+				for other in o where other !== me { d.remove(other as LDrawObserver) }
+				for other in o { other.onNotify = nil }
+			}
+		}
+		let first = reached(d, log)
+		#expect(first.count == 1, "\(first)")
+		#expect(reached(d, log) == first, "only the first one told remains")
+		d.remove(o.first { $0.label == first.first }! as LDrawObserver)
+		#expect(reached(d, log).isEmpty)
+	}
+
+	@Test("Dealloc says goodbye to every observer (0, 1, 2, 3+), passing the dying directive")
+	func goodbyeFromDealloc() {
+		for count in 0...4 {
+			let log = HookObserver.Log()
+			let o = observers(Array(["a", "b", "c", "d"].prefix(count)), log)
+			var address: UInt = 0
+			autoreleasepool {
+				let d = LDrawDirective()
+				address = HookObserver.address(d)
+				for x in o { d.add(x) }
+			}
+			#expect(log.lines.sorted() == o.map { "\($0.label) goodbye \(address)" }, "\(count): \(log.lines)")
+		}
+	}
+
+	@Test("Dealloc goodbye: an observer may remove itself (as LDrawPart does) or the next one, which is then skipped")
+	func goodbyeWithRemoval() {
+		let log = HookObserver.Log()
+		let o = observers(["a", "b"], log)
+		autoreleasepool {
+			let d = LDrawDirective()
+			d.add(o[0]); d.add(o[1])
+			o[0].onNotify = { [unowned(unsafe) d] me in d.remove(me as LDrawObserver) }
+			o[1].onNotify = { [unowned(unsafe) d] me in d.remove(me as LDrawObserver) }
+		}
+		#expect(log.lines.map { String($0.prefix(1)) } == ["a", "b"])
+
+		log.lines = []
+		autoreleasepool {
+			let d = LDrawDirective()
+			d.add(o[0]); d.add(o[1])
+			o[0].onNotify = { [unowned(unsafe) d] _ in d.remove(o[1] as LDrawObserver) }
+			o[1].onNotify = nil
+		}
+		#expect(log.lines.map { String($0.prefix(1)) } == ["a"])
+
+		log.lines = []
+		let three = observers(["x", "y", "z"], log)
+		autoreleasepool {
+			let d = LDrawDirective()
+			for x in three { d.add(x); x.onNotify = { [unowned(unsafe) d] me in d.remove(me as LDrawObserver) } }
+		}
+		#expect(log.lines.map { String($0.prefix(1)) }.sorted() == ["x", "y", "z"])
+	}
+
+	// MARK: Cache flags
+
+	@Test("invalCache tells observers only the newly dirty bits; revalCache returns the dirty bits it clears and tells no one")
+	func cacheFlags() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let o = observers(["a", "b"], log)
+		d.add(o[0]); d.add(o[1])
+		d.invalCache(.CacheFlagBounds)
+		#expect(log.lines == ["a inval 1", "b inval 1"])
+		log.lines = []
+		d.invalCache(.CacheFlagBounds)
+		d.invalCache([])
+		#expect(log.lines.isEmpty, "already dirty: no message")
+		d.invalCache([.CacheFlagBounds, .DisplayList])
+		#expect(log.lines == ["a inval 2", "b inval 2"])
+		log.lines = []
+		#expect(d.revalCache(.DisplayList) == .DisplayList)
+		#expect(d.revalCache(.DisplayList) == [])
+		#expect(d.revalCache([.CacheFlagBounds, .ContainerInvalid]) == .CacheFlagBounds)
+		#expect(log.lines.isEmpty)
+		d.invalCache(CacheFlagsT(rawValue: 8 | 4))
+		#expect(log.lines == ["a inval 12", "b inval 12"])
+		#expect(d.revalCache(CacheFlagsT(rawValue: -1)).rawValue == 12)
+		log.lines = []
+		d.invalCache(.CacheFlagBounds)
+		#expect(log.lines == ["a inval 1", "b inval 1"], "re-armed by revalCache")
+		d.remove(o[0] as LDrawObserver); d.remove(o[1] as LDrawObserver)
+
+		// The flags change even with no observer.
+		let lone = LDrawDirective()
+		#expect(lone.revalCache(CacheFlagsT(rawValue: -1)) == [])
+		lone.invalCache(.DisplayList)
+		#expect(lone.revalCache(CacheFlagsT(rawValue: -1)) == .DisplayList)
+	}
+
+	@Test("sendMessageToObservers passes the message through unchanged, and always (it isn't cached)")
+	func messages() {
+		let d = LDrawDirective()
+		let log = HookObserver.Log()
+		let a = HookObserver("a", log)
+		d.add(a)
+		d.sendMessage(toObservers: .nameChanged)
+		d.sendMessage(toObservers: .scopeChanged)
+		d.sendMessage(toObservers: .observedChanged)
+		d.sendMessage(toObservers: .observedChanged)
+		#expect(log.lines == ["a message 0", "a message 1", "a message 2", "a message 2"])
+		d.remove(a as LDrawObserver)
+	}
+
+	// MARK: Ancestry
+
+	@Test("enclosingFile/Model/Step return the nearest match walking up from self; ancestors lists root first")
+	func ancestry() {
+		let file = LDrawFile()
+		let model = LDrawMPDModel()
+		let outerStep = LDrawStep()
+		let innerStep = LDrawStep()
+		let leaf = LDrawDirective()
+		model.setEnclosing(file)
+		outerStep.setEnclosing(model)
+		innerStep.setEnclosing(outerStep)
+		leaf.setEnclosing(innerStep)
+		defer { for d: LDrawDirective in [leaf, innerStep, outerStep, model] { d.setEnclosing(nil) } }
+
+		#expect(leaf.enclosingDirective() === innerStep)
+		#expect(leaf.enclosingStep() === innerStep, "nearest, not highest")
+		#expect(leaf.enclosingModel() === model)
+		#expect(leaf.enclosingFile() === file)
+		#expect(innerStep.enclosingStep() === innerStep, "self counts")
+		#expect(model.enclosingModel() === model && file.enclosingFile() === file)
+		#expect(file.enclosingStep() == nil && file.enclosingModel() == nil && file.enclosingDirective() == nil)
+		#expect(LDrawDirective().enclosingFile() == nil)
+		let ancestors = leaf.ancestors() as! [LDrawDirective]
+		#expect(ancestors.count == 5)
+		#expect(zip(ancestors, [file, model, outerStep, innerStep, leaf] as [LDrawDirective]).allSatisfy { $0 === $1 })
+		#expect((LDrawDirective().ancestors() as! [LDrawDirective]).count == 1)
+
+		#expect(leaf.isAncestor(inList: [model]))
+		#expect(leaf.isAncestor(inList: [LDrawStep(), file]))
+		#expect(!leaf.isAncestor(inList: [leaf]), "self is not its own ancestor")
+		#expect(!leaf.isAncestor(inList: []))
+		#expect(!leaf.isAncestor(inList: nil))
+		#expect(!file.isAncestor(inList: [file]))
+	}
+
+	@Test("The parent pointer is not retained")
+	func parentUnretained() {
+		let child = LDrawDirective()
+		weak var weakParent: LDrawStep?
+		autoreleasepool {
+			let parent = LDrawStep()
+			weakParent = parent
+			child.setEnclosing(parent)
+		}
+		#expect(weakParent == nil)
+		child.setEnclosing(nil)
+	}
+
+	// MARK: Construction
+
+	@Test("directiveWithLines: allocates the receiving class; the base parse needs only a non-empty line list")
+	func factory() throws {
+		let lines = ldrawLines(["2 24 0 0 0 10 0 0"])
+		let range = NSRange(location: 0, length: 1)
+		let base = try #require(LDrawDirective.directive(lines: lines, in: range, parentGroup: nil))
+		#expect(type(of: base) == LDrawDirective.self)
+		#expect(base.iconName() == "" && base.write() == "")
+		let line = try #require(LDrawLine.directive(lines: lines, in: range, parentGroup: nil))
+		#expect(type(of: line) == LDrawLine.self)
+		#expect(line.write() == "2 24 0 0 0 10 0 0")
+		let cond = try #require(LDrawConditionalLine.directive(lines: ldrawLines(["5 24 0 0 0 10 0 0 0 5 0 0 -5 0"]), in: range, parentGroup: nil))
+		#expect(type(of: cond) == LDrawConditionalLine.self)
+		let step = try #require(LDrawStep.directive(lines: lines, in: range, parentGroup: nil))
+		#expect(type(of: step) == LDrawStep.self && (step as! LDrawStep).subdirectives().count == 1)
+
+		#expect(LDrawDirective.directive(lines: [], in: NSRange(location: 0, length: 0), parentGroup: nil) == nil)
+		#expect(LDrawDirective.directive(lines: nil, in: NSRange(location: 0, length: 0), parentGroup: nil) == nil)
+		#expect(LDrawDirective(lines: [], in: NSRange(location: 0, length: 0)) == nil)
+		#expect(LDrawDirective(lines: [], in: NSRange(location: 0, length: 0), parentGroup: nil) == nil)
+		// The base never indexes the lines: an out-of-range range is fine.
+		let far = try #require(LDrawDirective(lines: lines, in: NSRange(location: 7, length: 3)))
+		#expect(type(of: far) == LDrawDirective.self)
+		#expect(LDrawDirective(lines: lines, in: NSRange(location: 99, length: 0), parentGroup: nil) != nil)
+		// A group is accepted and ignored.
+		let group = DispatchGroup()
+		#expect(LDrawDirective(lines: lines, in: range, parentGroup: group) != nil)
+		#expect(group.wait(timeout: .now()) == .success)
+	}
+
+	@Test("rangeOfDirectiveBeginningAtIndex: the base is always one line at index")
+	func baseRange() {
+		let lines = ldrawLines(["0 a", "0 b"])
+		#expect(LDrawDirective.rangeOfDirectiveBeginning(at: 0, inLines: lines, maxIndex: 1) == NSRange(location: 0, length: 1))
+		#expect(LDrawDirective.rangeOfDirectiveBeginning(at: 1, inLines: lines, maxIndex: 1) == NSRange(location: 1, length: 1))
+		#expect(LDrawDirective.rangeOfDirectiveBeginning(at: 5, inLines: [], maxIndex: 0) == NSRange(location: 5, length: 1))
+	}
+
+	// MARK: Display and accessors
+
+	@Test("Icon name: the base default is nil, a new directive has \"\", setIconName(nil) reads back as \"\"")
+	func iconName() {
+		#expect(LDrawDirective.defaultIconName() == nil)
+		let d = LDrawDirective()
+		#expect(d.iconName() == "")
+		d.setIconName("Brick")
+		#expect(d.iconName() == "Brick")
+		d.setIconName(nil)
+		#expect(d.iconName() == "")
+	}
+
+	@Test("Base defaults: write, description, browsing, inspector, references, flatten, bounds and the hit tests do nothing")
+	func baseDefaults() throws {
+		let d = LDrawDirective()
+		#expect(d.write() == "")
+		#expect(d.description == "LDrawDirective\n")
+		#expect(d.browsingDescription() == "LDrawDirective")
+		#expect(d.inspectorClassName() == "")
+		#expect(!d.containsReference(to: "") && !d.containsReference(to: "main.ldr") && !d.containsReference(to: nil))
+		#expect(!d.isSelected())
+		#expect(V3EqualBoxes(d.boundingBox3(), InvalidBox) != 0)
+
+		let lines = NSMutableArray(), triangles = NSMutableArray(), quads = NSMutableArray(), other = NSMutableArray()
+		d.flatten(intoLines: lines, triangles: triangles, quadrilaterals: quads, other: other, currentColor: nil,
+				  currentTransform: IdentityMatrix4, normalTransform: IdentityMatrix3, recursive: true)
+		#expect(lines.count + triangles.count + quads.count + other.count == 0)
+
+		d.draw(0, viewScale: 1, parentColor: nil)
+		d.drawSelf(nil)
+		d.collectSelf(NullCollector())
+		let hits = NSMutableDictionary()
+		d.hitTest(Ray3(origin: V3Make(0, 0, 10), direction: V3Make(0, 0, -1)), transform: IdentityMatrix4, viewScale: 1,
+				  boundsOnly: false, creditObject: nil, hits: hits)
+		#expect(hits.count == 0)
+		let set = NSMutableSet()
+		#expect(!d.boxTest(Box2(origin: V2Make(-1, -1), size: V2MakeSize(2, 2)), transform: IdentityMatrix4, boundsOnly: false,
+						   creditObject: nil, hits: set))
+		#expect(set.count == 0)
+		var best: AnyObject? = d
+		var depth: Float = 0.5
+		d.depthTest(V2Make(0, 0), inBox: Box2(origin: V2Make(-1, -1), size: V2MakeSize(2, 2)), transform: IdentityMatrix4,
+					creditObject: nil, bestObject: &best, bestDepth: &depth)
+		#expect(best === d && depth == 0.5)
+	}
+
+	@Test("setSelected round-trips; noteNeedsDisplay posts LDrawDirectiveDidChangeNotification for self; registerUndoActions registers nothing")
+	func selectionDisplayUndo() throws {
+		let d = LDrawDirective()
+		d.setSelected(true)
+		#expect(d.isSelected())
+		d.setSelected(false)
+		#expect(!d.isSelected())
+
+		var posted: [AnyObject?] = []
+		let token = NotificationCenter.default.addObserver(forName: Notification.Name("LDrawDirectiveDidChangeNotification"),
+														   object: nil, queue: nil) { posted.append($0.object as AnyObject?) }
+		d.noteNeedsDisplay()
+		NotificationCenter.default.removeObserver(token)
+		#expect(posted.count == 1 && posted.first! === d)
+
+		// With no open group, registering anything would raise: the base registers nothing.
+		let undo = UndoManager()
+		undo.groupsByEvent = false
+		try ObjC.run { d.registerUndoActions(undo) }
+		#expect(!undo.canUndo)
+		d.registerUndoActions(nil)
+	}
+
+	// MARK: NSCoding and NSCopying
+
+	@Test("Archive: the only key is enclosingDirective, encoded conditionally; selection, icon, flags and observers are not kept")
+	func archive() throws {
+		let parent = LDrawStep()
+		let d = LDrawDirective()
+		d.setEnclosing(parent)
+		defer { d.setEnclosing(nil) }
+		d.setSelected(true)
+		d.setIconName("Brick")
+		d.invalCache(.CacheFlagBounds)
+		let log = HookObserver.Log()
+		let a = HookObserver("a", log)
+		d.add(a)
+		defer { d.remove(a as LDrawObserver) }
+
+		let alone = ObjectModel.archive(d)
+		#expect(try P6bPart.archivedKeys(alone, className: "LDrawDirective") == ["enclosingDirective"])
+		let decoded = try #require(try ObjectModel.unarchive(alone) as? LDrawDirective)
+		#expect(type(of: decoded) == LDrawDirective.self)
+		#expect(decoded.enclosingDirective() == nil, "the parent was not archived unconditionally")
+		#expect(!decoded.isSelected())
+		#expect(decoded.iconName() == "", "initWithCoder: leaves iconName nil")
+		#expect(decoded.revalCache(CacheFlagsT(rawValue: -1)) == [])
+		log.lines = []
+		decoded.invalCache(.CacheFlagBounds)
+		#expect(log.lines.isEmpty)
+
+		let pair = try #require(try ObjectModel.unarchive(ObjectModel.archive(NSArray(array: [d, parent]))) as? [AnyObject])
+		let decodedChild = try #require(pair[0] as? LDrawDirective)
+		#expect(decodedChild.enclosingDirective() === pair[1], "archived with its parent, the link survives")
+		decodedChild.setEnclosing(nil)
+	}
+
+	@Test("Copy: same class, no parent, selection kept, icon reset by -init, flags clean, no observers")
+	func copying() throws {
+		let parent = LDrawStep()
+		let d = LDrawDirective()
+		d.setEnclosing(parent)
+		defer { d.setEnclosing(nil) }
+		d.setSelected(true)
+		d.setIconName("Brick")
+		d.invalCache(.DisplayList)
+		let log = HookObserver.Log()
+		let a = HookObserver("a", log)
+		d.add(a)
+		defer { d.remove(a as LDrawObserver) }
+
+		let copied = try #require(d.copy() as? LDrawDirective)
+		#expect(copied !== d && type(of: copied) == LDrawDirective.self)
+		#expect(copied.enclosingDirective() == nil)
+		#expect(copied.isSelected())
+		#expect(copied.iconName() == "")
+		#expect(copied.revalCache(CacheFlagsT(rawValue: -1)) == [])
+		log.lines = []
+		copied.invalCache(.CacheFlagBounds)
+		copied.sendMessage(toObservers: .nameChanged)
+		#expect(log.lines.isEmpty)
+
+		d.setSelected(false)
+		#expect(!((d.copy() as? LDrawDirective)?.isSelected() ?? true))
+		// A subclass with no copy override of its own still copies as itself.
+		let comment = LDrawComment()
+		#expect(type(of: comment.copy() as AnyObject) == LDrawComment.self)
+	}
+}
