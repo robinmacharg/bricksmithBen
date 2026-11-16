@@ -261,9 +261,12 @@ struct LSynthCoverageTests {
 	@Test("Selecting a block in a coloured selection mode with the default selection colour (system red)",
 		  arguments: [1, 2])
 	func defaultSelectionColour(mode: Int) throws {
-		// A blue block, so that "recoloured to the (red) selection colour" can be told apart from "left alone".
+		// A blue block (its stored parts recoloured blue too), so that "recoloured to the (red) selection colour"
+		// can be told apart from "left alone".
 		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND", colour: 1))
 		let parts = SynthKit.synthesized(synth)
+		synth.setLDrawColor(try #require(ColorLibrary.shared()?.color(forCode: LDrawColorT(rawValue: 1))))
+		#expect(!parts.isEmpty && parts.allSatisfy { $0.lDrawColor()?.colorCode().rawValue == 1 })
 		// Exactly what +[PreferencesDialogController ensureDefaults] registers: a catalog colour, on which
 		// -redComponent raises (it needs an RGB colour space).
 		let systemRed = ArgumentPrefs.archivedColour(NSColor.systemRed)
