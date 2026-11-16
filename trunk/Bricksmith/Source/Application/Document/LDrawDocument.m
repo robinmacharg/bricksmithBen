@@ -17,56 +17,8 @@
 //  Copyright (c) 2005. All rights reserved.
 //==============================================================================
 #import "LDrawDocument.h"
+#import "LDrawDocument+Private.h"
 
-#import <AMSProgressBar/AMSProgressBar.h>
-
-#import "DimensionsPanel.h"
-#import "DocumentToolbarController.h"
-#import "ExtendedSplitView.h"
-#import "IconTextCell.h"
-#import "Inspector.h"
-#import "LDrawApplication.h"
-#import "LDrawColor.h"
-#import "LDrawColorPanelController.h"
-#import "LDrawComment.h"
-#import "LDrawConditionalLine.h"
-#import "LDrawContainer.h"
-#import "LDrawDirective.h"
-#import "LDrawDocumentWindow.h"
-#import "LDrawDragHandle.h"
-#import "LDrawDrawableElement.h"
-#import "LDrawFile.h"
-#import "LDrawFileOutlineView.h"
-#import "LDrawGLView.h"
-#import "LDrawLine.h"
-#import "LDrawLSynth.h"
-#import "LDrawLSynthDirective.h"
-#import "LDrawModel.h"
-#import "LDrawMPDModel.h"
-#import "LDrawPart.h"
-#import "LDrawQuadrilateral.h"
-#import "LDrawStep.h"
-#import "LDrawTriangle.h"
-#import "LDrawUtilities.h"
-#import "LDrawViewerContainer.h"
-#import "LSynthConfiguration.h"
-#import "MacLDraw.h"
-#import "MinifigureDialogController.h"
-#import "ModelManager.h"
-#import "MovePanel.h"
-#import "PartBrowserDataSource.h"
-#import "PartBrowserPanelController.h"
-#import "PartReport.h"
-#import "PieceCountPanel.h"
-#import "RotationPanelController.h"
-#import "SearchPanelController.h"
-#import "StringUtilities.h"
-#import "UserDefaultsCategory.h"
-#import "ViewportArranger.h"
-#import "WindowCategory.h"
-#if WANT_RELATED_PARTS
-#import "RelatedParts.h"
-#endif
 
 
 #if WANT_RELATED_PARTS
@@ -131,9 +83,6 @@ void AppendChoicesToNewItem(
 
 
 @implementation LDrawDocument
-{
-	LDrawFile		*documentContents;	// use -documentContents / -setDocumentContents: (the setter turns on notifications)
-}
 
 // Keep the original ivar names, so the existing direct uses in this file are unchanged.
 @synthesize toolbarController = toolbarController;

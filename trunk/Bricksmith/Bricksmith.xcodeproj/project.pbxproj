@@ -600,6 +600,7 @@
 		73772D9444E1E3B92321011F /* InspectionLSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectionLSynth.h; sourceTree = "<group>"; };
 		73772E30A6856B15E73A951A /* ComputationalGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComputationalGeometry.h; sourceTree = "<group>"; };
 		741501FF6219F19D814635AC /* Golden.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Golden.swift; sourceTree = "<group>"; };
+		7492CF7D84DF02886EA06FC8 /* LDrawDocument+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LDrawDocument+Private.h"; sourceTree = "<group>"; };
 		7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ObjectModelTests.swift; sourceTree = "<group>"; };
 		81BC44EA5B60A6CBB21D87D7 /* BricksmithUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BricksmithUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		852F4EEE5381CB836060A724 /* ModelLogicTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModelLogicTests.swift; sourceTree = "<group>"; };
@@ -977,6 +978,7 @@
 				2BF2E3020AB0FC5E0026D5DB /* RotationPanelController.m */,
 				9506E0EE18A3F4130006CE9C /* SearchPanelController.h */,
 				9506E0EF18A3F4130006CE9C /* SearchPanelController.m */,
+				7492CF7D84DF02886EA06FC8 /* LDrawDocument+Private.h */,
 			);
 			path = Document;
 			sourceTree = "<group>";
