@@ -27,6 +27,7 @@
 #import "LDrawDragHandle.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"
+#import "Bricksmith-Swift.h"
 #include "GLMatrixMath.h"
 
 

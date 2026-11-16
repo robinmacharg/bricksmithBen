@@ -25,6 +25,7 @@
 #import "LDrawDragHandle.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"
+#import "Bricksmith-Swift.h"
 #import "GLMatrixMath.h"
 
 @implementation LDrawQuadrilateral
