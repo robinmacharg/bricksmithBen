@@ -134,8 +134,6 @@
 		0B8EBE8C093C100100D87E0C /* LDrawFileOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE7A093C100100D87E0C /* LDrawFileOutlineView.m */; };
 		0B8EBE8D093C100100D87E0C /* LDrawGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE7B093C100100D87E0C /* LDrawGLView.h */; };
 		0B8EBE8E093C100100D87E0C /* LDrawGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE7C093C100100D87E0C /* LDrawGLView.m */; };
-		0B8EBEA2093C102E00D87E0C /* UserDefaultsCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8EBE9A093C102E00D87E0C /* UserDefaultsCategory.h */; };
-		0B8EBEA3093C102E00D87E0C /* UserDefaultsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EBE9B093C102E00D87E0C /* UserDefaultsCategory.m */; };
 		0B9907630DD7EDBB003F6B13 /* LDConfig.ldr in Resources */ = {isa = PBXBuildFile; fileRef = 0B9907620DD7EDBB003F6B13 /* LDConfig.ldr */; };
 		0B9907D70DDD540C003F6B13 /* LDrawColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B7588DB0D8DC4EF00357703 /* LDrawColor.m */; };
 		0B9907D80DDD540D003F6B13 /* LDrawColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B7588DA0D8DC4EF00357703 /* LDrawColor.h */; };
@@ -506,8 +504,6 @@
 		0B8EBE7A093C100100D87E0C /* LDrawFileOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawFileOutlineView.m; sourceTree = "<group>"; };
 		0B8EBE7B093C100100D87E0C /* LDrawGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawGLView.h; sourceTree = "<group>"; };
 		0B8EBE7C093C100100D87E0C /* LDrawGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawGLView.m; sourceTree = "<group>"; };
-		0B8EBE9A093C102E00D87E0C /* UserDefaultsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsCategory.h; sourceTree = "<group>"; };
-		0B8EBE9B093C102E00D87E0C /* UserDefaultsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsCategory.m; sourceTree = "<group>"; };
 		0B9907620DD7EDBB003F6B13 /* LDConfig.ldr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LDConfig.ldr; sourceTree = "<group>"; };
 		0B9FE54F08AD971E0046511D /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = InfoPlist.strings; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0B9FE56508AD97280046511D /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
@@ -840,8 +836,6 @@
 		0B6F38FD07C84E79007B1075 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				0B8EBE9A093C102E00D87E0C /* UserDefaultsCategory.h */,
-				0B8EBE9B093C102E00D87E0C /* UserDefaultsCategory.m */,
 				D2694B38A7FA3EA5B394849C /* StringCategory.swift */,
 				53044DFD66668D1A1B59F51B /* UserDefaultsCategory.swift */,
 				6B5E2DBD0A4B2EB0C762A318 /* WindowCategory.swift */,
@@ -1310,7 +1304,6 @@
 				0B8EBE89093C100100D87E0C /* LDrawDocumentWindow.h in Headers */,
 				0B8EBE8B093C100100D87E0C /* LDrawFileOutlineView.h in Headers */,
 				0B8EBE8D093C100100D87E0C /* LDrawGLView.h in Headers */,
-				0B8EBEA2093C102E00D87E0C /* UserDefaultsCategory.h in Headers */,
 				0B25F040093D5F960099D85E /* BricksmithApplication.h in Headers */,
 				0B2700870981FCEA0058A7BE /* ToolPalette.h in Headers */,
 				2BF2E3030AB0FC5E0026D5DB /* MovePanel.h in Headers */,
@@ -1629,7 +1622,6 @@
 				0B8EBE8A093C100100D87E0C /* LDrawDocumentWindow.m in Sources */,
 				0B8EBE8C093C100100D87E0C /* LDrawFileOutlineView.m in Sources */,
 				0B8EBE8E093C100100D87E0C /* LDrawGLView.m in Sources */,
-				0B8EBEA3093C102E00D87E0C /* UserDefaultsCategory.m in Sources */,
 				0B25F041093D5F960099D85E /* BricksmithApplication.m in Sources */,
 				0B2700880981FCEA0058A7BE /* ToolPalette.m in Sources */,
 				2BF2E3040AB0FC5E0026D5DB /* MovePanel.m in Sources */,
