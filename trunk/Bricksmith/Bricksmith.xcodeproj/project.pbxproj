@@ -219,6 +219,7 @@
 		2FF6E9CE18A86314107350AF /* LDrawDocument+FileIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 21C061505DAECE6464C8874B /* LDrawDocument+FileIO.m */; };
 		38700D566FC45CE272CAD839 /* StringConstants.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0A110152030C93F7121342 /* StringConstants.generated.swift */; };
 		39C633C3278F56F6005511E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39C633C2278F56F6005511E6 /* Assets.xcassets */; };
+		41398AC3E7F9D645B04C7693 /* LDrawDocument+ModelsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 21089774D0D91240BD42D0C3 /* LDrawDocument+ModelsMenu.m */; };
 		4988F532301C6C0B87751377 /* RecordingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBDF389EDB611A48BD761F7 /* RecordingRenderer.swift */; };
 		4FF35DF1C56BF625E1D2D98D /* PreferencesContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9043BD5BF5FF3A6F720BC4 /* PreferencesContractTests.swift */; };
 		5701DABC93A382AFA6BC4B71 /* ObjectModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A34D3F0785D70CE5C4F9C /* ObjectModelTests.swift */; };
@@ -558,6 +559,7 @@
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		145EDB4D816D27A98C3FFE06 /* LDrawKeywords.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawKeywords.m; sourceTree = "<group>"; };
 		1BB3D70377B2BEA1D4740400 /* PrimitiveEditingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrimitiveEditingTests.swift; sourceTree = "<group>"; };
+		21089774D0D91240BD42D0C3 /* LDrawDocument+ModelsMenu.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LDrawDocument+ModelsMenu.m"; sourceTree = "<group>"; };
 		2189D181B31A8DD65D2152EF /* DrawingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawingTests.swift; sourceTree = "<group>"; };
 		21C061505DAECE6464C8874B /* LDrawDocument+FileIO.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LDrawDocument+FileIO.m"; sourceTree = "<group>"; };
 		2217C8D18F6DD472E397AD56 /* AppLogicCoverageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppLogicCoverageTests.swift; sourceTree = "<group>"; };
@@ -985,6 +987,7 @@
 				7492CF7D84DF02886EA06FC8 /* LDrawDocument+Private.h */,
 				21C061505DAECE6464C8874B /* LDrawDocument+FileIO.m */,
 				2E06936AA1D9FF74DAA5F19E /* LDrawDocument+Editing.m */,
+				21089774D0D91240BD42D0C3 /* LDrawDocument+ModelsMenu.m */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -1695,6 +1698,7 @@
 				D84F2F24A0EE06FE2ACCE7D3 /* BricksmithTestSupport.m in Sources */,
 				2FF6E9CE18A86314107350AF /* LDrawDocument+FileIO.m in Sources */,
 				2F237C93D0C4AB6978296E11 /* LDrawDocument+Editing.m in Sources */,
+				41398AC3E7F9D645B04C7693 /* LDrawDocument+ModelsMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

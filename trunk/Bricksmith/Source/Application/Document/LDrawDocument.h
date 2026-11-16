@@ -127,20 +127,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) useSelectionForRotationCenter:(null_unspecified id)sender;
 - (IBAction) clearRotationCenter:(null_unspecified id)sender;
 
-// - Models menu
-- (IBAction) addModelClicked:(null_unspecified id)sender;
-- (IBAction) addStepClicked:(null_unspecified id)sender;
-- (IBAction) addPartClicked:(null_unspecified id)sender;
-- (void) addSubmodelReferenceClicked:(null_unspecified id)sender;
-- (IBAction) addLineClicked:(null_unspecified id)sender;
-- (IBAction) addTriangleClicked:(null_unspecified id)sender;
-- (IBAction) addQuadrilateralClicked:(null_unspecified id)sender;
-- (IBAction) addConditionalClicked:(null_unspecified id)sender;
-- (IBAction) addCommentClicked:(null_unspecified id)sender;
-- (IBAction) addRawCommandClicked:(null_unspecified id)sender;
-- (IBAction) addRelatedPartClicked:(null_unspecified id)sender;
-- (void) modelSelected:(null_unspecified id)sender;
-
 // Undoable Activities
 - (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent;
 - (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent atIndex:(NSInteger)index;
@@ -259,6 +245,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) showAllParts:(null_unspecified id)sender;
 - (IBAction) gotoModel:(null_unspecified id)sender;
 - (void) snapSelectionToGrid:(null_unspecified id)sender;
+
+@end
+
+
+
+@interface LDrawDocument (ModelsMenu)
+// LDrawDocument+ModelsMenu.m
+
+// - Models menu
+- (IBAction) addModelClicked:(null_unspecified id)sender;
+- (IBAction) addStepClicked:(null_unspecified id)sender;
+- (IBAction) addPartClicked:(null_unspecified id)sender;
+- (void) addSubmodelReferenceClicked:(null_unspecified id)sender;
+- (IBAction) addLineClicked:(null_unspecified id)sender;
+- (IBAction) addTriangleClicked:(null_unspecified id)sender;
+- (IBAction) addQuadrilateralClicked:(null_unspecified id)sender;
+- (IBAction) addConditionalClicked:(null_unspecified id)sender;
+- (IBAction) addCommentClicked:(null_unspecified id)sender;
+- (IBAction) addRawCommandClicked:(null_unspecified id)sender;
+- (IBAction) addRelatedPartClicked:(null_unspecified id)sender;
+- (void) modelSelected:(null_unspecified id)sender;
 
 @end
 
