@@ -630,3 +630,191 @@ struct ColorWellTests {
 		try Self.expectPaintedInsideOnly(view)
 	}
 }
+
+// MARK: - Nib top-level objects (P4: +loadNibNamed:owner: -> -loadNibNamed:owner:topLevelObjects:)
+
+/// The legacy loader retained every top-level object; the new one hands back autoreleased objects, and many
+/// outlets are __unsafe_unretained (L79). So each owner must keep the top-level objects itself. These tests
+/// create the owner inside an autorelease pool, let the pool drain, then touch what the nib made. A missing
+/// strong reference shows up as nil, a crash, or (with zombies) a message to a freed object.
+@MainActor
+@Suite("Nib loading: top-level objects outlive the autorelease pool (P4)", .fixtureLibrary, .serialized,
+	   .timeLimit(.minutes(1)))
+struct NibLifetimeTests {
+
+	nonisolated static let inspectionClasses = ["InspectionComment", "InspectionConditionalLine", "InspectionLSynth",
+									"InspectionLine", "InspectionMPDModel", "InspectionPart", "InspectionQuadrilateral",
+									"InspectionStep", "InspectionTriangle", "InspectionUnknownCommand"]
+
+	/// Make an object by class name (these headers are not in the bridging header) inside a drained pool.
+	static func make(_ className: String) throws -> NSObject {
+		let type = try #require(NSClassFromString(className) as? NSObject.Type, "\(className)")
+		var made: NSObject?
+		try ObjC.run { autoreleasepool { made = type.init() } }
+		return try #require(made)
+	}
+
+	/// Every view in the tree, touched (a freed view would crash here).
+	static func viewCount(_ view: NSView) -> Int {
+		_ = view.frame
+		return 1 + view.subviews.reduce(0) { $0 + viewCount($1) }
+	}
+
+	@Test("Inspection controllers: window, content view and outlets", arguments: inspectionClasses)
+	func inspectionController(_ className: String) throws {
+		let controller = try Self.make(className)
+		try ObjC.run {
+			let window = controller.value(forKey: "window") as? NSWindow
+			#expect(window != nil, "\(className): window")
+			#expect(window?.title.isEmpty == false, "\(className): title")
+			let content = window?.contentView
+			#expect(content.map(Self.viewCount) ?? 0 > 1, "\(className): content view")
+		}
+		if className == "InspectionPart" {
+			try ObjC.run {
+				for key in ["formatterBasic", "formatterAngle", "formatterScale"] {
+					#expect(controller.value(forKey: key) is NumberFormatter, "\(key)")
+				}
+				let field = controller.value(forKey: "locationXField") as? NSTextField
+				#expect(field?.formatter != nil && field?.formatter === controller.value(forKey: "formatterBasic") as AnyObject?)
+			}
+		}
+		if className == "InspectionStep" {
+			try ObjC.run {
+				// The nib's top-level "Degrees" formatter, reachable only through the fields that use it.
+				let field = controller.value(forKey: "rotationXField") as? NSTextField
+				#expect(field?.formatter is NumberFormatter)
+			}
+		}
+	}
+
+	@Test("Inspector: its panel survives, and inspecting a part, nothing, a line, a part, the same part")
+	func inspector() throws {
+		let inspector = try Self.make("Inspector")
+		let part = LDrawPart()
+		let line = LDrawLine()
+		let steps: [(String, [AnyObject])] = [("part", [part]), ("nothing", []), ("line", [line]),
+											  ("part again", [part]), ("same part", [part])]
+		for (label, objects) in steps {
+			try ObjC.run {
+				autoreleasepool {
+					_ = inspector.perform(NSSelectorFromString("inspectObjects:"), with: objects as NSArray)
+				}
+			}
+			try ObjC.run {
+				let panel = inspector.value(forKey: "inspectorPanel") as? NSPanel
+				#expect(panel != nil, "\(label): panel")
+				#expect(panel?.contentView.map(Self.viewCount) ?? 0 > 1, "\(label): content view")
+				#expect(panel?.title.isEmpty == false, "\(label): title")
+			}
+		}
+		try ObjC.run {
+			#expect(inspector.value(forKey: "errorTextField") is NSTextField)
+			_ = inspector.perform(NSSelectorFromString("unloadInspector"))
+		}
+	}
+
+	@Test("Preferences: window and every tab view")
+	func preferences() throws {
+		let controller = try Self.make("PreferencesDialogController")
+		try ObjC.run {
+			let window = controller.value(forKey: "preferencesWindow") as? NSWindow
+			#expect(window?.contentView != nil)
+			#expect(window?.toolbar != nil)
+			for key in ["generalTabContentView", "stylesContentView", "ldrawContentView", "lsynthContentView",
+						"folderChooserAccessoryView", "lsynthExecutableChooserAccessoryView",
+						"lsynthConfigurationChooserAccessoryView"] {
+				let view = controller.value(forKey: key) as? NSView
+				#expect(view.map(Self.viewCount) ?? 0 > 0, "\(key)")
+			}
+		}
+	}
+
+	@Test("Tool palette: its contents view (shared instance, palette kept hidden)")
+	func toolPalette() throws {
+		let cls: AnyObject = try #require(NSClassFromString("ToolPalette"))
+		try ArgumentPrefs.with([TOOL_PALETTE_HIDDEN: true]) {
+			var palette: AnyObject?
+			try ObjC.run {
+				autoreleasepool {
+					palette = cls.perform(NSSelectorFromString("sharedToolPalette"))?.takeUnretainedValue()
+				}
+			}
+			try ObjC.run {
+				let contents = palette?.value(forKey: "paletteContents") as? NSView
+				#expect(contents.map(Self.viewCount) ?? 0 > 1)
+				#expect(contents?.window != nil)
+			}
+		}
+	}
+
+	@Test("Part browser data source: its contextual menu")
+	func partBrowserMenu() throws {
+		let source = try Self.make("PartBrowserDataSource")
+		defer { NotificationCenter.default.removeObserver(source) }
+		try ObjC.run {
+			let menu = source.value(forKey: "contextualMenu") as? NSMenu
+			#expect((menu?.items.count ?? 0) > 0)
+			#expect(menu?.items.allSatisfy { $0.title.isEmpty == false || $0.isSeparatorItem } == true)
+		}
+	}
+
+	@Test("LDrawGLView: its contextual menu (from LDrawGLViewAccessories)")
+	func glViewMenu() throws {
+		var doc: LDrawDocument?
+		try autoreleasepool { doc = try DocHarness.open("02-line-types.ldr") }
+		let document = try #require(doc)
+		defer { DocHarness.close(document) }
+		try ObjC.run {
+			func glViews(_ view: NSView) -> [NSView] {
+				(NSStringFromClass(type(of: view)) == "LDrawGLView" ? [view] : []) + view.subviews.flatMap(glViews)
+			}
+			let views = document.windowControllers.first?.window?.contentView.map(glViews) ?? []
+			#expect(!views.isEmpty)
+			for view in views {
+				#expect((view.menu?.items.count ?? 0) > 0)
+			}
+		}
+	}
+
+	@Test("Minifigure generator: panel, object controller, formatter and the 15 array controllers")
+	func minifigure() throws {
+		let controller = try Self.make("MinifigureDialogController")
+		defer { MinifigureCoverageTests.finish(controller as! MinifigureDialogController) }
+		try ObjC.run {
+			let panel = controller.value(forKey: "minifigureGeneratorPanel") as? NSPanel
+			#expect(panel?.contentView.map(Self.viewCount) ?? 0 > 1)
+			#expect(controller.value(forKey: "objectController") is NSObjectController)
+			#expect(controller.value(forKey: "degreesFormatter") is NumberFormatter)
+			for key in MinifigureCoverageTests.controllerKeys {
+				let array = controller.value(forKey: key) as? NSArrayController
+				#expect(array != nil, "\(key)")
+				_ = array?.arrangedObjects
+			}
+		}
+	}
+
+	@Test("Dialog panels (Dimensions, Piece Count, Move): the panel and its object controller",
+		  arguments: [("DimensionsPanel", "dimensionPanelForFile:"), ("PieceCountPanel", "pieceCountPanelForFile:"),
+					  ("MovePanel", "movePanel")])
+	func dialogPanel(_ className: String, _ factory: String) throws {
+		let cls: AnyObject = try #require(NSClassFromString(className))
+		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/02-line-types.ldr"))
+		var made: NSPanel?
+		try ObjC.run {
+			autoreleasepool {
+				let result = factory.hasSuffix(":")
+					? cls.perform(NSSelectorFromString(factory), with: file)
+					: cls.perform(NSSelectorFromString(factory))
+				made = result?.takeUnretainedValue() as? NSPanel
+			}
+		}
+		let panel = try #require(made, "\(className)")
+		try ObjC.run {
+			#expect(NSStringFromClass(type(of: panel)) == className)
+			#expect(panel.contentView.map(Self.viewCount) ?? 0 > 1)
+			let controller = panel.value(forKey: "objectController") as? NSObjectController
+			#expect(controller?.content as AnyObject? === panel, "\(className): object controller content")
+		}
+	}
+}
