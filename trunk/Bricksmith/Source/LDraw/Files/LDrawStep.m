@@ -1032,64 +1032,56 @@
 {
 	NSScanner	*scanner	= [NSScanner scannerWithString:rotstep];
 	Tuple3		 angles		= ZeroPoint3;
-	BOOL		 success	= YES;
 	
-	@try
+	if([scanner scanString:@"0" intoString:NULL] == NO)
+		return NO;
+
+	if([scanner scanString:LDRAW_ROTATION_STEP_TERMINATOR intoString:NULL] == NO)
+		return NO;
+
+	// Is it an end rotation?
+	if([scanner scanString:LDRAW_ROTATION_END intoString:NULL] == YES)
 	{
-		if([scanner scanString:@"0" intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
+		[self setStepRotationType:LDrawStepRotationEnd];
+	}
+	else
+	{
+		//---------- Angles ------------------------------------------------
+		
+		if([scanner scanFloat:&(angles.x)] == NO)
+			return NO;
 
-		if([scanner scanString:LDRAW_ROTATION_STEP_TERMINATOR intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
+		if([scanner scanFloat:&(angles.y)] == NO)
+			return NO;
 
-		// Is it an end rotation?
-		if([scanner scanString:LDRAW_ROTATION_END intoString:NULL] == YES)
-		{
-			[self setStepRotationType:LDrawStepRotationEnd];
-		}
+		if([scanner scanFloat:&(angles.z)] == NO)
+			return NO;
+	
+	
+		//---------- Rotation Type -----------------------------------------
+		
+		if( [scanner scanString:LDRAW_ROTATION_ABSOLUTE intoString:NULL] == YES )
+			[self setStepRotationType:LDrawStepRotationAbsolute];
+		
+		else if( [scanner scanString:LDRAW_ROTATION_ADDITIVE intoString:NULL] == YES )
+			[self setStepRotationType:LDrawStepRotationAdditive];
+
+		else if( [scanner scanString:LDRAW_ROTATION_RELATIVE intoString:NULL] == YES )
+			[self setStepRotationType:LDrawStepRotationRelative];
+		
+		// if no type is explicitly specified, it is a relative rotation.
+		else if( [scanner isAtEnd] == YES )
+			[self setStepRotationType:LDrawStepRotationRelative];
+		
+		// there is some syntax we don't recognize. Abort parsing attempt.
 		else
-		{
-			//---------- Angles ------------------------------------------------
+			return NO;
 			
-			if([scanner scanFloat:&(angles.x)] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-
-			if([scanner scanFloat:&(angles.y)] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-
-			if([scanner scanFloat:&(angles.z)] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-		
-		
-			//---------- Rotation Type -----------------------------------------
-			
-			if( [scanner scanString:LDRAW_ROTATION_ABSOLUTE intoString:NULL] == YES )
-				[self setStepRotationType:LDrawStepRotationAbsolute];
-			
-			else if( [scanner scanString:LDRAW_ROTATION_ADDITIVE intoString:NULL] == YES )
-				[self setStepRotationType:LDrawStepRotationAdditive];
-
-			else if( [scanner scanString:LDRAW_ROTATION_RELATIVE intoString:NULL] == YES )
-				[self setStepRotationType:LDrawStepRotationRelative];
-			
-			// if no type is explicitly specified, it is a relative rotation.
-			else if( [scanner isAtEnd] == YES )
-				[self setStepRotationType:LDrawStepRotationRelative];
-			
-			// there is some syntax we don't recognize. Abort parsing attempt.
-			else
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad ROTSTEP syntax" userInfo:nil];
-				
-			// Set the parsed angles if we successfully got the type.
-			[self setRotationAngleZYX:angles];
-		}
-	}
-	@catch(NSException *exception)
-	{
-		success = NO;
+		// Set the parsed angles if we successfully got the type.
+		[self setRotationAngleZYX:angles];
 	}
 	
-	return success;
+	return YES;
 	
 }//end parseRotationStepFromLine:
 
