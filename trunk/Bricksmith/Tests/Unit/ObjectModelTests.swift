@@ -585,3 +585,325 @@ struct P6bPartPinTests {
 		#expect(!part.partIsMissing())
 	}
 }
+
+// MARK: - P6c pins: LDrawContainer
+
+enum P6cContainer {
+	static func children(_ c: LDrawContainer) -> [LDrawDirective] { (c.subdirectives() as? [LDrawDirective]) ?? [] }
+	static func same(_ a: [LDrawDirective], _ b: [LDrawDirective]) -> Bool {
+		a.count == b.count && zip(a, b).allSatisfy { $0 === $1 }
+	}
+	static func line(_ text: String) throws -> LDrawLine {
+		try #require(LDrawLine(lines: ldrawLines([text]), in: NSRange(location: 0, length: 1)))
+	}
+	/// Counts LDrawDirectiveDidChangeNotification posts for one object.
+	final class ChangeCounter {
+		var count = 0
+		private var token: NSObjectProtocol?
+		init(_ object: AnyObject) {
+			token = NotificationCenter.default.addObserver(forName: NSNotification.Name("LDrawDirectiveDidChangeNotification"),
+														   object: object, queue: nil) { [unowned self] _ in self.count += 1 }
+		}
+		deinit { token.map(NotificationCenter.default.removeObserver) }
+	}
+}
+
+@Suite("LDrawContainer (P6c pins)", .fixtureLibrary, .serialized)
+struct P6cContainerPinTests {
+
+	@Test("Insert, add and remove at indices: order, parent links, indexOfDirective:, and out-of-range or nil leaving everything unchanged")
+	func insertAndRemove() throws {
+		let c = LDrawContainer()
+		let a = LDrawDirective(), b = LDrawDirective(), d = LDrawDirective(), stranger = LDrawDirective()
+		#expect(c.subdirectives()?.count == 0)
+		#expect(!c.postsNotifications)
+		c.add(a)
+		c.add(d)
+		c.insert(b, at: 1)
+		#expect(P6cContainer.same(P6cContainer.children(c), [a, b, d]))
+		#expect([a, b, d].allSatisfy { $0.enclosingDirective() === c })
+		#expect(c.index(of: a) == 0 && c.index(of: b) == 1 && c.index(of: d) == 2)
+		#expect(c.index(of: stranger) == NSNotFound)
+		#expect(c.index(of: nil) == NSNotFound)
+
+		// Removing a directive that isn't there does nothing.
+		c.remove(stranger as LDrawDirective)
+		#expect(P6cContainer.same(P6cContainer.children(c), [a, b, d]))
+
+		c.remove(b as LDrawDirective)
+		#expect(P6cContainer.same(P6cContainer.children(c), [a, d]))
+		#expect(b.enclosingDirective() == nil)
+
+		// A child whose parent was changed elsewhere keeps that parent when removed.
+		let other = LDrawContainer()
+		d.setEnclosing(other)
+		c.removeDirective(at: 1)
+		#expect(P6cContainer.same(P6cContainer.children(c), [a]))
+		#expect(d.enclosingDirective() === other)
+
+		// Out of range or nil: the ObjC raised before changing anything; nothing changes either way.
+		for index in [-1, 2, 99] {
+			_ = try? ObjC.run { c.insert(stranger, at: index) }
+			#expect(P6cContainer.same(P6cContainer.children(c), [a]), "insert at \(index)")
+			#expect(stranger.enclosingDirective() == nil, "insert at \(index)")
+		}
+		_ = try? ObjC.run { c.insert(nil, at: 0) }
+		_ = try? ObjC.run { c.add(nil as LDrawDirective?) }
+		#expect(P6cContainer.same(P6cContainer.children(c), [a]))
+		for index in [-1, 1, 99] {
+			_ = try? ObjC.run { c.removeDirective(at: index) }
+			#expect(P6cContainer.same(P6cContainer.children(c), [a]), "remove at \(index)")
+		}
+		#expect(a.enclosingDirective() === c)
+		// subdirectives is the live array.
+		#expect(c.subdirectives() === c.subdirectives())
+	}
+
+	@Test("Children are observed while contained: their invalidations reach the container's observers, and stop after removal")
+	func childObservation() throws {
+		let c = LDrawContainer()
+		let child = LDrawDirective()
+		let recorder = ObserverRecorder(label: "c")
+		c.add(recorder)
+		defer { c.remove(recorder as LDrawObserver) }
+		c.add(child)
+		child.invalCache(.DisplayList)
+		#expect(recorder.log == ["c: statusInvalidated flags=2 from LDrawContainer"], "\(recorder.log)")
+
+		recorder.log.removeAll()
+		_ = child.revalCache([.CacheFlagBounds, .DisplayList])
+		_ = c.revalCache([.CacheFlagBounds, .DisplayList])
+		child.sendMessage(toObservers: .observedChanged)
+		#expect(recorder.log.isEmpty, "receiveMessage:who: does nothing: \(recorder.log)")
+
+		c.remove(child as LDrawDirective)
+		_ = child.revalCache([.CacheFlagBounds, .DisplayList])
+		_ = c.revalCache([.CacheFlagBounds, .DisplayList])
+		child.invalCache(.CacheFlagBounds)
+		#expect(recorder.log.isEmpty, "\(recorder.log)")
+	}
+
+	@Test("The observer messages: statusInvalidated: invalidates the container with the same flags; receiveMessage: and a goodbye do nothing")
+	func observerMessages() throws {
+		let c = LDrawContainer()
+		let child = LDrawDirective()
+		c.add(child)
+		let recorder = ObserverRecorder(label: "c")
+		c.add(recorder)
+		defer { c.remove(recorder as LDrawObserver) }
+		try ObjC.run { c.statusInvalidated([.CacheFlagBounds, .DisplayList], who: nil) }
+		#expect(recorder.log == ["c: statusInvalidated flags=3 from LDrawContainer"], "\(recorder.log)")
+		recorder.log.removeAll()
+		try ObjC.run {
+			c.receiveMessage(.nameChanged, who: child)
+			c.receiveMessage(.observedChanged, who: nil)
+			// A contained child saying goodbye only logs; a stranger or nil is ignored.
+			c.observableSaysGoodbyeCruelWorld(child)
+			c.observableSaysGoodbyeCruelWorld(LDrawDirective())
+			c.observableSaysGoodbyeCruelWorld(nil)
+		}
+		#expect(recorder.log.isEmpty, "\(recorder.log)")
+		#expect(P6cContainer.same(P6cContainer.children(c), [child]))
+		#expect(child.enclosingDirective() === c)
+	}
+
+	@Test("postsNotifications: the setter reaches children that respond to it (recursively); an inserted container takes the parent's setting; insert and remove post only while it is on")
+	func postsNotifications() throws {
+		let c = LDrawContainer()
+		let step = try #require(LDrawStep.empty() as? LDrawStep)
+		let inner = try #require(LDrawStep.empty() as? LDrawStep)
+		let plain = LDrawDirective()
+		step.add(inner as LDrawDirective)
+		c.add(step as LDrawDirective)
+		c.add(plain)
+		c.setPostsNotifications(true)
+		#expect(c.postsNotifications && step.postsNotifications && inner.postsNotifications)
+
+		// An inserted container is switched to the parent's setting, in either direction.
+		let off = try #require(LDrawStep.empty() as? LDrawStep)
+		c.add(off as LDrawDirective)
+		#expect(off.postsNotifications)
+		let c2 = LDrawContainer()
+		let on = try #require(LDrawStep.empty() as? LDrawStep)
+		on.setPostsNotifications(true)
+		c2.add(on as LDrawDirective)
+		#expect(!on.postsNotifications)
+
+		// Notifications from insert and remove.
+		let counter = P6cContainer.ChangeCounter(c)
+		c.add(LDrawDirective())
+		c.removeDirective(at: 3)
+		#expect(counter.count == 2)
+		c.setPostsNotifications(false)
+		#expect(!step.postsNotifications && !inner.postsNotifications && !off.postsNotifications)
+		c.add(LDrawDirective())
+		c.removeDirective(at: 3)
+		#expect(counter.count == 2)
+	}
+
+	@Test("allEnclosedElements flattens nested containers (not the containers themselves), in order")
+	func allEnclosedElements() throws {
+		let c = LDrawContainer()
+		let a = LDrawDirective(), b = LDrawDirective(), d = LDrawDirective(), e = LDrawDirective()
+		let step = try #require(LDrawStep.empty() as? LDrawStep)
+		let inner = LDrawContainer()
+		let empty = LDrawContainer()
+		inner.add(d)
+		step.add(b)
+		step.add(inner as LDrawDirective)
+		c.add(a)
+		c.add(step as LDrawDirective)
+		c.add(empty as LDrawDirective)
+		c.add(e)
+		let all = try #require(c.allEnclosedElements() as? [LDrawDirective])
+		#expect(P6cContainer.same(all, [a, b, d, e]))
+		#expect(LDrawContainer().allEnclosedElements()?.count == 0)
+	}
+
+	@Test("Drop and selection hooks: acceptsDroppedDirective: is YES for anything; setSubdirectiveSelected: changes nothing")
+	func hooks() throws {
+		let c = LDrawContainer()
+		#expect(c.acceptsDroppedDirective(LDrawDirective()))
+		#expect(c.acceptsDroppedDirective(LDrawContainer()))
+		#expect(c.acceptsDroppedDirective(nil))
+		c.add(LDrawDirective())
+		c.setSubdirectiveSelected(true)
+		#expect(!c.isSelected() && !(P6cContainer.children(c)[0].isSelected()))
+		c.setSubdirectiveSelected(false)
+	}
+
+	@Test("projectedBoundingBox: the union over children that respond to it; InvalidBox when empty")
+	func projectedBoundingBox() throws {
+		let l1 = try P6cContainer.line("2 4 0 0 0 10 20 30")
+		let l2 = try P6cContainer.line("2 4 -5 7 1 3 3 3")
+		let view = V2MakeBox(0, 0, 200, 100)
+		var mv = IdentityMatrix4
+		mv.element.0.0 = 0.5
+		let proj = IdentityMatrix4
+		let c = LDrawContainer()
+		#expect(V3EqualBoxes(c.projectedBoundingBox(withModelView: mv, projection: proj, view: view), InvalidBox) != 0)
+		c.add(LDrawDirective())
+		#expect(V3EqualBoxes(c.projectedBoundingBox(withModelView: mv, projection: proj, view: view), InvalidBox) != 0)
+		c.add(l1)
+		c.add(l2)
+		let step = try #require(LDrawStep.empty() as? LDrawStep)
+		let l3 = try P6cContainer.line("2 4 100 100 100 101 101 101")
+		step.add(l3)
+		c.add(step as LDrawDirective)
+		let expected = [l1, l2, l3].reduce(InvalidBox) {
+			V3UnionBox($0, $1.projectedBoundingBox(withModelView: mv, projection: proj, view: view))
+		}
+		let got = c.projectedBoundingBox(withModelView: mv, projection: proj, view: view)
+		#expect(V3EqualBoxes(got, expected) != 0)
+		#expect(V3EqualBoxes(got, InvalidBox) == 0)
+	}
+
+	@Test("collectPartReport: and applyToAllParts: reach every part, nested, in order; other children are skipped")
+	func partVisits() throws {
+		let p1 = try PartFactory.part("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat")
+		let p2 = try PartFactory.part("1 1 0 0 0 1 0 0 0 1 0 0 0 1 3024.dat")
+		let p3 = try PartFactory.part("1 2 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat")
+		let c = LDrawContainer()
+		let step = try #require(LDrawStep.empty() as? LDrawStep)
+		step.add(p2 as LDrawDirective)
+		c.add(p1 as LDrawDirective)
+		c.add(LDrawDirective())
+		c.add(try P6cContainer.line("2 4 0 0 0 1 1 1"))
+		c.add(step as LDrawDirective)
+		c.add(p3 as LDrawDirective)
+		let report = try #require(PartReport(for: nil))
+		try ObjC.run { c.collect(report) }
+		#expect(report.numberOfParts() == 3)
+		var visited: [LDrawPart] = []
+		try ObjC.run { c.apply(toAllParts: { visited.append($0) }) }
+		#expect(visited.count == 3 && visited[0] === p1 && visited[1] === p2 && visited[2] === p3)
+		// containsReferenceTo: asks each child (nested too) and stops at the first YES.
+		#expect(c.containsReference(to: "3024.dat"))
+		#expect(c.containsReference(to: "3001.dat"))
+		#expect(!c.containsReference(to: "nosuch.dat"))
+		#expect(!c.containsReference(to: nil))
+	}
+
+	@Test("Archiving: containedObjects plus the inherited enclosingDirective; children decode in order, parented and observed; postsNotifications isn't archived")
+	func archiving() throws {
+		let c = LDrawContainer()
+		let a = try P6cContainer.line("2 4 0 0 0 1 1 1")
+		let b = try P6cContainer.line("2 1 0 0 0 2 2 2")
+		c.add(a)
+		c.add(b)
+		c.setPostsNotifications(true)
+		let data = ObjectModel.archive(c)
+		let keys = try P6bPart.archivedKeys(data, className: "LDrawContainer")
+		#expect(keys == ["containedObjects", "enclosingDirective"], "\(keys)")
+		let decoded = try #require(try ObjectModel.unarchive(data) as? LDrawContainer)
+		#expect(!decoded.postsNotifications)
+		let kids = P6cContainer.children(decoded)
+		#expect(kids.map { $0.write() ?? "" } == [a.write() ?? "", b.write() ?? ""])
+		#expect(kids.allSatisfy { $0.enclosingDirective() === decoded })
+		#expect(decoded.subdirectives() is NSMutableArray)
+		decoded.add(LDrawDirective())
+		#expect(decoded.subdirectives()?.count == 3)
+		let recorder = ObserverRecorder(label: "d")
+		decoded.add(recorder)
+		defer { decoded.remove(recorder as LDrawObserver) }
+		_ = kids[0].revalCache([.CacheFlagBounds, .DisplayList])
+		_ = decoded.revalCache([.CacheFlagBounds, .DisplayList])
+		kids[0].invalCache(.DisplayList)
+		#expect(recorder.log == ["d: statusInvalidated flags=2 from LDrawContainer"], "\(recorder.log)")
+	}
+
+	@Test("copy: children are copied (new objects, parented and observed by the copy); postsNotifications and selection")
+	func copying() throws {
+		let c = LDrawContainer()
+		let a = try P6cContainer.line("2 4 0 0 0 1 1 1")
+		c.add(a)
+		c.setPostsNotifications(true)
+		c.setSelected(true)
+		let copy = try #require(c.copy() as? LDrawContainer)
+		#expect(!copy.postsNotifications)
+		#expect(copy.isSelected())
+		let kids = P6cContainer.children(copy)
+		#expect(kids.count == 1 && kids[0] !== a && kids[0].write() == a.write())
+		#expect(kids[0].enclosingDirective() === copy)
+		#expect(a.enclosingDirective() === c)
+		let recorder = ObserverRecorder(label: "copy")
+		copy.add(recorder)
+		defer { copy.remove(recorder as LDrawObserver) }
+		_ = kids[0].revalCache([.CacheFlagBounds, .DisplayList])
+		_ = copy.revalCache([.CacheFlagBounds, .DisplayList])
+		kids[0].invalCache(.DisplayList)
+		#expect(recorder.log == ["copy: statusInvalidated flags=2 from LDrawContainer"], "\(recorder.log)")
+
+		// Several children: copied in reverse (BUG-011).
+		let three = LDrawContainer()
+		let lines = try ["2 1 0 0 0 1 1 1", "2 2 0 0 0 1 1 1", "2 3 0 0 0 1 1 1"].map(P6cContainer.line)
+		lines.forEach { three.add($0) }
+		let threeCopy = try #require(three.copy() as? LDrawContainer)
+		let written = P6cContainer.children(threeCopy).map { $0.write() ?? "" }
+		#expect(Set(written) == Set(lines.map { $0.write() ?? "" }))
+		withKnownIssue("BUG-011: -[LDrawContainer copyWithZone:] inserts every copy at index 0, reversing the children") {
+			#expect(written == lines.map { $0.write() ?? "" })
+		}
+	}
+
+	@Test("Dealloc: children outliving the container are unparented and no longer observed; the container's observers get a goodbye")
+	func deallocation() throws {
+		let child = LDrawDirective()
+		let recorder = ObserverRecorder(label: "obs")
+		weak var weakContainer: LDrawContainer?
+		autoreleasepool {
+			let c = LDrawContainer()
+			weakContainer = c
+			c.add(child)
+			c.add(recorder)
+			#expect(child.enclosingDirective() === c)
+		}
+		#expect(weakContainer == nil)
+		#expect(recorder.log == ["obs: goodbye from LDrawContainer"], "\(recorder.log)")
+		#expect(child.enclosingDirective() == nil)
+		// Invalidating the surviving child must not message the freed container.
+		_ = child.revalCache([.CacheFlagBounds, .DisplayList])
+		child.invalCache([.CacheFlagBounds, .DisplayList])
+		child.sendMessage(toObservers: .nameChanged)
+	}
+}
