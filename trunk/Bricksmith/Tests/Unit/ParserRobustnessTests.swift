@@ -124,6 +124,26 @@ struct ParserRobustnessTests {
 		#expect(make("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat") == nil)
 	}
 
+	@Test("readFromData: turns the malformed-ROTSTEP parse exception into a bare corrupt-file error (S9 path)")
+	@MainActor
+	func documentReadOfMalformedRotstep() throws {
+		// The exception that crashes a direct parse (BUG-007) is caught inside -readFromData:ofType:error:,
+		// which then writes *outError without a NULL check (S9). Pin exactly what it writes, so the P4
+		// conversion of that @try can reproduce it.
+		let doc = LDrawDocument()
+		let before = doc.documentContents()
+		var caught: Error?
+		try ObjC.run {
+			do { try doc.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n".utf8), ofType: "LDraw Document") }
+			catch { caught = error }
+		}
+		let error = try #require(caught) as NSError
+		#expect(error.domain == NSCocoaErrorDomain)
+		#expect(error.code == NSFileReadCorruptFileError)
+		#expect(error.userInfo.isEmpty, "\(error.userInfo)")
+		#expect(doc.documentContents() === before, "the document's contents must not be replaced")
+	}
+
 	// MARK: Crashers, each confirmed IN ISOLATION (heap corruption can surface in a later case).
 
 	@Test("Isolated: malformed ROTSTEP angles crash today (BUG-007)")
