@@ -939,11 +939,11 @@ struct ContainerPinTests {
 
 /// An LDrawObserver whose callbacks append to a shared log and may run a hook (to add or remove observers
 /// while the observable is notifying). The doomed object of a goodbye is recorded by address only.
-final class HookObserver: NSObject, LDrawObserver {
+final class P6cHookObserver: NSObject, LDrawObserver {
 	final class Log { var lines: [String] = [] }
 	let label: String
 	let log: Log
-	var onNotify: ((HookObserver) -> Void)?
+	var onNotify: ((P6cHookObserver) -> Void)?
 	init(_ label: String, _ log: Log) { self.label = label; self.log = log }
 
 	static func address(_ o: Any?) -> UInt {
@@ -967,13 +967,28 @@ final class HookObserver: NSObject, LDrawObserver {
 
 /// An observer that keeps no strong reference to its observable and stops observing when it dies
 /// (the observer-dies-first rule in LDrawDirective.h).
-final class SelfRemovingObserver: NSObject, LDrawObserver {
+final class P6cSelfRemovingObserver: NSObject, LDrawObserver {
 	unowned(unsafe) let target: LDrawDirective
 	init(_ target: LDrawDirective) { self.target = target; super.init(); target.add(self) }
 	deinit { target.remove(self as LDrawObserver) }
 	func observableSaysGoodbyeCruelWorld(_ doomedObservable: (any LDrawObservable)!) {}
 	func statusInvalidated(_ flags: CacheFlagsT, who observable: (any LDrawObservable)!) {}
 	func receiveMessage(_ msg: MessageT, who observable: (any LDrawObservable)!) {}
+}
+
+/// A subclass with no initialisers of its own (it inherits them all, before and after the port) that logs
+/// the overridable setters copy and decode send, and reports itself selected whatever its stored flag says.
+final class P6cProbeDirective: LDrawDirective {
+	nonisolated(unsafe) static var log: [String] = []
+	override func isSelected() -> Bool { true }
+	override func setSelected(_ flag: Bool) {
+		Self.log.append("setSelected \(flag)")
+		super.setSelected(flag)
+	}
+	override func setEnclosing(_ newParent: LDrawContainer!) {
+		Self.log.append("setEnclosing \(newParent.map { String(describing: type(of: $0)) } ?? "nil")")
+		super.setEnclosing(newParent)
+	}
 }
 
 /// Pins the base class's behaviour before it moves to Swift: the observer set (LDrawFastSet: 0, 1, 2 and 3+
@@ -983,12 +998,12 @@ final class SelfRemovingObserver: NSObject, LDrawObserver {
 @Suite("LDrawDirective (P6c pins)", .fixtureLibrary, .serialized)
 struct DirectivePinTests {
 
-	private func observers(_ labels: [String], _ log: HookObserver.Log) -> [HookObserver] {
-		labels.map { HookObserver($0, log) }
+	private func observers(_ labels: [String], _ log: P6cHookObserver.Log) -> [P6cHookObserver] {
+		labels.map { P6cHookObserver($0, log) }
 	}
 
 	/// Who receives a message now, sorted when order isn't deterministic.
-	private func reached(_ d: LDrawDirective, _ log: HookObserver.Log, sorted: Bool = false) -> [String] {
+	private func reached(_ d: LDrawDirective, _ log: P6cHookObserver.Log, sorted: Bool = false) -> [String] {
 		log.lines = []
 		d.sendMessage(toObservers: .nameChanged)
 		let who = log.lines.map { String($0.prefix { $0 != " " }) }
@@ -1000,7 +1015,7 @@ struct DirectivePinTests {
 	@Test("Observer set: add and remove through 0, 1, 2, 3+, 2, 1, 0; one or two observers are told in insertion order")
 	func observerCounts() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b", "c", "d"], log)
 		#expect(reached(d, log).isEmpty)
 		d.add(o[0])
@@ -1032,7 +1047,7 @@ struct DirectivePinTests {
 	@Test("Observer set: a duplicate add is ignored at every size, and one remove then drops the observer")
 	func duplicateAdds() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b", "c"], log)
 		d.add(o[0]); d.add(o[0])
 		#expect(reached(d, log) == ["a"])
@@ -1051,20 +1066,20 @@ struct DirectivePinTests {
 	@Test("Observer set holds observers unretained")
 	func observersUnretained() {
 		let d = LDrawDirective()
-		weak var weakObserver: SelfRemovingObserver?
+		weak var weakObserver: P6cSelfRemovingObserver?
 		autoreleasepool {
-			let o = SelfRemovingObserver(d)
+			let o = P6cSelfRemovingObserver(d)
 			weakObserver = o
 		}
 		#expect(weakObserver == nil)
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		#expect(reached(d, log).isEmpty)
 	}
 
 	@Test("Two observers: the first removing the second skips it; removing itself still reaches the second")
 	func mutationDuringNotificationTwo() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b"], log)
 		d.add(o[0]); d.add(o[1])
 		o[0].onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.remove(o[1] as LDrawObserver) }
@@ -1081,7 +1096,7 @@ struct DirectivePinTests {
 	@Test("Two observers: one added during notification (the set grows to 3) is not told this time; the second still is")
 	func addDuringNotification() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b", "c", "d"], log)
 		d.add(o[0]); d.add(o[1])
 		o[0].onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.add(o[2]) }
@@ -1098,7 +1113,7 @@ struct DirectivePinTests {
 	@Test("Three observers: each removing itself is still told (all three); removing all others leaves exactly one told")
 	func mutationDuringNotificationThree() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b", "c"], log)
 		for x in o { d.add(x); x.onNotify = { [unowned(unsafe) d] me in me.onNotify = nil; d.remove(me as LDrawObserver) } }
 		#expect(reached(d, log, sorted: true) == ["a", "b", "c"])
@@ -1121,12 +1136,12 @@ struct DirectivePinTests {
 	@Test("Dealloc says goodbye to every observer (0, 1, 2, 3+), passing the dying directive")
 	func goodbyeFromDealloc() {
 		for count in 0...4 {
-			let log = HookObserver.Log()
+			let log = P6cHookObserver.Log()
 			let o = observers(Array(["a", "b", "c", "d"].prefix(count)), log)
 			var address: UInt = 0
 			autoreleasepool {
 				let d = LDrawDirective()
-				address = HookObserver.address(d)
+				address = P6cHookObserver.address(d)
 				for x in o { d.add(x) }
 			}
 			#expect(log.lines.sorted() == o.map { "\($0.label) goodbye \(address)" }, "\(count): \(log.lines)")
@@ -1135,7 +1150,7 @@ struct DirectivePinTests {
 
 	@Test("Dealloc goodbye: an observer may remove itself (as LDrawPart does) or the next one, which is then skipped")
 	func goodbyeWithRemoval() {
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b"], log)
 		autoreleasepool {
 			let d = LDrawDirective()
@@ -1168,7 +1183,7 @@ struct DirectivePinTests {
 	@Test("invalCache tells observers only the newly dirty bits; revalCache returns the dirty bits it clears and tells no one")
 	func cacheFlags() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
+		let log = P6cHookObserver.Log()
 		let o = observers(["a", "b"], log)
 		d.add(o[0]); d.add(o[1])
 		d.invalCache(.CacheFlagBounds)
@@ -1202,8 +1217,8 @@ struct DirectivePinTests {
 	@Test("sendMessageToObservers passes the message through unchanged, and always (it isn't cached)")
 	func messages() {
 		let d = LDrawDirective()
-		let log = HookObserver.Log()
-		let a = HookObserver("a", log)
+		let log = P6cHookObserver.Log()
+		let a = P6cHookObserver("a", log)
 		d.add(a)
 		d.sendMessage(toObservers: .nameChanged)
 		d.sendMessage(toObservers: .scopeChanged)
@@ -1382,8 +1397,8 @@ struct DirectivePinTests {
 		d.setSelected(true)
 		d.setIconName("Brick")
 		d.invalCache(.CacheFlagBounds)
-		let log = HookObserver.Log()
-		let a = HookObserver("a", log)
+		let log = P6cHookObserver.Log()
+		let a = P6cHookObserver("a", log)
 		d.add(a)
 		defer { d.remove(a as LDrawObserver) }
 
@@ -1414,8 +1429,8 @@ struct DirectivePinTests {
 		d.setSelected(true)
 		d.setIconName("Brick")
 		d.invalCache(.DisplayList)
-		let log = HookObserver.Log()
-		let a = HookObserver("a", log)
+		let log = P6cHookObserver.Log()
+		let a = P6cHookObserver("a", log)
 		d.add(a)
 		defer { d.remove(a as LDrawObserver) }
 
@@ -1435,5 +1450,34 @@ struct DirectivePinTests {
 		// A subclass with no copy override of its own still copies as itself.
 		let comment = LDrawComment()
 		#expect(type(of: comment.copy() as AnyObject) == LDrawComment.self)
+	}
+
+	@Test("Through a subclass: init sends no setters; copy sends setEnclosing(nil) then setSelected(stored flag, not the getter); decode sends setEnclosing; descriptions use the runtime class name")
+	func subclassDispatch() throws {
+		P6cProbeDirective.log = []
+		let p = P6cProbeDirective()
+		let parsed = try #require(P6cProbeDirective(lines: ldrawLines(["0 x"]), in: NSRange(location: 0, length: 1)))
+		let made = try #require(P6cProbeDirective.directive(lines: ldrawLines(["0 x"]), in: NSRange(location: 0, length: 1), parentGroup: nil))
+		#expect(type(of: parsed) == P6cProbeDirective.self && type(of: made) == P6cProbeDirective.self)
+		#expect(P6cProbeDirective.log.isEmpty, "\(P6cProbeDirective.log)")
+
+		#expect(p.isSelected(), "the override")
+		let copied = try #require(p.copy() as? P6cProbeDirective)
+		#expect(P6cProbeDirective.log == ["setEnclosing nil", "setSelected false"], "\(P6cProbeDirective.log)")
+		#expect(copied.isSelected())
+
+		P6cProbeDirective.log = []
+		let parent = LDrawStep()
+		p.setEnclosing(parent)
+		defer { p.setEnclosing(nil) }
+		P6cProbeDirective.log = []
+		let decoded = try #require(try ObjectModel.unarchive(ObjectModel.archive(p)) as? P6cProbeDirective)
+		#expect(P6cProbeDirective.log == ["setEnclosing nil"], "\(P6cProbeDirective.log)")
+		#expect(decoded.enclosingDirective() == nil)
+
+		let name = NSStringFromClass(P6cProbeDirective.self)
+		#expect(p.browsingDescription() == name)
+		#expect(p.description == name + "\n")
+		P6cProbeDirective.log = []
 	}
 }
