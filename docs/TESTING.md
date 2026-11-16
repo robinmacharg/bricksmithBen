@@ -171,7 +171,10 @@ things automation covers poorly. Record the sign-off in port-status.md.
 4. Select a part in the 3D view, then in the outline. The inspector shows its values. Change its colour and position from the inspector.
 5. Drag a part from the part browser into the model. Move it with the arrow keys, rotate it with the rotation panel, then undo and redo all of it.
 6. Copy and paste a part, both within one document and between two documents.
-7. Add a step and use step navigation. Add a submodel to an MPD, reference it, then rename it.
+7. Add a step and use step navigation. Add a submodel to an MPD, reference it, then rename it. Earlier parts may shift
+   slightly when a step adds parts further from the origin: this is by design, not a bug. The camera distance is
+   6.5 × (the farthest corner of the bounding box of the steps shown, + 40) (`-[LDrawGLCamera tickle]`), so the
+   perspective changes.
 8. Marquee-select several parts and delete them. Undo.
 9. Save As a new file, close it, reopen it. Content is identical (`diff` the files).
 10. Open Preferences and change the grid spacing. Restart the app; the setting is kept.
