@@ -27,9 +27,6 @@
 //==============================================================================
 #import "LDrawStep.h"
 
-#if USE_BLOCKS
-#import <dispatch/dispatch.h>
-#endif
 
 #import "LDrawKeywords.h"
 #import "LDrawModel.h"
@@ -118,20 +115,6 @@
 	cachedBounds = InvalidBox;
 	
 	dispatch_group_t    stepDispatchGroup   = NULL;
-#if USE_BLOCKS
-	dispatch_queue_t    queue               = NULL;	
-	
-	// Create a group for the multithreaded parsing of the step contents.
-	queue               = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);	
-	stepDispatchGroup   = dispatch_group_create();
-	
-	// Prevent the owning group from completing until the step is finished 
-	// asynchronously parsing its contents. 
-	if(parentGroup != NULL)
-	{
-		dispatch_group_enter(parentGroup);
-	}
-#endif	
 
 	// Parse out the STEP command
 	if(range.length > 0)
@@ -168,11 +151,6 @@
 			commandRange = [CommandClass rangeOfDirectiveBeginningAtIndex:lineIndex
 																  inLines:lines
 																 maxIndex:NSMaxRange(range) - 1];
-#if USE_BLOCKS
-			// Parse (multithreaded)
-			dispatch_group_async(stepDispatchGroup, queue,
-			^{
-#endif
 				// Parse but disallow multithreading for subparsing. LDraw 
 				// objects be be deeply recursive, which means we would pile 
 				// up a lot of dispatch_group_wait calls, resulting in so 
@@ -183,9 +161,6 @@
 				// (NSMutableArray is NOT). Since it doesn't retain, we mustn't 
 				// autorelease newDirective. 
 				directives[insertIndex] = newDirective;
-#if USE_BLOCKS
-			});
-#endif
 			lineIndex     = NSMaxRange(commandRange);
 			insertIndex += 1;
 		}
@@ -196,10 +171,6 @@
 
 	}
 	
-#if USE_BLOCKS
-	dispatch_group_notify(stepDispatchGroup, queue,
-	^{
-#endif
 		NSUInteger      counter             = 0;
 		LDrawDirective  *currentDirective   = nil;
 
@@ -213,16 +184,6 @@
 		}
 		free(directives);
 		
-#if USE_BLOCKS
-		// Now that the step is complete, we can release our lock on the 
-		// parent group and allow it to finish. 
-		if(parentGroup != NULL)
-		{
-			dispatch_group_leave(parentGroup);
-		}
-	});
-	dispatch_release(stepDispatchGroup);
-#endif
 	
 	return self;
 	

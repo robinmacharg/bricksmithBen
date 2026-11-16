@@ -971,22 +971,8 @@ To work, this needs to multiply the modelViewGLMatrix by the part transform.
 	// here - resolving later prevents thrash.
 	if(shouldParse == YES && newPartName != nil && [newPartName length] > 0)
 	{
-#if USE_BLOCKS
-		// Create a parsing group if needed.
-		if(parentGroup == NULL)
-			parseGroup = dispatch_group_create();
-		else
-			parseGroup = parentGroup;
-#endif
 		[[PartLibrary sharedPartLibrary] loadModelForName:referenceName inGroup:parseGroup];
 		
-#if USE_BLOCKS
-		if(parentGroup == NULL)
-		{
-			dispatch_group_wait(parseGroup, DISPATCH_TIME_FOREVER);
-			dispatch_release(parseGroup);
-		}
-#endif	
 	}
 	
 }//end setDisplayName:

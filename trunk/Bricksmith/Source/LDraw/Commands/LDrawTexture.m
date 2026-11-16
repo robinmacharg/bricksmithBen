@@ -722,22 +722,8 @@
 	// predictability and allows better potential threading optimization. 
 	if(shouldParse == YES && newName != nil && [newName length] > 0)
 	{
-#if USE_BLOCKS
-		// Create a parsing group if needed.
-		if(parentGroup == NULL)
-			parseGroup = dispatch_group_create();
-		else
-			parseGroup = parentGroup;
-#endif
 		[[PartLibrary sharedPartLibrary] loadImageForName:self->imageDisplayName inGroup:parseGroup];
 		
-#if USE_BLOCKS
-		if(parentGroup == NULL)
-		{
-			dispatch_group_wait(parseGroup, DISPATCH_TIME_FOREVER);
-			dispatch_release(parseGroup);
-		}
-#endif	
 	}
 	
 }//end setImageDisplayName:

@@ -135,26 +135,13 @@
 	maxLineIndex        = NSMaxRange(range) - 1;
 
 	dispatch_group_t	modelDispatchGroup = NULL;
-#if USE_BLOCKS
-	modelDispatchGroup = dispatch_group_create();
-	dispatch_queue_t	queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-	if(parentGroup != NULL)
-		dispatch_group_enter(parentGroup);
-#endif
 	// Parse out steps. Each time we run into a new 0 STEP command, we finish 
 	// the current step. 
 	do
 	{
 		stepRange   = [LDrawStep rangeOfDirectiveBeginningAtIndex:contentStartIndex inLines:lines maxIndex:maxLineIndex];
-#if USE_BLOCKS
-		dispatch_group_async(modelDispatchGroup,queue,
-		^{
-#endif
 			LDrawStep * newStep     = [[LDrawStep alloc] initWithLines:lines inRange:stepRange parentGroup:modelDispatchGroup];
 			substeps[insertIndex] = newStep;
-#if USE_BLOCKS
-		});
-#endif
 		++insertIndex;
 
 		contentStartIndex = NSMaxRange(stepRange);
@@ -162,10 +149,6 @@
 	}
 	while(contentStartIndex < NSMaxRange(range));
 		
-#if USE_BLOCKS
-	dispatch_group_notify(modelDispatchGroup,queue,
-	^{
-#endif
 		NSUInteger      counter				= 0;
 		for(counter = 0; counter < insertIndex; counter++)
 		{
@@ -183,12 +166,6 @@
 		{
 			[self addStep];
 		}
-#if USE_BLOCKS
-		if(parentGroup != NULL)
-			dispatch_group_leave(parentGroup);
-	});
-	dispatch_release(modelDispatchGroup);	
-#endif	
 	return self;
 	
 }//end initWithLines:inRange:
