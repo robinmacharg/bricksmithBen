@@ -119,6 +119,9 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 	// Stored defaults are nil/literals: -[LDrawDirective initWithLines:...] re-sends
 	// -init mid-parse (L104); -init allocates.
 	private var synthesizedParts: NSMutableArray!	= nil
+	/// The synthesized parts this block registered with as an observer (parse only; copies and decoded
+	/// blocks don't register). deinit unregisters from exactly these.
+	private var observedSynthesizedParts = Set<ObjectIdentifier>()
 	private var synthType: String?					= nil
 	private var lsynthClassValue: Int32				= 0
 	private var color: LDrawColor?					= nil
@@ -335,6 +338,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 						return nil
 					}
 					synthesizedParts.add(newDirective)
+					observedSynthesizedParts.insert(ObjectIdentifier(newDirective))
 				}
 
 			}
@@ -1101,6 +1105,9 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		}
 
 		// Clean up first
+		// (P6b: stop observing the parse-registered parts being dropped, so one that
+		// outlives this block can't say goodbye to it after it is freed; see deinit.)
+		unregisterFromSynthesizedParts()
 		synthesizedParts?.removeAllObjects()
 
 		var input = ""
@@ -1747,4 +1754,33 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		}
 		noteNeedsDisplay()
 	} // end requiresResynthesis:
+
+	// MARK: - Destructor
+
+	//========== deinit ========================================================
+	//
+	// Purpose:		Stop observing the synthesized parts. LDrawContainer's dealloc
+	//				does this for the children (constraints); the synthesized parts
+	//				are observed too (parse) but live in their own array, and the ObjC
+	//				never unregistered from them: it relied on them dying with the
+	//				block. Under Swift a part can outlive the block in an autorelease
+	//				pool, and its -[LDrawDirective dealloc] then said goodbye to the
+	//				freed block (P6b integration crash, found with NSZombieEnabled).
+	//				Only parts this block registered with (observedSynthesizedParts):
+	//				removing an unknown observer asserts.
+	//
+	//==========================================================================
+	deinit {
+		unregisterFromSynthesizedParts()
+	}
+
+	private func unregisterFromSynthesizedParts() {
+		if let synthesizedParts, observedSynthesizedParts.isEmpty == false {
+			for case let part as LDrawDirective in synthesizedParts
+				where observedSynthesizedParts.contains(ObjectIdentifier(part)) {
+				part.remove(self as LDrawObserver)
+			}
+		}
+		observedSynthesizedParts.removeAll()
+	}
 }
