@@ -25,7 +25,7 @@ This document describes the code **as it is**. For where it is going, see
 
 ```
 Source/
-  Other/          prefix header (.pch), MacLDraw.h (≈120 #define constants), RegexKitLite, main.m, MLCadIni
+  Other/          prefix header (.pch), MacLDraw.h (≈120 #define constants), main.m, MLCadIni
   Categories/     NSString, NSUserDefaults, NSView, NSWindow, NSTableView, NSBezierPath categories (the NSEvent category lives in `Widgets/LDrawGLView.h`)
   LDraw/
     Support/      LDrawDirective (root class), LDrawUtilities, ColorLibrary, PartLibrary, PartCatalogBuilder,

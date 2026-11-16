@@ -12,7 +12,7 @@ topics that match your task rather than the whole log.
 | Topic | Entries |
 |---|---|
 | Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84, L89 |
-| Build and warnings | L5-L10, L20, L21, L66, L84, L86 |
+| Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
 | Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87 |
@@ -387,3 +387,6 @@ topics that match your task rather than the whole log.
   - A local named `type` in a Swift test hides `type(of:)`.
   - In a `@MainActor` suite, `arguments:` data needs `nonisolated static let`.
   - `(?:SHOW|HIDE)` matches `HIDES` but not `HIDDEN`: write regex tests against the old implementation first.
+- **L90. xcodebuild's log can interleave parallel compiler output mid-line.** A warning once appeared as
+  `s/trunk/Bricksmith/...` (its path prefix cut off by another line), so `build.sh` reported it as new. → If a "new"
+  warning has a mangled path, check `build/build.log` for the same warning with a full path and rerun the build.

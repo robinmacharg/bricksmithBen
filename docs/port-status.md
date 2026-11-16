@@ -200,7 +200,7 @@ sign-off here:
 | `Bricksmith/Source/LDraw/Support/PartReport.m` | 415 | MRC | P7 | todo |
 | `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/MLCadIni.m` | 666 | ARC | P5 | todo |
-| `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | todo |
+| `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | **deleted** (P4; users moved to NSRegularExpression in stream B, `libicucore` link removed) |
 | `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/main.m` | 15 | ARC | P10 | todo |
