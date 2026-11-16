@@ -219,6 +219,19 @@ final class LDrawTriangle: LDrawDrawableElement {
 	//==========================================================================
 	@objc(collectSelf:)
 	override func collectSelf(_ renderer: (any LDrawCollector)!) {
+		collectPrimitive(renderer)
+	}
+
+
+	//---------- collectPrimitive(_:) ------------------------------------------
+	//
+	// Purpose:		The body of -collectSelf:. LDrawStep calls it directly for an
+	//				instance of exactly this class: entering through the @objc
+	//				method costs a retain and release of self and of the renderer
+	//				per primitive, which the ObjC primitives never paid.
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc final func collectPrimitive(_ renderer: (any LDrawCollector)!) {
 		// We must mark our DL as valid - otherwise we will not invalidate our
 		// DL when edited, and if we don't do that, we won't pass the message
 		// to our parents that our DL is invalid.  This passing the invalid DL up
@@ -294,6 +307,17 @@ final class LDrawTriangle: LDrawDrawableElement {
 	//==========================================================================
 	@objc(boxTest:transform:boundsOnly:creditObject:hits:)
 	override func boxTest(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: Any!, hits: NSMutableSet!) -> Bool {
+		boxTestPrimitive(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+	}
+
+
+	//---------- boxTestPrimitive(...) -----------------------------------------
+	//
+	// Purpose:		The body of -boxTest:..., which LDrawStep also calls directly
+	//				for an instance of exactly this class (as collectPrimitive(_:)).
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc final func boxTestPrimitive(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: Any!, hits: NSMutableSet!) -> Bool {
 		if self.isHidden() == false {
 			let clipVertex1 = V4MulPointByMatrix(V4FromPoint3(self.v1), transform)
 			let clipVertex2 = V4MulPointByMatrix(V4FromPoint3(self.v2), transform)
@@ -343,6 +367,19 @@ final class LDrawTriangle: LDrawDrawableElement {
 	override func depthTest(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: Any!,
 							bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>!,
 							bestDepth: UnsafeMutablePointer<Float>!) {
+		depthTestPrimitive(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+	}
+
+
+	//---------- depthTestPrimitive(...) ---------------------------------------
+	//
+	// Purpose:		The body of -depthTest:..., which LDrawStep also calls directly
+	//				for an instance of exactly this class (as collectPrimitive(_:)).
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc final func depthTestPrimitive(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: Any!,
+										   bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>!,
+										   bestDepth: UnsafeMutablePointer<Float>!) {
 		if self.isHidden() == false {
 			let clipVertex1 = V4MulPointByMatrix(V4FromPoint3(self.v1), transform)
 			let clipVertex2 = V4MulPointByMatrix(V4FromPoint3(self.v2), transform)

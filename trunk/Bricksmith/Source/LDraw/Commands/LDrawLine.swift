@@ -229,6 +229,19 @@ class LDrawLine: LDrawDrawableElement {
 	//==========================================================================
 	@objc(collectSelf:)
 	override func collectSelf(_ renderer: (any LDrawCollector)!) {
+		collectPrimitive(renderer)
+	}
+
+
+	//---------- collectPrimitive(_:) ------------------------------------------
+	//
+	// Purpose:		The body of -collectSelf:. LDrawStep calls it directly for an
+	//				instance of exactly this class: entering through the @objc
+	//				method costs a retain and release of self and of the renderer
+	//				per primitive, which the ObjC primitives never paid.
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc final func collectPrimitive(_ renderer: (any LDrawCollector)!) {
 		_ = self.revalCache(.DisplayList)
 
 		// One C call reads `hidden` and `color` straight from the ObjC ivars (no getter sends, no
@@ -305,6 +318,17 @@ class LDrawLine: LDrawDrawableElement {
 	//==========================================================================
 	@objc(boxTest:transform:boundsOnly:creditObject:hits:)
 	override func boxTest(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: Any!, hits: NSMutableSet!) -> Bool {
+		boxTestPrimitive(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+	}
+
+
+	//---------- boxTestPrimitive(...) -----------------------------------------
+	//
+	// Purpose:		The body of -boxTest:..., which LDrawStep also calls directly
+	//				for an instance of exactly this class (as collectPrimitive(_:)).
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc final func boxTestPrimitive(_ bounds: Box2, transform: Matrix4, boundsOnly: Bool, creditObject: Any!, hits: NSMutableSet!) -> Bool {
 		if self.isHidden() == false {
 			let worldVertex1 = V3MulPointByProjMatrix(self.v1, transform)
 			let worldVertex2 = V3MulPointByProjMatrix(self.v2, transform)
@@ -338,6 +362,19 @@ class LDrawLine: LDrawDrawableElement {
 	override func depthTest(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: Any!,
 							bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>!,
 							bestDepth: UnsafeMutablePointer<Float>!) {
+		depthTestPrimitive(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+	}
+
+
+	//---------- depthTestPrimitive(...) ---------------------------------------
+	//
+	// Purpose:		The body of -depthTest:..., which LDrawStep also calls directly
+	//				for an instance of exactly this class (as collectPrimitive(_:)).
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc final func depthTestPrimitive(_ pt: Point2, inBox bounds: Box2, transform: Matrix4, creditObject: Any!,
+										   bestObject: AutoreleasingUnsafeMutablePointer<AnyObject?>!,
+										   bestDepth: UnsafeMutablePointer<Float>!) {
 		if self.isHidden() == false {
 			let worldVertex1	= V3MulPointByProjMatrix(self.v1, transform)
 			let worldVertex2	= V3MulPointByProjMatrix(self.v2, transform)

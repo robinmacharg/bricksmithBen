@@ -94,9 +94,54 @@ func ldrawDirective(at index: Int, in array: NSArray) -> LDrawDirective {
 //------------------------------------------------------------------------------
 @inline(__always)
 func withLDrawDirective<Result>(at index: Int, in array: NSArray, _ body: (LDrawDirectiveSends) -> Result) -> Result {
-	let child = CFArrayGetValueAtIndex(unsafeBitCast(array, to: CFArray.self), index)!
-	return Unmanaged<AnyObject>.fromOpaque(child)._withUnsafeGuaranteedRef {
+	withUnretainedChild(at: index, in: array) {
 		body(unsafeBitCast($0, to: LDrawDirectiveSends.self))
+	}
+}
+
+
+//---------- withUnretainedChild(at:in:_:) -----------------------------------
+//
+// Purpose:		The child at index, read with CFArrayGetValueAtIndex and lent
+//				to body without a retain (see withLDrawDirective(at:in:_:)).
+//
+//------------------------------------------------------------------------------
+@inline(__always)
+func withUnretainedChild<Result>(at index: Int, in array: NSArray, _ body: (AnyObject) -> Result) -> Result {
+	let child = CFArrayGetValueAtIndex(unsafeBitCast(array, to: CFArray.self), index)!
+	return Unmanaged<AnyObject>.fromOpaque(child)._withUnsafeGuaranteedRef(body)
+}
+
+
+//---------- SwiftPrimitiveClasses ---------------------------------------------
+//
+// Purpose:		Picks out a child of exactly LDrawLine, LDrawConditionalLine,
+//				LDrawTriangle or LDrawQuadrilateral, so that a step's collect,
+//				box-test and depth-test loops can call the primitive's body
+//				directly (collectPrimitive(_:), boxTestPrimitive(...),
+//				depthTestPrimitive(...)). Entering a
+//				Swift method through its @objc entry costs a retain/release of
+//				the receiver and of each object argument (and boxes an `id` as
+//				Any), per primitive; the ObjC primitives never paid that. Any
+//				other class, a subclass or a KVO-observed instance included, is
+//				.other and is messaged as before. The same body runs either way.
+//
+//------------------------------------------------------------------------------
+struct SwiftPrimitiveClasses {
+	enum Kind { case line, triangle, quadrilateral, other }
+
+	private let line			= ObjectIdentifier(LDrawLine.self)
+	private let conditionalLine	= ObjectIdentifier(LDrawConditionalLine.self)
+	private let triangle		= ObjectIdentifier(LDrawTriangle.self)
+	private let quadrilateral	= ObjectIdentifier(LDrawQuadrilateral.self)
+
+	@inline(__always)
+	func kind(of child: AnyObject) -> Kind {
+		let childClass = ObjectIdentifier(type(of: child))
+		if childClass == triangle { return .triangle }
+		if childClass == quadrilateral { return .quadrilateral }
+		if childClass == line || childClass == conditionalLine { return .line }
+		return .other
 	}
 }
 
@@ -494,9 +539,18 @@ final class LDrawStep: LDrawContainer {
 	@objc(collectSelf:)
 	override func collectSelf(_ renderer: (any LDrawCollector)!) {
 		if let commandsInStep = subdirectives() {
+			let primitives = SwiftPrimitiveClasses()
+
 			//Draw each element in the step.
 			for counter in 0..<commandsInStep.count {
-				withLDrawDirective(at: counter, in: commandsInStep) { $0.collectSelf(renderer) }
+				withUnretainedChild(at: counter, in: commandsInStep) { child in
+					switch primitives.kind(of: child) {
+					case .triangle:			unsafeDowncast(child, to: LDrawTriangle.self).collectPrimitive(renderer)
+					case .quadrilateral:	unsafeDowncast(child, to: LDrawQuadrilateral.self).collectPrimitive(renderer)
+					case .line:				unsafeDowncast(child, to: LDrawLine.self).collectPrimitive(renderer)
+					case .other:			unsafeBitCast(child, to: LDrawDirectiveSends.self).collectSelf(renderer)
+					}
+				}
 			}
 		}
 		_ = revalCache(.DisplayList)
@@ -542,9 +596,23 @@ final class LDrawStep: LDrawContainer {
 		}
 		let commandCount = commandsInStep.count
 
+		let primitives = SwiftPrimitiveClasses()
+
 		// Draw all the steps in the model
 		for counter in 0..<commandCount {
-			if withLDrawDirective(at: counter, in: commandsInStep, { $0.boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: credit, hits: hits) }) {
+			let hit = withUnretainedChild(at: counter, in: commandsInStep) { child -> Bool in
+				switch primitives.kind(of: child) {
+				case .triangle:
+					return unsafeDowncast(child, to: LDrawTriangle.self).boxTestPrimitive(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+				case .quadrilateral:
+					return unsafeDowncast(child, to: LDrawQuadrilateral.self).boxTestPrimitive(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+				case .line:
+					return unsafeDowncast(child, to: LDrawLine.self).boxTestPrimitive(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: creditObject, hits: hits)
+				case .other:
+					return unsafeBitCast(child, to: LDrawDirectiveSends.self).boxTest(bounds, transform: transform, boundsOnly: boundsOnly, creditObject: credit, hits: hits)
+				}
+			}
+			if hit {
 				if creditObject != nil {
 					return true
 				}
@@ -574,9 +642,22 @@ final class LDrawStep: LDrawContainer {
 		}
 		let commandCount = commandsInStep.count
 
+		let primitives = SwiftPrimitiveClasses()
+
 		// Draw all the steps in the model
 		for counter in 0..<commandCount {
-			withLDrawDirective(at: counter, in: commandsInStep) { $0.depthTest(pt, inBox: bounds, transform: transform, creditObject: credit, bestObject: bestObject, bestDepth: bestDepth) }
+			withUnretainedChild(at: counter, in: commandsInStep) { child in
+				switch primitives.kind(of: child) {
+				case .triangle:
+					unsafeDowncast(child, to: LDrawTriangle.self).depthTestPrimitive(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+				case .quadrilateral:
+					unsafeDowncast(child, to: LDrawQuadrilateral.self).depthTestPrimitive(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+				case .line:
+					unsafeDowncast(child, to: LDrawLine.self).depthTestPrimitive(pt, inBox: bounds, transform: transform, creditObject: creditObject, bestObject: bestObject, bestDepth: bestDepth)
+				case .other:
+					unsafeBitCast(child, to: LDrawDirectiveSends.self).depthTest(pt, inBox: bounds, transform: transform, creditObject: credit, bestObject: bestObject, bestDepth: bestDepth)
+				}
+			}
 		}
 
 	}//end depthTest:inBox:transform:creditObject:bestObject:bestDepth:
