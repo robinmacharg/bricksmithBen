@@ -174,8 +174,6 @@ final class LDrawStep: LDrawContainer {
 	override init!(lines: [Any]!, in range: NSRange, parentGroup: dispatch_group_t?) {
 		let rangeLocation						= UInt(bitPattern: range.location)
 		var rangeLength							= UInt(bitPattern: range.length)
-		// (ObjC: calloc'd; the slots past the end were never checked: BUG-001.)
-		var directives							= [LDrawDirective?](repeating: nil, count: range.length)
 		var lineIndex: UInt						= 0
 		var insertIndex							= 0
 
@@ -222,6 +220,11 @@ final class LDrawStep: LDrawContainer {
 				rangeLength -= 1
 			}
 		}
+
+		// (ObjC: calloc'd range.length slots before the range was checked; the
+		// slots past the end were never checked: BUG-001. Allocated here, once
+		// range.length is known to be a real line count.)
+		var directives = [LDrawDirective?](repeating: nil, count: range.length)
 
 		// Convert each non-step-delimiter line into a directive, and add it to this
 		// step.
@@ -554,6 +557,7 @@ final class LDrawStep: LDrawContainer {
 	func write(withStepCommand flag: Bool) -> String! {
 		let written					= NSMutableString()
 		let CRLF					= NSString.crlf() as NSString
+		let CRLFString				= CRLF as String	// bridged once, not per child
 		let angleZYX				= rotationAngleZYX()
 
 		let commandsInStep			= subdirectives()
@@ -565,7 +569,7 @@ final class LDrawStep: LDrawContainer {
 			for counter in 0..<numberCommands {
 				let currentCommand = ldrawDirective(at: counter, in: commandsInStep)
 				written.append(currentCommand.write() ?? "(null)")
-				written.append(CRLF as String)
+				written.append(CRLFString)
 			}
 		}
 
