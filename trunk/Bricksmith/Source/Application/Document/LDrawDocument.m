@@ -131,6 +131,38 @@ void AppendChoicesToNewItem(
 
 
 @implementation LDrawDocument
+{
+	LDrawFile		*documentContents;	// use -documentContents / -setDocumentContents: (the setter turns on notifications)
+}
+
+// Keep the original ivar names, so the existing direct uses in this file are unchanged.
+@synthesize toolbarController = toolbarController;
+@synthesize bindingsController = bindingsController;
+@synthesize partBrowserDrawer = partBrowserDrawer;
+@synthesize partsBrowser = partsBrowser;
+@synthesize viewAllButton = viewAllButton;
+@synthesize viewStepsButton = viewStepsButton;
+@synthesize submodelPopUpMenu = submodelPopUpMenu;
+@synthesize scopeStepControlsContainer = scopeStepControlsContainer;
+@synthesize stepField = stepField;
+@synthesize stepNavigator = stepNavigator;
+@synthesize fileContentsSplitView = fileContentsSplitView;
+@synthesize fileContentsOutline = fileContentsOutline;
+@synthesize addReferenceButton = addReferenceButton;
+@synthesize viewportArranger = viewportArranger;
+@synthesize coordinateLabelX = coordinateLabelX;
+@synthesize coordinateLabelY = coordinateLabelY;
+@synthesize coordinateLabelZ = coordinateLabelZ;
+@synthesize coordinateFieldX = coordinateFieldX;
+@synthesize coordinateFieldY = coordinateFieldY;
+@synthesize coordinateFieldZ = coordinateFieldZ;
+@synthesize lastSelectedPart = lastSelectedPart;
+@synthesize selectedDirectives = selectedDirectives;
+@synthesize selectedDirectivesBeforeCopyDrag = selectedDirectivesBeforeCopyDrag;
+@synthesize gridMode = gridMode;
+@synthesize gridOrientation = gridOrientation;
+@synthesize mostRecentLDrawView = mostRecentLDrawView;
+@synthesize markedSelection = markedSelection;
 
 //========== init ==============================================================
 //
