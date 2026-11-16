@@ -23,7 +23,7 @@
 #import "LDrawColor.h"
 #import "LDrawColorPanelController.h"
 @class LDrawConditionalLine;
-#import "LDrawContainer.h"
+@class LDrawContainer;
 #import "LDrawDirective.h"
 #import "LDrawDocumentWindow.h"
 @class LDrawDragHandle;

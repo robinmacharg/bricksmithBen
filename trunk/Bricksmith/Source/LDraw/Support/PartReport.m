@@ -24,7 +24,6 @@
 //==============================================================================
 #import "PartReport.h"
 
-#import "LDrawContainer.h"
 #import "LDrawKeywords.h"
 #import "LDrawPart.h"
 #import "PartLibrary.h"

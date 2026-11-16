@@ -9,7 +9,6 @@
 //==============================================================================
 #import "LDrawDirective.h"
 
-#import "LDrawContainer.h"
 #import "LDrawFile.h"
 #import "LDrawStep.h"
 #import "Bricksmith-Swift.h"

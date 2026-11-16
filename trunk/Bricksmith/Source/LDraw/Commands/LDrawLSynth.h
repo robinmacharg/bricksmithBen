@@ -9,7 +9,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LDrawContainer.h"
+@class LDrawContainer;
 #import "LDrawDrawableElement.h"
 #import "ColorLibrary.h"
 #import "LDrawMovableDirective.h"

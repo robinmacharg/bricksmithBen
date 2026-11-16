@@ -14,7 +14,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ColorLibrary.h"
-#import "LDrawContainer.h"
+@class LDrawContainer;
 
 // This notification is sent by steps when step-specific meta-data (e.g. the viewing
 // angle changes.  It is only sent when notification is legal to avoid GCD threading

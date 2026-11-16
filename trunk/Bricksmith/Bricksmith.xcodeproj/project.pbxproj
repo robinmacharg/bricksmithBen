@@ -70,7 +70,6 @@
 		0B65543A081367E800EA7F4F /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B655439081367E800EA7F4F /* GLUT.framework */; };
 		0B6770EE0817588D0044A0E0 /* Mac LDraw_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCF750370BD2300C91783 /* Mac LDraw_Prefix.pch */; };
 		0B6771AA081764E60044A0E0 /* LDrawDrawableElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6771A8081764E60044A0E0 /* LDrawDrawableElement.h */; };
-		0B6771AB081764E60044A0E0 /* LDrawDrawableElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B6771A9081764E60044A0E0 /* LDrawDrawableElement.m */; };
 		0B7588D80D8DC4DD00357703 /* ColorLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B7588D60D8DC4DD00357703 /* ColorLibrary.h */; };
 		0B7588D90D8DC4DD00357703 /* ColorLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B7588D70D8DC4DD00357703 /* ColorLibrary.m */; };
 		0B76F2F90E74CC1700349D03 /* InspectionStep.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B76F2F70E74CC1700349D03 /* InspectionStep.h */; };
@@ -134,8 +133,6 @@
 		0BC71D910E6CC8340007F10D /* AMSProgressBar.framework in Copy Frameworks (1) */ = {isa = PBXBuildFile; fileRef = 2BB5975E09FEFD250077A885 /* AMSProgressBar.framework */; };
 		0BC75339136FC878002568B8 /* PartLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BC75337136FC878002568B8 /* PartLibrary.h */; };
 		0BC7533A136FC878002568B8 /* PartLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BC75338136FC878002568B8 /* PartLibrary.m */; };
-		0BCD0C6507FD0BA10066A536 /* LDrawContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BCD0C6307FD0BA10066A536 /* LDrawContainer.h */; };
-		0BCD0C6607FD0BA10066A536 /* LDrawContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BCD0C6407FD0BA10066A536 /* LDrawContainer.m */; };
 		0BDC146F0B9D0502001D1FF1 /* PartBrowserPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BDC146D0B9D0502001D1FF1 /* PartBrowserPanelController.h */; };
 		0BDC14700B9D0502001D1FF1 /* PartBrowserPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC146E0B9D0502001D1FF1 /* PartBrowserPanelController.m */; };
 		0BDE0EEA1371063600FDB8DB /* LDrawPathNames.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BDE0EE91371063600FDB8DB /* LDrawPathNames.h */; };
@@ -424,7 +421,6 @@
 		0B4F5E100F31632C00355631 /* PartLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartLibraryController.m; sourceTree = "<group>"; };
 		0B655439081367E800EA7F4F /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
 		0B6771A8081764E60044A0E0 /* LDrawDrawableElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawDrawableElement.h; sourceTree = "<group>"; };
-		0B6771A9081764E60044A0E0 /* LDrawDrawableElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawDrawableElement.m; sourceTree = "<group>"; };
 		0B6F383D07C81FEF007B1075 /* LDrawFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LDrawFile.h; path = Source/LDraw/Files/LDrawFile.h; sourceTree = SOURCE_ROOT; };
 		0B6F3A8C07C9934E007B1075 /* LDrawStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LDrawStep.h; path = Source/LDraw/Files/LDrawStep.h; sourceTree = SOURCE_ROOT; };
 		0B6F3FB107CB0253007B1075 /* LDrawPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawPart.h; sourceTree = "<group>"; };
@@ -485,8 +481,6 @@
 		0BC6AACD0987296700505A88 /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = English.lproj/Help; sourceTree = "<group>"; };
 		0BC75337136FC878002568B8 /* PartLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartLibrary.h; sourceTree = "<group>"; };
 		0BC75338136FC878002568B8 /* PartLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartLibrary.m; sourceTree = "<group>"; };
-		0BCD0C6307FD0BA10066A536 /* LDrawContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LDrawContainer.h; path = Source/LDraw/Files/LDrawContainer.h; sourceTree = SOURCE_ROOT; };
-		0BCD0C6407FD0BA10066A536 /* LDrawContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LDrawContainer.m; path = Source/LDraw/Files/LDrawContainer.m; sourceTree = SOURCE_ROOT; };
 		0BDC146D0B9D0502001D1FF1 /* PartBrowserPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartBrowserPanelController.h; sourceTree = "<group>"; };
 		0BDC146E0B9D0502001D1FF1 /* PartBrowserPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartBrowserPanelController.m; sourceTree = "<group>"; };
 		0BDE0EE91371063600FDB8DB /* LDrawPathNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawPathNames.h; sourceTree = "<group>"; };
@@ -780,7 +774,6 @@
 				0B7588DA0D8DC4EF00357703 /* LDrawColor.h */,
 				0B7588DB0D8DC4EF00357703 /* LDrawColor.m */,
 				0B6771A8081764E60044A0E0 /* LDrawDrawableElement.h */,
-				0B6771A9081764E60044A0E0 /* LDrawDrawableElement.m */,
 				0B6F3FB107CB0253007B1075 /* LDrawPart.h */,
 				95D893C816569CFD00AA055B /* LDrawLSynth.h */,
 				BE8287F3C791F783B87052D9 /* LDrawConditionalLine.swift */,
@@ -802,8 +795,6 @@
 		0B6F383C07C81F81007B1075 /* Files */ = {
 			isa = PBXGroup;
 			children = (
-				0BCD0C6307FD0BA10066A536 /* LDrawContainer.h */,
-				0BCD0C6407FD0BA10066A536 /* LDrawContainer.m */,
 				0B6F383D07C81FEF007B1075 /* LDrawFile.h */,
 				0B6F3A8C07C9934E007B1075 /* LDrawStep.h */,
 				3E484121C85C9D83DA4349D3 /* LDrawMPDModel.swift */,
@@ -1244,7 +1235,6 @@
 			files = (
 				9506E0F018A3F4130006CE9C /* SearchPanelController.h in Headers */,
 				0B491DA407F5555B00AC0C10 /* MatrixMath.h in Headers */,
-				0BCD0C6507FD0BA10066A536 /* LDrawContainer.h in Headers */,
 				0B6770EE0817588D0044A0E0 /* Mac LDraw_Prefix.pch in Headers */,
 				0B6771AA081764E60044A0E0 /* LDrawDrawableElement.h in Headers */,
 				0BF729B808AD849300E3DA53 /* DocumentToolbarController.h in Headers */,
@@ -1554,8 +1544,6 @@
 			files = (
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				0B491DA507F5555B00AC0C10 /* MatrixMath.c in Sources */,
-				0BCD0C6607FD0BA10066A536 /* LDrawContainer.m in Sources */,
-				0B6771AB081764E60044A0E0 /* LDrawDrawableElement.m in Sources */,
 				0BF729B908AD849300E3DA53 /* DocumentToolbarController.m in Sources */,
 				0BF729BB08AD849300E3DA53 /* LDrawDocument.m in Sources */,
 				0BF729BD08AD849300E3DA53 /* LDrawApplication.m in Sources */,

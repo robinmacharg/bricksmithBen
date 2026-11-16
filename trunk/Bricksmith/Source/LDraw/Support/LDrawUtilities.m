@@ -11,7 +11,6 @@
 #import "LDrawUtilities.h"
 
 #import "LDrawColor.h"
-#import "LDrawContainer.h"
 #import "LDrawKeywords.h"
 #import "LDrawPart.h"
 #import "PartLibrary.h"

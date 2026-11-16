@@ -13,7 +13,7 @@
 #import <Foundation/Foundation.h>
 
 #import "LDrawDirective.h"
-#import "LDrawContainer.h"
+@class LDrawContainer;
 
 // forward declarations
 @class LDrawMPDModel;

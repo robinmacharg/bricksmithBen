@@ -18,7 +18,6 @@
 #import "LDrawDrawableElement.h"
 #import "LDrawLSynth.h"
 #import "LDrawPart.h"
-#import "LDrawContainer.h"
 #import "LDrawFile.h"
 #import "LDrawStep.h"
 #import "ColorLibrary.h"
