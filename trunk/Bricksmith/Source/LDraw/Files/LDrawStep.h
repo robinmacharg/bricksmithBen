@@ -2,8 +2,11 @@
 //
 // File:		LDrawStep.h
 //
-// Purpose:		Represents a collection of Lego bricks which compose a single 
-//				step when constructing a model.
+// Purpose:		Types-only header. The class LDrawStep is in LDrawStep.swift
+//				(ported in P6b); ObjC code gets its interface from
+//				Bricksmith-Swift.h. This header keeps the notification name, the
+//				two step enums and the imports and forward declarations that
+//				importing headers rely on.
 //
 //  Created by Allen Smith on 2/20/05.
 //  Copyright (c) 2005. All rights reserved.
@@ -20,6 +23,7 @@
 #define LDrawStepDidChangeNotification				@"LDrawStepDidChangeNotification"
 
 @class LDrawModel;
+@class LDrawStep;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -48,54 +52,3 @@ typedef NS_ENUM(int, LDrawStepFlavorT)
 	LDrawStepConditionalLines	// etc.
 	
 };
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// class LDrawStep
-//
-////////////////////////////////////////////////////////////////////////////////
-NS_ASSUME_NONNULL_BEGIN
-
-@interface LDrawStep : LDrawContainer
-{
-	LDrawStepRotationT	stepRotationType;
-	Tuple3				rotationAngle;		// in degrees
-	Box3				cachedBounds;		// cached bounds of the step
-	//Optimization variables
-	LDrawStepFlavorT	stepFlavor; //defaults to LDrawStepAnyDirectives
-	LDrawColorT			colorOfAllDirectives;
-	
-	//Inherited from the superclasses:
-	//NSMutableArray	*containedObjects; //the commands that make up the step.
-	//LDrawContainer	*enclosingDirective; //weak link to enclosing model.
-}
-
-//Initialization
-+ (null_unspecified id) emptyStep;
-+ (null_unspecified id) emptyStepWithFlavor:(LDrawStepFlavorT) flavorType;
-
-//Directives
-- (null_unspecified NSString *) writeWithStepCommand:(BOOL) flag;
-
-//Accessors
-- (null_unspecified LDrawModel *) enclosingModel;
-- (Tuple3) rotationAngle;
-- (Tuple3) rotationAngleZYX;
-- (LDrawStepFlavorT) stepFlavor;
-- (LDrawStepRotationT) stepRotationType;
-
-- (void) setModel:(null_unspecified LDrawModel *)enclosingModel;
-- (void) setRotationAngle:(Tuple3)newAngle;
-- (void) setRotationAngleZYX:(Tuple3)newAngleZYX;
-- (void) setStepFlavor:(LDrawStepFlavorT)newFlavor;
-- (void) setStepRotationType:(LDrawStepRotationT)newValue;
-
-//Utilities
-+ (BOOL) lineIsStepTerminator:(null_unspecified NSString*)line;
-+ (BOOL) lineIsRotationStepTerminator:(null_unspecified NSString*)line;
-- (BOOL) parseRotationStepFromLine:(null_unspecified NSString *)rotstep;
-
-@end
-
-NS_ASSUME_NONNULL_END
