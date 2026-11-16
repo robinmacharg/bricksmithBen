@@ -24,7 +24,6 @@
 #import "LDrawColor.h"
 #import "LDrawDirective.h"
 #import "LDrawFile.h"
-#import "LDrawModel.h"
 #import "LDrawPart.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"

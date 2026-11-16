@@ -10,7 +10,6 @@
 #import "LDrawDocument.h"
 #import "LDrawFile.h"
 #import "LDrawStep.h"
-#import "LDrawModel.h"
 #import "LDrawPart.h"
 #import "LDrawLSynth.h"
 #import "LDrawColorPanelController.h"

@@ -26,7 +26,6 @@
 #import "IconTextCell.h"
 #import "LDrawApplication.h"
 #import "LDrawColorPanelController.h"
-#import "LDrawModel.h"
 #import "LDrawPart.h"
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"

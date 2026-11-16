@@ -22,7 +22,6 @@
 
 #import "LDrawColor.h"
 #import "LDrawFile.h"
-#import "LDrawModel.h"
 #import "LDrawPaths.h"
 #import "Bricksmith-Swift.h"
 

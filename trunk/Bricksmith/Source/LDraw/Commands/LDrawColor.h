@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <OpenGL/gl.h>
 
-#import "LDrawMetaCommand.h"
+@class LDrawMetaCommand;
 
 ////////////////////////////////////////////////////////////////////////////////
 //

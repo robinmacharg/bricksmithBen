@@ -12,7 +12,6 @@
 #import "InspectionQuadrilateral.h"
 
 #import "LDrawColorWell.h"
-#import "LDrawModel.h"
 #import "Bricksmith-Swift.h"
 
 @implementation QuadrilateralView

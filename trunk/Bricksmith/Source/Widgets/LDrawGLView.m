@@ -31,7 +31,6 @@
 #import "LDrawDocument.h"
 #import "LDrawFile.h"
 #import "LDrawGLRenderer.h"
-#import "LDrawModel.h"
 #import "LDrawPart.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"

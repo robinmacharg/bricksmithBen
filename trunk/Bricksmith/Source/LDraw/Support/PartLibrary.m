@@ -18,13 +18,11 @@
 
 #import "LDrawFile.h"
 #import "LDrawKeywords.h"
-#import "LDrawModel.h"
 #import "LDrawPart.h"
 #import "LDrawPathNames.h"
 #import "LDrawPaths.h"
 #import "LDrawShaderRenderer.h"
 #import "LDrawStep.h"
-#import "LDrawTexture.h"
 #import "LDrawUtilities.h"
 #import "MacLDraw.h"
 #import "PartCatalogBuilder.h"

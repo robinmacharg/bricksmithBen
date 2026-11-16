@@ -12,8 +12,6 @@
 #import "InspectionLine.h"
 
 #import "LDrawColorWell.h"
-#import "LDrawLine.h"
-#import "LDrawModel.h"
 #import "Bricksmith-Swift.h"
 
 @interface InspectionLine ()

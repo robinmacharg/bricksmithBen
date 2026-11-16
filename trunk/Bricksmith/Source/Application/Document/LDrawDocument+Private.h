@@ -31,10 +31,10 @@
 #import "LDrawFile.h"
 #import "LDrawFileOutlineView.h"
 #import "LDrawGLView.h"
-#import "LDrawLine.h"
+@class LDrawLine;
 #import "LDrawLSynth.h"
 @class LDrawLSynthDirective;
-#import "LDrawModel.h"
+@class LDrawModel;
 @class LDrawMPDModel;
 #import "LDrawPart.h"
 @class LDrawQuadrilateral;

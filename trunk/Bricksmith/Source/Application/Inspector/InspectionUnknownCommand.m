@@ -11,7 +11,6 @@
 //==============================================================================
 #import "InspectionUnknownCommand.h"
 
-#import "LDrawMetaCommand.h"
 #import "Bricksmith-Swift.h"
 
 @implementation InspectionUnknownCommand
