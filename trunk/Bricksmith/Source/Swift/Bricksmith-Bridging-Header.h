@@ -54,11 +54,9 @@
 
 // --- Constants, categories and utilities (group 2) ---
 #import "MacLDraw.h"
-#import "StringCategory.h"
 #import "UserDefaultsCategory.h"
 #import "BricksmithUtilities.h"
 #import "MLCadIni.h"
-#import "StringUtilities.h"
 
 // --- Application classes driven by characterisation tests (group 2) ---
 #import "LDrawApplication.h"

@@ -173,7 +173,7 @@ sign-off here:
 | `Bricksmith/Source/Application/Inspector/ObjectInspectionController.m` | 261 | ARC | P9 | todo |
 | `Bricksmith/Source/Categories/BezierPathCategory.m` | 77 | ARC | P5 | **Swift** (`BezierPathCategory.swift`) |
 | `Bricksmith/Source/Categories/OverlayViewCategory.m` | 113 | ARC | P5 | todo |
-| `Bricksmith/Source/Categories/StringCategory.m` | 163 | ARC | P5 | todo |
+| `Bricksmith/Source/Categories/StringCategory.m` | 163 | ARC | P5 | **Swift** (`StringCategory.swift`) |
 | `Bricksmith/Source/Categories/TableViewCategory.m` | 42 | ARC | P5 | **Swift** (`TableViewCategory.swift`) |
 | `Bricksmith/Source/Categories/UserDefaultsCategory.m` | 48 | ARC | P5 | todo |
 | `Bricksmith/Source/Categories/WindowCategory.m` | 60 | ARC | P5 | **Swift** (`WindowCategory.swift`) |
@@ -218,7 +218,7 @@ sign-off here:
 | `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | **Swift** (`BricksmithUtilities.swift`; `BricksmithUtilities.h` stays as an enum-only header for ObjC headers) |
 | `Bricksmith/Source/Other/MLCadIni.m` | 666 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | **deleted** (P4; users moved to NSRegularExpression in stream B, `libicucore` link removed) |
-| `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | todo |
+| `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | **Swift** (`StringUtilities.swift`) |
 | `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | **Swift** (`TransformerIntMinus1.swift`) |
 | `Bricksmith/Source/Other/main.m` | 15 | ARC | P10 | todo |
 | `Bricksmith/Source/Widgets/BackgroundColorView.m` | 75 | ARC | P9 | todo |
