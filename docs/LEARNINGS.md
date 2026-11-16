@@ -21,7 +21,7 @@ topics that match your task rather than the whole log.
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
-| Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82 |
+| Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82, L94 |
 | Agents and review | L17, L18, L75, L85, L93; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
@@ -400,3 +400,9 @@ topics that match your task rather than the whole log.
   session scratchpad) with ~30 minutes of uncommitted work, plus the scratch tools and the test lock. The main
   checkout was untouched; `git worktree prune` cleaned up. → Put worktrees and the test lock under the repo's ignored
   `build/` (`build/worktrees/`, `build/test.lock`), and have agents commit each gated step at once.
+- **L94. When converting "throws" to "returns nil", nil usually already meant something else.** The BUG-007
+  conversion treated any nil model from an existing part file as a parse failure. A zero-byte file, an unreadable
+  file or a directory also give nil, so those documents stopped opening (fixed in `75ebcc6`; found by adversarial
+  review, not by tests). The pin tests had covered only the failing input and a good control. → Before giving nil a
+  new meaning, list every existing way to get nil there, and pin each one. Carry an explicit flag
+  (`parseFailed:`) rather than inferring failure from nil.
