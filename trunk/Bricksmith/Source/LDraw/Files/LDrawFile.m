@@ -78,15 +78,34 @@
 //------------------------------------------------------------------------------
 + (LDrawFile *) parseFromFileContents:(NSString *) fileContents
 {
+	return [self parseFromFileContents:fileContents parseFailed:NULL];
+	
+}//end parseFromFileContents:
+
+
+//---------- parseFromFileContents:parseFailed: ----------------------[static]--
+//
+// Purpose:		Reads a file out of the raw file contents. 
+//
+//				Returns nil both for text with no lines and for text that could 
+//				not be parsed; *parseFailed (if given) says which. (The parse used 
+//				to throw in the second case; BUG-007.) 
+//
+//------------------------------------------------------------------------------
++ (LDrawFile *) parseFromFileContents:(NSString *) fileContents parseFailed:(BOOL *)parseFailed
+{
 	LDrawFile   *newFile    = nil;
 	NSArray     *lines      = [fileContents separateByLine];
 	
 	newFile = [[LDrawFile alloc] initWithLines:lines
 									   inRange:NSMakeRange(0, [lines count]) ];
 	
+	if(parseFailed != NULL)
+		*parseFailed = (newFile == nil && [lines count] > 0);
+	
 	return newFile;
 	
-}//end parseFromFileContents:allowThreads:
+}//end parseFromFileContents:parseFailed:
 
 
 #pragma mark -
@@ -161,6 +180,15 @@
 																 maxIndex:NSMaxRange(range) - 1];
 			// Parse
 				LDrawMPDModel *newModel    = [[LDrawMPDModel alloc] initWithLines:lines inRange:modelRange parentGroup:dispatchGroup];
+				if(newModel == nil)
+				{
+					// A model could not be parsed (malformed ROTSTEP): fail the file, 
+					// stopping here as the exception this replaces did. 
+					for(NSUInteger slot = 0; slot < insertIndex; slot++)
+						submodels[slot] = nil;
+					free(submodels);
+					return nil;
+				}
 				
 				// Store non-retaining, but *thread-safe* container 
 				// (NSMutableArray is NOT). Since it doesn't retain, we mustn't 

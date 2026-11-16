@@ -141,6 +141,16 @@
 	{
 		stepRange   = [LDrawStep rangeOfDirectiveBeginningAtIndex:contentStartIndex inLines:lines maxIndex:maxLineIndex];
 			LDrawStep * newStep     = [[LDrawStep alloc] initWithLines:lines inRange:stepRange parentGroup:modelDispatchGroup];
+			if(newStep == nil)
+			{
+				// The step could not be parsed (malformed ROTSTEP): fail the model. 
+				// Stop here, as the exception this replaces did, so later steps are 
+				// never parsed. 
+				for(NSUInteger slot = 0; slot < insertIndex; slot++)
+					substeps[slot] = nil;
+				free(substeps);
+				return nil;
+			}
 			substeps[insertIndex] = newStep;
 		++insertIndex;
 

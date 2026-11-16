@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Finding Parts
 - (void) loadImageForName:(null_unspecified NSString *)imageName inGroup:(null_unspecified dispatch_group_t)parentGroup;
-- (void) loadModelForName:(null_unspecified NSString *)name inGroup:(null_unspecified dispatch_group_t)parentGroup;
+- (BOOL) loadModelForName:(null_unspecified NSString *)name inGroup:(null_unspecified dispatch_group_t)parentGroup; // NO: the file exists but could not be parsed
 - (null_unspecified CGImageRef) imageForTextureName:(null_unspecified NSString *)imageName;
 - (null_unspecified CGImageRef) imageForTexture:(null_unspecified LDrawTexture *)texture;
 - (null_unspecified CGImageRef) imageFromNeighboringFileForTexture:(null_unspecified LDrawTexture *)texture;

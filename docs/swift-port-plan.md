@@ -342,7 +342,8 @@ This comes after the tests, because the remaining MRC files are the riskiest one
 
 ### P4: ObjC prep refactors, no behaviour change (L)
 Goldens and known issues **must not change**.
-- **Parse errors:** `@throw`/`@catch` becomes `BOOL` + `NSError **`, keeping every current outcome. That includes the
+- **Parse errors:** `@throw`/`@catch` becomes a `BOOL` or nil result (maintainer decision 2026-11-16: no `NSError **`,
+  because nothing reads the error detail and new parameters would change tested Swift spellings), keeping every current outcome. That includes the
   half-parsed `!COLOUR` (S1), the nil directive (S6), and `readFromData:`'s unchecked `*outError` (S9); these are
   KNOWN-BUGS [suspected entries](KNOWN-BUGS.md#suspected-not-yet-confirmed-by-a-test).
 - **Factory:** `+[LDrawDirective directiveWithLines:inRange:parentGroup:]` replaces the substitute-self init.

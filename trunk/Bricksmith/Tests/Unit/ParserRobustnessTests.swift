@@ -124,12 +124,11 @@ struct ParserRobustnessTests {
 		#expect(make("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat") == nil)
 	}
 
-	@Test("readFromData: turns the malformed-ROTSTEP parse exception into a bare corrupt-file error (S9 path)")
+	@Test("readFromData: a malformed-ROTSTEP parse failure gives a bare corrupt-file error (S9 path)")
 	@MainActor
 	func documentReadOfMalformedRotstep() throws {
-		// The exception that crashes a direct parse (BUG-007) is caught inside -readFromData:ofType:error:,
-		// which then writes *outError without a NULL check (S9). Pin exactly what it writes, so the P4
-		// conversion of that @try can reproduce it.
+		// Before P4 the parse threw (BUG-007) and -readFromData:ofType:error: caught it, writing *outError
+		// without a NULL check (S9). Pinned before the conversion; the parse now reports the failure instead.
 		let doc = LDrawDocument()
 		let before = doc.documentContents()
 		var caught: Error?
@@ -147,8 +146,9 @@ struct ParserRobustnessTests {
 	@Test("Document read: a library part whose last line is a malformed ROTSTEP")
 	@MainActor func documentReadOfPartWithMalformedRotstep() throws {
 		// The part is parsed while the document line referencing it is parsed (-[LDrawPart setDisplayName:parse:]),
-		// so the ROTSTEP exception (BUG-007) unwinds through the part's @try and then the document's. Pin what
-		// the user sees before P4 converts the throw. Unique name: PartLibrary caches models for the process.
+		// so the part fails and the document read fails. Pinned before P4 converted the ROTSTEP throw (BUG-007),
+		// which used to unwind through the part's @try and the document's. Unique name: PartLibrary caches models
+		// for the process.
 		let library = try #require(FixtureLibrary.current)
 		let name = "p4pin-rotstep-\(UUID().uuidString.prefix(8)).dat".lowercased()
 		try Data("0 Part with a malformed ROTSTEP\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n".utf8)
@@ -179,22 +179,30 @@ struct ParserRobustnessTests {
 
 	// MARK: Crashers, each confirmed IN ISOLATION (heap corruption can surface in a later case).
 
-	@Test("Isolated: malformed ROTSTEP angles crash today (BUG-007)")
-	func rotstepMalformedCrashesInIsolation() async {
-		await #expect(processExitsWith: .failure) {
+	@Test("BUG-007 (fixed in P4): a malformed ROTSTEP line does not crash the parser")
+	func bug007RotstepShouldNotCrash() async {
+		// Still in a child process: if this regresses, it aborts.
+		await #expect(processExitsWith: .success) {
 			_ = Robustness.roundTrip("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n")
 			exit(EXIT_SUCCESS)
 		}
 	}
 
-	@Test("BUG-007: a malformed ROTSTEP line should not crash the parser")
-	func bug007RotstepShouldNotCrash() async {
-		await withKnownIssue("BUG-007: '0 ROTSTEP x y' crashes") {
-			await #expect(processExitsWith: .success) {
-				_ = Robustness.roundTrip("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n")
-				exit(EXIT_SUCCESS)
-			}
-		}
+	@Test("A malformed ROTSTEP makes the parse return nil and say so; empty text is nil without failing")
+	func rotstepParseFailed() {
+		var failed: ObjCBool = false
+		#expect(LDrawFile.parse(fromFileContents: "1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n", parseFailed: &failed) == nil)
+		#expect(failed.boolValue)
+		// Only the last step of a model can fail, but it fails the whole file, later models included.
+		failed = false
+		#expect(LDrawFile.parse(fromFileContents: "0 FILE a.ldr\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n0 FILE b.ldr\n1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n", parseFailed: &failed) == nil)
+		#expect(failed.boolValue)
+		failed = true
+		#expect(LDrawFile.parse(fromFileContents: "", parseFailed: &failed) == nil)
+		#expect(!failed.boolValue, "empty text is not a parse failure (readFromData: must not report one)")
+		failed = true
+		#expect(LDrawFile.parse(fromFileContents: "1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP 0 90 0\n", parseFailed: &failed) != nil)
+		#expect(!failed.boolValue)
 	}
 
 	@Test("Isolated: unknown line type 6 crashes today (BUG-001 family)")

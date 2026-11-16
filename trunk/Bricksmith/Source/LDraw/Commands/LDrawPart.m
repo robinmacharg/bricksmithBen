@@ -199,15 +199,30 @@ int floatNearGrid(float v, float grid, float epsi)
 			//Read Part Name
 			// (part.dat) -- It can have spaces (for MPD models), so we just use the whole 
 			// rest of the line.
+			// (This is -setDisplayName:parse:YES inGroup:, split so that a library 
+			// part that fails to parse fails this part, as when that parse threw.) 
 			[self setDisplayName:[workingLine stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-						   parse:YES
+						   parse:NO
 						 inGroup:parentGroup];
+			if(		[self->displayName length] > 0
+			   &&	[[PartLibrary sharedPartLibrary] loadModelForName:self->referenceName inGroup:NULL] == NO )
+			{
+				NSLog(@"the part %@ was fatally invalid", [lines objectAtIndex:range.location]);
+				NSLog(@" raised exception %@", @"BricksmithParseException");
+				return nil;
+			}
 			
 			// Debug check: full part resolution isn't thread-safe so make sure we haven't run it by accident here!
 			assert(cacheType == PartTypeUnresolved);
 		}
 		else
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad part syntax" userInfo:nil];
+		{
+			// Not a type-1 line. (This used to throw to the @catch below; it 
+			// cannot happen from a file, because the line type chose this class.) 
+			NSLog(@"the part %@ was fatally invalid", [lines objectAtIndex:range.location]);
+			NSLog(@" raised exception %@", @"BricksmithParseException");
+			self = nil;
+		}
 	}
 	@catch(NSException *exception)
 	{

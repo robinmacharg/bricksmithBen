@@ -625,8 +625,13 @@ static PartLibrary *SharedPartLibrary = nil;
 // Purpose:		This is a thread-safe method which causes the model of the given 
 //				name to be loaded out of the LDraw folder. 
 //
+//				Returns NO only when the part's file exists but could not be 
+//				parsed (a malformed final ROTSTEP, BUG-007): the caller fails as it 
+//				did when that parse threw. A part that isn't in the library is not 
+//				a failure here; it is drawn as missing. 
+//
 //==============================================================================
-- (void) loadModelForName:(NSString *)partName
+- (BOOL) loadModelForName:(NSString *)partName
 				  inGroup:(dispatch_group_t)parentGroup
 {
 	// Determine if the model needs to be parsed.
@@ -650,8 +655,14 @@ static PartLibrary *SharedPartLibrary = nil;
 					{
 						[self->loadedFiles setObject:model forKey:partName];
 					}
+					else if(partPath != nil)
+					{
+						return NO;
+					}
 			}
 		}
+	
+	return YES;
 	
 }//end loadModelForName:
 

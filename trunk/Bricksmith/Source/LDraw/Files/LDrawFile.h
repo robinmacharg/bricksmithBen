@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (null_unspecified LDrawFile *) file NS_SWIFT_NAME(file());	// keep as a factory: imported as init() it would collide with -init (LEARNINGS L40)
 + (null_unspecified LDrawFile *) fileFromContentsAtPath:(null_unspecified NSString *)path;
 + (nullable LDrawFile *) parseFromFileContents:(null_unspecified NSString *) fileContents;
+// As above; *parseFailed is YES when the text could not be parsed (a malformed final ROTSTEP), as opposed to nil
+// for text with no lines.
++ (nullable LDrawFile *) parseFromFileContents:(null_unspecified NSString *) fileContents parseFailed:(nullable BOOL *)parseFailed;
 
 // Accessors
 - (null_unspecified LDrawMPDModel *) activeModel;

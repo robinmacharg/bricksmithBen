@@ -131,9 +131,14 @@
 		}
 		else if([[self class] lineIsRotationStepTerminator:currentLine])
 		{
-			// Parse the rotation step.
+			// Parse the rotation step. A malformed one fails the whole step, and 
+			// with it the model and file being parsed (it used to throw; BUG-007). 
+			// Nothing has been parsed into the step yet. 
 			if([self parseRotationStepFromLine:currentLine] == NO)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad rotstep syntax" userInfo:nil];
+			{
+				free(directives);
+				return nil;
+			}
 			
 			range.length -= 1;
 		}

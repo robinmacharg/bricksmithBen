@@ -458,8 +458,19 @@ void AppendChoicesToNewItem(
 			CFAbsoluteTime  startTime   = CFAbsoluteTimeGetCurrent();
 			CFTimeInterval  parseTime   = 0;
 			
-			newFile     = [LDrawFile parseFromFileContents:fileContents];
+			BOOL			parseFailed	= NO;
+			
+			newFile     = [LDrawFile parseFromFileContents:fileContents parseFailed:&parseFailed];
 			parseTime   = CFAbsoluteTimeGetCurrent() - startTime;
+			
+			// What the @catch below wrote when the parse threw (BUG-007), still 
+			// without checking outError for NULL (S9). 
+			if(parseFailed)
+			{
+				*outError = [NSError errorWithDomain:NSCocoaErrorDomain
+												code:NSFileReadCorruptFileError
+											userInfo:nil];
+			}
 			
 #if DEBUG
 			NSLog(@"parse time = %f", parseTime);
