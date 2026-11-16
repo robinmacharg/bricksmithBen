@@ -171,8 +171,10 @@ final class HandleActionRecorder: NSObject {
 enum P6a {
 	static func p(_ v: Point3) -> String { "(\(RecordingRenderer.fmt(v.x)), \(RecordingRenderer.fmt(v.y)), \(RecordingRenderer.fmt(v.z)))" }
 
+	/// [[type alloc] initWithLines:...] through +directiveWithLines: (no subclass used here overrides it). A
+	/// metatype init (`T(lines:...)`) needs a `required` initializer once LDrawDirective is Swift.
 	static func line<T: LDrawDirective>(_ type: T.Type, _ text: String) -> T? {
-		T(lines: ldrawLines([text]), in: NSRange(location: 0, length: 1), parentGroup: nil)
+		T.directive(lines: ldrawLines([text]), in: NSRange(location: 0, length: 1), parentGroup: nil) as? T
 	}
 
 	/// The objects registered in a hit dictionary or set (keys are NSValue-wrapped pointers).
