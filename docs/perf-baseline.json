@@ -1,10 +1,17 @@
 {
-  "machine" : "Mac15,7",
-  "results" : {
-    "archive_20000_parts" : 0.079031209000000005,
-    "copy_20000_parts" : 0.012477874999999998,
-    "draw_20000_parts_x20" : 0.036882084000000002,
-    "parse_20000_parts" : 0.23583216600000001,
-    "write_20000_parts" : 0.088194750000000016
+  "machine": "Mac15,7",
+  "results": {
+    "archive_20000_parts": 0.079031209,
+    "archive_20000_primitives": 0.115863125,
+    "boxtest_20000_primitives_x3": 0.017875791999999995,
+    "collect_20000_primitives_x40": 0.02008149999999999,
+    "copy_20000_parts": 0.012477874999999998,
+    "copy_20000_primitives_x4": 0.017581166000000006,
+    "depthtest_20000_primitives_x20": 0.017917166999999998,
+    "draw_20000_parts_x20": 0.036882084,
+    "parse_20000_parts": 0.235832166,
+    "parse_20000_primitives": 0.170417833,
+    "write_20000_parts": 0.08819475000000002,
+    "write_20000_primitives": 0.074968708
   }
 }

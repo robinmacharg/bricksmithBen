@@ -43,6 +43,28 @@ enum Perf {
 		return lines.joined(separator: "\r\n") + "\r\n"
 	}()
 
+	/// P6: 20000 inline primitives (types 2-5 in turn) in one model, so the per-primitive code of LDrawLine,
+	/// LDrawTriangle, LDrawQuadrilateral, LDrawConditionalLine and LDrawColor is what gets timed. The parts
+	/// model above only reaches them once (part files are parsed once, then drawn from display lists).
+	/// Integer coordinates in [-100, 100] so the HitLayout front view sees every primitive.
+	static let syntheticPrimitives: String = {
+		var rng = SeededRNG(seed: 0x9817_7E5)
+		let colours = ["16", "24", "4", "14", "72", "0x2FF8000"]
+		func p() -> String { (0..<3).map { _ in String(Int.random(in: -100...100, using: &rng)) }.joined(separator: " ") }
+		var lines = ["0 Synthetic primitives", "0 Name: primitives.ldr", "0 Author: perf"]
+		for i in 0..<20000 {
+			let c = colours[i % colours.count]
+			switch i % 4 {
+			case 0:  lines.append("2 \(c) \(p()) \(p())")
+			case 1:  lines.append("3 \(c) \(p()) \(p()) \(p())")
+			case 2:  lines.append("4 \(c) \(p()) \(p()) \(p()) \(p())")
+			default: lines.append("5 \(c) \(p()) \(p()) \(p()) \(p())")
+			}
+			if i % 500 == 499 { lines.append("0 STEP") }
+		}
+		return lines.joined(separator: "\r\n") + "\r\n"
+	}()
+
 	static func best(_ body: () throws -> Void) rethrows -> Double {
 		for _ in 0..<warmUp { try body() }
 		var times: [Double] = []
@@ -81,6 +103,45 @@ struct PerformanceTests {
 		try Perf.record("archive_20000_parts", Perf.best { _ = ObjectModel.archive(loaded) })
 	}
 
+	@Test("parse, write, copy, archive, collect and hit-test of 20000 inline primitives (P6)")
+	func primitiveOperations() throws {
+		let data = Data(Perf.syntheticPrimitives.utf8)
+		var file: LDrawFile!
+		try Perf.record("parse_20000_primitives", Perf.best { file = RoundTrip.load(data) })
+		let loaded = try #require(file)
+		try Perf.record("write_20000_primitives", Perf.best { _ = RoundTrip.save(loaded) })
+		try Perf.record("copy_20000_primitives_x4", Perf.best { for _ in 0..<4 { _ = loaded.copy() } })
+		try Perf.record("archive_20000_primitives", Perf.best { _ = ObjectModel.archive(loaded) })
+
+		// Repeated so each measurement is long enough (~10+ ms) to compare against a +20% budget (as draw, P3).
+		let collector = NullCollector()
+		try Perf.record("collect_20000_primitives_x40", Perf.best { try ObjC.run { for _ in 0..<40 { loaded.collectSelf(collector) } } })
+		#expect(collector.primitives == 20000 * 40 * (Perf.warmUp + Perf.iterations), "collect missed primitives")
+
+		// Marquee over the whole view: every primitive projects its vertices and registers a hit.
+		let all = Box2(origin: Point2(x: -1, y: -1), size: Size2(width: 2, height: 2))
+		var selected = 0
+		try Perf.record("boxtest_20000_primitives_x3", Perf.best { try ObjC.run {
+			for _ in 0..<3 {
+				let hits = NSMutableSet()
+				_ = loaded.boxTest(all, transform: HitLayout.transform, boundsOnly: false, creditObject: nil, hits: hits)
+				selected = hits.count
+			}
+		} })
+		#expect(selected == 20000)
+
+		// Twenty clicks across the view: every primitive is depth-tested at each.
+		try Perf.record("depthtest_20000_primitives_x20", Perf.best { try ObjC.run {
+			for k in 0..<20 {
+				let x = Float(k) / 10 - 0.95, y = 0.95 - Float(k) / 10, half: Float = 0.01
+				var best: AnyObject?
+				var depth: Float = 1.0
+				loaded.depthTest(Point2(x: x, y: y), inBox: Box2(origin: Point2(x: x - half, y: y - half), size: Size2(width: 2 * half, height: 2 * half)),
+								 transform: HitLayout.transform, creditObject: nil, bestObject: &best, bestDepth: &depth)
+			}
+		} })
+	}
+
 	@MainActor
 	@Test("GL draw of the synthetic model", .timeLimit(.minutes(2)))
 	func draw() throws {
@@ -100,4 +161,15 @@ struct PerformanceTests {
 			view.openGLContext?.makeCurrentContext(); glFinish()
 		} })
 	}
+}
+
+/// A collector that only counts: the collect metric times the model's per-primitive work, not a renderer's.
+final class NullCollector: NSObject, LDrawCollector {
+	private(set) var primitives = 0
+	func pushTexture(_ tex_spec: UnsafeMutablePointer<LDrawTextureSpec>!) {}
+	func popTexture() {}
+	func drawQuad(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) { primitives += 1 }
+	func drawTri(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) { primitives += 1 }
+	func drawLine(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) { primitives += 1 }
+	func textureTag(for texture: LDrawTexture!) -> GLuint { 0 }
 }
