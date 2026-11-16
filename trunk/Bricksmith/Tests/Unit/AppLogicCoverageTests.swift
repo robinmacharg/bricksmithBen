@@ -832,4 +832,27 @@ struct NibLifetimeTests {
 			#expect(controller?.content as AnyObject? === panel, "\(className): object controller content")
 		}
 	}
+
+	/// The panel owns its object controller (as under MRC), and the controller's content is the panel. OK
+	/// (-okButtonClicked:) breaks that cycle, after which the panel and controller are freed. Before P4 the
+	/// legacy loader's extra retain leaked both (S36).
+	@Test("Dialog panels (Dimensions, Piece Count): freed once OK breaks the object-controller cycle",
+		  arguments: [("DimensionsPanel", "dimensionPanelForFile:"), ("PieceCountPanel", "pieceCountPanelForFile:")])
+	func dialogPanelFreed(_ className: String, _ factory: String) throws {
+		let cls: AnyObject = try #require(NSClassFromString(className))
+		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/02-line-types.ldr"))
+		weak var weakPanel: NSPanel?
+		weak var weakController: NSObjectController?
+		try ObjC.run {
+			autoreleasepool {
+				let panel = cls.perform(NSSelectorFromString(factory), with: file)?.takeUnretainedValue() as? NSPanel
+				let controller = panel?.value(forKey: "objectController") as? NSObjectController
+				weakPanel = panel
+				weakController = controller
+				controller?.content = nil	// what -okButtonClicked: does after ending the sheet
+			}
+		}
+		#expect(weakPanel == nil, "\(className): panel leaked")
+		#expect(weakController == nil, "\(className): object controller leaked")
+	}
 }
