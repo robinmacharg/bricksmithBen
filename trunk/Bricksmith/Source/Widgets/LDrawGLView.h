@@ -42,8 +42,8 @@
 	
 	FocusRingView			*focusRingView;
 	
-	IBOutlet id             delegate;
-	id                      target;
+	IBOutlet __unsafe_unretained id             delegate;
+	__weak id                      target;
 	SEL                     backAction;
 	SEL                     forwardAction;
 	SEL						nudgeAction;

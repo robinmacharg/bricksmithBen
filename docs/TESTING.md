@@ -20,6 +20,7 @@ scripts/test.sh --only BricksmithTests/HarnessFixtureLibraryTests   # a subset
 scripts/test.sh --ui               # also the XCUITest smoke tests (scheme Bricksmith-UITests); real windows on screen
 scripts/test.sh --ui-only --only BricksmithUITests/SmokeUITests   # UI tests alone, for iterating
 scripts/dev/coverage-tiers.py      # P2 coverage gate: tier A/B per class, raw and effective (after docs/coverage-ledger.tsv)
+scripts/dev/leaks-smoke.sh         # Debug app on fixture copies under `leaks --atExit` (P3 exit)
 scripts/mutation-smoke.sh          # each scripts/mutations/*.patch must make a test fail
 scripts/perf-compare.sh --run      # build+run perf tests in the Perf configuration, compare with docs/perf-baseline.json
 scripts/perf-compare.sh            # compare existing build/perf-results.json (≤ +20%; a missing metric fails)
@@ -170,14 +171,17 @@ things automation covers poorly. Record the sign-off in port-status.md.
 4. Select a part in the 3D view, then in the outline. The inspector shows its values. Change its colour and position from the inspector.
 5. Drag a part from the part browser into the model. Move it with the arrow keys, rotate it with the rotation panel, then undo and redo all of it.
 6. Copy and paste a part, both within one document and between two documents.
-7. Add a step and use step navigation. Add a submodel to an MPD, reference it, then rename it.
+7. Add a step and use step navigation. Add a submodel to an MPD, reference it, then rename it. Earlier parts may shift
+   slightly when a step adds parts further from the origin: this is by design, not a bug. The camera distance is
+   6.5 × (the farthest corner of the bounding box of the steps shown, + 40) (`-[LDrawGLCamera tickle]`), so the
+   perspective changes.
 8. Marquee-select several parts and delete them. Undo.
 9. Save As a new file, close it, reopen it. Content is identical (`diff` the files).
 10. Open Preferences and change the grid spacing. Restart the app; the setting is kept.
 11. Use the Minifigure generator and add a minifig to the model.
 12. Add an LSynth hose and regenerate it.
 13. Close every document while it has unsaved changes. Each save prompt works, and nothing crashes.
-14. Select a few parts and use Randomize Colors. The colours change; Undo restores them.
+14. Select a few parts **of different colours** and use Randomize Colors. Each part gets one of the colours already in the selection (with one colour selected nothing changes, by design); Undo restores them.
 15. Export Steps to a temporary folder. One file per step is written (they come out in reverse order: BUG-011).
 16. Open Find, search by part and by colour; matching parts are selected.
 17. Hide a part, then Show All. Use Add Related Part from a part's context menu; the related part is added and Undo removes it.

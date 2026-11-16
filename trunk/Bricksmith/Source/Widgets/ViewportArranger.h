@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface ViewportArranger : ExtendedSplitView <NSSplitViewDelegate>
 {
-	id<ViewportArrangerDelegate>    delegate;
+	__weak id<ViewportArrangerDelegate>    delegate;	// the document owns us: unretained under MRC (L77)
 }
 
 // Accessors

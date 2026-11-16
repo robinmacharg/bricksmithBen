@@ -344,9 +344,8 @@ struct TextureCoverageTests {
 			weakChild = Tex.children(texture).first as? LDrawDirective
 		}
 		#expect(weakTexture == nil, "the texture leaked")
-		withKnownIssue("BUG-025: -[LDrawTexture initWithLines:...] never releases the directives it allocates (MRC), so they outlive the texture") {
-			#expect(weakChild == nil, "the texture's child leaked")
-		}
+		// BUG-025 (fixed by the P3 ARC conversion): the children used to leak under MRC.
+		#expect(weakChild == nil, "the texture's child leaked")
 	}
 }
 

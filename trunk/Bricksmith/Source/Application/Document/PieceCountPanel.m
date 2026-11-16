@@ -38,7 +38,7 @@
 //==============================================================================
 - (void) awakeFromNib
 {
-	LDrawColorCell  *colorCell      = [[[LDrawColorCell alloc] init] autorelease];
+	LDrawColorCell  *colorCell      = [[LDrawColorCell alloc] init];
 	NSTableColumn   *colorColumn    = [_pieceCountTable tableColumnWithIdentifier:PART_REPORT_LDRAW_COLOR];
 	
 	[colorColumn setDataCell:colorCell];
@@ -67,7 +67,7 @@
 	
 	panel = [[PieceCountPanel alloc] initWithFile:fileIn];
 	
-	return [panel autorelease];
+	return panel;
 	
 }//end pieceCountPanelForFile:
 
@@ -161,8 +161,6 @@
 	PartReport		*modelReport	= nil;
 	
 	//Update the model name.
-	[newModel retain];
-	[self->activeModel release];
 	self->activeModel = newModel;
 	
 	//Get the report for the new model.
@@ -181,8 +179,6 @@
 //==============================================================================
 - (void) setFile:(LDrawFile *)newFile
 {
-	[newFile retain];
-	[self->file release];
 	
 	file = newFile;
 	[self setActiveModel:[newFile activeModel]];
@@ -203,8 +199,6 @@
 	NSMutableArray *flattened = nil;
 	
 	//Update the part report
-	[newPartReport retain];
-	[self->partReport release];
 	partReport = newPartReport;
 	
 	//Prepare some new data for the table view:
@@ -231,8 +225,6 @@
 	[newReport sortUsingDescriptors:[_pieceCountTable sortDescriptors]];
 	
 	//Swap out the variable
-	[newReport retain];
-	[flattenedReport release];
 	
 	flattenedReport = newReport;
 	
@@ -409,7 +401,7 @@
 		partName	= [partRecord objectForKey:PART_REPORT_NUMBER_KEY];
 		partColor	= [partRecord objectForKey:PART_REPORT_LDRAW_COLOR];
 		
-		newPart		= [[[LDrawPart alloc] init] autorelease];
+		newPart		= [[LDrawPart alloc] init];
 		
 		// Not this simple anymore. We have to make sure to draw the optimized 
 		// vertexes. The easiest way to do that is to create a part referencing 
@@ -437,16 +429,7 @@
 // Purpose:		The end is nigh.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[file				release];
-	[activeModel		release];
-	[partReport			release];
-	[flattenedReport	release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

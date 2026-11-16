@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PartReport : NSObject
 {
-	LDrawContainer		*reportedObject;
+	__unsafe_unretained LDrawContainer		*reportedObject;	// unretained, as under MRC (L77)
 	NSMutableDictionary	*partsReport;			//see -registerPart: for a description of this data
 	NSMutableArray		*missingParts;
 	NSMutableArray		*movedParts;

@@ -100,10 +100,10 @@ void AppendChoicesToNewItem(
 
 	if(menu_style != rpm_merged)
 	{
-		my_item = [[[NSMenuItem alloc] initWithTitle:child_name action:NULL keyEquivalent:@""] autorelease];
+		my_item = [[NSMenuItem alloc] initWithTitle:child_name action:NULL keyEquivalent:@""];
 		[parent_menu addItem:my_item];
 		
-		choices_menu = [[[NSMenu alloc] initWithTitle:@"choices"] autorelease];
+		choices_menu = [[NSMenu alloc] initWithTitle:@"choices"];
 		[my_item setSubmenu:choices_menu];
 	}
 	else
@@ -121,7 +121,7 @@ void AppendChoicesToNewItem(
 		case rpm_merged: title = [NSString stringWithFormat:@"%s: %s", [[ps role] UTF8String], [[ps childName] UTF8String]]; break;
 		}
 
-		NSMenuItem * ps_item = [[[NSMenuItem alloc] initWithTitle:title action:@selector(addRelatedPartClicked:) keyEquivalent:@""] autorelease];
+		NSMenuItem * ps_item = [[NSMenuItem alloc] initWithTitle:title action:@selector(addRelatedPartClicked:) keyEquivalent:@""];
 		[choices_menu addItem:ps_item];		
 		[ps_item setRepresentedObject:ps];
 	}
@@ -190,7 +190,7 @@ void AppendChoicesToNewItem(
     [super windowControllerDidLoadNib:aController];
 	
 	// Create the toolbar.
-	toolbar = [[[NSToolbar alloc] initWithIdentifier:@"LDrawDocumentToolbar"] autorelease];
+	toolbar = [[NSToolbar alloc] initWithIdentifier:@"LDrawDocumentToolbar"];
 	[toolbar setAutosavesConfiguration:YES];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setDelegate:self->toolbarController];
@@ -329,7 +329,6 @@ void AppendChoicesToNewItem(
 	// (none currently necessary!)
 
 	// Release memory
-	[coordinateFormatter release];
 	
 }//end windowControllerDidLoadNib:
 
@@ -714,8 +713,6 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (void) setDocumentContents:(LDrawFile *)newContents
 {
-	[newContents retain];
-	[documentContents release];
 	
 	// This is going to be an editable container now, so we need to know when it 
 	// changes. 
@@ -776,8 +773,6 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (void) setLastSelectedPart:(LDrawPart *)newPart
 {
-	[newPart retain];
-	[lastSelectedPart release];
 	
 	lastSelectedPart = newPart;
 	
@@ -1452,7 +1447,6 @@ void AppendChoicesToNewItem(
 		
 		[alert runModal];
 		
-		[alert release];
 	}
 	
 }//end doMissingPiecesCheck:
@@ -1495,7 +1489,6 @@ void AppendChoicesToNewItem(
 			[self updateChangeCount:NSChangeDone];
 		}
 		
-		[alert release];
 	}
 	
 }//end doMovedPiecesCheck:
@@ -1595,7 +1588,7 @@ void AppendChoicesToNewItem(
 	 {
 		 // Do the save
 		 
-		 NSFileManager	 *fileManager		 = [[[NSFileManager alloc] init] autorelease];
+		 NSFileManager	 *fileManager		 = [[NSFileManager alloc] init];
 		 NSURL			 *saveURL			 = nil;
 		 NSString		 *saveName			 = nil;
 		 NSString		 *modelName 		 = nil;
@@ -1631,11 +1624,9 @@ void AppendChoicesToNewItem(
 				 //Move the target model to the top of the file. That way L3P will know to
 				 // render it!
 				 LDrawMPDModel *currentModel = [[fileCopy submodels] objectAtIndex:modelCounter];
-				 [currentModel retain];
 				 [fileCopy removeDirective:currentModel];
 				 [fileCopy insertDirective:currentModel atIndex:0];
 				 [fileCopy setActiveModel:currentModel];
-				 [currentModel release];
 				 
 				 //Make a new folder for the model's steps.
 				 modelName	= [NSString stringWithFormat:modelnameFormat, [currentModel modelName]];
@@ -1664,7 +1655,6 @@ void AppendChoicesToNewItem(
 				 }
 				 
 				 
-				 [fileCopy release];
 				 
 			 }
 			 
@@ -1951,7 +1941,7 @@ void AppendChoicesToNewItem(
 			Matrix4 local = [part transformationMatrix];
 			Matrix4 global = Matrix4Multiply(local, xfrm);
 			
-			LDrawPart *newPart        = [[[LDrawPart alloc] init] autorelease];
+			LDrawPart *newPart        = [[LDrawPart alloc] init];
 			[newPart setLDrawColor:[part LDrawColor]];
 			[newPart setDisplayName:[part displayName]];
 			[newPart setTransformationMatrix:&global];
@@ -2735,7 +2725,7 @@ void AppendChoicesToNewItem(
 	
 	// Add one new part that refers to the new sub-model.
 	LDrawColor          *selectedColor  = [[LDrawColorPanelController sharedColorPanel] LDrawColor];
-	LDrawPart           *newPart        = [[[LDrawPart alloc] init] autorelease];
+	LDrawPart           *newPart        = [[LDrawPart alloc] init];
 	[newPart setLDrawColor:selectedColor];
 	[newPart setDisplayName:[newModel modelName]];
 	[newPart setTransformationMatrix:&anchorMatrix];
@@ -2841,7 +2831,6 @@ void AppendChoicesToNewItem(
 		
 		NSBeep();
 		[alert beginSheetModalForWindow:[self windowForSheet] completionHandler:nil];
-		[alert release];
 	}
 }//end addSubmodelReferenceClicked:
 
@@ -2853,7 +2842,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (IBAction) addLineClicked:(id)sender
 {
-	LDrawLine       *newLine        = [[[LDrawLine alloc] init] autorelease];
+	LDrawLine       *newLine        = [[LDrawLine alloc] init];
 	NSUndoManager   *undoManager    = [self undoManager];
 	LDrawColor      *selectedColor  = [[LDrawColorPanelController sharedColorPanel] LDrawColor];
 	Point3          position        = ZeroPoint3;
@@ -2882,7 +2871,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (IBAction) addTriangleClicked:(id)sender
 {
-	LDrawTriangle	*newTriangle	= [[[LDrawTriangle alloc] init] autorelease];
+	LDrawTriangle	*newTriangle	= [[LDrawTriangle alloc] init];
 	NSUndoManager	*undoManager	= [self undoManager];
 	LDrawColor      *selectedColor  = [[LDrawColorPanelController sharedColorPanel] LDrawColor];
 	Point3          position        = ZeroPoint3;
@@ -2913,7 +2902,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (IBAction) addQuadrilateralClicked:(id)sender
 {
-	LDrawQuadrilateral  *newQuadrilateral   = [[[LDrawQuadrilateral alloc] init] autorelease];
+	LDrawQuadrilateral  *newQuadrilateral   = [[LDrawQuadrilateral alloc] init];
 	NSUndoManager       *undoManager        = [self undoManager];
 	LDrawColor          *selectedColor      = [[LDrawColorPanelController sharedColorPanel] LDrawColor];
 	Point3              position            = ZeroPoint3;
@@ -2945,7 +2934,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (IBAction) addConditionalClicked:(id)sender
 {
-	LDrawConditionalLine    *newConditional = [[[LDrawConditionalLine alloc] init] autorelease];
+	LDrawConditionalLine    *newConditional = [[LDrawConditionalLine alloc] init];
 	NSUndoManager           *undoManager    = [self undoManager];
 	LDrawColor              *selectedColor  = [[LDrawColorPanelController sharedColorPanel] LDrawColor];
 	
@@ -2966,7 +2955,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (IBAction) addCommentClicked:(id)sender
 {
-	LDrawComment	*newComment		= [[[LDrawComment alloc] init] autorelease];
+	LDrawComment	*newComment		= [[LDrawComment alloc] init];
 	NSUndoManager	*undoManager	= [self undoManager];
 	
 	[self addStepComponent:newComment parent:nil index:NSNotFound];
@@ -2983,7 +2972,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (IBAction) addRawCommandClicked:(id)sender
 {
-	LDrawMetaCommand	*newCommand		= [[[LDrawMetaCommand alloc] init] autorelease];
+	LDrawMetaCommand	*newCommand		= [[LDrawMetaCommand alloc] init];
 	NSUndoManager		*undoManager	= [self undoManager];
 	
 	[self addStepComponent:newCommand parent:nil index:NSNotFound];
@@ -3031,7 +3020,7 @@ void AppendChoicesToNewItem(
 		if([parentPart isKindOfClass:[LDrawPart class]])
 		{
 			// Create our new part to match the parent.
-			newPart        = [[[LDrawPart alloc] init] autorelease];
+			newPart        = [[LDrawPart alloc] init];
 			[newPart setLDrawColor:selectedColor];
 			[newPart setDisplayName:partName];
 			
@@ -3073,7 +3062,6 @@ void AppendChoicesToNewItem(
 		[self addModel:minifigure atIndex:NSNotFound preventNameCollisions:YES];
 	}
 	
-	[minifigDialog release];
 	
 }//end addMinifigure:
 
@@ -3107,7 +3095,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (void) insertSynthesizableDirective:(id)sender
 {
-    LDrawLSynth		*synthesizedObject	= [[[LDrawLSynth alloc] init] autorelease];
+    LDrawLSynth		*synthesizedObject	= [[LDrawLSynth alloc] init];
 	NSDictionary	*synthEntry			= [sender representedObject];
 	NSString		*type				= [synthEntry objectForKey:@"LSYNTH_TYPE"];
     LDrawColor		*selectedColor		= [[LDrawColorPanelController sharedColorPanel] LDrawColor];
@@ -3211,7 +3199,6 @@ void AppendChoicesToNewItem(
 			[undoManager setActionName:NSLocalizedString(@"UndoAddLSynthConstraint", nil)];
 		}
 		
-		[constraint release];
     }
 } // end insertLSynthConstraint
 
@@ -3286,7 +3273,6 @@ void AppendChoicesToNewItem(
 			[undoManager setActionName:undoName];
 		}
 
-        [direction release];
     }
 }//end insertINSIDEOUTSIDELSynthDirective:
 
@@ -3909,7 +3895,6 @@ void AppendChoicesToNewItem(
     //And lastly, select the dragged objects.
 	[(LDrawFileOutlineView*)outlineView selectObjects:pastedObjects];
 
-    [donatingParents release];
 	return YES;
 	
 }//end outlineView:acceptDrop:item:childIndex:
@@ -3980,8 +3965,7 @@ void AppendChoicesToNewItem(
 		[[selectedDirectives objectAtIndex:counter] setSelected:NO];
 	
 	//Tell the newly-selected directives that they just got selected.
-	[selectedDirectives release];
-	selectedDirectives = [selectedObjects retain];
+	selectedDirectives = selectedObjects;
 	for(counter = 0; counter < [self->selectedDirectives count]; counter++)
 		[[selectedDirectives objectAtIndex:counter] setSelected:YES];
 	
@@ -4182,7 +4166,6 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (void) LDrawGLViewPartDragEnded:(LDrawGLView*)glView
 {
-	[self->selectedDirectivesBeforeCopyDrag release];
 	self->selectedDirectivesBeforeCopyDrag = nil;
 }
 
@@ -4205,7 +4188,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (void) LDrawGLViewPartsWereDraggedIntoOblivion:(LDrawGLView *)glView
 {
-	NSArray *directivesToDelete = [[self->selectedDirectives mutableCopy] autorelease];
+	NSArray *directivesToDelete = [self->selectedDirectives mutableCopy];
 	id		currentDirective	= nil;
 	
 	for(currentDirective in directivesToDelete)
@@ -4258,12 +4241,10 @@ void AppendChoicesToNewItem(
 {
 	if(self->markedSelection)
 	{
-		[self->markedSelection release];
 		markedSelection = NULL;
 	}
 	
 	markedSelection = [self selectedObjects];
-	[markedSelection retain];	
 }//end markPreviousSelection
 
 
@@ -4277,7 +4258,6 @@ void AppendChoicesToNewItem(
 {
 	if(markedSelection)
 	{
-		[markedSelection release];
 		markedSelection = NULL;
 	}
 }//end unmarkPreviousSelection
@@ -5211,7 +5191,7 @@ void AppendChoicesToNewItem(
 		//
 		// Active Model menu items
 		//
-		modelItem = [[[NSMenuItem alloc] init] autorelease];
+		modelItem = [[NSMenuItem alloc] init];
 		[modelItem setTitle:modelDescription];
 		[modelItem setRepresentedObject:currentModel];
 		[modelItem setTarget:self];
@@ -5220,7 +5200,7 @@ void AppendChoicesToNewItem(
 		//
 		// MPD reference menu items
 		//
-		referenceItem = [[[NSMenuItem alloc] init] autorelease];
+		referenceItem = [[NSMenuItem alloc] init];
 		[referenceItem setTitle:modelDescription];
 		[referenceItem setRepresentedObject:currentModel];
 		//We set the same tag for all items in the reference menu.
@@ -5234,8 +5214,8 @@ void AppendChoicesToNewItem(
 		//
 		[modelMenu insertItem:modelItem atIndex:separatorIndex+counter+1];
 		[referenceMenu addItem:referenceItem];
-		[[addReferenceButton menu] addItem:[[referenceItem copy] autorelease]];
-		[[self->submodelPopUpMenu menu] addItem:[[modelItem copy] autorelease]];
+		[[addReferenceButton menu] addItem:[referenceItem copy]];
+		[[self->submodelPopUpMenu menu] addItem:[modelItem copy]];
 		
 		//
 		// Set (or re-set) the selected state
@@ -5342,7 +5322,7 @@ void AppendChoicesToNewItem(
 		
 		if([kids count])
 		{
-			NSMenu * kids_and_roles = [[[NSMenu alloc] initWithTitle:@"Related Parts"] autorelease];
+			NSMenu * kids_and_roles = [[NSMenu alloc] initWithTitle:@"Related Parts"];
 			
 			[relatedItem setSubmenu:kids_and_roles];
 			[relatedItem setEnabled:TRUE];
@@ -5713,7 +5693,7 @@ void AppendChoicesToNewItem(
 //==============================================================================
 - (void) addPartNamed:(NSString *)partName
 {
-	LDrawPart           *newPart        = [[[LDrawPart alloc] init] autorelease];
+	LDrawPart           *newPart        = [[LDrawPart alloc] init];
 	NSUndoManager       *undoManager    = [self undoManager];
 	LDrawColor          *selectedColor  = [[LDrawColorPanelController sharedColorPanel] LDrawColor];
 	TransformComponents transformation  = IdentityComponents;
@@ -5862,7 +5842,6 @@ void AppendChoicesToNewItem(
 		[alert beginSheetModalForWindow:[self windowForSheet]
 					  completionHandler:nil];
 
-		[alert release];
 		
 	}
 	
@@ -5975,9 +5954,8 @@ void AppendChoicesToNewItem(
 								attributes:attributes ];
 	
 	//Release stuff we created or copied.
-	[paragraphStyle release];
 	
-	return [styledString autorelease];
+	return styledString;
 
 }//end formatDirective:withStringRepresentation:
 
@@ -6427,7 +6405,6 @@ void AppendChoicesToNewItem(
 	if ([NSThread isMainThread])
 	{
 		[[ModelManager sharedModelManager] documentSignOut:documentContents];
-		[documentContents	release];
 	}
 	else
 	{
@@ -6440,15 +6417,11 @@ void AppendChoicesToNewItem(
 		LDrawFile * doc = documentContents;
 		dispatch_async(dispatch_get_main_queue(),^{
 			[[ModelManager sharedModelManager] documentSignOut:doc];
-			[doc release];
 		});
 	}
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[lastSelectedPart	release];
-	[selectedDirectives	release];
 
-	[super dealloc];
 	
 }//end dealloc
 

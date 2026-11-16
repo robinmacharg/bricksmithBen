@@ -31,51 +31,51 @@ typedef enum {
 ////////////////////////////////////////////////////////////////////////////////
 @interface PreferencesDialogController : NSObject <NSToolbarDelegate, NSTextFieldDelegate>
 {
-    IBOutlet NSWindow		*preferencesWindow;
+    IBOutlet __unsafe_unretained NSWindow		*preferencesWindow;
 	
 			 NSView			*blankContent; //the initial, empty content of the window in the Nib.
-	IBOutlet NSView			*generalTabContentView;
-	IBOutlet NSView			*stylesContentView;
-	IBOutlet NSView			*ldrawContentView;
-    IBOutlet NSView         *lsynthContentView;
+	IBOutlet __unsafe_unretained NSView			*generalTabContentView;
+	IBOutlet __unsafe_unretained NSView			*stylesContentView;
+	IBOutlet __unsafe_unretained NSView			*ldrawContentView;
+    IBOutlet __unsafe_unretained NSView         *lsynthContentView;
 	
 	// General Tab
-	IBOutlet NSMatrix		*mouseDraggingRadioButtons;
+	IBOutlet __unsafe_unretained NSMatrix		*mouseDraggingRadioButtons;
 	
-	IBOutlet NSMatrix		*rotateModeRadioButtons;
-	IBOutlet NSMatrix		*rightButtonRadioButtons;
-	IBOutlet NSMatrix		*mouseWheelRadioButtons;
+	IBOutlet __unsafe_unretained NSMatrix		*rotateModeRadioButtons;
+	IBOutlet __unsafe_unretained NSMatrix		*rightButtonRadioButtons;
+	IBOutlet __unsafe_unretained NSMatrix		*mouseWheelRadioButtons;
 
 	// Parts Tab
-    IBOutlet NSTextField	*LDrawPathTextField;
-    IBOutlet NSMatrix		*partBrowserStyleRadioButtons;
+    IBOutlet __unsafe_unretained NSTextField	*LDrawPathTextField;
+    IBOutlet __unsafe_unretained NSMatrix		*partBrowserStyleRadioButtons;
 	
 	// Style Tab
-	IBOutlet NSColorWell	*backgroundColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*backgroundColorWell;
 	
-	IBOutlet NSColorWell	*modelsColorWell;
-	IBOutlet NSColorWell	*stepsColorWell;
-	IBOutlet NSColorWell	*partsColorWell;
-	IBOutlet NSColorWell	*primitivesColorWell;
-	IBOutlet NSColorWell	*colorsColorWell;
-	IBOutlet NSColorWell	*commentsColorWell;
-	IBOutlet NSColorWell	*unknownColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*modelsColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*stepsColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*partsColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*primitivesColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*colorsColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*commentsColorWell;
+	IBOutlet __unsafe_unretained NSColorWell	*unknownColorWell;
 	
     // LSynth Tab
-    IBOutlet NSTextField    *lsynthExecutablePath;
-    IBOutlet NSTextField    *lsynthConfigurationPath;
-    IBOutlet NSMatrix       *lsynthSelectionModeMatrix;
-    IBOutlet NSSlider       *lsynthTransparencySlider;
-    IBOutlet NSTextField    *lsynthTransparencyText;
-    IBOutlet NSColorWell    *lsynthSelectionColorWell;
-    IBOutlet NSButton       *lsynthSaveSynthesizedParts;
-    IBOutlet NSView         *lsynthExecutableChooserAccessoryView;
-    IBOutlet NSView         *lsynthConfigurationChooserAccessoryView;
+    IBOutlet __unsafe_unretained NSTextField    *lsynthExecutablePath;
+    IBOutlet __unsafe_unretained NSTextField    *lsynthConfigurationPath;
+    IBOutlet __unsafe_unretained NSMatrix       *lsynthSelectionModeMatrix;
+    IBOutlet __unsafe_unretained NSSlider       *lsynthTransparencySlider;
+    IBOutlet __unsafe_unretained NSTextField    *lsynthTransparencyText;
+    IBOutlet __unsafe_unretained NSColorWell    *lsynthSelectionColorWell;
+    IBOutlet __unsafe_unretained NSButton       *lsynthSaveSynthesizedParts;
+    IBOutlet __unsafe_unretained NSView         *lsynthExecutableChooserAccessoryView;
+    IBOutlet __unsafe_unretained NSView         *lsynthConfigurationChooserAccessoryView;
     NSTextField             *lsynthTransparencyNumberChanged;
-    IBOutlet NSButton       *lsynthShowBasicPartsList;
+    IBOutlet __unsafe_unretained NSButton       *lsynthShowBasicPartsList;
     
     // Miscellaneous
-	IBOutlet NSView			*folderChooserAccessoryView;
+	IBOutlet __unsafe_unretained NSView			*folderChooserAccessoryView;
 }
 
 //Initialization

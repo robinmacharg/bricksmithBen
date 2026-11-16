@@ -151,11 +151,7 @@ static PartBrowserPanelController *sharedPartBrowserPanel = nil;
 // Purpose:		We're checking out of this fleabag hotel.
 //
 //==============================================================================
-- (void) dealloc
-{
-	// no need to release top-level nib objects, as this is an NSWindowController
-
-}//end dealloc
+//end dealloc
 
 
 @end

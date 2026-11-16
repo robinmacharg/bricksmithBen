@@ -275,3 +275,47 @@ section. Each entry says what happened and what to do instead.
   - Test preferences through the volatile argument domain, never a persistent domain.
   - Read private outlets by KVC name only where necessary. The port must keep those names (listed in
     `AppLogicCoverageTests`).
+- **L77. ARC conversion with ARCMT (P3).** Xcode 26's clang still contains Apple's ARC migrator, behind
+  `-Xclang -arcmt-action=modify`; the `-ccc-arcmt-*` driver flags are silently ignored. `scripts/dev/arcmt-migrate.py`
+  runs it with each file's real compile command. Review every diff, because ARCMT gets some things wrong or doesn't
+  decide them:
+  - It rewrites MRC `__block Foo *x = [[Foo alloc] init]` as `__weak`, which is **nil at once** under ARC. Make it
+    a plain strong local (`__block` only if the variable itself is reassigned inside the block).
+  - Plain object ivars become `__strong`. Back-pointers (parent, delegate, owner) that were deliberately unretained
+    under MRC need `__weak` or `__unsafe_unretained`, or they form retain cycles.
+  - `unsafe_unretained` properties that were assigned `[[X alloc] init]` and then released by hand: make them
+    `strong` and drop the release.
+  - The legacy `+[NSBundle loadNibNamed:owner:]` retains top-level objects. MRC code balanced that with
+    `autorelease`/`release`; under ARC that's no longer possible, so those objects leak (S36) until P4 moves to
+    `loadNibNamed:owner:topLevelObjects:`.
+  - `[self autorelease]` (singletons that drop themselves when their window closes): use an `__autoreleasing`
+    local to keep the same lifetime.
+- **L78. A black render snapshot doesn't by itself mean the change broke rendering.** During P3, all-black captures
+  came and went across identical configurations: the same tree failed, then passed minutes later. A bisect chased
+  that noise. The likely cause is the transparent harness window not being visible (another Space, or behind a
+  full-screen app). → The render test now records the window's occlusion state and skips, with a message, when the
+  capture is uniform *and* the window wasn't visible. Before bisecting a render failure, rerun it on the last good
+  commit.
+- **L79. Under ARC, *when* a release happens can be behaviour.**
+  - `LDrawShaderRenderer` does its real drawing in `dealloc`. ARCMT removed `[ren release]`, so the renderer now
+    lived to the end of the method, after GL-state asserts, and they aborted. → Set the variable to `nil` where the
+    release used to be.
+  - `IBOutlet` ivars are not retained by nib loading under MRC, but they are **strong** under ARC. LDrawDocument's
+    strong outlets kept a closed window's views alive until the document went away. The views were then torn down
+    during another window's display cycle ("Collection was mutated while being enumerated" in
+    `NSViewUpdateVibrancyForSubtree`). → Bare outlets become `IBOutlet __unsafe_unretained`, matching MRC; NSDrawer
+    and some other AppKit classes can't be weakly referenced. The exceptions are outlets the original code retained
+    itself and released in `dealloc` (DocumentToolbarController's tool views): they stay strong.
+- **L80. A Debug build can draw differently from a release build of the same code, on the same Mac.** The P3 manual
+  smoke found black and yellow panels (BUG-033). They came from views that fill their dirty rect instead of their
+  bounds. The pre-port snapshot drew them correctly under the release bundle id and wrongly when built with
+  `com.AllenSmith.Bricksmith.debug`; preferences, window position and displays were ruled out. → When a UI symptom
+  appears, A/B the *same bundle id* before blaming a commit, and fix the drawing code rather than relying on it.
+  Related traps found on the way:
+  - Commits before `50b795b` (including tag `snapshot-20261114-pre-swift-plan`) build with the **real** bundle id
+    and write the user's real preferences when launched. Build them with
+    `PRODUCT_BUNDLE_IDENTIFIER=com.AllenSmith.Bricksmith.debug`, or back up and restore the real domain.
+  - `defaults import` **merges** into a domain; it does not replace it. To restore, `defaults delete` the domain
+    first (or delete the keys the run added), then diff against the backup.
+  - UI-scripting a click (System Events) on a button inside an `NSApp runModalForWindow:` session did not trigger
+    its action here; drive modal dialogs from tests by calling the action directly.

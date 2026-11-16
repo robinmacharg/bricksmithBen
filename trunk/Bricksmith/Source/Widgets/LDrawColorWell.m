@@ -67,8 +67,6 @@ static LDrawColorWell *sharedActiveColorWell = nil;
 	[newWell				setState:NSOnState];
 
 	//trade out variable
-	[newWell				retain];
-	[sharedActiveColorWell	release];
 	
 	sharedActiveColorWell = newWell;
 	
@@ -110,18 +108,15 @@ static LDrawColorWell *sharedActiveColorWell = nil;
 	GLfloat		 components[4];
 	
 	// assign ivar
-	[newColor retain];
-	[self->color release];
 	self->color = newColor;
 	
 	// Set cached NSColor too
 	[newColor getColorRGBA:components];
 	
-	[self->nsColor release];
-	self->nsColor = [[NSColor colorWithCalibratedRed:components[0]
+	self->nsColor = [NSColor colorWithCalibratedRed:components[0]
 											   green:components[1]
 												blue:components[2]
-											   alpha:1.0 ] retain];
+											   alpha:1.0 ];
 	
 	[self setNeedsDisplay:YES];
 	
@@ -141,7 +136,8 @@ static LDrawColorWell *sharedActiveColorWell = nil;
 {
 	[super drawRect:aRect];
 	
-	NSRect	 colorRect = NSInsetRect(aRect, 4, 4);
+	// The bounds, not the dirty rect: views do not clip to bounds (macOS 14 SDK), so aRect may exceed the well (BUG-033).
+	NSRect	 colorRect = NSInsetRect([self bounds], 4, 4);
 	
 	[self->nsColor set];
 	NSRectFill(colorRect);
@@ -256,9 +252,7 @@ static LDrawColorWell *sharedActiveColorWell = nil;
 	if([LDrawColorWell activeColorWell] == self)
 		[LDrawColorWell setActiveColorWell:nil];
 	
-	[self->nsColor	release];
 	
-	[super dealloc];
 	
 }//end dealloc
 

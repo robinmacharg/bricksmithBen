@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PartLibrary : NSObject
 {
-	id<PartLibraryDelegate> delegate;
+	__weak id<PartLibraryDelegate> delegate;	// unretained under MRC (L77)
 	NSDictionary            *partCatalog;
 	NSMutableArray          *favorites;					// parts names in the "Favorites" pseduocategory
 	NSMutableDictionary     *loadedFiles;				// list of LDrawFiles which have been read off disk.

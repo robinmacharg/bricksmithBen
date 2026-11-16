@@ -33,14 +33,14 @@ typedef NS_ENUM(int, SearchPartCriteriaT){
 
 @interface SearchPanelController : NSWindowController <NSWindowDelegate, NSDraggingDestination>
 {
-	IBOutlet NSMatrix		*scopeMatrix;
-	IBOutlet NSMatrix		*colorMatrix;
-	IBOutlet LDrawColorWell *colorWell;
-	IBOutlet NSMatrix		*findTypeMatrix;
-	IBOutlet NSButton		*searchInsideLSynthContainers;
-	IBOutlet NSButton		*searchHiddenParts;
-	IBOutlet NSTextField	*partName;
-	IBOutlet NSTextField	*warningText;
+	IBOutlet __unsafe_unretained NSMatrix		*scopeMatrix;
+	IBOutlet __unsafe_unretained NSMatrix		*colorMatrix;
+	IBOutlet __unsafe_unretained LDrawColorWell *colorWell;
+	IBOutlet __unsafe_unretained NSMatrix		*findTypeMatrix;
+	IBOutlet __unsafe_unretained NSButton		*searchInsideLSynthContainers;
+	IBOutlet __unsafe_unretained NSButton		*searchHiddenParts;
+	IBOutlet __unsafe_unretained NSTextField	*partName;
+	IBOutlet __unsafe_unretained NSTextField	*warningText;
 }
 
 //Initialization

@@ -117,9 +117,9 @@ static PartLibrary *SharedPartLibrary = nil;
 {
 	self = [super init];
 	
-	loadedFiles                 = [[NSMutableDictionary dictionaryWithCapacity:400] retain];
+	loadedFiles                 = [NSMutableDictionary dictionaryWithCapacity:400];
 	loadedImages				= [[NSMutableDictionary alloc] init];
-	optimizedRepresentations    = [[NSMutableDictionary dictionaryWithCapacity:400] retain];
+	optimizedRepresentations    = [NSMutableDictionary dictionaryWithCapacity:400];
 	optimizedTextures			= [[NSMutableDictionary alloc] init];
 	
 	favorites                   = [[NSMutableArray alloc] init];
@@ -435,8 +435,6 @@ static PartLibrary *SharedPartLibrary = nil;
 //==============================================================================
 - (void) setPartCatalog:(NSDictionary *)newCatalog
 {
-	[newCatalog retain];
-	[partCatalog release];
 	
 	partCatalog = newCatalog;
 	
@@ -463,7 +461,7 @@ static PartLibrary *SharedPartLibrary = nil;
 //==============================================================================
 - (BOOL) load
 {
-	NSFileManager   *fileManager    = [[[NSFileManager alloc] init] autorelease];
+	NSFileManager   *fileManager    = [[NSFileManager alloc] init];
 	NSString        *catalogPath    = [[LDrawPaths sharedPaths] partCatalogPath];
 	BOOL            partsListExists = NO;
 	NSString		*version		= nil;
@@ -522,7 +520,6 @@ static PartLibrary *SharedPartLibrary = nil;
 				[self setPartCatalog:newPartCatalog];
 				[[NSNotificationCenter defaultCenter] postNotificationName:LDrawPartLibraryReloaded object:self ];
 			}
-			[catalogBuilder release];
 			
 			if(completionHandler)
 			{
@@ -611,7 +608,7 @@ static PartLibrary *SharedPartLibrary = nil;
 		BOOL            alreadyParsing      = NO;	// another thread is already parsing partName
 	
 		// Already been parsed?
-		image = (CGImageRef)[self->loadedImages objectForKey:imageName];
+		image = (__bridge CGImageRef)[self->loadedImages objectForKey:imageName];
 		if(image == nil)
 		{
 #if USE_BLOCKS
@@ -657,7 +654,7 @@ static PartLibrary *SharedPartLibrary = nil;
 						^{
 							if(image != nil)
 							{
-								[self->loadedImages setObject:(id)image forKey:imageName];
+								[self->loadedImages setObject:(__bridge id)image forKey:imageName];
 							}
 							
 							// Notify waiting threads we are finished parsing this part.
@@ -676,7 +673,7 @@ static PartLibrary *SharedPartLibrary = nil;
 					image = (CGImageRef)[self readImageAtPath:imagePath asynchronously:NO completionHandler:NULL];
 					if(image != nil)
 					{
-						[self->loadedImages setObject:(id)image forKey:imageName];
+						[self->loadedImages setObject:(__bridge id)image forKey:imageName];
 					}
 #endif //-----------------------------------------------------------------------
 #if USE_BLOCKS
@@ -798,7 +795,7 @@ static PartLibrary *SharedPartLibrary = nil;
 	NSString	*imagePath	= nil;
 	
 	// Has it already been parsed?
-	image = (CGImageRef)[self->loadedImages objectForKey:imageName];
+	image = (__bridge CGImageRef)[self->loadedImages objectForKey:imageName];
 	
 	if(image == nil)
 	{
@@ -807,7 +804,7 @@ static PartLibrary *SharedPartLibrary = nil;
 		image		= [self readImageAtPath:imagePath asynchronously:NO completionHandler:NULL];
 		
 		if(image != nil)
-			[self->loadedImages setObject:(id)image forKey:imageName];
+			[self->loadedImages setObject:(__bridge id)image forKey:imageName];
 	}
 	
 	return image;
@@ -865,7 +862,7 @@ static PartLibrary *SharedPartLibrary = nil;
 	
 	if(filePath != nil)
 	{
-		fileManager		= [[[NSFileManager alloc] init] autorelease];
+		fileManager		= [[NSFileManager alloc] init];
 		fileDirectory	= [filePath stringByDeletingLastPathComponent];
 		imageName		= [texture imageDisplayName]; // handle case-sensitive filesystem
 		
@@ -894,7 +891,7 @@ static PartLibrary *SharedPartLibrary = nil;
 		{
 			image = [self readImageAtPath:testPath asynchronously:NO completionHandler:NULL];
 			if(image != nil)
-				[self->loadedImages setObject:(id)image forKey:imageName];
+				[self->loadedImages setObject:(__bridge id)image forKey:imageName];
 		}
 	}
 	
@@ -1276,7 +1273,7 @@ static PartLibrary *SharedPartLibrary = nil;
 		dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 #endif
 		[parsedFile optimizeStructure];
-		model = [[[[parsedFile submodels] objectAtIndex:0] retain] autorelease];
+		model = [[parsedFile submodels] objectAtIndex:0];
 		// We are "leaking" the enclosing file, but returning an internal model 
 		// without disconnecting it from its file is pretty dodgy and it would 
 		// be easy to code a bug in. We'd be better off returning the file 
@@ -1316,22 +1313,7 @@ static PartLibrary *SharedPartLibrary = nil;
 // Purpose:		We have turned a corner on the Circle of Life.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[partCatalog				release];
-	[favorites					release];
-	[loadedFiles				release];
-	[loadedImages				release];
-	[optimizedRepresentations	release];
-	[optimizedTextures			release];
-#if USE_BLOCKS
-	dispatch_release(catalogAccessQueue);
-#endif
-	[parsingGroups		release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

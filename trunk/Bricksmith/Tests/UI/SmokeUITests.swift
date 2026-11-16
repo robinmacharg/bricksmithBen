@@ -66,7 +66,13 @@ final class SmokeUITests: XCTestCase {
 		XCTAssertTrue(window.waitForExistence(timeout: 15), "document window did not open")
 		let outline = window.outlines.firstMatch
 		XCTAssertTrue(outline.waitForExistence(timeout: 5))
-		XCUIElement.perform(withKeyModifiers: .option) { outline.disclosureTriangles.firstMatch.click() }
+		// The first click can land before the outline has finished loading: wait for the triangle, and retry once.
+		let triangle = outline.disclosureTriangles.firstMatch
+		XCTAssertTrue(triangle.waitForExistence(timeout: 5))
+		for _ in 0..<2 where outline.outlineRows.count <= 2 {
+			XCUIElement.perform(withKeyModifiers: .option) { triangle.click() }
+			_ = outline.outlineRows.element(boundBy: 2).waitForExistence(timeout: 3)
+		}
 		XCTAssertGreaterThan(outline.outlineRows.count, 2, "outline did not expand")
 		return outline
 	}

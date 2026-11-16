@@ -25,7 +25,9 @@
 //#define USE_BLOCKS				NS_BLOCKS_AVAILABLE
 #define USE_BLOCKS				0
 
-#if !USE_BLOCKS
+// P3: only for files still built without ARC. Under ARC, dispatch objects are managed ObjC objects and must
+// keep their real types (P4 removes USE_BLOCKS and this hack).
+#if !USE_BLOCKS && !__has_feature(objc_arc)
 	#define dispatch_queue_t    void *
 	#define dispatch_group_t    void *
 #endif

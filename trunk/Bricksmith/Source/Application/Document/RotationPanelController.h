@@ -31,7 +31,7 @@ typedef enum {
 	float			fixedPointY;
 	float			fixedPointZ;
 	
-	IBOutlet NSObjectController	*objectController;
+	IBOutlet __unsafe_unretained NSObjectController	*objectController;
 }
 
 //initialization

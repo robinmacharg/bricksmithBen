@@ -53,11 +53,30 @@ enum RenderHarness {
 			view.openGLContext?.makeCurrentContext()
 			glReadBuffer(GLenum(GL_BACK))
 		}
+		lastWindowVisible = view.window?.occlusionState.contains(.visible) ?? false
 		let path = FileManager.default.temporaryDirectory.appendingPathComponent("render-\(UUID().uuidString).tiff").path
 		defer { try? FileManager.default.removeItem(atPath: path) }
 		try ObjC.run { view.saveImage(toPath: path) }
 		let data = try Data(contentsOf: URL(fileURLWithPath: path))
 		return flipped(try #require(NSBitmapImageRep(data: data)))
+	}
+
+	/// Whether the harness window was on a visible part of the screen during the last render. A window on another
+	/// Space, or behind a full-screen app, captures nothing (a uniform image) (L78).
+	static var lastWindowVisible = true
+
+	/// True if every pixel equals the first one (a capture with nothing drawn).
+	static func isUniform(_ image: NSBitmapImageRep) -> Bool {
+		guard let data = image.bitmapData else { return false }
+		let bpr = image.bytesPerRow, bpp = image.bitsPerPixel / 8
+		let first = Array(UnsafeBufferPointer(start: data, count: bpp))
+		for y in 0..<image.pixelsHigh {
+			for x in 0..<image.pixelsWide {
+				let p = data + y * bpr + x * bpp
+				for i in 0..<bpp where p[i] != first[i] { return false }
+			}
+		}
+		return true
 	}
 
 	static func flipped(_ image: NSBitmapImageRep) -> NSBitmapImageRep {
@@ -112,7 +131,12 @@ struct RenderSnapshotTests {
 			print("No render reference for machine \(RenderHarness.machine): \(name) (not a CI gate; record with RECORD_GOLDENS=1)")
 			return
 		}
+		if RenderHarness.isUniform(image) && !RenderHarness.lastWindowVisible {
+			// Not a rendering result: the window was not on screen (another Space, a full-screen app). Skip (L78).
+			print("Render skipped for \(name): the test window was not visible on screen; nothing could be captured")
+			return
+		}
 		let diff = try #require(RenderHarness.difference(image, reference), "image size changed")
-		#expect(diff.1 <= 0.005, "\(name): \(String(format: "%.2f%%", diff.1 * 100)) pixels differ (max delta \(diff.0))")
+		#expect(diff.1 <= 0.005, "\(name): \(String(format: "%.2f%%", diff.1 * 100)) pixels differ (max delta \(diff.0)); window visible: \(RenderHarness.lastWindowVisible); uniform capture: \(RenderHarness.isUniform(image))")
 	}
 }

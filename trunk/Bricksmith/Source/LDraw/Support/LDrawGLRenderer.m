@@ -26,6 +26,7 @@
 #import "LDrawDragHandle.h"
 #import "LDrawFile.h"
 #import "LDrawModel.h"
+#import "LDrawMPDModel.h"
 #import "LDrawPart.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"
@@ -48,9 +49,9 @@
 
 @interface LDrawGLRenderer ()
 {
-	id<LDrawGLRendererDelegate> delegate;
-	id<LDrawGLCameraScroller>	scroller;
-	id							target;
+	__weak id<LDrawGLRendererDelegate> delegate;
+	__weak id<LDrawGLCameraScroller>	scroller;
+	__weak id							target;
 	BOOL						allowsEditing;
 	
 	LDrawDirective          *fileBeingDrawn;		// Should only be an LDrawFile or LDrawModel.
@@ -80,7 +81,7 @@
 	BOOL                    dragEndedInOurDocument;	// YES if the drag we initiated ended in the document we display
 	Vector3                 draggingOffset;			// displacement between part 0's position and the initial click point of the drag
 	Point3                  initialDragLocation;	// point in model where part was positioned at draggingEntered
-	LDrawDragHandle			*activeDragHandle;		// drag handle hit on last mouse-down (or nil)
+	__weak LDrawDragHandle			*activeDragHandle;		// drag handle hit on last mouse-down (or nil)
 }
 @end
 
@@ -300,7 +301,7 @@
 
 		LDrawShaderRenderer * ren = [[LDrawShaderRenderer alloc] initWithScale:[self zoomPercentageForGL]/100. modelView:[camera getModelView] projection:[camera getProjection]];	
 		[self->fileBeingDrawn drawSelf:ren];
-		[ren release];
+		ren = nil;	// release NOW (was [ren release]): its dealloc flushes and unbinds GL state checked below (L79)
 
 	#endif
   
@@ -767,8 +768,6 @@
 //==============================================================================
 -(void) setLDrawColor:(LDrawColor *)newColor
 {
-	[newColor retain];
-	[self->color release];
 	self->color = newColor;
 	
 	[self->delegate LDrawGLRendererNeedsRedisplay:self];
@@ -790,8 +789,6 @@
 	Box3	bounds		= InvalidBox;
 	
 	//Update our variable.
-	[newFile retain];
-	[self->fileBeingDrawn release];
 	self->fileBeingDrawn = newFile;
 	
 	if(newFile)
@@ -2573,11 +2570,8 @@
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-	[fileBeingDrawn	release];
 
-	[camera release];
 	
-	[super dealloc];
 	
 }//end dealloc
 

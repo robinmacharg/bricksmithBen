@@ -46,8 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 	
 	GLfloat			glTransformation[16];
 
-	LDrawDirective	*cacheDrawable;			// The drawable is the model we link to OR a VBO that represents it from the part library -- a drawable proxy.
-	LDrawModel		*cacheModel;			// The model is the real model we link to.
+	__unsafe_unretained LDrawDirective	*cacheDrawable;			// The drawable is the model we link to OR a VBO that represents it from the part library -- a drawable proxy.
+	__unsafe_unretained LDrawModel		*cacheModel;	// both unretained, as under MRC: the part observes the model (L77)			// The model is the real model we link to.
 	PartTypeT		cacheType;
 	NSLock			*drawLock;
 	

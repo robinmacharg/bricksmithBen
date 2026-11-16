@@ -24,21 +24,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PartBrowserDataSource : NSObject <NSOutlineViewDelegate, NSOutlineViewDataSource>
 {
-	IBOutlet NSButton		*searchAllCategoriesButton;
-	IBOutlet NSButton		*searchSelectedCategoryButton;
-	IBOutlet NSSearchField	*searchField;
+	IBOutlet __unsafe_unretained NSButton		*searchAllCategoriesButton;
+	IBOutlet __unsafe_unretained NSButton		*searchSelectedCategoryButton;
+	IBOutlet __unsafe_unretained NSSearchField	*searchField;
 	
-	IBOutlet NSOutlineView	*categoryTable;
-	IBOutlet NSTableView	*partsTable;
-	IBOutlet LDrawGLView	*partPreview;
-	IBOutlet LDrawViewerContainer	*partPreviewViewport;
-	IBOutlet NSButton		*zoomInButton;
-	IBOutlet NSButton		*zoomOutButton;
-	IBOutlet NSButton		*addRemoveFavoriteButton;
-	IBOutlet NSButton		*insertButton;
-	IBOutlet NSMenu			*contextualMenu;
+	IBOutlet __unsafe_unretained NSOutlineView	*categoryTable;
+	IBOutlet __unsafe_unretained NSTableView	*partsTable;
+	IBOutlet __unsafe_unretained LDrawGLView	*partPreview;
+	IBOutlet __unsafe_unretained LDrawViewerContainer	*partPreviewViewport;
+	IBOutlet __unsafe_unretained NSButton		*zoomInButton;
+	IBOutlet __unsafe_unretained NSButton		*zoomOutButton;
+	IBOutlet __unsafe_unretained NSButton		*addRemoveFavoriteButton;
+	IBOutlet __unsafe_unretained NSButton		*insertButton;
+	IBOutlet __unsafe_unretained NSMenu			*contextualMenu;
 
-	PartLibrary     *partLibrary; //weak reference to the shared part catalog.
+	__weak PartLibrary     *partLibrary; //weak reference to the shared part catalog.
 	NSString		*selectedCategory;
 	NSArray         *categoryList;
 	NSMutableArray  *tableDataSource;

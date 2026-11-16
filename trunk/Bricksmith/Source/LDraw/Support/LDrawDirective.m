@@ -811,7 +811,7 @@
 - (void) addObserver:(id<LDrawObserver>) observer
 {
 	#if NEW_SET
-		LDrawFastSetInsert(observers, observer);	
+		LDrawFastSetInsert(observers, (__bridge void *)observer);	
 	#else
 	if(observers == nil)
 		printf("WARNING: OBSERVERS ARE NULL.\n");
@@ -830,7 +830,7 @@
 - (void) removeObserver:(id<LDrawObserver>) observer
 {
 	#if NEW_SET
-		LDrawFastSetRemove(observers,observer);
+		LDrawFastSetRemove(observers, (__bridge void *)observer);
 	#else	
 		if(observers == nil)
 			printf("WARNING: OBSERVERS ARE NULL.\n");

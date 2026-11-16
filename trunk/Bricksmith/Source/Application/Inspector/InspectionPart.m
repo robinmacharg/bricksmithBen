@@ -87,9 +87,11 @@ typedef enum
 {
 	[super awakeFromNib];
 	
-	[_formatterBasic autorelease];
-	[_formatterAngle autorelease];
-	[_formatterScale autorelease];
+	// Top-level nib objects get an extra retain from the legacy loadNibNamed:owner:; we hold them in strong
+	// properties, so balance it (was autorelease under MRC; L77).
+	CFRelease((__bridge CFTypeRef)_formatterBasic);
+	CFRelease((__bridge CFTypeRef)_formatterAngle);
+	CFRelease((__bridge CFTypeRef)_formatterScale);
 }
 
 
@@ -390,16 +392,7 @@ typedef enum
 // Purpose:		Abandon all hope ye who enter here.
 //
 //==============================================================================
-- (void) dealloc
-{
-	//Top level nib objects:
-	[_formatterBasic release];
-	[_formatterAngle release];
-	[_formatterScale release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

@@ -178,7 +178,7 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invo
 @interface LDrawDirective : NSObject <NSCoding, NSCopying, LDrawObservable>
 {
 	@private
-	LDrawContainer *enclosingDirective; //LDraw files are a hierarchy.
+	__unsafe_unretained LDrawContainer *enclosingDirective;	// parent: unretained, as under MRC (L77) //LDraw files are a hierarchy.
 	#if NEW_SET
 		LDrawFastSet	observers;
 	#else

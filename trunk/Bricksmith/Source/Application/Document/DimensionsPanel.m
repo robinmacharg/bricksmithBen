@@ -45,7 +45,7 @@
 	
 	dimensions = [[DimensionsPanel alloc] initWithFile:fileIn];
 	
-	return [dimensions autorelease];
+	return dimensions;
 	
 }//end dimensionPanelForFile:
 
@@ -123,8 +123,6 @@
 //==============================================================================
 - (void) setActiveModel:(LDrawMPDModel *)newModel
 {
-	[newModel retain];
-	[self->activeModel release];
 	self->activeModel = newModel;
 	
 	[dimensionsTable reloadData];
@@ -139,8 +137,6 @@
 //==============================================================================
 - (void) setFile:(LDrawFile *)newFile
 {
-	[newFile retain];
-	[self->file release];
 	
 	file = newFile;
 	[self setActiveModel:[newFile activeModel]];
@@ -198,8 +194,8 @@
 	objectValueForTableColumn:(NSTableColumn *)tableColumn
 						  row:(NSInteger)rowIndex
 {
-	NSNumberFormatter*  floatFormatter = [[NSNumberFormatter new] autorelease];
-	NSNumberFormatter*  studFormatter 	= [[NSNumberFormatter new] autorelease];
+	NSNumberFormatter*  floatFormatter = [NSNumberFormatter new];
+	NSNumberFormatter*  studFormatter 	= [NSNumberFormatter new];
 	id                  object          = nil;
 	Box3                bounds          = [self->activeModel boundingBox3];
 	double              width           = 0;
@@ -313,14 +309,7 @@
 // Purpose:		The end is nigh.
 //
 //==============================================================================
-- (void) dealloc
-{
-	[file			release];
-	[activeModel	release];
-	
-	[super dealloc];
-	
-}//end dealloc
+//end dealloc
 
 
 @end

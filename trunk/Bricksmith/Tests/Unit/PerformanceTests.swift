@@ -94,6 +94,10 @@ struct PerformanceTests {
 		let view = try #require(doc.main3DViewport())
 		try ObjC.run { view.zoomToFit(nil); view.draw() }   // warm-up: builds display lists/VBOs
 		// glFinish so the timing includes the GPU work, not just command submission.
-		try Perf.record("draw_20000_parts", Perf.best { try? ObjC.run { view.draw(); view.openGLContext?.makeCurrentContext(); glFinish() } })
+		// 20 frames per measurement: a single frame (~2 ms) was too short to compare against a +20% budget (P3).
+		try Perf.record("draw_20000_parts_x20", Perf.best { try? ObjC.run {
+			for _ in 0..<20 { view.draw() }
+			view.openGLContext?.makeCurrentContext(); glFinish()
+		} })
 	}
 }

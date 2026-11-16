@@ -19,7 +19,7 @@
 	LDrawFile		*file;
 	LDrawMPDModel	*activeModel;
 	
-	IBOutlet NSTableView		*dimensionsTable;
+	IBOutlet __unsafe_unretained NSTableView		*dimensionsTable;
 }
 
 //Initialization
