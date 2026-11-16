@@ -4,6 +4,8 @@
 //
 //  Created by Robin Macharg on 16/11/2012.
 //
+//  Ported to LDrawLSynth.swift (P6b). This header keeps only the parser-state
+//  enum (types only); the class is declared by Bricksmith-Swift.h.
 //
 
 #import <Foundation/Foundation.h>
@@ -58,44 +60,4 @@ typedef NS_ENUM(int, LSynthParserStateT)
     PARSER_STATE_COUNT
 };
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface LDrawLSynth : LDrawContainer <LDrawColorable, LDrawMovableDirective>
-{
-    NSMutableArray  *synthesizedParts;
-    NSString        *synthType;
-    int              lsynthClass;
-    LDrawColor      *color;
-    GLfloat			 glTransformation[16];
-    BOOL             hidden;
-    BOOL             subdirectiveSelected;
-    Box3			 cachedBounds;		// cached bounds of the enclosed directives
-}
-
-// Accessors
-- (void) setLsynthClass:(int)lsynthClass;
-- (int) lsynthClass;
-- (void) setLsynthType:(null_unspecified NSString *)lsynthType;
-- (null_unspecified NSString *) lsynthType;
-- (void) setHidden:(BOOL)flag;
-- (BOOL) isHidden;
-- (void) setLDrawColor:(null_unspecified LDrawColor *)color;
-
-- (TransformComponents) transformComponents;
-- (Matrix4) transformationMatrix;
-
-
-// Utilities
-- (void) synthesize;
-- (void)colorSelectedSynthesizedParts:(BOOL)yesNo;
-- (null_unspecified NSString *)determineIconName:(null_unspecified LDrawDirective *)directive;
-- (null_unspecified NSMutableArray *)prepareAutoHullData;
--(int)synthesizedPartsCount;
-
-
-+ (BOOL) lineIsLSynthBeginning:(null_unspecified NSString*)line;
-+ (BOOL) lineIsLSynthTerminator:(null_unspecified NSString*)line;
-
-@end
-
-NS_ASSUME_NONNULL_END
+@class LDrawLSynth;
