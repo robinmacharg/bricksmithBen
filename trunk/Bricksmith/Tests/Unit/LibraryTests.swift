@@ -177,3 +177,283 @@ struct LibraryCatalogTests {
 		try Golden.check(Data((lines.joined(separator: "\n") + "\n").utf8), against: "library/mlcad.txt")
 	}
 }
+
+// MARK: - MLCadIni parsing (P5 pre-port characterisation)
+
+/// Pins the MLCad.ini parser's exact behaviour, quirks included, before the Swift port: section mapping (MLCad's
+/// left is the minifigure's right), NSScanner details (case-insensitive literals, out-parameters left stale on a
+/// failed scan), de-duplication, sorting and the matrix order. Parsed on fresh instances from temporary files.
+@Suite("Library: MLCad.ini parsing details (P5)", .fixtureLibrary, .serialized)
+struct MLCadIniParsingTests {
+
+	static let identityRow = "1 0 0 0 1 0 0 0 1 0 0 0"
+
+	/// Parse `text` (written to a temporary file) into a fresh, unshared MLCadIni.
+	static func parse(_ text: String, lineEnding: String = "\n") throws -> MLCadIni {
+		let url = FileManager.default.temporaryDirectory.appendingPathComponent("MLCad-\(UUID().uuidString).ini")
+		try Data(text.replacingOccurrences(of: "\n", with: lineEnding).utf8).write(to: url)
+		defer { try? FileManager.default.removeItem(at: url) }
+		let ini = MLCadIni()
+		ini.parse(fromPath: url.path)
+		return ini
+	}
+
+	/// "referenceName [m00 m01 … m33]" per part; the matrix is printed row by row as `M4.rows` gives it.
+	static func describe(_ list: [Any]?) -> [String] {
+		(list ?? []).map { item in
+			guard let part = item as? LDrawPart else { return "not a part: \(item)" }
+			let m = M4.rows(part.transformationMatrix()).joined().map { String(format: "%g", $0) }.joined(separator: " ")
+			return "\((part.referenceName() ?? "nil").debugDescription) [\(m)]"
+		}
+	}
+
+	static func names(_ list: [Any]?) -> [String] {
+		(list ?? []).map { ($0 as? LDrawPart)?.referenceName() ?? "not a part" }
+	}
+
+	static func allLists(_ ini: MLCadIni) -> [(String, [Any]?)] {
+		[("hats", ini.minifigureHats()), ("heads", ini.minifigureHeads()), ("necks", ini.minifigureNecks()),
+		 ("torsos", ini.minifigureTorsos()), ("hips", ini.minifigureHips()),
+		 ("armsLeft", ini.minifigureArmsLeft()), ("armsRight", ini.minifigureArmsRight()),
+		 ("handsLeft", ini.minifigureHandsLeft()), ("handsLeftAccessories", ini.minifigureHandsLeftAccessories()),
+		 ("handsRight", ini.minifigureHandsRight()), ("handsRightAccessories", ini.minifigureHandsRightAccessories()),
+		 ("legsLeft", ini.minifigureLegsLeft()), ("legsLeftAcessories", ini.minifigureLegsLeftAcessories()),
+		 ("legsRight", ini.minifigureLegsRight()), ("legsRightAccessories", ini.minifigureLegsRightAccessories())]
+	}
+
+	@Test("A new instance is empty: minifigure lists are empty arrays, the LSynth list is nil until parsed")
+	func freshInstance() {
+		let ini = MLCadIni()
+		for (name, list) in Self.allLists(ini) {
+			#expect(list != nil && list!.isEmpty, "\(name)")
+		}
+		#expect(ini.lsynthVisibleTypes() == nil)
+	}
+
+	@Test("Each section fills its own list; MLCad's left is the minifigure's right")
+	func sectionMapping() throws {
+		let sections = ["HATS", "HEAD", "NECK", "BODY", "BODY2", "RARM", "LARM", "RHAND", "RHANDA", "LHAND", "LHANDA",
+						"RLEG", "RLEGA", "LLEG", "LLEGA"]
+		let text = sections.map { "[\($0)]\n\"Display\" \"\($0).dat\" 0 \(Self.identityRow)\n" }.joined()
+		let ini = try Self.parse(text)
+		let got = Self.allLists(ini).map { "\($0.0): \(Self.names($0.1).joined(separator: ","))" }
+		#expect(got == ["hats: hats.dat", "heads: head.dat", "necks: neck.dat", "torsos: body.dat", "hips: body2.dat",
+						"armsLeft: rarm.dat", "armsRight: larm.dat", "handsLeft: rhand.dat",
+						"handsLeftAccessories: rhanda.dat", "handsRight: lhand.dat",
+						"handsRightAccessories: lhanda.dat", "legsLeft: rleg.dat", "legsLeftAcessories: rlega.dat",
+						"legsRight: lleg.dat", "legsRightAccessories: llega.dat"], "\(got)")
+		#expect(ini.lsynthVisibleTypes().map { $0.isEmpty } == true, "no [LSYNTH] section gives an empty list")
+	}
+
+	@Test("Part lines: matrix order, carried-over matrices, empty and duplicate names, sorting")
+	func partLines() throws {
+		let text = """
+			; comment before any section
+			"Before any section" "before.dat" 0 \(Self.identityRow)
+			[UNKNOWN]
+			"Unknown section" "unknown.dat" 0 \(Self.identityRow)
+			[HATS]
+			"Zeta" "Zeta.dat" 0 1 2 3 4 5 6 7 8 9 10 11 12
+			   ; indented comment
+
+				"alpha" "alpha.dat" 0 -1 0 0 0 1 0 0 0 -1 0 -24 0.5   
+			"Duplicate" "ZETA.DAT" 0 \(Self.identityRow)
+			"Empty name" "" 0 2 0 0 0 2 0 0 0 2 7 8 9
+			"No matrix" "bare.dat" 0
+			"Partial" "Partial.dat" 0 3 3
+			"" "anon.dat" 0 1e1 -.5 +2 0 1 0 0 0 1 0 0 0
+			"Quoted "1" inside" "q.dat" 0 \(Self.identityRow)
+			NoQuotes nq.dat 0 \(Self.identityRow)
+			"Junk" "junk.dat" 0 1 x 5
+			"Flags" "flags.dat" FLAGWORD 4 0 0 0 4 0 0 0 4 1 2 3
+			"Space name" "with space.dat" 0 \(Self.identityRow)
+			"Sub" "s\\sub.dat" 0 \(Self.identityRow)
+			"Model" "Model.ldr" 0 \(Self.identityRow)
+			"Tail" "tail.dat"
+			"""
+		let ini = try Self.parse(text)
+		let got = Self.describe(ini.minifigureHats())
+		// Sorted by browsingDescription (the display name here: the fixture catalog doesn't list these), so
+		// case-sensitively. The "1" in "Quoted "1" inside" is read as the file name slot, so the part is "inside"
+		// and the shifted matrix starts with "0" (the flags) (BUG-026). A value that fails to scan keeps the
+		// previous line's value: "No matrix" inherits the skipped "Empty name" line's matrix.
+		#expect(got == [
+			#""model.ldr" [1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]"#,
+			#""partial.dat" [3 0 0 0 3 2 0 0 0 0 2 0 7 8 9 1]"#,
+			#""zeta.dat" [1 4 7 0 2 5 8 0 3 6 9 0 10 11 12 1]"#,
+			#""alpha.dat" [-1 0 0 0 0 1 0 0 0 0 -1 0 0 -24 0.5 1]"#,
+			#""anon.dat" [10 0 0 0 -0.5 1 0 0 2 0 1 0 0 0 0 1]"#,
+			#""bare.dat" [2 0 0 0 0 2 0 0 0 0 2 0 7 8 9 1]"#,
+			#""flags.dat" [4 0 0 0 0 4 0 0 0 0 4 0 1 2 3 1]"#,
+			#""inside" [0 0 0 0 1 0 0 0 0 1 0 0 1 0 0 1]"#,
+			#""junk.dat" [1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 1]"#,
+			#""s\\sub.dat" [1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]"#,
+			#""tail.dat" [1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]"#,
+			#""with space.dat" [1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]"#,
+		], "\n\(got.joined(separator: "\n"))")
+	}
+
+	@Test("Number edge cases: overflow, inf/nan, hex, comma decimals (pins NSScanner's number scanning)")
+	func numberEdgeCases() throws {
+		let text = """
+			[HATS]
+			"a" "a.dat" 0 1e50 inf nan 0x10 1,5 2 3 4 5 6 7 8
+			"b" "b.dat" 0 -1e-50 1.5e 2.e1 .5. -0 1 1 1 1 1 1 1
+			"c" "c.dat" 0 3.4028236e38 -inf 1_0 0b1 1 1 1 1 1 1 1 1
+			[LSYNTH]
+			99999999999999999999 - BIG = SYNTH BEGIN BIG_T 16
+			-99999999999999999999 - SMALL = SYNTH BEGIN SMALL_T 16
+			0x1 - HEX = SYNTH BEGIN HEX_T 16
+			+3 - PLUS = SYNTH BEGIN PLUS_T 16
+			1.5 - FLOAT = SYNTH BEGIN FLOAT_T 16
+			"""
+		let ini = try Self.parse(text)
+		let got = Self.describe(ini.minifigureHats()) + (ini.lsynthVisibleTypes() as? [String] ?? ["not strings"])
+		// Out-of-range floats become ±inf/0; "inf", "nan", "1.5e" and hex stop the scan, and every later value on
+		// the line keeps the previous line's value. Integers overflow without failing; "0x1" and "1.5" read as 0
+		// and 1, leaving text that breaks the rest of the line.
+		#expect(got == [
+			#""a.dat" [inf 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]"#,
+			#""b.dat" [-0 0 0 0 1.5 1 0 0 0 0 1 0 0 0 0 1]"#,
+			#""c.dat" [inf 0 0 0 1.5 1 0 0 0 0 1 0 0 0 0 1]"#,
+			"BIG_T", "SMALL_T", "PLUS_T",
+		], "\n\(got.joined(separator: "\n"))")
+	}
+
+	@Test("Section headers: trimmed lines, later duplicate sections win, [] keeps the previous name, case matters")
+	func sectionHeaders() throws {
+		let text = """
+			[NECK]
+			"n1" "n1.dat" 0 \(Self.identityRow)
+			[NECK]
+			"n2" "n2.dat" 0 \(Self.identityRow)
+			   [HEAD
+			"h" "h.dat" 0 \(Self.identityRow)
+			[ BODY ]
+			"b" "b.dat" 0 \(Self.identityRow)
+			[RLEG]
+			"r1" "r1.dat" 0 \(Self.identityRow)
+			[]
+			"r2" "r2.dat" 0 \(Self.identityRow)
+			[rarm]
+			"a" "a.dat" 0 \(Self.identityRow)
+			[LARM] trailing text
+			"l" "l.dat" 0 \(Self.identityRow)
+			[HIPS]extra]
+			[BODY2]]
+			"p" "p.dat" 0 \(Self.identityRow)
+			"""
+		for ending in ["\n", "\r\n", "\r"] {
+			let ini = try Self.parse(text, lineEnding: ending)
+			let got = Self.allLists(ini).filter { !($0.1 ?? []).isEmpty }
+				.map { "\($0.0): \(Self.names($0.1).joined(separator: ","))" }
+			// "[ BODY ]" is section "BODY " and "[rarm]" is not "RARM": neither fills a list. "[]" fails to scan a
+			// name, so its lines replace the previous section's ([RLEG]).
+			#expect(got == ["heads: h.dat", "necks: n2.dat", "hips: p.dat", "armsRight: l.dat", "legsLeft: r2.dat"],
+					"\(ending.debugDescription): \(got)")
+		}
+	}
+
+	@Test("Reparsing replaces every list; a missing file empties them and gives an empty LSynth list")
+	func reparse() throws {
+		let ini = try Self.parse("[HATS]\n\"h\" \"h.dat\" 0 \(Self.identityRow)\n[LSYNTH]\n01 - A = SYNTH BEGIN A_T 16\n")
+		#expect(Self.names(ini.minifigureHats()) == ["h.dat"])
+		#expect(ini.lsynthVisibleTypes() as? [String] == ["A_T"])
+		let second = FileManager.default.temporaryDirectory.appendingPathComponent("MLCad-\(UUID().uuidString).ini")
+		try Data("[HATS]\n\"g\" \"g.dat\" 0 \(Self.identityRow)\n[HEAD]\n\"k\" \"k.dat\" 0 \(Self.identityRow)\n".utf8)
+			.write(to: second)
+		defer { try? FileManager.default.removeItem(at: second) }
+		ini.parse(fromPath: second.path)
+		#expect(Self.names(ini.minifigureHats()) == ["g.dat"])
+		#expect(Self.names(ini.minifigureHeads()) == ["k.dat"])
+		#expect(ini.lsynthVisibleTypes() != nil && ini.lsynthVisibleTypes().isEmpty)
+		ini.parse(fromPath: FileManager.default.temporaryDirectory.appendingPathComponent("no-such-\(UUID()).ini").path)
+		for (name, list) in Self.allLists(ini) {
+			#expect(list != nil && list!.isEmpty, "\(name)")
+		}
+		#expect(ini.lsynthVisibleTypes() != nil && ini.lsynthVisibleTypes().isEmpty)
+	}
+
+	@Test("LSynth lines: number, optional dash, one-word display name, case-insensitive '= SYNTH BEGIN', type name")
+	func lsynthLines() throws {
+		let text = """
+			[LSYNTH]
+			00 - VERSION 3.1
+			01 - BAND_A = SYNTH BEGIN BAND_A_TYPE 16
+			02 - lower = synth begin LOWER_TYPE 16
+			03 - Two Words = SYNTH BEGIN SKIPPED_TYPE 16
+			04 NODASH = SYNTH BEGIN NODASH_TYPE 16
+			X5 - NOTNUM = SYNTH BEGIN NOTNUM_TYPE 16
+			06 - TIGHT=SYNTH BEGIN TIGHT_TYPE 16
+			07-ADJ = SYNTH BEGIN ADJ_TYPE 16
+			-8 - NEG = SYNTH BEGIN NEG_TYPE 16
+			09 - SPACED =  SYNTH BEGIN SPACED_TYPE 16
+			10 - DUP = SYNTH BEGIN BAND_A_TYPE 16
+			11 - TABBED =\tSYNTH BEGIN\tTAB_TYPE\t16
+			12 - LAST = SYNTH BEGIN LAST_TYPE
+			; comment
+			[HATS]
+			"h" "h.dat" 0 \(Self.identityRow)
+			"""
+		let ini = try Self.parse(text)
+		let got = ini.lsynthVisibleTypes() as? [String] ?? ["not strings"]
+		#expect(got == ["BAND_A_TYPE", "LOWER_TYPE", "NODASH_TYPE", "ADJ_TYPE", "NEG_TYPE", "BAND_A_TYPE", "LAST_TYPE"],
+				"\(got)")
+	}
+
+	@Test("BUG-036: an [LSYNTH] line with no type name after SYNTH BEGIN should be skipped")
+	func bug036StaleLSynthName() throws {
+		// NSScanner leaves the out-parameter untouched when the scan fails, so the previous line's type is
+		// added again.
+		let ini = try Self.parse("[LSYNTH]\n01 - A = SYNTH BEGIN A_TYPE 16\n02 - NONAME = SYNTH BEGIN\n")
+		let got = ini.lsynthVisibleTypes() as? [String] ?? ["not strings"]
+		withKnownIssue("BUG-036: the previous LSynth type name is repeated for a line with no type name") {
+			#expect(got == ["A_TYPE"], "\(got)")
+		}
+	}
+
+	/// Child-process body for `bug036FirstLSynthLineWithoutNameFails`: parses an [LSYNTH] section whose first
+	/// type line has no type name (there is no earlier name to repeat).
+	static func parseFirstLSynthLineWithoutName() {
+		let url = FileManager.default.temporaryDirectory.appendingPathComponent("MLCad-\(UUID().uuidString).ini")
+		try? Data("[LSYNTH]\n01 - NONAME = SYNTH BEGIN\n".utf8).write(to: url)
+		MLCadIni().parse(fromPath: url.path)
+		try? FileManager.default.removeItem(at: url)
+	}
+
+	@Test("BUG-036: the same line as the first [LSYNTH] type line does not finish today (nil inserted into an array)")
+	func bug036FirstLSynthLineWithoutNameFails() async {
+		// The child arms an alarm first, so a hang (an NSException swallowed on a test thread, L57) also ends.
+		await #expect(processExitsWith: .failure) {
+			alarm(5)
+			MLCadIniParsingTests.parseFirstLSynthLineWithoutName()
+			exit(EXIT_SUCCESS)
+		}
+	}
+
+	@Test("Arm angle: mechanical torsos get no rotation, every other name the regular torso angle")
+	func armAngle() {
+		let ini = MLCadIni()
+		#expect(ini.armAngle(forTorsoName: "30375.dat") == 0)
+		#expect(ini.armAngle(forTorsoName: "54275.dat") == 0)
+		#expect(ini.armAngle(forTorsoName: "973.dat") == 9.791)
+		#expect(ini.armAngle(forTorsoName: "30375.DAT") == 9.791)
+		#expect(ini.armAngle(forTorsoName: nil) == 9.791)
+	}
+
+	@Test("The bundled MLCad.ini parses to the same full lists (names and matrices) as before the port")
+	func bundledFullDump() throws {
+		let ini = try #require(MLCadIni.iniFile())
+		var lines: [String] = ["lsynth: " + ((ini.lsynthVisibleTypes() as? [String]) ?? ["nil"]).joined(separator: ",")]
+		for (name, list) in Self.allLists(ini) {
+			lines.append("\(name): \(list?.count ?? -1)")
+			lines += Self.describe(list).map { "  " + $0 }
+		}
+		let dump = lines.joined(separator: "\n") + "\n"
+		var hash: UInt64 = 0xcbf29ce484222325
+		for byte in dump.utf8 { hash = (hash ^ UInt64(byte)) &* 0x100000001b3 }
+		let out = FileManager.default.temporaryDirectory.appendingPathComponent("mlcad-full-dump.txt")
+		try Data(dump.utf8).write(to: out)
+		#expect(lines.count == 2599 && hash == 0x6c4baa8c544ee79e, "dump (\(lines.count) lines, FNV-1a \(String(hash, radix: 16))) at \(out.path)")
+	}
+}
