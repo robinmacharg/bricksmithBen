@@ -15,7 +15,7 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
@@ -390,3 +390,9 @@ topics that match your task rather than the whole log.
 - **L90. xcodebuild's log can interleave parallel compiler output mid-line.** A warning once appeared as
   `s/trunk/Bricksmith/...` (its path prefix cut off by another line), so `build.sh` reported it as new. → If a "new"
   warning has a mangled path, check `build/build.log` for the same warning with a full path and rerun the build.
+- **L91. An ObjC property whose type is only `@class`-forward-declared is silently dropped from Swift**, and the app
+  build stays green. P4 found `toolbarController` and `fileContentsOutline` missing that way. → Import the type's
+  header in the bridging header, and probe new API with real Swift code.
+- **L92. To find every outside reader of a class's ivars in one pass,** move the ivar blocks into the `.m`, then
+  re-run each file's compile command from `build/build.log` with `-fsyntax-only -ferror-limit=0` (xcodebuild stops
+  at the first failing file). Revert the experiment afterwards.
