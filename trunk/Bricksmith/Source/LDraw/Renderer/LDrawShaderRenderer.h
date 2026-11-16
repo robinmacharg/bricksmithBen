@@ -83,4 +83,8 @@ struct	LDrawDragHandleInstance;
 
 - (void) drawDragHandleImm:(GLfloat*)xyz withSize:(GLfloat)size;
 
+// Uploads a BGRA (premultiplied-first, host byte order) bitmap as a mip-mapped 2D texture and returns its name.
+// Used by PartLibrary, which owns the per-image cache of texture names.
++ (GLuint) textureTagForBitmap:(void *)imageBuffer width:(GLsizei)width height:(GLsizei)height;
+
 @end

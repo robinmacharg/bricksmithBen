@@ -22,6 +22,7 @@
 #import "LDrawPart.h"
 #import "LDrawPathNames.h"
 #import "LDrawPaths.h"
+#import "LDrawShaderRenderer.h"
 #import "LDrawStep.h"
 #import "LDrawTexture.h"
 #import "LDrawUtilities.h"
@@ -940,35 +941,11 @@ static PartLibrary *SharedPartLibrary = nil;
 //			CGImageDestinationFinalize(myImageDest);
 //			CFRelease(myImageDest);
 			
-			// Generate a tag for the texture we're about to generate, then set it as 
-			// the active texture. 
-			// Note: We are using non-rectangular textures here, which started as an 
-			//		 extension (_EXT) and is now ratified by the review board (_ARB) 
-			glGenTextures(1, &textureTag);
-			glBindTexture(GL_TEXTURE_2D, textureTag);
-			
-			// Generate Texture!
-			glPixelStorei(GL_PACK_ROW_LENGTH,	canvasRect.size.width * 4);
-			glPixelStorei(GL_PACK_ALIGNMENT,	1); // byte alignment
-			
-			glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8,			// texture type params
-						 canvasRect.size.width, canvasRect.size.height, 0,	// source image (w, h)
-						 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,				// source storage format
-						 imageBuffer );
-						// see function notes about the source storage format.
-			
-			// This requires GL_EXT_framebuffer_object, available on all renderers on 10.6.8 and beyond.
-			// Build mipmaps so we can use linear-mipmap-linear
-			glGenerateMipmapEXT(GL_TEXTURE_2D);
-
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	// This enables mip-mapping - makes textures look good when small.
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.0);				// Max anisotropic filtering of all renderers on 10.6.8 is 16.0.
-																							// This keeps texture res high when looking at a tile from a low angle.
-
-			glBindTexture(GL_TEXTURE_2D, 0);
+			// Upload it (renderer side). The bitmap's storage format is 
+			// GL_BGRA / GL_UNSIGNED_INT_8_8_8_8_REV; see the renderer's notes. 
+			textureTag = [LDrawShaderRenderer textureTagForBitmap:imageBuffer
+															width:canvasRect.size.width
+														   height:canvasRect.size.height];
 			
 			[self->optimizedTextures setObject:[NSNumber numberWithUnsignedInt:textureTag] forKey:name];
 			

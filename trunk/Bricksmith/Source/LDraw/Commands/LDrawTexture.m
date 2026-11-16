@@ -325,7 +325,7 @@
 	float			length				= 0;
 
 	if(textureTag == 0)
-		textureTag = [[PartLibrary sharedPartLibrary] textureTagForTexture:self];
+		textureTag = [renderer textureTagForTexture:self];
 
 	struct LDrawTextureSpec spec;
 	
@@ -380,7 +380,7 @@
 	float			length				= 0;
 
 	if(textureTag == 0)
-		textureTag = [[PartLibrary sharedPartLibrary] textureTagForTexture:self];
+		textureTag = [renderer textureTagForTexture:self];
 
 	struct LDrawTextureSpec spec;
 	
