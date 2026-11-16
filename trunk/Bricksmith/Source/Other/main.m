@@ -9,7 +9,15 @@
 //==============================================================================
 #import <Cocoa/Cocoa.h>
 
+#import "LDrawApplication.h"
+
 int main(int argc, char *argv[])
 {
+	// Before NSApplicationMain loads any nib: nibs refer to these by name.
+	@autoreleasepool
+	{
+		[LDrawApplication registerValueTransformers];
+	}
+
     return NSApplicationMain(argc, (const char **) argv);
 }

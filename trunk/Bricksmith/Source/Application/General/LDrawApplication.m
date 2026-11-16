@@ -33,18 +33,23 @@
 
 @implementation LDrawApplication
 
-//---------- initialize ----------------------------------------------[static]--
+//---------- registerValueTransformers -------------------------------[static]--
 //
-// Purpose:		Load things that need to be loaded *extremely* early in startup.
+// Purpose:		Load things that need to be loaded *extremely* early in startup:
+//				the value transformers that nibs refer to by name.
+//
+// Notes:		main() calls this before NSApplicationMain, so before any nib
+//				loads. It used to be +initialize, which ran when MainMenu.xib
+//				instantiated this class; Swift can't define +initialize.
 //
 //------------------------------------------------------------------------------
-+ (void) initialize
++ (void) registerValueTransformers
 {
 	TransformerIntMinus1 *minus1Transformer = [[TransformerIntMinus1 alloc] init];
 	
 	[NSValueTransformer setValueTransformer:minus1Transformer
 									forName:@"TransformerIntMinus1" ];
-}//end initialize
+}//end registerValueTransformers
 
 
 #pragma mark -
