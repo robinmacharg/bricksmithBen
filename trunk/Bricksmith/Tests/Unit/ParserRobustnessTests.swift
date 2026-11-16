@@ -144,6 +144,39 @@ struct ParserRobustnessTests {
 		#expect(doc.documentContents() === before, "the document's contents must not be replaced")
 	}
 
+	@Test("Document read: a library part whose last line is a malformed ROTSTEP")
+	@MainActor func documentReadOfPartWithMalformedRotstep() throws {
+		// The part is parsed while the document line referencing it is parsed (-[LDrawPart setDisplayName:parse:]),
+		// so the ROTSTEP exception (BUG-007) unwinds through the part's @try and then the document's. Pin what
+		// the user sees before P4 converts the throw. Unique name: PartLibrary caches models for the process.
+		let library = try #require(FixtureLibrary.current)
+		let name = "p4pin-rotstep-\(UUID().uuidString.prefix(8)).dat".lowercased()
+		try Data("0 Part with a malformed ROTSTEP\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n0 ROTSTEP x y\n".utf8)
+			.write(to: library.appendingPathComponent("parts/\(name)"))
+		let doc = LDrawDocument()
+		let before = doc.documentContents()
+		var caught: Error?
+		try ObjC.run {
+			do { try doc.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 \(name)\n".utf8), ofType: "LDraw Document") }
+			catch { caught = error }
+		}
+		let parts = DocOps.parts(doc).map { "\($0.referenceName() ?? "nil") missing=\($0.partIsMissing())" }
+		let error = try #require(caught, "read succeeded: \(parts)") as NSError
+		#expect(error.domain == NSCocoaErrorDomain)
+		#expect(error.code == NSFileReadCorruptFileError)
+		#expect(doc.documentContents() === before, "the document's contents must not be replaced")
+
+		// Control: the same part without the bad ROTSTEP is found and the document opens.
+		let goodName = "p4pin-good-\(UUID().uuidString.prefix(8)).dat".lowercased()
+		try Data("0 Good part\n1 16 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat\n".utf8)
+			.write(to: library.appendingPathComponent("parts/\(goodName)"))
+		let good = LDrawDocument()
+		try ObjC.run { try? good.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 \(goodName)\n".utf8), ofType: "LDraw Document") }
+		let goodParts = DocOps.parts(good)
+		#expect(goodParts.count == 1)
+		#expect(goodParts.first?.partIsMissing() == false, "control part not found: the pin above would prove nothing")
+	}
+
 	// MARK: Crashers, each confirmed IN ISOLATION (heap corruption can surface in a later case).
 
 	@Test("Isolated: malformed ROTSTEP angles crash today (BUG-007)")
