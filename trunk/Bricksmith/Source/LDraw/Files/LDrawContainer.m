@@ -14,6 +14,7 @@
 
 #import "LDrawUtilities.h"
 #import "PartReport.h"
+#import "Bricksmith-Swift.h"
 
 @implementation LDrawContainer
 

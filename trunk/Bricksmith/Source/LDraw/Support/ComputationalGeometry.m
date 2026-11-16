@@ -20,6 +20,7 @@
 #import "LDrawDirective.h"
 #import "LDrawPart.h"
 #import "LSynthConfiguration.h"
+#import "Bricksmith-Swift.h"
 #import "MatrixMath.h"
 
 //@interface TangentPoint

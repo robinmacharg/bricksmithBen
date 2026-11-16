@@ -15,6 +15,7 @@
 #import "LDrawDirective.h"
 #import "LDrawDocument.h"
 #import "MacLDraw.h"
+#import "Bricksmith-Swift.h"
 
 
 @interface ObjectInspectionController ()
