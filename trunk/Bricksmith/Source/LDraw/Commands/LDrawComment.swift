@@ -25,8 +25,9 @@ final class LDrawComment: LDrawMetaCommand {
 	//==============================================================================
 	@objc(finishParsing:)
 	override func finishParsing(_ scanner: Scanner!) -> Bool {
-		_ = scanner.scanCharacters(from: .whitespaces)
-		setStringValue(String(scanner.string[scanner.currentIndex...]))
+		// NSScanner's own methods: UTF-16 positions, exactly as the ObjC (ScannerUTF16.swift, L101).
+		_ = scanner.utf16.scanCharacters(from: .whitespaces, into: nil)
+		setStringValue((scanner.string as NSString).substring(from: scanner.utf16.location()))
 		return true
 	}
 

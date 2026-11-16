@@ -15,7 +15,7 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
@@ -469,3 +469,11 @@ topics that match your task rather than the whole log.
     swept the 25 that lacked it (plus two duplicate imports) before any stream started, so streams never edit
     importers. Streams leave a forward-declaration stub (`// Ported to Foo.swift` + `@class Foo;`) so importing
     headers keep compiling; `port-remove-stubs.rb` turns those imports into `@class` lines at integration.
+- **L101. Swift's modern `Scanner` API is not NSScanner.** `scanString(_:)`, `scanInt32()`, `scanCharacters(from:)`,
+  `scanUpToCharacters(from:)`, `currentIndex` work in grapheme clusters; NSScanner's ObjC methods work in UTF-16
+  units. They agree on ASCII; with a combining mark or zero-width joiner next to a token they differ (P6a colour
+  stream: 4051 of 400k fuzzed `!COLOUR` lines; confirmed with `charactersToBeSkipped = nil`: " \u{301}abc" keeps the
+  space under the new API). The Swift spellings that reach the ObjC methods are deprecated (warning gate). → Ports
+  of NSScanner code use `scanner.utf16` (`Source/Other/ScannerUTF16.swift`), which sends the original selectors.
+  L98's "matched in a 300k fuzz" held for ASCII only; `MLCadIni.swift` and `StringUtilities.swift` (P5) still use
+  the modern API and are re-checked separately.
