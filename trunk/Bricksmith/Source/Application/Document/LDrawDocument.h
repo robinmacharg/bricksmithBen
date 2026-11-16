@@ -88,6 +88,11 @@ NS_ASSUME_NONNULL_BEGIN
 		NSArray		*	markedSelection;		// if we are mid-marquee selection, this is an array of the previously selected directives before drag started
 }
 
+// Random source for Randomize Colors (-randomizeLDrawColors:). Returns a
+// non-negative int, as rand() does. nil (the default) means rand(); tests set
+// a seeded source to make the action deterministic.
+@property (nonatomic, copy, nullable) int (^randomSource)(void);
+
 // Accessors
 - (null_unspecified LDrawFile *) documentContents;
 - (null_unspecified NSWindow *)foremostWindow;

@@ -2039,6 +2039,9 @@ void AppendChoicesToNewItem(
 //				the palettte, but I have not tested it with models that use
 //				custom colors in an LDraw directive in their MPD file.
 //
+//				The random numbers come from -randomSource, which is rand()
+//				unless a caller (a test) has set its own.
+//
 //==============================================================================
 - (void) randomizeLDrawColors:(id)sender
 {
@@ -2065,6 +2068,9 @@ void AppendChoicesToNewItem(
 	if(colorCount > 0)
 	{
 		NSArray * allColorsArray = [allColors allObjects];
+		int (^nextRandom)(void) = [self randomSource];
+		if(nextRandom == nil)
+			nextRandom = ^int(void) { return rand(); };
 
 		int last = -1;
 
@@ -2073,14 +2079,14 @@ void AppendChoicesToNewItem(
 			currentObject = [selectedObjects objectAtIndex:counter];
 			if([currentObject conformsToProtocol:@protocol(LDrawColorable)])
 			{
-				int r = rand() % colorCount;
+				int r = nextRandom() % colorCount;
 				// Try to avoid consecutives if we have enough palette --
 				// this technically makes the distribution not random, but
 				// it probably looks better unless the parts are just super
 				// tiny.
 				while(colorCount > 1 && r == last)
 				{
-					r = rand() % colorCount;
+					r = nextRandom() % colorCount;
 				}
 				last = r;
 				LDrawColor * randomColor = [allColorsArray objectAtIndex:r];
