@@ -11,12 +11,12 @@ topics that match your task rather than the whole log.
 
 | Topic | Entries |
 |---|---|
-| Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84 |
+| Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84, L89 |
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
 | Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87 |
-| ARC | L54, L67, L77, L79 |
+| ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and TESTING.md "Performance") |
@@ -376,3 +376,14 @@ topics that match your task rather than the whole log.
   `insertObject:nil` when a child init returns nil, `objectAtIndex:0` in `readModelAtPath:`, and
   `pathForPartName:nil`. → Before removing a `@try`, list every call inside it that can raise, and guard each one
   explicitly. The §6 recipe grep is necessary, not sufficient.
+- **L88. `-[NSBundle loadNibNamed:owner:topLevelObjects:]` does not keep the top-level objects alive; the legacy
+  `+loadNibNamed:owner:` retained (leaked) them.** With bare outlets `__unsafe_unretained` (L79), switching without
+  keeping the array frees windows still in use (the Inspector crashed with signal 11 in the negative control).
+  → Keep the returned array in a strong ivar on the owner. Objects that leaked before are now freed with their
+  owner, which is a lifetime change: pin it with a test that drains an autorelease pool and then touches the objects
+  (`NibLifetimeTests`).
+- **L89. Shell and Swift gotchas from P4 stream B:**
+  - A `pgrep -f "<pattern>"` wait loop matches its own command line and never ends. Wait on a log line instead.
+  - A local named `type` in a Swift test hides `type(of:)`.
+  - In a `@MainActor` suite, `arguments:` data needs `nonisolated static let`.
+  - `(?:SHOW|HIDE)` matches `HIDES` but not `HIDDEN`: write regex tests against the old implementation first.

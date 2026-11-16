@@ -185,3 +185,12 @@ things automation covers poorly. Record the sign-off in port-status.md.
 15. Export Steps to a temporary folder. One file per step is written (they come out in reverse order: BUG-011).
 16. Open Find, search by part and by colour; matching parts are selected.
 17. Hide a part, then Show All. Use Add Related Part from a part's context menu; the related part is added and Undo removes it.
+18. Panels and menus open, close and reopen without crashing (P4 changed how their nib objects are kept alive):
+    - Inspector with every kind of selection (part, line, triangle, quad, conditional line, comment, unknown
+      command, step, MPD model, LSynth), fast selection changes, nothing selected, several selected, and editing a
+      field then changing the selection.
+    - Dimensions and Piece Count: open, OK, reopen several times, then keep working in the document.
+    - Move panel twice; Minifigure generator open, OK, reopen; tool palette show and hide.
+    - Preferences: every tab, the LDraw folder and LSynth executable/config choosers; close, reopen, repeat.
+    - Context menus: add and remove a favourite in the parts table; use the 3D view's menu, close the document,
+      open another, use the menu again.
