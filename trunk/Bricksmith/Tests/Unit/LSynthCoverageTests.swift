@@ -539,7 +539,7 @@ struct LSynthCoverageTests {
 	@Test("A block has no transform of its own; its transform components decompose to the identity")
 	func transform() throws {
 		// LDrawDocument uses the last selected part's transformComponents for a newly added part or LSynth
-		// constraint, and an LDrawLSynth can be that part (LDrawDocument.m ~4017, ~3172).
+		// constraint, and an LDrawLSynth can be that part (LDrawDocument+Outline.m drag and drop, LDrawDocument+ModelsMenu.m LSynth insertion).
 		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
 		let c = synth.transformComponents()
 		let f = { (v: Point3) in [v.x, v.y, v.z] }

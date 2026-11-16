@@ -15,7 +15,7 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
@@ -406,3 +406,14 @@ topics that match your task rather than the whole log.
   review, not by tests). The pin tests had covered only the failing input and a good control. → Before giving nil a
   new meaning, list every existing way to get nil there, and pin each one. Carry an explicit flag
   (`parseFailed:`) rather than inferring failure from nil.
+- **L95. Splitting an ObjC class into categories (P4 `LDrawDocument`):**
+  - A method declared in the primary `@interface` but implemented only in a category warns
+    `-Wincomplete-implementation`; move its declaration into a matching category `@interface`.
+  - Methods declared in a class extension can't be implemented in a category; private cross-file declarations need
+    their own named category (`(ViewersInternal)`), since reusing the public category name duplicates it.
+  - Category files can't see ivars synthesized in the core `.m`: declare them explicitly in a private header's class
+    extension and keep `@synthesize name = name;` in the core. An explicit ivar of a deprecated type (`NSDrawer`)
+    warns where the synthesized one didn't.
+  - Prove the move: compare the multiset of non-blank lines before and after, and diff `nm` method symbols (strip
+    category names and block numbering, which the compiler renumbers).
+  - L90 has a second form: a log line cut at its end rather than its path.

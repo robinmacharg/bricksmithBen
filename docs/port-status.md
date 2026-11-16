@@ -64,7 +64,8 @@ their own port phase.
 | P4 | B: 17 `loadNibNamed:owner:` calls → `-loadNibNamed:owner:topLevelObjects:` with the array kept by the owner (S36 resolved); RegexKitLite out of LDrawLSynth and Preferences (`bb59fdd`..`b385871`) | 2026-11-16 | agent | 208 tests, 72 known; 17 deprecation warnings gone, baselines re-recorded (`9495086`). Leaked nib objects are now freed with their owner; manual checklist step 18 added. Perf: parse 102%, others 82-95% (agent's run) |
 | P4 | Ivars → properties: all 27 `LDrawDocument` outlets and state (`@synthesize name = name`, ownership kept); `LDrawContainer.postsNotifications` readonly; `DocumentToolbarController.h`, `LDrawFileOutlineView.h` added to the bridging header (L91) | 2026-11-16 | agent | Outside readers found mechanically (L92). `documentContents` stays an ivar behind its accessors (a property would change the tests' `documentContents()` spelling). **P6 note:** `color`/`hidden` (`LDrawDrawableElement`) and `vertex1`/`vertex2` (`LDrawLine`) stay `@protected` ivars; Swift reads them through the existing getters, so the ported leaves' collect/draw/hit-test loops become message sends: perf-gate them. Agent's perf runs were on a loaded machine, inconclusive; P4 exit reruns on a quiet one |
 | P4 | S37 confirmed through a real TEXMAP parse → **BUG-034** (hang; `3f5cb32`); exit-test pair plus an in-process control | 2026-11-16 | agent | 211 tests, **73** known issues (BUG-034 added, after BUG-007's removal) |
-| P4 | Streams A-D integrated; RegexKitLite deleted (`0af1bc4`); ivars → properties (`185f272`); 23 deprecated enum aliases replaced, 38 warnings gone (`8a2be8f`). In progress: split LDrawDocument.m (one agent, worktree from `8a2be8f`) | 2026-11-16 | agent | P4 exit: UI suite, perf (3 runs on a quiet machine, medians), manual checklist incl. step 18 |
+| P4 | `LDrawDocument.m` split into a core and 8 categories with `LDrawDocument+Private.h` (`2ea5a5c`-equivalent..`9d4392a`, 10 commits) | 2026-11-16 | agent | Verbatim checker: 0 missing lines, 206 boilerplate; `nm` symbol list identical to before. Warnings re-recorded only for moved ones, plus one new declaration site of the existing `NSDrawer` deprecation (explicit ivar in the private header) |
+| P4 | All P4 code items done (streams A-D, RegexKitLite deleted, ivars → properties, enum aliases, LDrawDocument split); regression from `c0785f7` fixed in `75ebcc6` after adversarial review | 2026-11-16 | agent | Next: P4 exit gate (UI suite, perf 3 runs, manual checklist incl. step 18); maintainer decisions pending: BUG-007 wider scope, attribution-trailer rewrite |
 | P2 | Mutation smoke: 30/30 killed (`scripts/mutation-smoke.sh`, patches from `scripts/dev/make-mutations.py`) | 2026-11-15 | agent | Two survivors on the first run: one revealed a missing test (untyped ROTSTEP), one targeted dead code (retargeted) |
 | P2 | Default suite time | 2026-11-15 | agent | 185 tests in ~31-60 s (limit 3 min) |
 | P2 | 🧑 Golden review: re-recorded render references (`golden/render/Mac15,7/*`, harness now fixes 1x and 625x691, L73) | **pending** | | Same renders, offset a few pixels |
@@ -127,7 +128,15 @@ sign-off here:
 | `AMSProgressBar/main.c` | 3 | C | stays C | todo |
 | `Bricksmith/Source/Application/Document/DimensionsPanel.m` | 326 | MRC | P9 | todo |
 | `Bricksmith/Source/Application/Document/DocumentToolbarController.m` | 794 | MRC | P9 | todo |
-| `Bricksmith/Source/Application/Document/LDrawDocument.m` | 6455 | MRC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument.m` | 875 | ARC | P10 | todo (P4 split: core only; categories below) |
+| `Bricksmith/Source/Application/Document/LDrawDocument+FileIO.m` | 507 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Editing.m` | 1329 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+ModelsMenu.m` | 664 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Undo.m` | 288 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Outline.m` | 480 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Viewers.m` | 777 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Menus.m` | 845 | ARC | P10 | todo |
+| `Bricksmith/Source/Application/Document/LDrawDocument+Utilities.m` | 816 | ARC | P10 | todo |
 | `Bricksmith/Source/Application/Document/MovePanel.m` | 97 | ARC | P9 | todo |
 | `Bricksmith/Source/Application/Document/PieceCountPanel.m` | 452 | MRC | P9 | todo |
 | `Bricksmith/Source/Application/Document/RotationPanelController.m` | 204 | MRC | P9 | todo |

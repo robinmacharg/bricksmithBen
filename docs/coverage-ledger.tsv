@@ -46,4 +46,4 @@ LDraw/Commands/LDrawTexture.m	lineIsTextureFallback:	Dead: no callers (no ObjC c
 Categories/OverlayViewCategory.m	removeOverlayView:	Dead: no callers; LDrawGLView never removes its overlay (OverlayHelperView detaches in -viewWillMoveToWindow:). Candidate for deletion in P4
 LDraw/Support/PartLibrary.m	modelForPartInternal:	Dead: no callers in Source/Resources/Tests; not declared in PartLibrary.h
 LDraw/Support/PartLibrary.m	optimizedDrawableForPart:color:	Dead: body is assert(!"Not used."); only caller is the fixed-function LDrawPart drawElement: (NEW_RENDERER 1)
-Application/General/RelatedParts.m	dump	Dead: only caller is commented out (LDrawDocument.m:142); also -[RelatedPart dump]
+Application/General/RelatedParts.m	dump	Dead: only caller is commented out (LDrawDocument.m, the dump call in the core file); also -[RelatedPart dump]

@@ -35,7 +35,8 @@ Source/
     Files/        containers: LDrawContainer, LDrawFile, LDrawModel, LDrawMPDModel, LDrawStep
     Renderer/     shader renderer, display lists, VBO streaming, MeshSmooth.c, LDrawRenderer.h protocols
   Application/
-    Document/     LDrawDocument (6,455 lines), panels (Move, Rotation, Dimensions, PieceCount…)
+    Document/     LDrawDocument: core LDrawDocument.m plus 8 categories (+FileIO, +Editing, +ModelsMenu, +Undo,
+                  +Outline, +Viewers, +Menus, +Utilities) sharing LDrawDocument+Private.h (P4), panels (Move, Rotation, Dimensions, PieceCount…)
     General/      app delegate (LDrawApplication), ToolPalette, Preferences, PartBrowser, Minifigure generator
     Inspector/    Inspector + one Inspection* controller and xib per directive type
   Widgets/        LDrawGLView (NSOpenGLView, 3,165 lines), outline view, colour well/bar, viewport arranger, cells
