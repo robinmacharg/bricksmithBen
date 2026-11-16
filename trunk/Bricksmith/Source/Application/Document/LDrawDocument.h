@@ -117,8 +117,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stepChanged:(null_unspecified NSNotification *)notification;
 - (void)syntaxColorChanged:(null_unspecified NSNotification *)notification;
 
-
-
 @end
 
 
@@ -138,7 +136,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) revealInFinder:(null_unspecified id)sender;
 
 @end
-
 
 
 @interface LDrawDocument (Editing)
@@ -191,7 +188,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-
 @interface LDrawDocument (ModelsMenu)
 // LDrawDocument+ModelsMenu.m
 
@@ -212,7 +208,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-
 @interface LDrawDocument (Undo)
 // LDrawDocument+Undo.m
 
@@ -230,7 +225,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-
 @interface LDrawDocument (Viewers)
 // LDrawDocument+Viewers.m
 
@@ -240,7 +234,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) updateViewportAutosaveNamesAndRestore:(BOOL)shouldRestore;
 
 @end
-
 
 
 @interface LDrawDocument (Menus)
@@ -268,7 +261,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) buildRelatedPartsMenus;
 
 @end
-
 
 
 @interface LDrawDocument (Utilities)
