@@ -215,11 +215,11 @@ sign-off here:
 | `Bricksmith/Source/LDraw/Support/PartCatalogBuilder.m` | 553 | MRC | P7 | todo |
 | `Bricksmith/Source/LDraw/Support/PartLibrary.m` | 1322 | MRC | P7 | todo |
 | `Bricksmith/Source/LDraw/Support/PartReport.m` | 415 | MRC | P7 | todo |
-| `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | todo |
+| `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | **Swift** (`BricksmithUtilities.swift`; `BricksmithUtilities.h` stays as an enum-only header for ObjC headers) |
 | `Bricksmith/Source/Other/MLCadIni.m` | 666 | ARC | P5 | todo |
 | `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | **deleted** (P4; users moved to NSRegularExpression in stream B, `libicucore` link removed) |
 | `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | todo |
-| `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | todo |
+| `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | **Swift** (`TransformerIntMinus1.swift`) |
 | `Bricksmith/Source/Other/main.m` | 15 | ARC | P10 | todo |
 | `Bricksmith/Source/Widgets/BackgroundColorView.m` | 75 | ARC | P9 | todo |
 | `Bricksmith/Source/Widgets/DialogPanel.m` | 112 | MRC | P9 | todo |

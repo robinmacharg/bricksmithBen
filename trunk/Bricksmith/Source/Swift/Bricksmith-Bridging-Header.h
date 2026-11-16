@@ -12,7 +12,6 @@
 //
 //==============================================================================
 
-#import "TransformerIntMinus1.h"
 
 // --- LDraw model (P1 header hygiene: group 1) ---
 #import "LDrawColor.h"
