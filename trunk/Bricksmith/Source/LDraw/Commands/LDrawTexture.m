@@ -17,6 +17,32 @@
 #import "StringCategory.h"
 
 
+//---------- QuotableTokenIsMissing() --------------------------------[static]--
+//
+// Purpose:		Returns YES if +[LDrawUtilities scanQuotableToken:] would raise
+//				on this scanner: that is, when its first scan finds no token
+//				and it appends nil. Makes the same scanner calls, then puts the
+//				scan location back, so the scanner is left unchanged.
+//
+//------------------------------------------------------------------------------
+static BOOL QuotableTokenIsMissing(NSScanner *scanner)
+{
+	NSCharacterSet	*doubleQuote	= [NSCharacterSet characterSetWithCharactersInString:@"\""];
+	NSUInteger		startLocation	= [scanner scanLocation];
+	BOOL			foundToken		= NO;
+
+	if([scanner scanCharactersFromSet:doubleQuote intoString:NULL] == YES)
+		foundToken = [scanner scanUpToCharactersFromSet:doubleQuote intoString:NULL];
+	else
+		foundToken = [scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:NULL];
+
+	[scanner setScanLocation:startLocation];
+
+	return (foundToken == NO);
+
+}//end QuotableTokenIsMissing
+
+
 @implementation LDrawTexture
 
 //========== initWithLines:inRange:parentGroup: ================================
@@ -979,82 +1005,80 @@
 						parentGroup:(dispatch_group_t)parentGroup
 {
 	NSScanner	*scanner	= [NSScanner scannerWithString:line];
-	BOOL		success 	= YES;
 
-	@try
+	if([scanner scanString:@"0" intoString:NULL] == NO)
+		return NO;
+	
+	if([scanner scanString:LDRAW_TEXTURE intoString:NULL] == NO)
+		return NO;
+	
+	if(		[scanner scanString:LDRAW_TEXTURE_START intoString:NULL] == NO
+	   &&	[scanner scanString:LDRAW_TEXTURE_NEXT intoString:NULL] == NO )
+		return NO;
+	
+	if([scanner scanString:LDRAW_TEXTURE_METHOD_PLANAR intoString:NULL] == NO)
+		return NO;
+	
+	//---------- Coordinates -----------------------------------------------
+	
+	if([scanner scanFloat:&(planePoint1.x)] == NO)
+		return NO;
+	
+	if([scanner scanFloat:&(planePoint1.y)] == NO)
+		return NO;
+	
+	if([scanner scanFloat:&(planePoint1.z)] == NO)
+		return NO;
+	
+
+	if([scanner scanFloat:&(planePoint2.x)] == NO)
+		return NO;
+	
+	if([scanner scanFloat:&(planePoint2.y)] == NO)
+		return NO;
+	
+	if([scanner scanFloat:&(planePoint2.z)] == NO)
+		return NO;
+	
+
+	if([scanner scanFloat:&(planePoint3.x)] == NO)
+		return NO;
+	
+	if([scanner scanFloat:&(planePoint3.y)] == NO)
+		return NO;
+	
+	if([scanner scanFloat:&(planePoint3.z)] == NO)
+		return NO;
+	
+	//---------- Name ------------------------------------------------------
+	// TEXMAP has different syntax from linetype 1 because Joshua Delahunty 
+	// wouldn't consider synchronizing the two. 
+	// scanQuotableToken: raises when there is no token (utilities golden);
+	// that used to be caught here and reported as a syntax error.
+	if(QuotableTokenIsMissing(scanner))
+		return NO;
+	NSString *parsedName = [LDrawUtilities scanQuotableToken:scanner];
+	if([parsedName length] == 0)
+		return NO;
+	[self setImageDisplayName:parsedName];
+	[self setImageDisplayName:parsedName parse:YES inGroup:parentGroup];
+	
+	//---------- Glossmap --------------------------------------------------
+	// It's optional and unused. It should have been on a separate TEXMAP 
+	// line so we didn't have to even bother with it. See above for reason 
+	// it's not. 
+	if([scanner scanString:LDRAW_TEXTURE_GLOSSMAP intoString:NULL])
 	{
-		if([scanner scanString:@"0" intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
+		if(QuotableTokenIsMissing(scanner))
+			return NO;
+		NSString *parsedGlossmapName = [LDrawUtilities scanQuotableToken:scanner];
+		if([parsedGlossmapName length] == 0)
+			return NO;
 		
-		if([scanner scanString:LDRAW_TEXTURE intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if(		[scanner scanString:LDRAW_TEXTURE_START intoString:NULL] == NO
-		   &&	[scanner scanString:LDRAW_TEXTURE_NEXT intoString:NULL] == NO )
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanString:LDRAW_TEXTURE_METHOD_PLANAR intoString:NULL] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		//---------- Coordinates -----------------------------------------------
-		
-		if([scanner scanFloat:&(planePoint1.x)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanFloat:&(planePoint1.y)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanFloat:&(planePoint1.z)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-
-		if([scanner scanFloat:&(planePoint2.x)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanFloat:&(planePoint2.y)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanFloat:&(planePoint2.z)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-
-		if([scanner scanFloat:&(planePoint3.x)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanFloat:&(planePoint3.y)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		if([scanner scanFloat:&(planePoint3.z)] == NO)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		
-		//---------- Name ------------------------------------------------------
-		// TEXMAP has different syntax from linetype 1 because Joshua Delahunty 
-		// wouldn't consider synchronizing the two. 
-		NSString *parsedName = [LDrawUtilities scanQuotableToken:scanner];
-		if([parsedName length] == 0)
-			@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-		[self setImageDisplayName:parsedName];
-		[self setImageDisplayName:parsedName parse:YES inGroup:parentGroup];
-		
-		//---------- Glossmap --------------------------------------------------
-		// It's optional and unused. It should have been on a separate TEXMAP 
-		// line so we didn't have to even bother with it. See above for reason 
-		// it's not. 
-		if([scanner scanString:LDRAW_TEXTURE_GLOSSMAP intoString:NULL])
-		{
-			NSString *parsedGlossmapName = [LDrawUtilities scanQuotableToken:scanner];
-			if([parsedGlossmapName length] == 0)
-				@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad Planar TEXMAP syntax" userInfo:nil];
-			
-			[self setGlossmapName:parsedGlossmapName];
-		}
-	}
-	@catch(NSException *exception)
-	{
-		success = NO;
+		[self setGlossmapName:parsedGlossmapName];
 	}
 	
-	return success;
+	return YES;
 	
 }
 
