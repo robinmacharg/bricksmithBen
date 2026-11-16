@@ -14,6 +14,8 @@
 //==============================================================================
 #import "LDrawDocument+Private.h"
 
+#import "Bricksmith-Swift.h"
+
 @implementation LDrawDocument (Utilities)
 
 #pragma mark -

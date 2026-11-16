@@ -54,7 +54,6 @@
 #import "PieceCountPanel.h"
 #import "RotationPanelController.h"
 #import "SearchPanelController.h"
-#import "StringUtilities.h"
 #import "UserDefaultsCategory.h"
 #import "ViewportArranger.h"
 #if WANT_RELATED_PARTS
