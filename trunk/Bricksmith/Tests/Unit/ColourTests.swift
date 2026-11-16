@@ -145,3 +145,113 @@ struct PreferenceColourTests {
 		}
 	}
 }
+
+/// P5 pins for -[NSUserDefaults setColor:forKey:] / -colorForKey: before the port to Swift: the exact bytes
+/// written, and every read outcome. Writes go to UserDefaults.standard inside DefaultsSandbox (the Debug domain,
+/// restored afterwards); stored blobs are read back through the volatile argument domain (restored by
+/// .fixtureLibrary). Nothing touches the real defaults.
+@Suite("Preferences colour category: exact bytes and edge cases (P5)", .fixtureLibrary, .serialized)
+struct PreferenceColourCategoryTests {
+	static let key = "BricksmithTests.P5.colour"
+
+	/// What setColor:forKey: stores for `colour` under `key` (nil if nothing was stored).
+	private func written(_ colour: NSColor?, forKey key: String? = Self.key) throws -> (Data?, [String: Any]?, [String: Any]?) {
+		try DefaultsSandbox.run {
+			let defaults = UserDefaults.standard
+			let before = defaults.persistentDomain(forName: DefaultsSandbox.debugDomain)
+			defaults.setColor(colour, forKey: key)
+			let after = defaults.persistentDomain(forName: DefaultsSandbox.debugDomain)
+			return (after?[Self.key] as? Data, before, after)
+		}
+	}
+
+	/// colorForKey: on UserDefaults.standard, with `value` in the argument domain under `key`.
+	private func read(_ value: Any) throws -> NSColor? {
+		DefaultsSandbox.setArguments([Self.key: value])
+		defer { DefaultsSandbox.removeArguments([Self.key]) }
+		return try ObjC.run { UserDefaults.standard.color(forKey: Self.key) }
+	}
+
+	@Test("The writer's bytes equal the committed NSArchiver blob exactly")
+	func writerMatchesCommittedBlob() throws {
+		let blob = try Data(contentsOf: FixturePaths.fixtures.appendingPathComponent("prefs/nsarchiver-colour.bin"))
+		let data = try #require(try written(NSColor(calibratedRed: 1, green: 0.5, blue: 0, alpha: 1)).0)
+		#expect(data == blob, "\(data as NSData) vs \(blob as NSData)")
+	}
+
+	@Test("The writer's bytes equal +[NSArchiver archivedDataWithRootObject:] for several kinds of colour")
+	func writerMatchesNSArchiver() throws {
+		let colours: [NSColor] = [
+			NSColor(calibratedRed: 0.1, green: 0.2, blue: 0.3, alpha: 0.4),
+			NSColor(deviceRed: 0.9, green: 0.8, blue: 0.7, alpha: 1),
+			NSColor(srgbRed: 0.5, green: 0.25, blue: 0.125, alpha: 1),
+			NSColor(calibratedWhite: 0.6, alpha: 1),
+			NSColor(deviceCyan: 0.1, magenta: 0.2, yellow: 0.3, black: 0.4, alpha: 1),
+			NSColor.red,
+			NSColor.black,
+			NSColor.textColor,       // a catalog colour
+		]
+		for colour in colours {
+			let data = try #require(try written(colour).0, "\(colour)")
+			let expected = ArgumentPrefs.archivedColour(colour)
+			#expect(data == expected, "\(colour): \(data as NSData) vs \(expected as NSData)")
+			let back = try #require(try read(data), "\(colour) read back as nil")
+			#expect(ArgumentPrefs.archivedColour(back) == data, "\(colour) read back as \(back)")
+		}
+	}
+
+	@Test("A nil colour stores the 20-byte NSArchiver archive of nil, which reads back as nil")
+	func nilColour() throws {
+		let data = try #require(try written(nil).0)
+		let expected = Data([0x04, 0x0B]) + Data("streamtyped".utf8) + Data([0x81, 0xE8, 0x03, 0x84, 0x01, 0x40, 0x85])
+		#expect(data == expected, "\(data as NSData)")
+		#expect(try read(data) == nil)
+	}
+
+	@Test("A nil key is a silent no-op on write and gives nil on read")
+	func nilKey() throws {
+		let (_, before, after) = try written(NSColor.red, forKey: nil)
+		#expect(NSDictionary(dictionary: before ?? [:]).isEqual(to: after ?? [:]), "the domain changed")
+		#expect(try ObjC.run { UserDefaults.standard.color(forKey: nil) } == nil)
+	}
+
+	@Test("Absent, non-data and non-archive values read as nil")
+	func unreadableValues() throws {
+		#expect(try ObjC.run { UserDefaults.standard.color(forKey: "BricksmithTests.P5.absent") } == nil)
+		#expect(try read("a string") == nil)
+		#expect(try read(42) == nil)
+		#expect(try read(Data("garbage".utf8)) == nil)
+		#expect(try read(Data()) == nil)
+	}
+
+	@Test("A non-colour object in an NSArchiver blob is returned as-is (no type check)")
+	func nonColourObjectReturnedAsIs() throws {
+		let archiver: AnyObject = NSClassFromString("NSArchiver")!
+		let data = archiver.perform(NSSelectorFromString("archivedDataWithRootObject:"), with: "not a colour" as NSString)!
+			.takeUnretainedValue() as! Data
+		let object: AnyObject? = try read(data)
+		let returned = try #require(object as? NSObject)
+		#expect(returned.isKind(of: NSString.self), "\(type(of: returned))")
+		#expect(returned.description == "not a colour")
+	}
+
+	@Test("A truncated NSArchiver blob raises NSArchiverArchiveInconsistency (current behaviour)")
+	func truncatedBlobRaises() throws {
+		let data = ArgumentPrefs.archivedColour(NSColor(calibratedRed: 1, green: 0.5, blue: 0, alpha: 1)).prefix(20)
+		do {
+			_ = try read(Data(data))
+			Issue.record("expected an Objective-C exception")
+		} catch let error as ObjCException {
+			#expect(error.name == "NSArchiverArchiveInconsistency", "\(error)")
+		}
+	}
+
+	@Test("BUG-035: a truncated colour blob should read as nil instead of raising")
+	func bug035TruncatedBlobShouldReadNil() throws {
+		let data = Data(ArgumentPrefs.archivedColour(NSColor.red).prefix(20))
+		withKnownIssue("BUG-035: colorForKey: raises NSArchiverArchiveInconsistency on a truncated archive") {
+			let colour = try read(data)
+			#expect(colour == nil)
+		}
+	}
+}

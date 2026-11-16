@@ -530,4 +530,109 @@ struct AppKitCategoryTests {
 		#expect(window.childWindows?.isEmpty ?? true, "overlay window still attached")
 		child.orderOut(nil)
 	}
+
+	// MARK: P5 pins (before the categories move to Swift)
+
+	@Test("frameRectForContentSize: is the frame plus the content-size difference, growing downwards")
+	func frameRectArithmetic() {
+		let window = Self.makeWindow()
+		defer { window.close() }
+		let frame = window.frame
+		let content = window.contentView!.frame.size
+		for size in [NSSize(width: 10, height: 10), NSSize(width: 1000, height: 20), NSSize(width: 0, height: 0)] {
+			let result = window.frameRect(forContentSize: size)
+			let expected = NSRect(x: frame.minX, y: frame.minY - (size.height - content.height),
+								  width: frame.width + size.width - content.width,
+								  height: frame.height + size.height - content.height)
+			#expect(result == expected, "\(size): \(result) vs \(expected)")
+		}
+		#expect(window.frame == frame, "frameRectForContentSize: must not move the window")
+	}
+
+	@Test("resizeToSize:animate:YES ends at the same frame as animate:NO")
+	func resizeAnimated() {
+		let window = Self.makeWindow()
+		defer { window.close() }
+		let topLeft = NSPoint(x: window.frame.minX, y: window.frame.maxY)
+		window.resize(to: NSSize(width: 420, height: 330), animate: true)
+		#expect(window.frame == NSRect(x: topLeft.x, y: topLeft.y - 330, width: 420, height: 330), "\(window.frame)")
+	}
+
+	@Test("scrollRowToCenter: on a table outside a scroll view does nothing and does not raise")
+	func scrollRowToCenterWithoutScrollView() throws {
+		let rows = Rows()
+		let table = NSTableView(frame: NSRect(x: 0, y: 0, width: 200, height: 1700))
+		table.addTableColumn(NSTableColumn(identifier: NSUserInterfaceItemIdentifier("c")))
+		table.rowHeight = 17
+		table.intercellSpacing = NSSize(width: 0, height: 0)
+		table.style = .plain
+		table.dataSource = rows
+		table.reloadData()
+		let before = table.visibleRect
+		try ObjC.run { table.scrollRow(toCenter: 50) }
+		#expect(table.visibleRect == before)
+		withExtendedLifetime(rows) {}
+	}
+
+	@Test("The four overlay hooks are declared but not implemented: a plain NSView does not respond to them")
+	func overlayHooksUnimplemented() {
+		for name in ["viewWillBecomeOverlay", "viewDidBecomeOverlay", "viewWillResignOverlay", "viewDidResignOverlay"] {
+			#expect(!NSView().responds(to: NSSelectorFromString(name)), "\(name)")
+			#expect(!NSView.instancesRespond(to: NSSelectorFromString(name)), "\(name)")
+		}
+	}
+
+	/// Counts setNeedsDisplay:YES (AppKit may clear needsDisplay again before a test can read it).
+	final class DirtyRecordingView: NSView {
+		var markedDirty = 0
+		override var needsDisplay: Bool {
+			get { super.needsDisplay }
+			set { if newValue { markedDirty += 1 }; super.needsDisplay = newValue }
+		}
+	}
+
+	@Test("removeOverlayView: removes only the helper that manages the given overlay, and marks the view dirty")
+	func removeOverlay() throws {
+		let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
+							  styleMask: [.borderless], backing: .buffered, defer: false)
+		window.isReleasedWhenClosed = false
+		window.alphaValue = 0
+		let host = DirtyRecordingView(frame: NSRect(x: 20, y: 30, width: 200, height: 100))
+		window.contentView?.addSubview(host)
+		let plain = NSView(frame: NSRect(x: 0, y: 0, width: 10, height: 10))
+		host.addSubview(plain)
+		window.orderFront(nil)
+		defer { window.orderOut(nil); window.close() }
+
+		let first = NSView(frame: .zero)
+		let second = NSView(frame: .zero)
+		try ObjC.run {
+			_ = host.perform(NSSelectorFromString("addOverlayView:"), with: first)
+			_ = host.perform(NSSelectorFromString("addOverlayView:"), with: second)
+		}
+		RunLoop.main.run(until: Date().addingTimeInterval(0.2))
+		#expect(host.subviews.count == 3)
+		let helpers = host.subviews.filter { String(describing: type(of: $0)) == "OverlayHelperView" }
+		#expect(helpers.count == 2)
+
+		// An overlay that isn't attached: nothing is removed, but the view is still marked dirty.
+		host.markedDirty = 0
+		try ObjC.run { _ = host.perform(NSSelectorFromString("removeOverlayView:"), with: NSView(frame: .zero)) }
+		#expect(host.subviews.count == 3)
+		#expect(host.markedDirty == 1)
+
+		host.markedDirty = 0
+		try ObjC.run { _ = host.perform(NSSelectorFromString("removeOverlayView:"), with: first) }
+		#expect(host.subviews.count == 2)
+		#expect(host.subviews.first === plain, "the plain subview must stay")
+		let remaining = host.subviews.filter { String(describing: type(of: $0)) == "OverlayHelperView" }
+		#expect(remaining.count == 1)
+		#expect((remaining.first?.value(forKey: "overlayView") as AnyObject?) === second)
+		#expect(host.markedDirty == 1)
+
+		try ObjC.run { _ = host.perform(NSSelectorFromString("removeOverlayView:"), with: second) }
+		RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+		#expect(host.subviews == [plain])
+		#expect(window.childWindows?.isEmpty ?? true, "overlay windows still attached")
+	}
 }
