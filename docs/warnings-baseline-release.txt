@@ -51,12 +51,6 @@ trunk/Bricksmith/Source/Application/Inspector/InspectionPart.m: warning: implici
 trunk/Bricksmith/Source/Application/Inspector/InspectionStep.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LDrawStepRotationT' (aka 'enum LDrawStepRotationT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/Application/Inspector/InspectionStep.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'ViewOrientationT' (aka 'enum ViewOrientationT') [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/Categories/UserDefaultsCategory.swift: warning: 'NSArchiver' was deprecated in macOS 10.13: Use NSKeyedArchiver instead
-trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LSynthClassT' (aka 'enum LSynthClassT') [-Wshorten-64-to-32]
-trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'LSynthSelectionModeT' [-Wshorten-64-to-32]
-trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSInteger' (aka 'long') to 'int' [-Wshorten-64-to-32]
-trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: implicit conversion loses integer precision: 'NSUInteger' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32]
-trunk/Bricksmith/Source/LDraw/Commands/LDrawLSynth.m: warning: variable 'errorFile' set but not used [-Wunused-but-set-variable]
-trunk/Bricksmith/Source/LDraw/Commands/LDrawMetaCommand.m: warning: implicit conversion loses integer precision: 'NSUInteger' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
 trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: variable 'ctr' set but not used [-Wunused-but-set-variable]
 trunk/Bricksmith/Source/LDraw/Renderer/MeshSmooth.c: warning: variable 'total_after' set but not used [-Wunused-but-set-variable]
