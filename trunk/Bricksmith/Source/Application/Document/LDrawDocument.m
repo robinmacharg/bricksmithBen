@@ -5279,7 +5279,7 @@ void AppendChoicesToNewItem(
 		//
 		if([[self documentContents] activeModel] == currentModel)
 		{
-			[modelItem setState:NSOnState];
+			[modelItem setState:NSControlStateValueOn];
 			[self->submodelPopUpMenu selectItemAtIndex:counter];
 		}
 	}

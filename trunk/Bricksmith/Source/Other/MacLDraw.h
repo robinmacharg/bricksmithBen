@@ -167,7 +167,7 @@ FOUNDATION_EXPORT NSNotificationName const LDrawKeyboardDidChangeNotification; /
 FOUNDATION_EXPORT NSNotificationName const LDrawMouseToolDidChangeNotification; // @"LDrawMouseToolDidChangeNotification"
 
 //tablet pointing device changed.
-// Object is an NSEvent: NSTabletProximity.
+// Object is an NSEvent: NSEventTypeTabletProximity.
 FOUNDATION_EXPORT NSNotificationName const LDrawPointingDeviceDidChangeNotification; // @"LDrawPointingDeviceDidChangeNotification"
 
 //Part Browser should be shown a different way.

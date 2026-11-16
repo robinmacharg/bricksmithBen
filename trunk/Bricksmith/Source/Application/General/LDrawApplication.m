@@ -348,7 +348,7 @@
 	// equivalent, we are probably dealing with one of these rabid anti-mouse 
 	// people. We automatically make the color search field key, so they can 
 	// enter color codes to their heart's content. 
-	if([[NSApp currentEvent] type] == NSKeyDown)
+	if([[NSApp currentEvent] type] == NSEventTypeKeyDown)
 		[colorPanel focusSearchField:sender];
 	
 }//end showColors:
