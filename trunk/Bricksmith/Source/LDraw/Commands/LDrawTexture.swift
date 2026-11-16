@@ -320,6 +320,30 @@ final class LDrawTexture: LDrawContainer {
 	//------------------------------------------------------------------------------
 	@objc(rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:)
 	override class func rangeOfDirectiveBeginning(at index: UInt, inLines lines: [Any]!, maxIndex: UInt) -> NSRange {
+		var ranPastEnd = false
+		return textureRange(at: index, inLines: lines, maxIndex: maxIndex, ranPastEnd: &ranPastEnd)
+
+	}//end rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:
+
+
+	//---------- textureRange(at:inLines:maxIndex:ranPastEnd:) ----------[static]--
+	//
+	// Purpose:		+rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:, with the
+	//				nesting made explicit.
+	//
+	// Notes:		The ObjC asked for a nested texture's range with
+	//				maxIndex:NSMaxRange(testRange), one past its own last line, so a
+	//				nested START with no END running to the end of the lines read
+	//				one past them and raised (KNOWN-BUGS BUG-P6B-meta-4). Where it
+	//				raised, every level now answers "to the end of the lines", as
+	//				the spec has it for a texture with no END. (Answering the count
+	//				so far instead leaves the inner START as the last line of the
+	//				outer texture; its range is then empty, and the outer texture's
+	//				parse loop never advances: the zero-length range of
+	//				BUG-P6B-meta-13.)
+	//
+	//------------------------------------------------------------------------------
+	private class func textureRange(at index: UInt, inLines lines: [Any]!, maxIndex: UInt, ranPastEnd: inout Bool) -> NSRange {
 		let lineArray					= lines as NSArray?
 		var counter: UInt				= 0
 		let testLocation: UInt			= index
@@ -332,9 +356,12 @@ final class LDrawTexture: LDrawContainer {
 
 		// (Messaging a nil array answered nil, which is not a texture line.)
 		if let lineArray {
-			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines);
-			// see KNOWN-BUGS BUG-P6B-meta-4
-			guard testLocation < UInt(lineArray.count) else {
+			let lineCount = UInt(lineArray.count)
+
+			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines;
+			// not reachable: the first line is always inside them); see
+			// KNOWN-BUGS BUG-P6B-meta-4
+			guard testLocation < lineCount else {
 				return NSMakeRange(Int(bitPattern: index), textureLength)
 			}
 
@@ -369,8 +396,9 @@ final class LDrawTexture: LDrawContainer {
 							// the lines: a nested START with no END, whose range is
 							// asked for one line past the outer one); see KNOWN-BUGS
 							// BUG-P6B-meta-4
-							guard counter < UInt(lineArray.count) else {
-								break
+							guard counter < lineCount else {
+								ranPastEnd = true
+								return NSMakeRange(Int(bitPattern: index), Int(lineCount &- index))
 							}
 							currentLine = lineArray.object(at: Int(bitPattern: counter)) as? NSString
 
@@ -379,7 +407,10 @@ final class LDrawTexture: LDrawContainer {
 								// any level of texture nesting.
 								// This is only necessary at all if nested textures are permitted to
 								// be added without a leading "0 !:".
-								let nestedTextureRange = rangeOfDirectiveBeginning(at: counter, inLines: lines, maxIndex: testMax)
+								let nestedTextureRange = textureRange(at: counter, inLines: lines, maxIndex: testMax, ranPastEnd: &ranPastEnd)
+								if ranPastEnd {
+									return NSMakeRange(Int(bitPattern: index), Int(lineCount &- index))
+								}
 								textureLength += nestedTextureRange.length
 							}
 							else {
@@ -400,7 +431,7 @@ final class LDrawTexture: LDrawContainer {
 
 		return NSMakeRange(Int(bitPattern: index), textureLength)
 
-	}//end rangeOfDirectiveBeginningAtIndex:inLines:maxIndex:
+	}//end textureRange(at:inLines:maxIndex:ranPastEnd:)
 
 
 	// MARK: - Directives
