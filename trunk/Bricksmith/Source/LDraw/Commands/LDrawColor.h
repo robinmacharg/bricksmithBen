@@ -2,8 +2,8 @@
 //
 // File:		LDrawColor.h
 //
-// Purpose:		Defines a LDraw color code and its attributes. These come from 
-//				parsing !COLOUR directives in ldconfig.ldr. 
+// Purpose:		LDraw color code and material enums, and the HSV helpers.
+//				The LDrawColor class itself is in LDrawColor.swift.
 //
 // Modified:	3/16/08 Allen Smith.
 //
@@ -120,67 +120,10 @@ typedef NS_ENUM(int, LDrawColorMaterialT)
 };
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Class:	LDrawColor
-//
-// Notes:	This does NOT conform to LDrawColorable, because we do not want 
-//			color picker changes affecting the values of these objects. 
-//
-////////////////////////////////////////////////////////////////////////////////
-NS_ASSUME_NONNULL_BEGIN
-
-@interface LDrawColor : LDrawMetaCommand
-{
-	LDrawColorT			 colorCode;
-	GLfloat				 colorRGBA[4];		// range [0.0 - 1.0]
-	LDrawColorT			 edgeColorCode;		// == LDrawColorBogus if not used
-	GLfloat				 edgeColorRGBA[4];
-	BOOL				 hasExplicitAlpha;
-	BOOL				 hasLuminance;
-	uint8_t				 luminance;
-	LDrawColorMaterialT	 material;
-	NSString			*materialParameters;
-	NSString			*name;
-	
-	LDrawColor			*fakeComplimentColor;	// synthesized, not according to !COLOUR rules
-}
-
-// Initialization
-+ (null_unspecified LDrawColor *) blendedColorForCode:(LDrawColorT)colorCode;
-
-// Accessors
-
-- (GLfloat)				alpha;
-- (LDrawColorT)			colorCode;
-- (null_unspecified LDrawColor *)		complimentColor;
-- (LDrawColorT)			edgeColorCode;
-- (void)				getColorRGBA:(null_unspecified GLfloat *)inComponents;
-- (void)				getEdgeColorRGBA:(null_unspecified GLfloat *)inComponents;
-- (null_unspecified NSString *)			localizedName;
-- (uint8_t)				luminance;
-- (LDrawColorMaterialT)	material;
-- (null_unspecified NSString *)			materialParameters;
-- (null_unspecified NSString *)			name;
-
-- (void) setColorCode:(LDrawColorT)newCode;
-- (void) setColorRGBA:(null_unspecified GLfloat *)newComponents;
-- (void) setEdgeColorCode:(LDrawColorT)newCode;
-- (void) setEdgeColorRGBA:(null_unspecified GLfloat *)newComponents;
-- (void) setLuminance:(uint8_t)newValue;
-- (void) setMaterial:(LDrawColorMaterialT)newValue;
-- (void) setMaterialParameters:(null_unspecified NSString *)newValue;
-- (void) setName:(null_unspecified NSString *)newName;
-
-// Utilities
-- (NSComparisonResult) HSVACompare:(null_unspecified LDrawColor *)otherColor;
-- (null_unspecified NSString *) hexStringForRGB:(null_unspecified GLfloat *)components;
-- (BOOL) scanHexString:(null_unspecified NSScanner *)hexScanner intoRGB:(null_unspecified GLfloat *)components;
-- (null_unspecified id)fullCopyWithZone:(null_unspecified NSZone *)zone;
-
-@end
-
-NS_ASSUME_NONNULL_END
+// The LDrawColor class is in LDrawColor.swift (ported in P6a). This header keeps
+// only the types and C functions that ObjC headers use; RGBtoHSV and HSVtoRGB
+// are implemented in LDrawColor.m.
+@class LDrawColor;
 
 extern void RGBtoHSV( float r, float g, float b, float * _Null_unspecified h, float * _Null_unspecified s, float * _Null_unspecified v );
 extern void HSVtoRGB( float h, float s, float v, float * _Null_unspecified r, float * _Null_unspecified g, float * _Null_unspecified b );
