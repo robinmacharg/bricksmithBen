@@ -10,7 +10,7 @@
 //==============================================================================
 #import "PartBrowserTableView.h"
 
-#import "BricksmithUtilities.h"
+#import "Bricksmith-Swift.h"
 
 @implementation PartBrowserTableView
 

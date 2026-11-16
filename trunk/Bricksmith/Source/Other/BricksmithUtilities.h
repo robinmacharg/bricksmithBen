@@ -2,10 +2,8 @@
 //
 // File:		BricksmithUtilities.h
 //
-// Purpose:		Miscellaneous utility methods for the Bricksmith application.
-//
-// Notes:		Utility methods specific to LDraw syntax, manipulation, or 
-//				display or found in LDrawUtilities. 
+// Purpose:		Grid-mode enums shared by the document, toolbar and viewer.
+//				The BricksmithUtilities class is in BricksmithUtilities.swift.
 //
 // Modified:	02/07/2011 Allen Smith. Creation Date.
 //
@@ -31,17 +29,8 @@ typedef NS_ENUM(int, gridOrientationModeT)
 	
 };
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// BricksmithUtilities
-//
-////////////////////////////////////////////////////////////////////////////////
-@interface BricksmithUtilities : NSObject
-{
-
-}
-
-+ (NSImage *) dragImageWithOffset:(NSPointPointer)dragImageOffset;
-+ (float) gridSpacingForMode:(gridSpacingModeT)gridMode;
-
-@end
+// The BricksmithUtilities class itself was ported to BricksmithUtilities.swift
+// (P5). This header stays for the grid-mode enums above, which ObjC headers
+// (LDrawDocument.h, LDrawGLView.h, DocumentToolbarController.h) use and which
+// can't come from Bricksmith-Swift.h (plan §4.4 rule 8). ObjC callers of the
+// class import "Bricksmith-Swift.h" in their .m files.

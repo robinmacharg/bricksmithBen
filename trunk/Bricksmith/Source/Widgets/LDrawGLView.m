@@ -20,6 +20,8 @@
 //==============================================================================
 #import "LDrawGLView.h"
 
+#import "Bricksmith-Swift.h"
+
 #import <OpenGL/OpenGL.h>
 
 #import "FocusRingView.h"
