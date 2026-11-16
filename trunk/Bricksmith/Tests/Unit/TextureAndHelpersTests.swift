@@ -362,6 +362,424 @@ extension Tex {
 	}
 }
 
+// MARK: - LDrawMetaCommand (P6b pre-port)
+
+enum Meta {
+	/// One line through +[LDrawMetaCommand directiveWithLines:inRange:parentGroup:].
+	static func make(_ line: String) -> LDrawDirective? {
+		LDrawMetaCommand.directive(lines: [line], in: NSRange(location: 0, length: 1), parentGroup: nil)
+	}
+
+	/// Class, stringValue and written form, with every non-ASCII scalar escaped.
+	static func describe(_ directive: LDrawDirective?) -> String {
+		guard let directive else { return "nil" }
+		let value = (directive as? LDrawMetaCommand)?.stringValue()
+		return "\(type(of: directive)) value=[\(value.map(escape) ?? "nil")] write=[\(escape(directive.write() ?? "nil"))]"
+	}
+
+	static func escape(_ s: String) -> String {
+		s.unicodeScalars.map { $0.isASCII && $0.value >= 0x20 ? String($0) : String(format: "\\u{%X}", $0.value) }.joined()
+	}
+}
+
+@MainActor
+@Suite("LDrawMetaCommand: meta-command dispatch, stored string, archiving (P6b pre-port)", .fixtureLibrary, .serialized)
+struct MetaCommandTests {
+
+	@Test("Dispatch of 0 lines: subclass, stored string (UTF-16 positions next to non-ASCII), written form")
+	func dispatch() throws {
+		// Combining marks, ZWJ, an astral emoji and a no-break space next to the line code and the command word:
+		// NSScanner works in UTF-16 units here (L101).
+		let lines = [
+			"0 // comment", "0 //comment", "0 WRITE text", "0 PRINT text", "0 // ", "0 //",
+			"0 !COLOUR Red CODE 4 VALUE #C91A09 EDGE #333333", "0 !COLOUR",
+			"0", "0 ", "0   ", "", "   ", "\t", "0 UNKNOWN  two  spaces ", "\t0\tTAB\tSEP", "  0 LEADING",
+			"00 DOUBLE ZERO", "+0 PLUS", "-0 MINUS", "0x1 HEX", "0FOO", "0.5 FRACTION", "abc def",
+			"0 \u{301}FOO", "0\u{301} FOO", "0 FOO\u{301} bar", "0 //\u{200D}x", "0 // \u{301}x", "0\u{A0}NBSP x",
+			"0 \u{1F600} emoji", "0 \u{1F600}// emoji", "0 é decomposed", "\u{301}0 FOO",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png", "0 SYNTH BEGIN RUBBER_BAND 4", "0 STEP",
+			"1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat", "2 24 0 0 0 1 1 1", "9 nine",
+		]
+		var out: [String] = []
+		for line in lines {
+			out.append("\(Meta.escape(line)) -> \(Meta.describe(try ObjC.run { Meta.make(line) }))")
+		}
+		let actual = out.joined(separator: "\n")
+		#expect(actual == Self.expectedDispatch, "\(actual)")
+	}
+
+	static let expectedDispatch = #"""
+		0 // comment -> LDrawComment value=[comment] write=[0 // comment]
+		0 //comment -> LDrawMetaCommand value=[//comment] write=[0 //comment]
+		0 WRITE text -> LDrawComment value=[text] write=[0 // text]
+		0 PRINT text -> LDrawComment value=[text] write=[0 // text]
+		0 //  -> LDrawComment value=[] write=[0 // ]
+		0 // -> LDrawComment value=[] write=[0 // ]
+		0 !COLOUR Red CODE 4 VALUE #C91A09 EDGE #333333 -> LDrawColor value=[] write=[0 !COLOUR Red CODE 4 VALUE #C91A09 EDGE #333333]
+		0 !COLOUR -> LDrawColor value=[] write=[0 !COLOUR (null) CODE -1 VALUE #000000 EDGE #000000]
+		0 -> LDrawMetaCommand value=[] write=[0 ]
+		0  -> LDrawMetaCommand value=[] write=[0 ]
+		0    -> LDrawMetaCommand value=[] write=[0 ]
+		 -> LDrawMetaCommand value=[] write=[0 ]
+		    -> LDrawMetaCommand value=[   ] write=[0    ]
+		\u{9} -> LDrawMetaCommand value=[\u{9}] write=[0 \u{9}]
+		0 UNKNOWN  two  spaces  -> LDrawMetaCommand value=[UNKNOWN  two  spaces ] write=[0 UNKNOWN  two  spaces ]
+		\u{9}0\u{9}TAB\u{9}SEP -> LDrawMetaCommand value=[TAB\u{9}SEP] write=[0 TAB\u{9}SEP]
+		  0 LEADING -> LDrawMetaCommand value=[LEADING] write=[0 LEADING]
+		00 DOUBLE ZERO -> LDrawMetaCommand value=[DOUBLE ZERO] write=[0 DOUBLE ZERO]
+		+0 PLUS -> LDrawMetaCommand value=[PLUS] write=[0 PLUS]
+		-0 MINUS -> LDrawMetaCommand value=[MINUS] write=[0 MINUS]
+		0x1 HEX -> LDrawMetaCommand value=[x1 HEX] write=[0 x1 HEX]
+		0FOO -> LDrawMetaCommand value=[FOO] write=[0 FOO]
+		0.5 FRACTION -> LDrawMetaCommand value=[.5 FRACTION] write=[0 .5 FRACTION]
+		abc def -> LDrawMetaCommand value=[abc def] write=[0 abc def]
+		0 \u{301}FOO -> LDrawMetaCommand value=[\u{301}FOO] write=[0 \u{301}FOO]
+		0\u{301} FOO -> LDrawMetaCommand value=[\u{301} FOO] write=[0 \u{301} FOO]
+		0 FOO\u{301} bar -> LDrawMetaCommand value=[FOO\u{301} bar] write=[0 FOO\u{301} bar]
+		0 //\u{200D}x -> LDrawMetaCommand value=[//\u{200D}x] write=[0 //\u{200D}x]
+		0 // \u{301}x -> LDrawComment value=[\u{301}x] write=[0 // \u{301}x]
+		0\u{A0}NBSP x -> LDrawMetaCommand value=[NBSP x] write=[0 NBSP x]
+		0 \u{1F600} emoji -> LDrawMetaCommand value=[\u{1F600} emoji] write=[0 \u{1F600} emoji]
+		0 \u{1F600}// emoji -> LDrawMetaCommand value=[\u{1F600}// emoji] write=[0 \u{1F600}// emoji]
+		0 \u{E9} decomposed -> LDrawMetaCommand value=[\u{E9} decomposed] write=[0 \u{E9} decomposed]
+		\u{301}0 FOO -> LDrawMetaCommand value=[\u{301}0 FOO] write=[0 \u{301}0 FOO]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png -> LDrawMetaCommand value=[!TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png] write=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png]
+		0 SYNTH BEGIN RUBBER_BAND 4 -> LDrawMetaCommand value=[SYNTH BEGIN RUBBER_BAND 4] write=[0 SYNTH BEGIN RUBBER_BAND 4]
+		0 STEP -> LDrawMetaCommand value=[STEP] write=[0 STEP]
+		1 4 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat -> nil
+		2 24 0 0 0 1 1 1 -> nil
+		9 nine -> nil
+		"""#
+
+	@Test("The range picks the line; a subclass receiver still makes generic commands of its own class")
+	func rangeAndReceiver() throws {
+		let lines = ["0 FIRST", "0 SECOND", "0 // third"]
+		let second = LDrawMetaCommand.directive(lines: lines, in: NSRange(location: 1, length: 1), parentGroup: nil)
+		#expect(Meta.describe(second) == "LDrawMetaCommand value=[SECOND] write=[0 SECOND]")
+		let third = LDrawMetaCommand.directive(lines: lines, in: NSRange(location: 2, length: 1), parentGroup: nil)
+		#expect(Meta.describe(third) == "LDrawComment value=[third] write=[0 // third]")
+		// +directiveWithLines: allocates [self alloc] for an unrecognised command.
+		let viaComment = LDrawComment.directive(lines: ["0 NOT A COMMENT"], in: NSRange(location: 0, length: 1), parentGroup: nil)
+		#expect(Meta.describe(viaComment) == "LDrawComment value=[NOT A COMMENT] write=[0 // NOT A COMMENT]")
+	}
+
+	@Test("A new meta command: empty string, display, inspector; a nil string; finishParsing: fails")
+	func basics() throws {
+		let command = LDrawMetaCommand()
+		#expect(command.stringValue() == "")
+		#expect(command.write() == "0 ")
+		#expect(command.browsingDescription() == "")
+		#expect(command.iconName() == "Unknown")
+		#expect(command.inspectorClassName() == "InspectionUnknownCommand")
+		#expect(command.finishParsing(Scanner(string: "anything")) == false)
+		command.setStringValue(nil)
+		#expect(command.stringValue() == nil)
+		#expect(command.write() == "0 (null)")
+		#expect(command.browsingDescription() == nil)
+		// Drawing does nothing (and doesn't need GL).
+		command.draw(0, viewScale: 1, parentColor: nil)
+		// The other init paths keep the empty string; no lines gives nil.
+		#expect((LDrawMetaCommand(lines: ["0 IGNORED"], in: NSRange(location: 0, length: 1)) as LDrawMetaCommand?)?.stringValue() == "")
+		#expect((LDrawMetaCommand(lines: ["0 IGNORED"], in: NSRange(location: 0, length: 1), parentGroup: nil) as LDrawMetaCommand?)?.stringValue() == "")
+		#expect((LDrawMetaCommand(lines: [], in: NSRange(location: 0, length: 0), parentGroup: nil) as LDrawMetaCommand?) == nil)
+	}
+
+	@Test("copy and keyed archiving keep the command string (also nil and non-ASCII)")
+	func copyAndArchive() throws {
+		for value in ["UNKNOWN meta", "", "\u{1F600} e\u{301}", nil] as [String?] {
+			let command = LDrawMetaCommand()
+			command.setStringValue(value)
+			command.setSelected(true)
+			let copied = try #require(command.copy() as? LDrawMetaCommand)
+			#expect(type(of: copied) == LDrawMetaCommand.self)
+			#expect(copied.stringValue() == value)
+			#expect(copied.isSelected())
+			let decoded = try #require(try ObjectModel.unarchive(ObjectModel.archive(command)) as? LDrawMetaCommand)
+			#expect(type(of: decoded) == LDrawMetaCommand.self)
+			#expect(decoded.stringValue() == value)
+			#expect(decoded.write() == command.write())
+		}
+	}
+
+	@Test("Undo of a string change restores the old string through -setStringValue:")
+	func undo() throws {
+		let command = try #require(Meta.make("0 BEFORE") as? LDrawMetaCommand)
+		let undo = UndoManager()
+		undo.groupsByEvent = false
+		undo.beginUndoGrouping()
+		try ObjC.run { command.registerUndoActions(undo) }
+		command.setStringValue("AFTER")
+		undo.endUndoGrouping()
+		try ObjC.run { undo.undo() }
+		#expect(command.stringValue() == "BEFORE")
+		// -setStringValue: registers no undo itself, so there is nothing to redo.
+		#expect(!undo.canRedo)
+	}
+}
+
+// MARK: - LDrawTexture (P6b pre-port)
+
+/// Records the texture spec pushed by -drawSelf:/-collectSelf: bit for bit.
+final class TextureSpecRecorder: NSObject, LDrawRenderer, LDrawCollector {
+	var log: [String] = []
+	var tag: GLuint = 7
+
+	static func bits(_ tuple: (GLfloat, GLfloat, GLfloat, GLfloat)) -> String {
+		[tuple.0, tuple.1, tuple.2, tuple.3].map { String(format: "%08X", $0.bitPattern) }.joined(separator: " ")
+	}
+
+	func pushMatrix(_ matrix: UnsafeMutablePointer<GLfloat>!) {}
+	func popMatrix() {}
+	func checkCull(_ minXYZ: UnsafeMutablePointer<GLfloat>!, to maxXYZ: UnsafeMutablePointer<GLfloat>!) -> Int32 { Int32(cull_draw) }
+	func drawBox(from minXyz: UnsafeMutablePointer<GLfloat>!, to maxXyz: UnsafeMutablePointer<GLfloat>!) {}
+	func pushColor(_ color: UnsafeMutablePointer<GLfloat>!) {}
+	func popColor() {}
+	func pushWireFrame() {}
+	func popWireFrame() {}
+	func pushTexture(_ tex_spec: UnsafeMutablePointer<LDrawTextureSpec>!) {
+		let s = tex_spec.pointee
+		log.append("push projection=\(s.projection) tex=\(s.tex_obj) s=[\(Self.bits(s.plane_s))] t=[\(Self.bits(s.plane_t))]")
+	}
+	func popTexture() { log.append("pop") }
+	func drawDragHandle(_ xyz: UnsafeMutablePointer<GLfloat>!, withSize size: GLfloat) {}
+	func beginDL() -> (any LDrawCollector)! { self }
+	func endDL(_ outHandle: UnsafeMutablePointer<LDrawDLHandle?>!, cleanupFunc: UnsafeMutablePointer<LDrawDLCleanup_f?>!) {
+		outHandle.pointee = nil
+		cleanupFunc.pointee = { _ in }
+	}
+	func drawDL(_ dl: LDrawDLHandle!) {}
+	func textureTag(for texture: LDrawTexture!) -> GLuint { log.append("textureTag"); return tag }
+	func drawQuad(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) { log.append("quad") }
+	func drawTri(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) { log.append("tri") }
+	func drawLine(_ vertices: UnsafeMutablePointer<GLfloat>!, normal: UnsafeMutablePointer<GLfloat>!, color: UnsafeMutablePointer<GLfloat>!) { log.append("line") }
+}
+
+@MainActor
+@Suite("LDrawTexture: archiving, copying, plane points, spec, containers (P6b pre-port)", .fixtureLibrary, .serialized)
+struct TexturePortTests {
+	init() throws { try OffscreenGL.makeCurrent() }
+
+	static let full = [
+		"0 !TEXMAP START PLANAR -10.5 0.25 -10 10 0 -10.125 -10 3.5 10 \"My Sticker.PNG\" GLOSSMAP \"gl oss.png\"",
+		"0 !: 3 16 -10 0 -10 10 0 -10 10 0 10",
+		"4 16 0 0 0 10 0 0 10 0 10 0 0 10",
+		"0 !TEXMAP FALLBACK",
+		"3 16 -10 0 -10 10 0 10 -10 0 10",
+		"0 // fallback comment",
+		"0 !TEXMAP END",
+	]
+
+	static func texture(_ lines: [String] = full) throws -> LDrawTexture {
+		try #require(try ObjC.run { LDrawTexture(lines: lines, in: NSRange(location: 0, length: lines.count), parentGroup: nil) })
+	}
+
+	@Test("A new texture: zero plane points and bounds, nil names, written form")
+	func fresh() throws {
+		let texture = LDrawTexture()
+		let box = texture.boundingBox3()
+		#expect([box.min.x, box.min.y, box.min.z, box.max.x, box.max.y, box.max.z] == [0, 0, 0, 0, 0, 0])
+		#expect(texture.imageDisplayName() == nil && texture.imageReferenceName() == nil && texture.glossmapName() == nil)
+		#expect(texture.browsingDescription() == nil)
+		#expect(texture.iconName() == "Texture")
+		#expect(Prim.write(texture) == "0 !TEXMAP START PLANAR 0 0 0 0 0 0 0 0 0 (null)\n0 !TEXMAP END")
+		texture.setImageDisplayName("Ab C.PNG")
+		#expect(texture.imageDisplayName() == "Ab C.PNG" && texture.imageReferenceName() == "ab c.png")
+		texture.setImageDisplayName(nil)
+		#expect(texture.imageDisplayName() == nil && texture.imageReferenceName() == nil)
+	}
+
+	@Test("Parsed directly: children, fallback, names; write; keyed archive and copy write the same")
+	func archiveAndCopy() throws {
+		let texture = try Self.texture()
+		let written = Prim.write(texture)
+		#expect(written == Self.expectedFull, "\(written)")
+		#expect(texture.imageDisplayName() == "My Sticker.PNG")
+		#expect(texture.imageReferenceName() == "my sticker.png")
+		#expect(texture.glossmapName() == "gl oss.png")
+		#expect(texture.subdirectives().count == 2)
+
+		let decoded = try #require(try ObjectModel.unarchive(ObjectModel.archive(texture)) as? LDrawTexture)
+		#expect(Prim.write(decoded) == written)
+		#expect(decoded.imageReferenceName() == "my sticker.png")
+		let copied = try #require(texture.copy() as? LDrawTexture)
+		#expect(copied.imageDisplayName() == "My Sticker.PNG" && copied.glossmapName() == "gl oss.png")
+		// LDrawContainer's copy inserts every copied child at index 0.
+		#expect(Prim.write(copied) == Self.expectedCopy, "\(Prim.write(copied))")
+		#expect(copied.boundingBox3().max.x == texture.boundingBox3().max.x)
+	}
+
+	static let expectedFull = #"""
+		0 !TEXMAP START PLANAR -10.5 0.25 -10 10 0 -10.125 -10 3.5 10 My Sticker.PNG GLOSSMAP gl oss.png
+		0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+		0 !: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+		0 !TEXMAP FALLBACK
+		3 16 -10 0 -10 10 0 10 -10 0 10
+		0 // fallback comment
+		0 !TEXMAP END
+		"""#
+	static let expectedCopy = #"""
+		0 !TEXMAP START PLANAR -10.5 0.25 -10 10 0 -10.125 -10 3.5 10 My Sticker.PNG GLOSSMAP gl oss.png
+		0 !: 4 16 0 0 0 10 0 0 10 0 10 0 0 10
+		0 !: 3 16 -10 0 -10 10 0 -10 10 0 10
+		0 !TEXMAP FALLBACK
+		3 16 -10 0 -10 10 0 10 -10 0 10
+		0 // fallback comment
+		0 !TEXMAP END
+		"""#
+
+	@Test("drawSelf: and collectSelf: push the planar spec computed from the plane points, then pop")
+	func spec() throws {
+		let texture = try Self.texture()
+		let drawn = TextureSpecRecorder()
+		try ObjC.run { texture.drawSelf(drawn) }
+		let collected = TextureSpecRecorder()
+		collected.tag = 9
+		try ObjC.run { texture.collectSelf(collected) }
+		// The tag is asked for once, then cached in the texture.
+		try ObjC.run { texture.collectSelf(collected) }
+		let actual = (["draw:"] + drawn.log + ["collect:"] + collected.log).joined(separator: "\n")
+		#expect(actual == Self.expectedSpec, "\(actual)")
+	}
+
+	static let expectedSpec = #"""
+		draw:
+		textureTag
+		push projection=0 tex=7 s=[3D47C48B BA1BEA91 B99BEA91 3F025FD4] t=[3A9F871B 3C019DC6 3D4768E2 3EFECAEA]
+		pop
+		collect:
+		push projection=0 tex=7 s=[3D47C48B BA1BEA91 B99BEA91 3F025FD4] t=[3A9F871B 3C019DC6 3D4768E2 3EFECAEA]
+		tri
+		quad
+		pop
+		push projection=0 tex=7 s=[3D47C48B BA1BEA91 B99BEA91 3F025FD4] t=[3A9F871B 3C019DC6 3D4768E2 3EFECAEA]
+		tri
+		quad
+		pop
+		"""#
+
+	@Test("Drag handles move the plane points; setSelected: makes and drops them")
+	func dragHandles() throws {
+		let texture = try Self.texture()
+		for (tag, point) in [(1, V3Make(1, 2, 3)), (2, V3Make(4, 5, 6)), (3, V3Make(7, 8, 9)), (4, V3Make(100, 100, 100))] {
+			let handle = try #require(LDrawDragHandle(tag: tag, position: point))
+			try ObjC.run { _ = texture.perform(NSSelectorFromString("dragHandleChanged:"), with: handle) }
+		}
+		#expect(Prim.write(texture).hasPrefix("0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 My Sticker.PNG GLOSSMAP gl oss.png\n"),
+				"\(Prim.write(texture))")
+		try ObjC.run { texture.setSelected(true) }
+		#expect(texture.isSelected())
+		let handle = try #require(LDrawDragHandle(tag: 2, position: V3Make(-1, -2, -3)))
+		try ObjC.run { _ = texture.perform(NSSelectorFromString("dragHandleChanged:"), with: handle) }
+		#expect(Prim.write(texture).hasPrefix("0 !TEXMAP START PLANAR 1 2 3 -1 -2 -3 7 8 9 "), "\(Prim.write(texture))")
+		try ObjC.run { texture.setSelected(false) }
+		#expect(!texture.isSelected())
+	}
+
+	@Test("Insert and remove keep the bounds current; flatten (non-recursive) moves only the plane points")
+	func containerEditing() throws {
+		let texture = try Self.texture()
+		let before = texture.boundingBox3()
+		let far = try Prim.parse("3 16 100 0 0 110 0 0 100 10 0")
+		try ObjC.run { texture.insert(far, at: 0) }
+		#expect(texture.boundingBox3().max.x == 110, "bounds after insert: \(texture.boundingBox3())")
+		#expect((far.enclosingDirective() as AnyObject?) === texture)
+		try ObjC.run { texture.removeDirective(at: 0) }
+		#expect(texture.boundingBox3().max.x == before.max.x)
+		#expect(far.enclosingDirective() == nil)
+
+		let lines = NSMutableArray(), tris = NSMutableArray(), quads = NSMutableArray(), other = NSMutableArray()
+		var move = IdentityMatrix4
+		move.element.3 = (5, 0, 0, 1)
+		try ObjC.run {
+			texture.flatten(intoLines: lines, triangles: tris, quadrilaterals: quads, other: other, currentColor: nil,
+							currentTransform: move, normalTransform: IdentityMatrix3, recursive: false)
+		}
+		#expect(other.count == 1 && other.firstObject as AnyObject === texture)
+		#expect(lines.count == 0 && tris.count == 0 && quads.count == 0)
+		#expect(texture.subdirectives().count == 2)
+		#expect(Prim.write(texture).hasPrefix("0 !TEXMAP START PLANAR -5.5 0.25 -10 15 0 -10.125 -5 3.5 10 "), "\(Prim.write(texture))")
+		// Recursive: children are flattened in place (lines, triangles, quads, others) and the fallback dropped.
+		try ObjC.run {
+			texture.flatten(intoLines: lines, triangles: tris, quadrilaterals: quads, other: other, currentColor: nil,
+							currentTransform: IdentityMatrix4, normalTransform: IdentityMatrix3, recursive: true)
+		}
+		#expect(!Prim.write(texture).contains("FALLBACK"))
+		#expect(texture.subdirectives().count == 2)
+	}
+
+	@Test("Line classifiers and the range of a texture block")
+	func ranges() throws {
+		let checks: [(String?, Bool, Bool, Bool)] = [
+			// line, beginning, fallback, terminator
+			("0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png", true, false, false),
+			("0 !TEXMAP NEXT PLANAR", true, false, false),
+			("0 !TEXMAP START CYLINDRICAL", false, false, false),
+			("0  !TEXMAP\tSTART  PLANAR", true, false, false),
+			("0 !TEXMAP FALLBACK", false, true, false),
+			("0 !TEXMAP END", false, false, true),
+			("0 !TEXMAP ENDING", false, false, false),
+			("0 !texmap end", false, false, false),
+			("1 !TEXMAP END", false, false, false),
+			("0 !: 0 !TEXMAP END", false, false, false),
+			("", false, false, false),
+			(nil, false, false, false),
+		]
+		for (line, begin, fallback, end) in checks {
+			#expect(LDrawTexture.lineIsTextureBeginning(line) == begin, "\(String(describing: line))")
+			#expect(LDrawTexture.lineIsTextureFallback(line) == fallback, "\(String(describing: line))")
+			#expect(LDrawTexture.lineIsTextureTerminator(line) == end, "\(String(describing: line))")
+		}
+		let start = "0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png"
+		let tri = "3 16 0 0 0 1 0 0 0 1 0"
+		let cases: [([String], Int, Int, NSRange)] = [
+			([start, tri, "0 !TEXMAP END", tri], 0, 3, NSRange(location: 0, length: 3)),
+			([start, tri, tri], 0, 2, NSRange(location: 0, length: 2)),
+			([tri, start, tri, "0 !TEXMAP END"], 1, 3, NSRange(location: 1, length: 3)),
+			([start, start, tri, "0 !TEXMAP END", tri, "0 !TEXMAP END"], 0, 5, NSRange(location: 0, length: 6)),
+			([start], 0, 0, NSRange(location: 0, length: 0)),
+			([tri, tri], 0, 1, NSRange(location: 0, length: 0)),
+			(["0 // not a texture", tri], 0, 1, NSRange(location: 0, length: 0)),
+		]
+		for (lines, index, maxIndex, expected) in cases {
+			let range = LDrawTexture.rangeOfDirectiveBeginning(at: UInt(index), inLines: lines, maxIndex: UInt(maxIndex))
+			#expect(range == expected, "\(lines) from \(index) to \(maxIndex): \(range)")
+		}
+	}
+
+	@Test("Planar header with non-ASCII next to the fields (UTF-16 scanning, L101)")
+	func planarHeaderNonASCII() throws {
+		let lines = [
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \u{301}a.png",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9\u{301} a.png",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \"\u{1F600} x\" GLOSSMAP \u{200D}g",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png\u{A0}GLOSSMAP g",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP \"\"",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \"\" GLOSSMAP g",
+			"0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \"\"\"a b\"",
+			"0\u{301} !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png",
+		]
+		var out: [String] = []
+		for line in lines {
+			let texture = LDrawTexture()
+			let ok = try ObjC.run { texture.parsePlanarTexture(fromLine: line, parentGroup: nil) }
+			out.append("\(Meta.escape(line)) -> \(ok) image=[\(texture.imageDisplayName().map(Meta.escape) ?? "nil")] gloss=[\(texture.glossmapName().map(Meta.escape) ?? "nil")] header=[\(Meta.escape(Prim.write(texture).components(separatedBy: "\n")[0]))]")
+		}
+		let actual = out.joined(separator: "\n")
+		#expect(actual == Self.expectedNonASCII, "\(actual)")
+	}
+
+	static let expectedNonASCII = #"""
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \u{301}a.png -> true image=[\u{301}a.png] gloss=[nil] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \u{301}a.png]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9\u{301} a.png -> true image=[\u{301}] gloss=[nil] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \u{301}]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 "\u{1F600} x" GLOSSMAP \u{200D}g -> true image=[\u{1F600} x] gloss=[\u{200D}g] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 \u{1F600} x GLOSSMAP \u{200D}g]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png\u{A0}GLOSSMAP g -> true image=[a.png] gloss=[g] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP g]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png GLOSSMAP "" -> false image=[a.png] gloss=[nil] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 "" GLOSSMAP g -> true image=[GLOSSMAP g] gloss=[nil] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 GLOSSMAP g]
+		0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 """a b" -> true image=[a b] gloss=[nil] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a b]
+		0\u{301} !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png -> true image=[a.png] gloss=[nil] header=[0 !TEXMAP START PLANAR 1 2 3 4 5 6 7 8 9 a.png]
+		"""#
+}
+
 // MARK: - StringUtilities
 
 @Suite("StringUtilities: next copy name (P2 exit)")

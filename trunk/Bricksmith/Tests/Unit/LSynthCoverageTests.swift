@@ -685,4 +685,166 @@ struct LSynthCoverageTests {
 			#expect(synth.synthesizedPartsCount() == bundled, "path \(blank.debugDescription)")
 		}
 	}
+
+	// MARK: P6b pre-port
+
+	/// How many times `synth` handles one LSynthSelectionDisplayDidChange notification: each handled one posts
+	/// LDrawDirectiveDidChange for the block (-noteNeedsDisplay), so this counts its observer registrations.
+	static func displayObserverCount(_ synth: LDrawLSynth) throws -> Int {
+		var count = 0
+		let token = NotificationCenter.default.addObserver(forName: Notification.Name("LDrawDirectiveDidChangeNotification"),
+														   object: synth, queue: nil) { _ in count += 1 }
+		defer { NotificationCenter.default.removeObserver(token) }
+		try ObjC.run { NotificationCenter.default.post(name: .LSynthSelectionDisplayDidChange, object: nil) }
+		return count
+	}
+
+	@Test("A new block: defaults, written form, display, bounds, drop rules (P6b pre-port)")
+	func freshBlock() throws {
+		let synth = LDrawLSynth()
+		let box = synth.boundingBox3()
+		let colour = synth.lDrawColor()
+		let lines = [
+			"class \(synth.lsynthClass()) type '\(synth.lsynthType() ?? "nil")' colour \(colour.map { "\($0.colorCode().rawValue)" } ?? "nil")",
+			"synthesized \(synth.synthesizedPartsCount()) hidden \(synth.isHidden()) selected \(synth.isSelected())",
+			"browsing '\(synth.browsingDescription() ?? "nil")' icon \(synth.iconName() ?? "nil") inspector \(synth.inspectorClassName() ?? "nil")",
+			"bounds \(box.min.x) \(box.min.y) \(box.min.z) \(box.max.x) \(box.max.y) \(box.max.z)",
+			"determineIconName \(synth.determineIconName(nil) ?? "nil")",
+			"written: " + SynthKit.lines(synth.write()).replacingOccurrences(of: "\n", with: " / "),
+			"observers \(try Self.displayObserverCount(synth))",
+		]
+		let actual = lines.joined(separator: "\n")
+		#expect(actual == Self.expectedFresh, "\(actual)")
+	}
+
+	static let expectedFresh = #"""
+		class 0 type '' colour -1
+		synthesized 0 hidden false selected false
+		browsing '' icon LSynthPart inspector InspectionLSynth
+		bounds inf inf inf -inf -inf -inf
+		determineIconName Brick
+		written: 0 SYNTH BEGIN  -1 / 0 SYNTH SHOW / 0 SYNTH END / 
+		observers 1
+		"""#
+
+	@Test("Parsed blocks register the preference observers twice (S32), new, copied and decoded ones once (P6b pre-port)")
+	func observerRegistrations() throws {
+		let (_, parsed) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
+		#expect(try Self.displayObserverCount(parsed) == 2)
+		let lines = SynthKit.block("PNEUMATIC_HOSE").components(separatedBy: "\n")
+		let direct = try #require(LDrawLSynth(lines: lines, in: NSRange(location: 0, length: lines.count), parentGroup: nil))
+		#expect(try Self.displayObserverCount(direct) == 2)
+		let copied = try #require(parsed.copy() as? LDrawLSynth)
+		#expect(try Self.displayObserverCount(copied) == 1)
+		let decoded = try #require(try ObjectModel.unarchive(ObjectModel.archive(parsed)) as? LDrawLSynth)
+		#expect(try Self.displayObserverCount(decoded) == 1)
+	}
+
+	@Test("Keyed archive keeps type, class, colour and constraints (not synthesized parts) and resynthesizes on draw; copy keeps only the children (P6b pre-port)")
+	func archiveAndCopy() throws {
+		try OffscreenGL.makeCurrent()
+		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
+		try ObjC.run { synth.setSelected(true) }
+		let decoded = try #require(try ObjectModel.unarchive(ObjectModel.archive(synth)) as? LDrawLSynth)
+		#expect(decoded.lsynthType() == "RUBBER_BAND")
+		#expect(decoded.lsynthClass() == synth.lsynthClass())
+		#expect(decoded.lDrawColor()?.colorCode().rawValue == 4)
+		#expect(decoded.synthesizedPartsCount() == 0)
+		#expect(decoded.subdirectives().count == 3)
+		#expect(decoded.isSelected() == false)
+		#expect(decoded.subdirectives().compactMap { ($0 as? LDrawDirective)?.iconName() } == ["LSynthBandConstraint", "LSynthDirection", "LSynthBandConstraint"])
+		// A decoded hose with real constraints resynthesizes on its first draw.
+		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/08b-lsynth-show.ldr"))
+		let hose = try #require(ObjectModel.all(file).compactMap { $0 as? LDrawLSynth }.first)
+		let decodedHose = try #require(try ObjectModel.unarchive(ObjectModel.archive(hose)) as? LDrawLSynth)
+		#expect(decodedHose.synthesizedPartsCount() == 0)
+		try ObjC.run { decodedHose.drawSelf(RecordingRenderer()) }
+		#expect(decodedHose.synthesizedPartsCount() > 0, "a decoded block resynthesizes on its first draw")
+
+		let copied = try #require(synth.copy() as? LDrawLSynth)
+		let text = [
+			"copy: class \(copied.lsynthClass()) type '\(copied.lsynthType() ?? "nil")' colour \(copied.lDrawColor()?.colorCode().rawValue ?? -1) selected \(copied.isSelected()) synthesized \(copied.synthesizedPartsCount())",
+			"icons: " + copied.subdirectives().compactMap { ($0 as? LDrawDirective)?.iconName() }.joined(separator: " "),
+			"written: " + SynthKit.lines(copied.write()).replacingOccurrences(of: "\n", with: " / "),
+		].joined(separator: "\n")
+		#expect(text == Self.expectedCopy, "\(text)")
+	}
+
+	static let expectedCopy = #"""
+		copy: class 0 type '' colour -1 selected false synthesized 0
+		icons: Brick LSynthDirection Brick
+		written: 0 SYNTH BEGIN  -1 / 0 SYNTH SHOW / 1 4 50 0 0 1 0 0 0 1 0 0 0 1 3003.dat / 0 SYNTH OUTSIDE / 1 4 -50 0 0 1 0 0 0 1 0 0 0 1 3003.dat / 0 SYNTH END / 
+		"""#
+
+	@Test("'Save Synthesized Parts' is compared with YES (1): other values omit the block (P6b pre-port)", arguments: [0, 1, 2, -1])
+	func saveSynthesizedValues(value: Int) throws {
+		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
+		let written = ArgumentPrefs.with([LSYNTH_SAVE_SYNTHESIZED_PARTS_KEY: value]) { SynthKit.lines(synth.write()) }
+		#expect(written.contains("0 SYNTH SYNTHESIZED BEGIN") == (value == 1), "\(written)")
+	}
+
+	@Test("Mutating accessors: class, type, hidden, colour; hidden invalidates; colour recolours selected parts (P6b pre-port)")
+	func accessors() throws {
+		let (_, synth) = try SynthKit.load(SynthKit.block("PNEUMATIC_HOSE"))
+		synth.setLsynthClass(3)
+		#expect(synth.lsynthClass() == 3)
+		#expect(synth.determineIconName(nil) == "LSynthBandConstraint")
+		synth.setLsynthClass(2)
+		#expect(synth.determineIconName(nil) == "LSynthHoseConstraint")
+		synth.setLsynthClass(1)
+		synth.setLsynthType("PLI_TECHNIC_TREAD")
+		#expect(synth.determineIconName(nil) == "LSynthBandConstraint")
+		synth.setLsynthType("PLI_HOSE_FLEXIBLE_12L")
+		#expect(synth.determineIconName(nil) == "LSynthHoseConstraint")
+		synth.setLsynthType("NOT_A_PART")
+		#expect(synth.determineIconName(nil) == "Brick")
+		synth.setLsynthClass(9)
+		#expect(synth.determineIconName(nil) == "Brick")
+		synth.setLsynthType(nil)
+		#expect(synth.lsynthType() == nil)
+		#expect(SynthKit.lines(synth.write()).hasPrefix("0 SYNTH BEGIN (null) 4\n"), "\(synth.write() ?? "nil")")
+		synth.setHidden(true)
+		synth.setHidden(true)
+		#expect(synth.isHidden())
+		let blue = try #require(ColorLibrary.shared()?.color(forCode: LDrawColorT(rawValue: 1)))
+		synth.setLDrawColor(blue)
+		#expect(SynthKit.synthesized(synth).allSatisfy { $0.lDrawColor()?.colorCode().rawValue == 1 })
+		synth.setLDrawColor(nil)
+		#expect(synth.lDrawColor() == nil)
+		#expect(SynthKit.lines(synth.write()).hasPrefix("0 SYNTH BEGIN (null) 0\n"), "\(synth.write() ?? "nil")")
+	}
+
+	@Test("Auto-hull preparation (no live caller): one entry per tangent point, none in the hull yet (P6b pre-port)")
+	func autoHullData() throws {
+		let (_, synth) = try SynthKit.load("""
+			0 SYNTH BEGIN RUBBER_BAND 4
+			0 SYNTH SHOW
+			1 4 -50 0 0 1 0 0 0 1 0 0 0 1 LS01.dat
+			1 4 50 0 0 1 0 0 0 1 0 0 0 1 LS01.dat
+			1 4 0 0 60 1 0 0 0 1 0 0 0 1 LS01.dat
+			0 SYNTH END
+			""")
+		let data = try #require(try ObjC.run { synth.prepareAutoHullData() })
+		let rows = data.map { entry -> String in
+			let d = entry as! NSDictionary
+			return "\(d["x"]!) \(d["y"]!) \(d["inHull"]!) \((d["directive"] as AnyObject) is LDrawPart)"
+		}
+		let actual = rows.joined(separator: "\n")
+		#expect(actual == Self.expectedHull, "\(actual)")
+	}
+
+	static let expectedHull = #"""
+		0 0 0 true
+		0 0 0 true
+		0 0 0 true
+		0 0 0 true
+		100 0 0 true
+		100 0 0 true
+		100 0 0 true
+		100 0 0 true
+		50 0 0 true
+		50 0 0 true
+		50 0 0 true
+		50 0 0 true
+		"""#
 }
