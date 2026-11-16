@@ -81,7 +81,8 @@ These singletons matter for tests and for the port:
 - `ColorLibrary sharedColorLibrary` is touched by **every coloured line parse**. It loads
   `LDConfig.ldr` from the path that `LDrawPaths` reports.
 - `LDrawPaths sharedPaths` reads the LDraw folder from `NSUserDefaults` (key in `MacLDraw.h`).
-- `PartLibrary sharedPartLibrary` resolves part references, creates **GL textures**, and builds part
+- `PartLibrary sharedPartLibrary` resolves part references, decodes texture images (the GL upload is
+  `+[LDrawShaderRenderer textureTagForBitmap:width:height:]`, reached through the renderer), and builds part
   catalogs through `PartCatalogBuilder`.
 - `ModelManager sharedModelManager` resolves cross-document submodel references.
 - `MLCadIni iniFile` holds minifig and LSynth type lists.
@@ -90,11 +91,10 @@ These singletons matter for tests and for the port:
 
 - `LDrawRenderer.h` declares the `LDrawRenderer` and `LDrawCollector` protocols. Directives
   implement `drawSelf:` and `collectSelf:`. **This is the seam a Metal renderer will plug into.**
-- The seam leaks in four places:
+- The seam leaks in three places (P4 moved the texture upload behind `-textureTagForTexture:`):
   - The protocol uses `GLfloat *`.
   - The legacy `draw:viewScale:parentColor:` path in `LDrawPart`/`LDrawDirective` makes immediate-mode GL calls.
   - `LDrawPart` stores `GLfloat glTransformation[16]`.
-  - `PartLibrary` uploads textures.
 - `LDrawGLRenderer` (camera, picking, projection) and `LDrawGLView` (an `NSOpenGLView`) are
   GL-specific end to end.
 - `MatrixMath.c` is the core geometry library (`Point3`, `Vector3`, `Matrix4`, `Box3`,

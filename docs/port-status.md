@@ -55,6 +55,8 @@ their own port phase.
 | P3 | UI smoke after the BUG-033 fix (`scripts/test.sh --ui-only`): 5/5 passed; real and Debug defaults unchanged | 2026-11-16 | agent | |
 | P3 | Merged to master as 4.0.3 (`015d40b`): Debug/Release no new warnings, 189 tests (73 known), UI 5/5 | 2026-11-16 | agent | |
 | P4 | `USE_BLOCKS`, its dead branches and the dispatch typedef hack removed (`9774896`) | 2026-11-16 | agent | Branch `20261116-p4-objc-prep` |
+| P4 | D: GL out of the model. Texture upload behind `-textureTagForTexture:` (`LDrawRenderer`/`LDrawCollector`), drag-handle sphere built lazily on the dead legacy path (`4201a47`, `94d5a94`) | 2026-11-16 | agent | Remaining GL in model files is on dead fixed-function paths (coverage ledger rows 16, 29, 33) plus the `glTransformation` ivar name. Perf 78-93% of baseline |
+| P4 | C: Randomize Colors `randomSource`, `-exportStepsToURL:` (mirror deleted), `+registerValueTransformers` from `main.m` (`d55cc6e`, `c4f04bd`, `1c69ef5`) | 2026-11-16 | agent | 192 tests, 73 known |
 | P4 | In progress, as parallel streams in worktrees from `9774896`: A parse errors → NSError + factory; D GL out of the model; B nib loading + RegexKitLite; C Randomize RNG, Export Steps extraction, `+initialize` | 2026-11-16 | agent | Then (serial): ivars → properties, enum names, delete RegexKitLite, split LDrawDocument.m |
 | P2 | Mutation smoke: 30/30 killed (`scripts/mutation-smoke.sh`, patches from `scripts/dev/make-mutations.py`) | 2026-11-15 | agent | Two survivors on the first run: one revealed a missing test (untyped ROTSTEP), one targeted dead code (retargeted) |
 | P2 | Default suite time | 2026-11-15 | agent | 185 tests in ~31-60 s (limit 3 min) |

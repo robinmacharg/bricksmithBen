@@ -142,9 +142,9 @@ confirm the list is complete.
 
 | Feature or action | Why it's manual | Covered by checklist step |
 |---|---|---|
-| Randomize Colors | Uses unseeded `rand()` (`LDrawDocument.m:2086`). P4 adds an injectable RNG | 14 |
+| Randomize Colors (the menu action only) | The shuffle logic is tested with an injected random source (`LDrawDocument.randomSource`; `DocumentActionTests.randomizeColorsScripted`/`Seeded`); the shipping app still uses unseeded `rand()` | 14 |
 | Split Model, Add Part (from browser), Add Submodel Reference, Insert Part, Add Minifigure | Present panels, alerts or menus (`canDeleteDirective`, part browser, minifig dialog) | 5, 7, 11 |
-| Export Steps | Save panel; the export logic itself is covered by row 11 (note BUG-011: files come out in reverse order) | 15 |
+| Export Steps (the save panel only) | The export itself is `-[LDrawDocument exportStepsToURL:]`, tested in `ExportTests` (note BUG-011: files come out in reverse order). The goldens use parsed-file input; opening a real document first adds `.ldr` to extensionless model names, so folder names differ | 15 |
 | Search panel (Find) | Its matching logic is bound to the panel's controls (scope/colour/part popups) | 16 |
 | Missing/moved pieces checks on open | Alerts | 2 |
 | Move and Rotation panels, Find, Dimensions, Piece Count | Panels; the underlying edits (`moveSelectionBy`, `rotateSelection`) are automated in row 10 | 5 |

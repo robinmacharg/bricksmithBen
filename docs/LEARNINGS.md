@@ -197,7 +197,8 @@ section. Each entry says what happened and what to do instead.
   kept alongside, so a genuinely broken undo is still caught.
 - **L60. When logic is trapped in UI code (a save-panel completion block), mirror it in the test line for line and
   cite the source.** Record a P4 task to extract it, so the mirror can't drift for long. The mirror is how BUG-011's
-  real user impact (backwards Export Steps files) was confirmed.
+  real user impact (backwards Export Steps files) was confirmed. *(P4: extracted into `-exportStepsToURL:`; the
+  mirror is gone.)*
 - **L61. Never put Foundation `-description` output in a golden.** Its formatting of nested collections can change
   between OS versions. → Serialise to compact sorted JSON (`JSONSerialization` with `.sortedKeys`).
 - **L62. Private ObjC actions can be driven from tests by selector** (`perform(NSSelectorFromString("generateMinifigure:"))`)
@@ -241,6 +242,8 @@ section. Each entry says what happened and what to do instead.
   (which `setSelected:YES` does for primitives) builds a sphere mesh with `glGenBuffers`. Drawing an
   `LDrawTexture` asks PartLibrary for a GL texture name. With no current context, both crash (SIGSEGV in
   libGL). → Use `OffscreenGL.makeCurrent()` (`Tests/Unit/DrawingTests.swift`) in suites that select or draw.
+  *(Since P4 the drag handle builds its sphere only on the dead legacy `draw:` path, so selecting no longer needs
+  GL; drawing a texture still does.)*
 - **L71. Parse snippets with a header.** A file whose first line is `0 something` takes that line as the model's
   title, so a comment or meta-command under test disappears from the steps. `Prim.parse` prepends
   `0 Primitive` / `0 Name:` / `0 Author:` lines.
@@ -335,3 +338,15 @@ section. Each entry says what happened and what to do instead.
   → `git merge --no-ff --no-commit <branch>` on master; set both `CFBundleShortVersionString` and `CFBundleVersion`
   in the merge; run `scripts/build.sh`, `scripts/build.sh --release` and `scripts/test.sh --ui` on the merged tree;
   only then commit, with the gates in the message. Cut the next branch from master, not from the old branch.
+- **L84. In a worktree under `/tmp`, Xcode logs `/tmp/...` paths but `${0:A}` resolves to `/private/tmp/...`.**
+  `build.sh` then reported every warning as new (fixed in `e66adfa` by stripping both spellings). → When a script
+  compares tool output against paths it computed, normalise symlinked prefixes on both sides.
+- **L85. Agent lessons from P4 stream C:**
+  - Check a value-transformer registration through `NSValueTransformer.valueTransformerNames()` in a fresh child
+    process, before any lookup: a lookup by name instantiates and registers a class of that name itself.
+  - Opening a document renames extensionless models to `*.ldr` (`-doMissingModelnameExtensionCheck:`), so document
+    output and parsed-file goldens differ in model names.
+  - An injected random source for Randomize Colors must not return a constant: its retry loop never ends.
+- **L86. Adding one nullability annotation to a header outside `NS_ASSUME_NONNULL` triggers
+  `-Wnullability-completeness` for the whole header.** Leave new methods unannotated like their neighbours, or
+  annotate the whole header in its own commit.

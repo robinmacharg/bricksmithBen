@@ -52,7 +52,7 @@ Steps marked **🧑 HUMAN GATE** need a person to sign off: an agent stops there
 | `PartCatalogBuilder` writes `parts.plist` into the LDraw folder | `PartCatalogBuilder.m:209` | Each run gets its own temp copy of the fixture library. |
 | `write` emits **CRLF**. Inputs may be UTF-8 with a BOM, Latin-1 or MacRoman, and output is always UTF-8 | `LDrawModel.m:571`; `LDrawUtilities.m:376-387`; `LDrawDocument.m:534` | Fixtures and goldens are protected with `.gitattributes`, and tests compare **bytes**. |
 | Document edit actions read the outline view's selection | `LDrawDocument.m:6050-6065`, `:858-875` | Document tests load the nib (the window isn't shown). |
-| `+initialize` registers value transformers | `LDrawApplication.m:53` | Swift can't define `+initialize`, so P4 moves it. |
+| `+initialize` registers value transformers | `LDrawApplication.m:41` (before P4) | Swift can't define `+initialize`, so P4 moves it (done: `+registerValueTransformers`, called from `main.m`). |
 | Colours in preferences are archived with non-keyed `NSArchiver` | `UserDefaultsCategory.m:22,41` | Tests cover both the reader **and** the writer format. |
 | Info.plist hard-codes `LSMinimumSystemVersion` to `10.11.0`. Sparkle points at the live SourceForge appcast in every configuration | `Info.plist` | Debug and dev builds could update themselves to the release build. P0 fixes this. |
 | `LDrawDataStream.m` isn't compiled; only its header is in the project | `project.pbxproj` | Excluded from porting. Delete it or leave it, at the maintainer's choice. |
