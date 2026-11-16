@@ -271,9 +271,10 @@ class MLCadIni: NSObject {
 					// (a failed scan leaves the name unchanged, as NSScanner's
 					// out-parameter did: "[]" continues the previous section's name)
 					let scanner = Scanner(string: currentLine as String)
-					_ = scanner.scanString("[")
-					if let name = scanner.scanUpToString("]") {
-						currentSectionName = name
+					var name: NSString? = nil
+					_ = scanner.utf16.scanString("[", into: nil)
+					if scanner.utf16.scanUpTo("]", into: &name), let name {
+						currentSectionName = name as String
 					}
 					currentSectionLines = NSMutableArray()
 				}
@@ -320,12 +321,14 @@ class MLCadIni: NSObject {
 		for case let currentLine as String in lines ?? [] {
 			let scanner = Scanner(string: currentLine)
 
-			if scanner.scanInt() != nil {
-				_ = scanner.scanString("-")
-				_ = scanner.scanUpToCharacters(from: whitespaceSet)		// display name
-				if scanner.scanString("= SYNTH BEGIN") != nil {			// ignore 00 - VERSION 3.1 line
-					if let name = scanner.scanUpToCharacters(from: whitespaceSet) {
-						actualName = name
+			var typeNumber = 0
+			if scanner.utf16.scanInteger(&typeNumber) {
+				_ = scanner.utf16.scanString("-", into: nil)
+				_ = scanner.utf16.scanUpToCharacters(from: whitespaceSet, into: nil)		// display name
+				if scanner.utf16.scanString("= SYNTH BEGIN", into: nil) {			// ignore 00 - VERSION 3.1 line
+					var name: NSString? = nil
+					if scanner.utf16.scanUpToCharacters(from: whitespaceSet, into: &name), let name {
+						actualName = name as String
 					}
 					guard let name = actualName else {
 						NSLog("MLCad.ini [LSYNTH]: skipping \"%@\", which has no type name after SYNTH BEGIN", currentLine)
@@ -377,9 +380,7 @@ class MLCadIni: NSObject {
 		let whitespaceSet	= CharacterSet.whitespaces
 
 		func scanFloat(_ scanner: Scanner, into value: inout Float) {
-			if let scanned = scanner.scanFloat() {
-				value = scanned
-			}
+			_ = scanner.utf16.scanFloat(&value)
 		}
 
 		for case let currentLine as String in lines ?? [] {
@@ -388,23 +389,23 @@ class MLCadIni: NSObject {
 			let scanner = Scanner(string: currentLine)
 
 			//skip the display name. We just don't care.
-			_ = scanner.scanUpToCharacters(from: quoteSet)
-			_ = scanner.scanString("\"")
-			_ = scanner.scanUpToCharacters(from: quoteSet)
-			_ = scanner.scanString("\"") //so we scan "" as two separate characters
+			_ = scanner.utf16.scanUpToCharacters(from: quoteSet, into: nil)
+			_ = scanner.utf16.scanString("\"", into: nil)
+			_ = scanner.utf16.scanUpToCharacters(from: quoteSet, into: nil)
+			_ = scanner.utf16.scanString("\"", into: nil) //so we scan "" as two separate characters
 
 			//scan the part name, skipping the first quote.
-			_ = scanner.scanUpToCharacters(from: quoteSet)
-			_ = scanner.scanString("\"")
-			let scannedName = scanner.scanUpToCharacters(from: quoteSet)
-			let gotName = scannedName != nil
-			if let scannedName {
-				partName = scannedName
+			_ = scanner.utf16.scanUpToCharacters(from: quoteSet, into: nil)
+			_ = scanner.utf16.scanString("\"", into: nil)
+			var scannedName: NSString? = nil
+			let gotName = scanner.utf16.scanUpToCharacters(from: quoteSet, into: &scannedName)
+			if gotName, let scannedName {
+				partName = scannedName as String
 			}
-			_ = scanner.scanString("\"")
+			_ = scanner.utf16.scanString("\"", into: nil)
 
 			//skip the flags; they don't mean anything yet anyway
-			_ = scanner.scanUpToCharacters(from: whitespaceSet)
+			_ = scanner.utf16.scanUpToCharacters(from: whitespaceSet, into: nil)
 
 			//the rest is the transformation matrix, but in a different order from
 			// an LDraw type 1 part line.

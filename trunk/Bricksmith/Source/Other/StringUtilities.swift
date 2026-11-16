@@ -54,13 +54,14 @@ class StringUtilities: NSObject {
 		// This is already a copy itself; now we need to figure out which copy is
 		// next!
 		else {
+			// NSScanner's own methods, in UTF-16 units as the ObjC (L101).
 			let copyNumberScanner = Scanner(string: originalString)
-			copyNumberScanner.currentIndex = String.Index(utf16Offset: NSMaxRange(rangeOfCopyToken), in: originalString)
+			copyNumberScanner.utf16.setLocation(NSMaxRange(rangeOfCopyToken))
 
 			// Is there a number at the end?
-			let scannedNumber   = copyNumberScanner.scanInt()
-			let foundCopyNumber = (scannedNumber != nil)
-			currentCopyNumber   = scannedNumber ?? 0
+			var scannedNumber   = 0
+			let foundCopyNumber = copyNumberScanner.utf16.scanInteger(&scannedNumber)
+			currentCopyNumber   = scannedNumber
 
 			if copyNumberScanner.isAtEnd == false {
 				// The word "copy" in the name was apparently followed by something
