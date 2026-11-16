@@ -10,7 +10,7 @@
 //  Created by Allen Smith on 3/31/05.
 //  Copyright (c) 2005. All rights reserved.
 //
-//  Ported to Swift in P6c. The superclass (LDrawDirective) is still ObjC.
+//  Ported to Swift in P6c, as was its superclass, LDrawDirective.
 //  LDrawContainer.h survives as a forward-declaration stub.
 //
 //  The children stay in an NSMutableArray, which -subdirectives returns live

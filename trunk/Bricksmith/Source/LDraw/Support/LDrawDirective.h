@@ -1,23 +1,15 @@
-//==============================================================================
+// Ported to LDrawDirective.swift (P6c).
 //
-// File:		LDrawDirective.h
-//
-// Purpose:		This is an abstract base class for all elements of an LDraw 
-//				document.
-//
-//  Created by Allen Smith on 2/19/05.
-//  Copyright 2005. All rights reserved.
-//==============================================================================
+// Types-only header: the cache flags, messages and observer protocols, the
+// notification and drawing macros, LDrawPartVisitor and the imports their
+// users relied on, plus the three initializer shims LDrawDirective.swift uses.
 #import <Foundation/Foundation.h>
 #import "BricksmithBuildConfig.h"
 
 #import "MatrixMath.h"
-#import "LDrawFastSet.h"
 #import "LDrawRenderer.h"
 
-// This uses the hacky C wrapper around NSSet to improve performance.
-#define NEW_SET 1
-
+@class LDrawDirective;
 @class LDrawColor;
 @class LDrawContainer;
 @class LDrawFile;
@@ -168,91 +160,58 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invoked as visitor(self) by -[LDrawPart applyToAllParts:] (verified 2026-11-15)
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
-// LDrawDirective
+#pragma mark		Initializer shims (used by LDrawDirective.swift)
 //
 ////////////////////////////////////////////////////////////////////////////////
-@interface LDrawDirective : NSObject <NSCoding, NSCopying, LDrawObservable>
+//
+// -[LDrawDirective initWithLines:inRange:parentGroup:] began with [self init],
+// and -initWithLines:inRange: sent [self initWithLines:inRange:parentGroup:NULL]:
+// both reach the subclass's override on the object being initialized, and the
+// subclasses depend on it (LDrawContainer's children array, LDrawModel's colour
+// library, LDrawPart's icon and transform). A Swift designated initializer
+// can't delegate to self, and Swift can't send an init message to an existing
+// object: an @objc protocol method with the selector, sent through a bitcast,
+// over-releases (an init consumes self and returns +1, which a plain method
+// can't express; the P6c probe crashed with SIGSEGV). So the Swift initializers
+// call NSObject's init and then these shims, which ARC compiles with the init
+// family's ownership.
+//
+// +directiveWithLines:inRange:parentGroup: is [[self alloc] initWithLines:...].
+// In Swift, self.init(lines:...) on a metatype needs a `required` initializer,
+// which forces `required` onto every subclass override and fails for subclasses
+// that declare other initializers (P6c probe), so it goes through the third
+// shim, keeping ObjC's alloc/init semantics.
+//
+// NS_RETURNS_RETAINED: Swift takes the result owned, so it never depends on the
+// autorelease-return handshake (no directive is left in an autorelease pool).
+
+
+// The parse initializer's selector, so the shims can send it to an `id`.
+@protocol LDrawDirectiveParseInit
+- (nullable instancetype) initWithLines:(nullable NSArray<NSObject *> *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup;
+@end
+
+// [directive init]: the receiver's (most derived) -init.
+static inline NSObject * _Nullable LDrawDirectiveSendInit(NSObject *directive) NS_RETURNS_RETAINED;
+static inline NSObject * _Nullable LDrawDirectiveSendInit(NSObject *directive)
 {
-	@private
-	__unsafe_unretained LDrawContainer *enclosingDirective;	// parent: unretained, as under MRC (L77) //LDraw files are a hierarchy.
-	#if NEW_SET
-		LDrawFastSet	observers;
-	#else
-		NSMutableSet   *observers;			//Any observers watching us.  This is an array of NSValues of pointers to create WEAK references.
-	#endif
-	CacheFlagsT		invalFlags;
-	BOOL			isSelected;
-    NSString       *iconName;
-	
+	return [directive init];
 }
 
-// Class methods
-+(null_unspecified NSString *)defaultIconName;
+// [directive initWithLines:lines inRange:range parentGroup:parentGroup]
+static inline NSObject * _Nullable LDrawDirectiveSendInitWithLines(NSObject *directive, NSArray<NSObject *> * _Nullable lines, NSRange range, dispatch_group_t _Nullable parentGroup) NS_RETURNS_RETAINED;
+static inline NSObject * _Nullable LDrawDirectiveSendInitWithLines(NSObject *directive, NSArray<NSObject *> * _Nullable lines, NSRange range, dispatch_group_t _Nullable parentGroup)
+{
+	return [(NSObject<LDrawDirectiveParseInit> *)directive initWithLines:lines inRange:range parentGroup:parentGroup];
+}
 
-// Initialization
-- (null_unspecified id) initWithLines:(null_unspecified NSArray<NSObject *> *)lines inRange:(NSRange)range;
-- (null_unspecified id) initWithLines:(null_unspecified NSArray<NSObject *> *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup;
-// Parses lines into a directive of the receiving class, or of whatever class the lines call for
-// (LDrawMetaCommand returns LDrawComment, LDrawColor, ...). Use this, not -initWithLines:..., when the
-// class comes from +[LDrawUtilities classForDirectiveBeginningWithLine:].
-+ (nullable LDrawDirective *) directiveWithLines:(null_unspecified NSArray<NSObject *> *)lines inRange:(NSRange)range parentGroup:(nullable dispatch_group_t)parentGroup NS_SWIFT_NAME(directive(lines:in:parentGroup:));
-+ (NSRange) rangeOfDirectiveBeginningAtIndex:(NSUInteger)index inLines:(null_unspecified NSArray<NSObject *> *)lines maxIndex:(NSUInteger)maxIndex;
-
-// Directives
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(null_unspecified LDrawColor *)parentColor;
-- (void) drawSelf:(null_unspecified id<LDrawRenderer>)renderer;
-- (void) collectSelf:(null_unspecified id<LDrawCollector>)renderer;
-- (Box3) boundingBox3;
-
-// Hit testing primitives
-- (void) hitTest:(Ray3)pickRay transform:(Matrix4)transform viewScale:(float)scaleFactor boundsOnly:(BOOL)boundsOnly creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableDictionary *)hits;
-- (BOOL) boxTest:(Box2)bounds transform:(Matrix4)transform boundsOnly:(BOOL)boundsOnly creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableSet *)hits;
-- (void) depthTest:(Point2)testPt inBox:(Box2)bounds transform:(Matrix4)transform creditObject:(null_unspecified id)creditObject bestObject:(id _Null_unspecified * _Null_unspecified)bestObject bestDepth:(null_unspecified float *)bestDepth;
-
-- (null_unspecified NSString *) write;
-
-// Display
-- (null_unspecified NSString *) browsingDescription;
-- (null_unspecified NSString *) iconName;
-- (null_unspecified NSString *) inspectorClassName;
-
-// Accessors
-- (null_unspecified NSArray *)ancestors;
-- (null_unspecified LDrawContainer *) enclosingDirective;
-- (null_unspecified LDrawFile *) enclosingFile;
-- (null_unspecified LDrawModel *) enclosingModel;
-- (null_unspecified LDrawStep *) enclosingStep;
-- (BOOL) isSelected;
-
-- (void) setEnclosingDirective:(null_unspecified LDrawContainer *)newParent;
-- (void) setSelected:(BOOL)flag;
-- (void) setIconName:(null_unspecified NSString *)icon;
-
-// Utilities
-- (BOOL) containsReferenceTo:(null_unspecified NSString *)name;
-- (void) flattenIntoLines:(null_unspecified NSMutableArray *)lines
-				triangles:(null_unspecified NSMutableArray *)triangles
-		   quadrilaterals:(null_unspecified NSMutableArray *)quadrilaterals
-					other:(null_unspecified NSMutableArray *)everythingElse
-			 currentColor:(null_unspecified LDrawColor *)parentColor
-		 currentTransform:(Matrix4)transform
-		  normalTransform:(Matrix3)normalTransform
-				recursive:(BOOL)recursive;
-- (BOOL) isAncestorInList:(null_unspecified NSArray *)containers;
-- (void) noteNeedsDisplay;
-- (void) registerUndoActions:(null_unspecified NSUndoManager *)undoManager;
-
-// These methods should really be "protected" methods for sub-classes to use when acting like observables.
-// Obj-C doesn't give us compiler-level support to stop externals from calling them.
-
-- (void) sendMessageToObservers:(MessageT) msg;					// Send a specific message to all observers.
-- (void) invalCache:(CacheFlagsT) flags;						// Invalidate cache bits - this notifies observers as needed.  Flags are the bits to invalidate, not the net effect.
-- (CacheFlagsT) revalCache:(CacheFlagsT) flags;						// Revalidate flags - no notifications are sent, but internals are updated.  Returns which flags _were_ dirty.
-
-@end
+// [[directiveClass alloc] initWithLines:lines inRange:range parentGroup:parentGroup]
+static inline NSObject * _Nullable LDrawDirectiveAllocInitWithLines(Class directiveClass, NSArray<NSObject *> * _Nullable lines, NSRange range, dispatch_group_t _Nullable parentGroup) NS_RETURNS_RETAINED;
+static inline NSObject * _Nullable LDrawDirectiveAllocInitWithLines(Class directiveClass, NSArray<NSObject *> * _Nullable lines, NSRange range, dispatch_group_t _Nullable parentGroup)
+{
+	return [(NSObject<LDrawDirectiveParseInit> *)[directiveClass alloc] initWithLines:lines inRange:range parentGroup:parentGroup];
+}
 
 NS_ASSUME_NONNULL_END
