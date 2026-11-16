@@ -261,13 +261,21 @@ struct LSynthCoverageTests {
 	@Test("Selecting a block in a coloured selection mode with the default selection colour (system red)",
 		  arguments: [1, 2])
 	func defaultSelectionColour(mode: Int) throws {
-		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND"))
+		// A blue block, so that "recoloured to the (red) selection colour" can be told apart from "left alone".
+		let (_, synth) = try SynthKit.load(SynthKit.block("RUBBER_BAND", colour: 1))
+		let parts = SynthKit.synthesized(synth)
 		// Exactly what +[PreferencesDialogController ensureDefaults] registers: a catalog colour, on which
 		// -redComponent raises (it needs an RGB colour space).
 		let systemRed = ArgumentPrefs.archivedColour(NSColor.systemRed)
 		try ArgumentPrefs.with([LSYNTH_SELECTION_MODE_KEY: mode, LSYNTH_SELECTION_COLOR_KEY: systemRed]) {
+			// The correct behaviour, as one expectation: selecting doesn't raise, and the synthesized parts take
+			// the selection colour (system red). (P6b: a port that stops at the raise site without raising still
+			// fails it, by leaving the parts blue.)
+			let raised = (try? ObjC.run { synth.setSelected(true) }) == nil
+			let colours = parts.map { $0.lDrawColor().map(Colour.rgba) ?? [] }
+			let recoloured = !colours.isEmpty && colours.allSatisfy { $0.count == 4 && $0[0] > 0.5 && $0[1] < 0.5 && $0[2] < 0.5 }
 			withKnownIssue("BUG-029: colorSelectedSynthesizedParts: calls -redComponent on the default (catalog) selection colour and raises") {
-				#expect(throws: Never.self) { try ObjC.run { synth.setSelected(true) } }
+				#expect(!raised && recoloured, "raised: \(raised); synthesized part colours: \(colours)")
 			}
 			// Deselecting uses the block's own colour and is unaffected.
 			try ObjC.run { synth.setSelected(false) }
