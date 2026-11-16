@@ -21,7 +21,7 @@
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"
 #import "MatrixMath.h"
-#import "MLCadIni.h"
+#import "Bricksmith-Swift.h"
 
 @interface MinifigureDialogController ()
 {
