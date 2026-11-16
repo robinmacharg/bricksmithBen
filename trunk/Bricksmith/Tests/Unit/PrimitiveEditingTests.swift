@@ -698,3 +698,194 @@ struct P6bLinePinTests {
 		#expect(type(of: copied) == LDrawLine.self && Prim.write(copied) == Prim.write(line))
 	}
 }
+
+// MARK: - P6c pins: LDrawDrawableElement (colour, hidden, vertex-buffer colour resolution, archive, copy, flatten)
+
+@MainActor
+@Suite("LDrawDrawableElement (P6c pins)", .fixtureLibrary, .serialized)
+struct P6cDrawableElementPinTests {
+
+	static func colour(_ code: Int32) throws -> LDrawColor {
+		try #require(ColorLibrary.shared()!.color(forCode: LDrawColorT(rawValue: code)))
+	}
+
+	static func rgba(_ c: LDrawColor?) -> String {
+		guard let c else { return "nil" }
+		var rgba: (GLfloat, GLfloat, GLfloat, GLfloat) = (0, 0, 0, 0)
+		withUnsafeMutablePointer(to: &rgba) { $0.withMemoryRebound(to: GLfloat.self, capacity: 4) { c.getRGBA($0) } }
+		return [rgba.0, rgba.1, rgba.2, rgba.3].map(RecordingRenderer.fmt).joined(separator: " ")
+	}
+
+	static func code(_ c: LDrawColor?) -> String { c.map { "\($0.colorCode().rawValue)" } ?? "nil" }
+
+	@Test("writeToVertexBuffer:parentColor: resolves 16 to the parent, 24 to its complement, else its own colour; hidden still writes")
+	func vertexBufferParentColour() throws {
+		let red = try Self.colour(4), blue = try Self.colour(1)
+		func write(_ code: Int32, parent: LDrawColor?, hidden: Bool = false) throws -> String {
+			let prim = try #require(try Prim.parse("3 \(code) 0 0 0 10 0 0 0 10 0") as? LDrawDrawableElement)
+			prim.setHidden(hidden)
+			let buffer = UnsafeMutablePointer<VBOVertexData>.allocate(capacity: 8)
+			defer { buffer.deallocate() }
+			buffer.initialize(repeating: VBOVertexData(), count: 8)
+			guard let end = prim.write(toVertexBuffer: buffer, parentColor: parent, wireframe: false) else { return "nil" }
+			let colours = Set((0..<(end - buffer)).map { i -> String in
+				let c = buffer[i].color
+				return [c.0, c.1, c.2, c.3].map(RecordingRenderer.fmt).joined(separator: " ")
+			})
+			return "\(end - buffer) vertices \(colours.sorted())"
+		}
+		#expect(try write(16, parent: red) == "3 vertices [\"\(Self.rgba(red))\"]")
+		#expect(try write(24, parent: red) == "3 vertices [\"\(Self.rgba(red.compliment()))\"]")
+		#expect(try write(4, parent: blue) == "3 vertices [\"\(Self.rgba(red))\"]")
+		#expect(try write(4, parent: nil) == "3 vertices [\"\(Self.rgba(red))\"]", "a nil parent only logs")
+		#expect(try write(4, parent: blue, hidden: true) == "3 vertices [\"\(Self.rgba(red))\"]", "hidden is not checked here")
+		// The bare class writes nothing (its -writeElementToVertexBuffer: returns NULL), whatever its colour.
+		let bare = LDrawDrawableElement()
+		var vertex = VBOVertexData()
+		#expect(bare.write(toVertexBuffer: &vertex, parentColor: red, wireframe: false) == nil)
+		#expect(bare.write(toVertexBuffer: &vertex, with: red, wireframe: true) == nil)
+	}
+
+	@Test("projectedBoundingBox: the union of the 8 projected corners of boundingBox3; invalid bounds stay invalid")
+	func projectedBounds() throws {
+		let tri = try #require(try Prim.parse("3 16 -1 -1 0 1 0 0 0 1 0.5") as? LDrawDrawableElement)
+		let viewport = Box2(origin: Point2(x: 0, y: 0), size: Size2(width: 100, height: 50))
+		let projected = tri.projectedBoundingBox(withModelView: IdentityMatrix4, projection: IdentityMatrix4, view: viewport)
+		let b = tri.boundingBox3()
+		var expected = InvalidBox
+		for x in [b.min.x, b.max.x] { for y in [b.min.y, b.max.y] { for z in [b.min.z, b.max.z] {
+			expected = V3UnionBoxAndPoint(expected, V3Project(V3Make(x, y, z), IdentityMatrix4, IdentityMatrix4, viewport))
+		} } }
+		#expect(P6a.p(projected.min) == P6a.p(expected.min) && P6a.p(projected.max) == P6a.p(expected.max))
+		#expect(P6a.p(projected.min) == "(0, 0, 0.5)" && P6a.p(projected.max) == "(100, 50, 0.75)",
+				"\(P6a.p(projected.min)) \(P6a.p(projected.max))")
+		// A translated model view moves it.
+		let shift = M4.make([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0.5, 0, 0, 1]])
+		let moved = tri.projectedBoundingBox(withModelView: shift, projection: IdentityMatrix4, view: viewport)
+		#expect(P6a.p(moved.min) == "(25, 0, 0.5)" && P6a.p(moved.max) == "(125, 50, 0.75)", "\(P6a.p(moved.min)) \(P6a.p(moved.max))")
+		tri.setHidden(true)
+		#expect(V3EqualBoxes(tri.projectedBoundingBox(withModelView: IdentityMatrix4, projection: IdentityMatrix4, view: viewport), InvalidBox) != 0)
+		let bare = LDrawDrawableElement()
+		#expect(V3EqualBoxes(bare.projectedBoundingBox(withModelView: IdentityMatrix4, projection: IdentityMatrix4, view: viewport), InvalidBox) != 0)
+	}
+
+	@Test("position:snappedToGrid: rounds each axis half away from zero (roundf)")
+	func snapping() throws {
+		let bare = LDrawDrawableElement()
+		#expect(P6a.p(bare.position(V3Make(2.5, -2.5, 0.5), snappedToGrid: 1)) == "(3, -3, 1)")
+		#expect(P6a.p(bare.position(V3Make(15, -15, 4), snappedToGrid: 10)) == "(20, -20, 0)")
+		#expect(P6a.p(bare.position(V3Make(1.2, -0.7, 7.9), snappedToGrid: 0.5)) == "(1, -0.5, 8)")
+	}
+
+	@Test("setHidden: invalidates bounds and display list only on a change; setLDrawColor: always invalidates the display list")
+	func hiddenAndColourInvalidation() throws {
+		let tri = try #require(try Prim.parse(P6a.tri) as? LDrawTriangle)
+		#expect(tri.isHidden() == false && LDrawDrawableElement().isHidden() == false)
+		#expect(LDrawDrawableElement().lDrawColor() == nil)
+		let recorder = ObserverRecorder(label: "o")
+		tri.add(recorder)
+		defer { tri.remove(recorder) }
+		let all = CacheFlagsT(rawValue: -1)
+		let both = CacheFlagsT.CacheFlagBounds.union(.DisplayList).rawValue
+		let dl = CacheFlagsT.DisplayList.rawValue
+
+		_ = tri.revalCache(all)
+		tri.setHidden(false)
+		#expect(recorder.log.isEmpty, "\(recorder.log)")
+		tri.setHidden(true)
+		#expect(tri.isHidden() && recorder.log == ["o: statusInvalidated flags=\(both) from LDrawTriangle"], "\(recorder.log)")
+		recorder.log = []
+		_ = tri.revalCache(all)
+		tri.setHidden(true)
+		#expect(recorder.log.isEmpty, "\(recorder.log)")
+		tri.setHidden(false)
+		#expect(!tri.isHidden() && recorder.log == ["o: statusInvalidated flags=\(both) from LDrawTriangle"], "\(recorder.log)")
+
+		let blue = try Self.colour(1)
+		recorder.log = []
+		_ = tri.revalCache(all)
+		tri.setLDrawColor(blue)
+		#expect(tri.lDrawColor() === blue && recorder.log == ["o: statusInvalidated flags=\(dl) from LDrawTriangle"], "\(recorder.log)")
+		recorder.log = []
+		_ = tri.revalCache(all)
+		tri.setLDrawColor(blue)
+		#expect(recorder.log == ["o: statusInvalidated flags=\(dl) from LDrawTriangle"], "the same colour still invalidates: \(recorder.log)")
+		tri.setLDrawColor(nil)
+		#expect(tri.lDrawColor() == nil)
+		#expect(Prim.write(tri) == "3 0 0 0 0 10 0 0 0 10 0", "a nil colour writes as code 0")
+	}
+
+	@Test("Collecting with a nil colour: the zeroed scratch RGBA (lines, triangles, quads); a part pushes it")
+	func collectNilColour() throws {
+		for (text, expected) in [
+			("2 4 0 0 0 10 0 0", "line [0 0 0 10 0 0] n [0 -1 0] rgba(0 0 0 0)"),
+			(P6a.tri, "tri [0 0 0 10 0 0 0 10 0] n [0 0 100] rgba(0 0 0 0)"),
+			(P6a.quad, "quad [0 0 0 10 0 0 10 10 0 0 10 0] n [0 0 100] rgba(0 0 0 0)"),
+		] {
+			let prim = try #require(try Prim.parse(text) as? LDrawDrawableElement)
+			prim.setLDrawColor(nil)
+			#expect(P6a.collect(prim) == [expected])
+		}
+		let part = try PartFactory.part("1 4 0 0 0 1 0 0 0 1 0 0 0 1 3024.dat")
+		part.setLDrawColor(nil)
+		let r = RecordingRenderer()
+		try ObjC.run { part.drawSelf(r) }
+		let top = r.log.filter { !$0.hasPrefix(" ") }
+		#expect(top.first == "pushColor rgba(0 0 0 0)" && top.last == "popColor", "\(top)")
+	}
+
+	@Test("Archiving: keys, hidden survives, the decoded colour is the library's object; a nil colour decodes as library black")
+	func archive() throws {
+		let red = try Self.colour(4)
+		let bare = LDrawDrawableElement()
+		let bareData = ObjectModel.archive(bare)
+		let keys = try P6bPart.archivedKeys(bareData, className: "LDrawDrawableElement")
+		#expect(keys == ["color", "enclosingDirective", "hidden"], "\(keys)")
+		let decodedBare = try #require(try ObjectModel.unarchive(bareData) as? LDrawDrawableElement)
+		#expect(type(of: decodedBare) == LDrawDrawableElement.self)
+		let black = try Self.colour(0)
+		#expect(Self.code(decodedBare.lDrawColor()) == "0" && decodedBare.lDrawColor() === black,
+				"[nil colorCode] is 0, and the library's colour 0 replaces the nil")
+		#expect(decodedBare.isHidden() == false)
+
+		let tri = try #require(try Prim.parse("3 4 0 0 0 10 0 0 0 10 0") as? LDrawTriangle)
+		tri.setHidden(true)
+		let decoded = try #require(try ObjectModel.unarchive(ObjectModel.archive(tri)) as? LDrawTriangle)
+		#expect(decoded.isHidden())
+		#expect(decoded.lDrawColor() === red, "the library's colour object, not the decoded copy")
+		#expect(Prim.write(decoded) == Prim.write(tri))
+	}
+
+	@Test("copy: shares the colour object; hidden is not copied")
+	func copy() throws {
+		let tri = try #require(try Prim.parse("3 4 0 0 0 10 0 0 0 10 0") as? LDrawTriangle)
+		tri.setHidden(true)
+		let copied = try #require(tri.copy() as? LDrawTriangle)
+		#expect(copied.lDrawColor() === tri.lDrawColor())
+		#expect(copied.isHidden() == false)
+		let bare = try #require(LDrawDrawableElement().copy() as? LDrawDrawableElement)
+		#expect(type(of: bare) == LDrawDrawableElement.self && bare.lDrawColor() == nil)
+	}
+
+	@Test("flatten resolves 16 to the parent and 24 to its complement unless the parent is 16; nil parents give nil")
+	func flattenColours() throws {
+		let current = try Self.colour(16), edge = try Self.colour(24), red = try Self.colour(4), blue = try Self.colour(1)
+		func flatten(_ own: LDrawColor?, parent: LDrawColor?) -> LDrawColor? {
+			let e = LDrawDrawableElement()
+			e.setLDrawColor(own)
+			let a = NSMutableArray(), b = NSMutableArray(), c = NSMutableArray(), d = NSMutableArray()
+			e.flatten(intoLines: a, triangles: b, quadrilaterals: c, other: d, currentColor: parent, currentTransform: IdentityMatrix4,
+					  normalTransform: Matrix3MakeNormalTransformFromProjMatrix(IdentityMatrix4), recursive: true)
+			#expect(a.count + b.count + c.count + d.count == 0, "the base class adds itself nowhere")
+			return e.lDrawColor()
+		}
+		#expect(flatten(current, parent: red) === red)
+		#expect(flatten(current, parent: current) === current)
+		#expect(flatten(current, parent: nil) == nil)
+		#expect(flatten(edge, parent: red) === red.compliment())
+		#expect(flatten(edge, parent: current) === edge)
+		#expect(flatten(edge, parent: nil) == nil)
+		#expect(flatten(blue, parent: red) === blue)
+		#expect(flatten(nil, parent: red) == nil)
+	}
+}
