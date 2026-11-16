@@ -119,7 +119,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) selectDirective:(null_unspecified LDrawDirective *)directiveToSelect byExtendingSelection:(BOOL)shouldExtend;
 - (void) selectDirectives:(null_unspecified NSArray *)directivesToSelect;
 - (void) setSelectionToHidden:(BOOL)hideFlag;
-- (void) exportStepsToURL:(NSURL *)saveURL;
 - (void) setZoomPercentage:(CGFloat)newPercentage;
 
 // Actions
@@ -128,20 +127,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) panelMoveParts:(null_unspecified id)sender;
 - (void) panelRotateParts:(null_unspecified id)sender;
 
-// - miscellaneous
-- (void) doMissingModelnameExtensionCheck:(null_unspecified id)sender;
-- (void) doMissingPiecesCheck:(null_unspecified id)sender;
-- (void) doMovedPiecesCheck:(null_unspecified id)sender;
-
 // - Scope bar
 - (IBAction) viewAll:(null_unspecified id)sender;
 - (IBAction) viewSteps:(null_unspecified id)sender;
 - (IBAction) stepFieldChanged:(null_unspecified id)sender;
 - (IBAction) stepNavigatorClicked:(null_unspecified id)sender;
-
-// - File menu
-- (IBAction) exportSteps:(null_unspecified id)sender;
-- (IBAction) revealInFinder:(null_unspecified id)sender;
 
 // - Edit menu
 - (IBAction) copy:(null_unspecified id)sender;
@@ -244,6 +234,24 @@ NS_ASSUME_NONNULL_BEGIN
 - (null_unspecified NSArray *) pasteFromPasteboard:(null_unspecified NSPasteboard *) pasteboard preventNameCollisions:(BOOL)renameModels parent:(null_unspecified LDrawContainer*)parent index:(NSInteger)insertAtIndex;
 
 - (void) flushDocChangesAndSelect:(null_unspecified NSArray*)directives;
+
+@end
+
+
+@interface LDrawDocument (FileIO)
+// LDrawDocument+FileIO.m
+
+// Activities
+- (void) exportStepsToURL:(NSURL *)saveURL;
+
+// - miscellaneous
+- (void) doMissingModelnameExtensionCheck:(null_unspecified id)sender;
+- (void) doMissingPiecesCheck:(null_unspecified id)sender;
+- (void) doMovedPiecesCheck:(null_unspecified id)sender;
+
+// - File menu
+- (IBAction) exportSteps:(null_unspecified id)sender;
+- (IBAction) revealInFinder:(null_unspecified id)sender;
 
 @end
 
