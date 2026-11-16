@@ -207,7 +207,6 @@ typedef void(^LDrawPartVisitor)(LDrawPart *);	// part is nonnull: only ever invo
 - (void) drawSelf:(null_unspecified id<LDrawRenderer>)renderer;
 - (void) collectSelf:(null_unspecified id<LDrawCollector>)renderer;
 - (Box3) boundingBox3;
-- (void) debugDrawboundingBox;
 
 // Hit testing primitives
 - (void) hitTest:(Ray3)pickRay transform:(Matrix4)transform viewScale:(float)scaleFactor boundsOnly:(BOOL)boundsOnly creditObject:(null_unspecified id)creditObject hits:(null_unspecified NSMutableDictionary *)hits;

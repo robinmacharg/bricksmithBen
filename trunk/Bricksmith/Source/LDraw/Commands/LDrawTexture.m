@@ -318,18 +318,6 @@ static BOOL QuotableTokenIsMissing(NSScanner *scanner)
 #pragma mark DIRECTIVES
 #pragma mark -
 
-//========== draw:viewScale:parentColor: =======================================
-//
-// Purpose:		Bind the texture and draw all the subparts in it.
-//
-//==============================================================================
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor
-{
-	assert(!"Not used.");
-
-}//end draw:viewScale:parentColor:
-
-
 //========== drawSelf: ===========================================================
 //
 // Purpose:		Draw this directive and its subdirectives by calling APIs on 

@@ -91,9 +91,9 @@ These singletons matter for tests and for the port:
 
 - `LDrawRenderer.h` declares the `LDrawRenderer` and `LDrawCollector` protocols. Directives
   implement `drawSelf:` and `collectSelf:`. **This is the seam a Metal renderer will plug into.**
-- The seam leaks in three places (P4 moved the texture upload behind `-textureTagForTexture:`):
+- The seam leaks in two places (P4 moved the texture upload behind `-textureTagForTexture:` and deleted the
+  fixed-function draw path; `-draw:viewScale:parentColor:` survives only to register LDConfig colours):
   - The protocol uses `GLfloat *`.
-  - The legacy `draw:viewScale:parentColor:` path in `LDrawPart`/`LDrawDirective` makes immediate-mode GL calls.
   - `LDrawPart` stores `GLfloat glTransformation[16]`.
 - `LDrawGLRenderer` (camera, picking, projection) and `LDrawGLView` (an `NSOpenGLView`) are
   GL-specific end to end.

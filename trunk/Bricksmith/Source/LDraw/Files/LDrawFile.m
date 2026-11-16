@@ -302,18 +302,6 @@
 }//end collectSelf:
 
 
-//========== debugDrawboundingBox ==============================================
-//
-// Purpose:		Draw a translucent visualization of our bounding box to test
-//				bounding box caching.
-//
-//==============================================================================
-- (void) debugDrawboundingBox
-{
-	[activeModel debugDrawboundingBox];
-}//end debugDrawboundingBox
-
-
 //========== hitTest:transform:viewScale:boundsOnly:creditObject:hits: =======
 //
 // Purpose:		Hit-test the geometry.

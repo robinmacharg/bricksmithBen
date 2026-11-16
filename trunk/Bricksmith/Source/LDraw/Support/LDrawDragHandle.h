@@ -44,13 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setPosition:(Point3)positionIn updateTarget:(BOOL)update;
 - (void) setTarget:(null_unspecified id)sender;
 
-// Draw
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(null_unspecified LDrawColor *)parentColor
-;
-
-// Utilities
-+ (void) makeSphereWithLongitudinalCount:(int)longitudeSections
-						latitudinalCount:(int)latitudeSections;
 @end
 
 NS_ASSUME_NONNULL_END

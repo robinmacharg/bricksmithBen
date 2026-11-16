@@ -55,7 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 //Directives
-- (void) drawBoundsWithColor:(null_unspecified LDrawColor *)drawingColor;
 - (null_unspecified NSString *) write;
 
 //Accessors

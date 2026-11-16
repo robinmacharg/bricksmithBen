@@ -170,25 +170,6 @@
 #pragma mark DIRECTIVES
 #pragma mark -
 
-//========== drawElement:viewScale:withColor: ==================================
-//
-// Purpose:		Draws the graphic of the element represented. This call is a 
-//				subroutine of -draw: in LDrawDrawableElement.
-//
-//==============================================================================
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(LDrawColor *)drawingColor
-{
-	if(self->dragHandles)
-	{
-		for(LDrawDragHandle *handle in self->dragHandles)
-		{
-			[handle draw:optionsMask viewScale:scaleFactor parentColor:drawingColor];
-		}
-	}
-	
-}//end drawElement:drawingColor:
-
-
 //========== drawSelf: ===========================================================
 //
 // Purpose:		Draw this directive and its subdirectives by calling APIs on 

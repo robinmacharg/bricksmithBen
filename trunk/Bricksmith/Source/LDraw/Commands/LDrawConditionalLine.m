@@ -196,36 +196,6 @@
 #pragma mark DIRECTIVES
 #pragma mark -
 
-//========== draw:optionsMask: =================================================
-//
-// Purpose:		We have completely disabled these conditional lines. They add 
-//				little to the modern shaded LDraw experience, and they would 
-//				absolutely kill performance. 
-//
-//==============================================================================
-- (void) draw:(NSUInteger)optionsMask viewScale:(float)scaleFactor parentColor:(LDrawColor *)parentColor
-
-{
-	//do nothing.
-	
-}//end draw:optionsMask:
-
-
-//========== drawElement:viewScale:withColor: ==================================
-//
-// Purpose:		Draws the graphic of the element represented. This call is a 
-//				subroutine of -draw: in LDrawDrawableElement.
-//
-// Note:		DISABLED. See -draw:parentColor:
-//
-//==============================================================================
-- (void) drawElement:(NSUInteger)optionsMask viewScale:(float)scaleFactor withColor:(LDrawColor *)drawingColor
-{
-	[super drawElement:optionsMask viewScale:scaleFactor withColor:drawingColor];
-	
-}//end drawElement:withColor:
-
-
 //========== write =============================================================
 //
 // Purpose:		Returns a line that can be written out to a file.
