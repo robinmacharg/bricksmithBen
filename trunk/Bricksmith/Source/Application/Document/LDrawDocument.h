@@ -111,48 +111,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setGridOrientationMode:(gridOrientationModeT)newMode;
 - (void) setStepDisplay:(BOOL)showStepsFlag;
 
-// Activities
-- (void) moveSelectionBy:(Vector3) movementVector;
-- (void) nudgeSelectionBy:(Vector3) nudgeVector;
-- (void) rotateSelectionAround:(Vector3)rotationAxis;
-- (void) rotateSelection:(Tuple3)rotation mode:(RotationModeT)mode fixedCenter:(null_unspecified Point3 *)fixedCenter;
-- (void) selectDirective:(null_unspecified LDrawDirective *)directiveToSelect byExtendingSelection:(BOOL)shouldExtend;
-- (void) selectDirectives:(null_unspecified NSArray *)directivesToSelect;
-- (void) setSelectionToHidden:(BOOL)hideFlag;
-- (void) setZoomPercentage:(CGFloat)newPercentage;
-
-// Actions
-- (void) changeLDrawColor:(null_unspecified id)sender;
-- (void) insertLDrawPart:(null_unspecified id)sender;
-- (void) panelMoveParts:(null_unspecified id)sender;
-- (void) panelRotateParts:(null_unspecified id)sender;
-
 // - Scope bar
 - (IBAction) viewAll:(null_unspecified id)sender;
 - (IBAction) viewSteps:(null_unspecified id)sender;
 - (IBAction) stepFieldChanged:(null_unspecified id)sender;
 - (IBAction) stepNavigatorClicked:(null_unspecified id)sender;
-
-// - Edit menu
-- (IBAction) copy:(null_unspecified id)sender;
-- (IBAction) paste:(null_unspecified id)sender;
-- (IBAction) delete:(null_unspecified id)sender;
-- (IBAction) duplicate:(null_unspecified id)sender;
-- (IBAction) splitStep:(null_unspecified id)sender;
-- (IBAction) splitModel:(null_unspecified id)sender;
-- (IBAction) orderFrontRotationPanel:(null_unspecified id)sender;
-- (IBAction) quickRotateClicked:(null_unspecified id)sender;
-- (IBAction) randomizeLDrawColors:(null_unspecified id)sender;
-- (IBAction) find:(null_unspecified id)sender;
-- (IBAction) changeOrigin:(null_unspecified id)sender;
-
-// - Tools menu
-- (IBAction) showInspector:(null_unspecified id)sender;
-- (IBAction) toggleFileContentsDrawer:(null_unspecified id)sender;
-- (IBAction) gridGranularityMenuChanged:(null_unspecified id)sender;
-- (IBAction) gridOrientationModeChanged:(null_unspecified id)sender;
-- (IBAction) showDimensions:(null_unspecified id)sender;
-- (IBAction) showPieceCount:(null_unspecified id)sender;
 
 // - View menu
 - (IBAction) zoomActual:(null_unspecified id)sender;
@@ -163,13 +126,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) backOneStep:(null_unspecified id)sender;
 - (IBAction) useSelectionForRotationCenter:(null_unspecified id)sender;
 - (IBAction) clearRotationCenter:(null_unspecified id)sender;
-
-// - Piece menu
-- (IBAction) showParts:(null_unspecified id)sender;
-- (IBAction) hideParts:(null_unspecified id)sender;
-- (IBAction) showAllParts:(null_unspecified id)sender;
-- (IBAction) gotoModel:(null_unspecified id)sender;
-- (void) snapSelectionToGrid:(null_unspecified id)sender;
 
 // - Models menu
 - (IBAction) addModelClicked:(null_unspecified id)sender;
@@ -252,6 +208,57 @@ NS_ASSUME_NONNULL_BEGIN
 // - File menu
 - (IBAction) exportSteps:(null_unspecified id)sender;
 - (IBAction) revealInFinder:(null_unspecified id)sender;
+
+@end
+
+
+
+@interface LDrawDocument (Editing)
+// LDrawDocument+Editing.m
+
+// Activities
+- (void) moveSelectionBy:(Vector3) movementVector;
+- (void) nudgeSelectionBy:(Vector3) nudgeVector;
+- (void) rotateSelectionAround:(Vector3)rotationAxis;
+- (void) rotateSelection:(Tuple3)rotation mode:(RotationModeT)mode fixedCenter:(null_unspecified Point3 *)fixedCenter;
+- (void) selectDirective:(null_unspecified LDrawDirective *)directiveToSelect byExtendingSelection:(BOOL)shouldExtend;
+- (void) selectDirectives:(null_unspecified NSArray *)directivesToSelect;
+- (void) setSelectionToHidden:(BOOL)hideFlag;
+- (void) setZoomPercentage:(CGFloat)newPercentage;
+
+// Actions
+- (void) changeLDrawColor:(null_unspecified id)sender;
+- (void) insertLDrawPart:(null_unspecified id)sender;
+- (void) panelMoveParts:(null_unspecified id)sender;
+- (void) panelRotateParts:(null_unspecified id)sender;
+
+// - Edit menu
+- (IBAction) copy:(null_unspecified id)sender;
+- (IBAction) paste:(null_unspecified id)sender;
+- (IBAction) delete:(null_unspecified id)sender;
+- (IBAction) duplicate:(null_unspecified id)sender;
+- (IBAction) splitStep:(null_unspecified id)sender;
+- (IBAction) splitModel:(null_unspecified id)sender;
+- (IBAction) orderFrontRotationPanel:(null_unspecified id)sender;
+- (IBAction) quickRotateClicked:(null_unspecified id)sender;
+- (IBAction) randomizeLDrawColors:(null_unspecified id)sender;
+- (IBAction) find:(null_unspecified id)sender;
+- (IBAction) changeOrigin:(null_unspecified id)sender;
+
+// - Tools menu
+- (IBAction) showInspector:(null_unspecified id)sender;
+- (IBAction) toggleFileContentsDrawer:(null_unspecified id)sender;
+- (IBAction) gridGranularityMenuChanged:(null_unspecified id)sender;
+- (IBAction) gridOrientationModeChanged:(null_unspecified id)sender;
+- (IBAction) showDimensions:(null_unspecified id)sender;
+- (IBAction) showPieceCount:(null_unspecified id)sender;
+
+// - Piece menu
+- (IBAction) showParts:(null_unspecified id)sender;
+- (IBAction) hideParts:(null_unspecified id)sender;
+- (IBAction) showAllParts:(null_unspecified id)sender;
+- (IBAction) gotoModel:(null_unspecified id)sender;
+- (void) snapSelectionToGrid:(null_unspecified id)sender;
 
 @end
 
