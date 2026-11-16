@@ -24,7 +24,6 @@
 #import "LDrawFile.h"
 #import "LDrawModel.h"
 #import "LDrawPaths.h"
-#import "LDrawMPDModel.h"
 #import "Bricksmith-Swift.h"
 
 @implementation ColorLibrary

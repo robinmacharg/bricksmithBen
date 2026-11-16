@@ -8,7 +8,6 @@
 #import "SearchPanelController.h"
 
 #import "LDrawDocument.h"
-#import "LDrawMPDModel.h"
 #import "LDrawFile.h"
 #import "LDrawStep.h"
 #import "LDrawModel.h"

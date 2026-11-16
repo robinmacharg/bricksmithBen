@@ -15,7 +15,6 @@
 #import "Bricksmith-Swift.h"
 #import "LDrawKeywords.h"
 #import "LDrawApplication.h"
-#import "LDrawLSynthDirective.h"
 #import "ComputationalGeometry.h"
 #import "MatrixMath.h"
 #import "MacLDraw.h"

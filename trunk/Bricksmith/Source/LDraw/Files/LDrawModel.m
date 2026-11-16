@@ -27,7 +27,6 @@
 #import "LDrawPart.h"
 #import "LDrawUtilities.h"
 #import "Bricksmith-Swift.h"
-#import "LDrawLSynthDirective.h"
 
 // This disables culling and box approximations for small bricks.  Normally
 // we want this on, but for the purpose of measuring heads-up video card

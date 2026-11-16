@@ -10,7 +10,6 @@
 #import "DimensionsPanel.h"
 
 #import "LDrawFile.h"
-#import "LDrawMPDModel.h"
 #import <math.h>
 #import "Bricksmith-Swift.h"
 

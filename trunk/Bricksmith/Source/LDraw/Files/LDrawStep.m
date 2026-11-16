@@ -30,11 +30,9 @@
 
 #import "LDrawKeywords.h"
 #import "LDrawModel.h"
-#import "LDrawMPDModel.h"
 #import "LDRawPart.h"
 #import "LDrawUtilities.h"
 #import "Bricksmith-Swift.h"
-#import "LDrawLSynthDirective.h"
 
 
 @implementation LDrawStep

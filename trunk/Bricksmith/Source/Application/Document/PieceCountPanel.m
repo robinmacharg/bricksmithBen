@@ -14,7 +14,6 @@
 #import "LDrawColorCell.h"
 #import "LDrawFile.h"
 #import "LDrawGLView.h"
-#import "LDrawMPDModel.h"
 #import "LDrawPart.h"
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"

@@ -12,7 +12,6 @@
 #import "ModelManager.h"
 #import "Bricksmith-Swift.h"
 #import "LDrawFile.h"
-#import "LDrawMPDModel.h"
 #import "LDrawUtilities.h"
 
 // ModelManager Implementation:

@@ -33,9 +33,9 @@
 #import "LDrawGLView.h"
 #import "LDrawLine.h"
 #import "LDrawLSynth.h"
-#import "LDrawLSynthDirective.h"
+@class LDrawLSynthDirective;
 #import "LDrawModel.h"
-#import "LDrawMPDModel.h"
+@class LDrawMPDModel;
 #import "LDrawPart.h"
 @class LDrawQuadrilateral;
 #import "LDrawStep.h"
