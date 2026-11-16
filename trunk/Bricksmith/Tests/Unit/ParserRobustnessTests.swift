@@ -205,6 +205,44 @@ struct ParserRobustnessTests {
 		#expect(!failed.boolValue)
 	}
 
+	// MARK: BUG-034 - a TEXMAP image name ending in \" at end of line hangs the parser
+
+	/// `"abc\"` with nothing after it: `+[LDrawUtilities scanQuotableToken:]` un-escapes the `\"`, finds no more
+	/// text, keeps the previous `temp` (`abc\`), appends it again and loops forever. `QuotableTokenIsMissing()`
+	/// doesn't stop it: the first scan does find a token.
+	/// The header lines matter: a model's first lines are read as its description, name and author, so a
+	/// TEXMAP line there is never parsed as a texture.
+	static let bug034Text = "0 Texmap\n0 Name: t.ldr\n0 Author: Fixture Author\n0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 \"abc\\\"\n3 16 0 0 0 1 0 0 0 1 0\n0 !TEXMAP END\n"
+
+	@Test("BUG-034: a TEXMAP image name ending in \\\" at end of line hangs the parse today")
+	func bug034TexmapTrailingEscapedQuoteHangs() async {
+		// The child arms an alarm first, so the hang ends in SIGALRM (not a crash, not a timeout of the run).
+		await #expect(processExitsWith: .signal(SIGALRM)) {
+			alarm(3)
+			_ = LDrawFile.parse(fromFileContents: ParserRobustnessTests.bug034Text)
+			exit(EXIT_SUCCESS)
+		}
+	}
+
+	@Test("BUG-034: parsing a TEXMAP image name ending in \\\" should finish")
+	func bug034TexmapTrailingEscapedQuoteShouldFinish() async {
+		await withKnownIssue("BUG-034: scanQuotableToken: loops forever on \"abc\\\" at end of line") {
+			await #expect(processExitsWith: .success) {
+				alarm(3)
+				_ = LDrawFile.parse(fromFileContents: ParserRobustnessTests.bug034Text)
+				exit(EXIT_SUCCESS)
+			}
+		}
+	}
+
+	@Test("Control for BUG-034: an escaped quote inside a TEXMAP image name parses in process")
+	func bug034Control() throws {
+		let text = Self.bug034Text.replacingOccurrences(of: "\"abc\\\"", with: "\"a\\\"b.png\"")
+		let file = try #require(LDrawFile.parse(fromFileContents: text))
+		let texture = try #require(ObjectModel.all(file).compactMap { $0 as? LDrawTexture }.first)
+		#expect(texture.imageDisplayName() == "a\"b.png")
+	}
+
 	@Test("Isolated: unknown line type 6 crashes today (BUG-001 family)")
 	func unknownLineType6CrashesInIsolation() async {
 		await #expect(processExitsWith: .failure) {
