@@ -11,6 +11,7 @@
 
 #import "ColorLibrary.h"
 #import "LDrawColor.h"
+#import "Bricksmith-Swift.h"
 
 @implementation LDrawColorCell
 

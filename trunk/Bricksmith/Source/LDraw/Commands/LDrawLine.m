@@ -23,6 +23,7 @@
 #import "LDrawDragHandle.h"
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"
+#import "Bricksmith-Swift.h"
 
 // If set to 1, lines don't draw using the new renderer.  This can be used
 // as a quick-and-dirty way to measure the fps cost of line drawing or see

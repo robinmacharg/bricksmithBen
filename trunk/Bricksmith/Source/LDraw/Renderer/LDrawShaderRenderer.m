@@ -15,6 +15,7 @@
 #import "PartLibrary.h"
 
 #import <OpenGL/glext.h>
+#import "Bricksmith-Swift.h"
 
 // This list of attribute names matches the text of the GLSL attribute declarations - 
 // and its order must match the attr_position...array in the .h.

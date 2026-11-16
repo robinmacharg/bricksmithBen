@@ -16,6 +16,7 @@
 #import "LDrawGLView.h"
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"
+#import "Bricksmith-Swift.h"
 
 @interface DonationDialogController ()
 

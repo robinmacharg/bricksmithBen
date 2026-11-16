@@ -13,6 +13,7 @@
 #import "LDrawColorBar.h"
 
 #import "LDrawColor.h"
+#import "Bricksmith-Swift.h"
 
 @implementation LDrawColorBar
 

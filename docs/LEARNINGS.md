@@ -464,3 +464,8 @@ topics that match your task rather than the whole log.
     were fine. A failure is a compile error, never silent: fix it by importing the superclass header first.
   - **The P6 perf workload must reach the class being ported.** The parts model touches line/triangle/quad code
     only once (parts are parsed once and drawn from display lists); P6 added inline-primitive metrics first.
+  - **Which `.m` files need `Bricksmith-Swift.h` once a class leaves ObjC?** Replace the class's `@interface … @end`
+    with `@class Foo;` in its header, build with continue-after-errors, and list the `.m` files with errors. P6a
+    swept the 25 that lacked it (plus two duplicate imports) before any stream started, so streams never edit
+    importers. Streams leave a forward-declaration stub (`// Ported to Foo.swift` + `@class Foo;`) so importing
+    headers keep compiling; `port-remove-stubs.rb` turns those imports into `@class` lines at integration.

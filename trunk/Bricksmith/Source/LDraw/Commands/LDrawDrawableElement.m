@@ -15,6 +15,7 @@
 #import "LDrawColor.h"
 #import "LDrawContainer.h"
 #import "LDrawUtilities.h"
+#import "Bricksmith-Swift.h"
 
 
 @implementation LDrawDrawableElement

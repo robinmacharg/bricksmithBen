@@ -13,6 +13,7 @@
 #import "LDrawFile.h"
 #import "LDrawModel.h"
 #import "LDrawStep.h"
+#import "Bricksmith-Swift.h"
 	
 @implementation LDrawDirective
 

@@ -14,6 +14,7 @@
 #import "LDrawFile.h"
 #import "LDrawMPDModel.h"
 #import "LDrawUtilities.h"
+#import "Bricksmith-Swift.h"
 
 @implementation InspectionMPDModel
 

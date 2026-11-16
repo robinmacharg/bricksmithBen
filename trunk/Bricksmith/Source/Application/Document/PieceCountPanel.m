@@ -20,6 +20,7 @@
 #import "MacLDraw.h"
 #import "PartLibrary.h"
 #import "PartReport.h"
+#import "Bricksmith-Swift.h"
 
 @interface PieceCountPanel ()
 

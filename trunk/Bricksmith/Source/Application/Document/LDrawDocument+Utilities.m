@@ -15,7 +15,6 @@
 #import "LDrawDocument+Private.h"
 #import "Bricksmith-Swift.h"
 
-#import "Bricksmith-Swift.h"
 
 @implementation LDrawDocument (Utilities)
 

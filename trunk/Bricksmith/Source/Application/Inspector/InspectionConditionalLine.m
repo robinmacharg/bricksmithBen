@@ -13,6 +13,7 @@
 
 #import "LDrawColorWell.h"
 #import "LDrawConditionalLine.h"
+#import "Bricksmith-Swift.h"
 
 @interface InspectionConditionalLine ()
 

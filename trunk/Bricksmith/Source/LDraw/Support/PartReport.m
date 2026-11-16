@@ -28,6 +28,7 @@
 #import "LDrawKeywords.h"
 #import "LDrawPart.h"
 #import "PartLibrary.h"
+#import "Bricksmith-Swift.h"
 
 NSString    *PART_REPORT_NUMBER_KEY     = @"Part Number";
 NSString    *PART_REPORT_NAME_KEY       = @"Part Name";

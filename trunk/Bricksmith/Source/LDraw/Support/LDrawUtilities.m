@@ -22,6 +22,7 @@
 #import "LDrawTriangle.h"
 #import "PartLibrary.h"
 #import "LDrawLSynth.h"
+#import "Bricksmith-Swift.h"
 
 static BOOL                 ColumnizesOutput    = NO;
 static NSString				*defaultAuthor		= @"anonymous";

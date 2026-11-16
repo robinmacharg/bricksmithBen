@@ -28,6 +28,7 @@
 
 #import "LDrawColor.h"
 #import "LDrawColorPanelController.h"
+#import "Bricksmith-Swift.h"
 
 @implementation LDrawColorWell
 

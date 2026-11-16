@@ -19,6 +19,7 @@
 #import "LDrawFileOutlineView.h"
 #import "PartBrowserTableView.h"
 #import "MacLDraw.h"
+#import "Bricksmith-Swift.h"
 
 @implementation SearchPanelController
 

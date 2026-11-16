@@ -17,6 +17,7 @@
 #import "LDrawColorCell.h"
 #import "LDrawColorWell.h"
 #import "MacLDraw.h"
+#import "Bricksmith-Swift.h"
 
 typedef enum
 {

@@ -14,6 +14,7 @@
 #import "LDrawColorWell.h"
 #import "LDrawModel.h"
 #import "LDrawTriangle.h"
+#import "Bricksmith-Swift.h"
 
 @implementation TriangleView
 

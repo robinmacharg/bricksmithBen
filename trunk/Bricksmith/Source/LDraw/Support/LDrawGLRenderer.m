@@ -31,6 +31,7 @@
 #import "LDrawStep.h"
 #import "LDrawUtilities.h"
 #import "LDrawShaderRenderer.h"
+#import "Bricksmith-Swift.h"
 #include "OpenGLUtilities.h"
 #include "MacLDraw.h"
 
