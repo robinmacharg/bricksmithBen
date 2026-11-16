@@ -127,17 +127,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) useSelectionForRotationCenter:(null_unspecified id)sender;
 - (IBAction) clearRotationCenter:(null_unspecified id)sender;
 
-// Undoable Activities
-- (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent;
-- (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent atIndex:(NSInteger)index;
-- (void) deleteDirective:(null_unspecified LDrawDirective *)doomedDirective;
-- (void) moveDirective:(null_unspecified LDrawDrawableElement *)object inDirection:(Vector3)moveVector;
-- (void) preserveDirectiveState:(null_unspecified LDrawDirective *)directive;
-- (void) rotatePart:(null_unspecified LDrawPart *)part byDegrees:(Tuple3)rotationDegrees aroundPoint:(Point3)rotationCenter;
-- (void) setElement:(null_unspecified LDrawDrawableElement *)element toHidden:(BOOL)hideFlag;
-- (void) setObject:(null_unspecified LDrawDirective <LDrawColorable>*)object toColor:(null_unspecified LDrawColor *)newColor;
-- (void) setTransformation:(TransformComponents)newComponents forPart:(null_unspecified LDrawPart *)part;
-
 //Notifications
 - (void)partChanged:(null_unspecified NSNotification *)notification;
 - (void)docChanged:(null_unspecified NSNotification *)notification;
@@ -266,6 +255,24 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) addRawCommandClicked:(null_unspecified id)sender;
 - (IBAction) addRelatedPartClicked:(null_unspecified id)sender;
 - (void) modelSelected:(null_unspecified id)sender;
+
+@end
+
+
+
+@interface LDrawDocument (Undo)
+// LDrawDocument+Undo.m
+
+// Undoable Activities
+- (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent;
+- (void) addDirective:(null_unspecified LDrawDirective *)newDirective toParent:(null_unspecified LDrawContainer *)parent atIndex:(NSInteger)index;
+- (void) deleteDirective:(null_unspecified LDrawDirective *)doomedDirective;
+- (void) moveDirective:(null_unspecified LDrawDrawableElement *)object inDirection:(Vector3)moveVector;
+- (void) preserveDirectiveState:(null_unspecified LDrawDirective *)directive;
+- (void) rotatePart:(null_unspecified LDrawPart *)part byDegrees:(Tuple3)rotationDegrees aroundPoint:(Point3)rotationCenter;
+- (void) setElement:(null_unspecified LDrawDrawableElement *)element toHidden:(BOOL)hideFlag;
+- (void) setObject:(null_unspecified LDrawDirective <LDrawColorable>*)object toColor:(null_unspecified LDrawColor *)newColor;
+- (void) setTransformation:(TransformComponents)newComponents forPart:(null_unspecified LDrawPart *)part;
 
 @end
 
