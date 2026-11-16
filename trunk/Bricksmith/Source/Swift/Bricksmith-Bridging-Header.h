@@ -54,11 +54,8 @@
 
 // --- Constants, categories and utilities (group 2) ---
 #import "MacLDraw.h"
-#import "BezierPathCategory.h"
 #import "StringCategory.h"
-#import "TableViewCategory.h"
 #import "UserDefaultsCategory.h"
-#import "WindowCategory.h"
 #import "BricksmithUtilities.h"
 #import "MLCadIni.h"
 #import "StringUtilities.h"
