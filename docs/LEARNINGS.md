@@ -12,10 +12,10 @@ topics that match your task rather than the whole log.
 | Topic | Entries |
 |---|---|
 | Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84, L89, L96 |
-| Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
+| Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90, L115 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107, L109, L111, L112 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107, L109, L111, L112, L113, L114, L115 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
@@ -564,3 +564,16 @@ topics that match your task rather than the whole log.
   `-LDrawColor` is `lDrawColor()`), and the P6c brief got it wrong. Take spellings from the generated interface (L97),
   never from a brief or memory. Also: `try` inside an `#expect(a && b === (try f()))` operand doesn't compile; bind
   the value to a local first (as L104's operand note).
+- **L113. `NSSet(set: someNSMutableSet)` in Swift picks the overload that takes a Swift `Set`**: the set is bridged
+  through Swift and comes back in a different iteration order (17.5k mismatches in the P6c observer-set fuzz). To
+  snapshot an NS collection, use `set.copy() as! NSSet` (or `NSArray`'s `copy()`).
+- **L114. A Swift root class can't re-send an init to `self`** (`[self init]` inside `-initWithLines:`, which
+  subclasses relied on for their setup). `required` initializers ripple into every subclass and fail for
+  convenience-only ones; re-sending through a bitcast `@objc` protocol over-releases (an init consumes `self` and
+  returns +1, which a plain `@objc func` can't express: segfault). What works: a `static inline` ObjC function
+  declared `NS_RETURNS_RETAINED` in a bridged header (`LDrawDirectiveSendInit`). Also, once the root is Swift, a
+  metatype init (`T(lines:…)` with `T: LDrawDirective`) needs `required`; imported ObjC inits never did.
+- **L115. A Swift method with a non-void result is `warn_unused_result` in `Bricksmith-Swift.h`**, so ObjC callers that
+  ignore it gain a warning (`-boxTest:…` in `LDrawGLRenderer.m`). Mark such methods `@discardableResult`. Separately,
+  L90's mangled-line "new warning" (`LDrawGLView.m: warning:` with nothing after it) hit twice in P6c: rerun before
+  investigating.

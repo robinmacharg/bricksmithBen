@@ -11,7 +11,6 @@
 //  Copyright (c) 2005. All rights reserved.
 //
 //  Ported to Swift in P6c, as was its superclass, LDrawDirective.
-//  LDrawContainer.h survives as a forward-declaration stub.
 //
 //  The children stay in an NSMutableArray, which -subdirectives returns live
 //  (the subclasses iterate and edit it). Per-child loops read the children
