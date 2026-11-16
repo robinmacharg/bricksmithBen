@@ -11,7 +11,7 @@
 //==============================================================================
 #import "InspectionComment.h"
 
-#import "LDrawComment.h"
+#import "Bricksmith-Swift.h"
 
 @implementation InspectionComment
 

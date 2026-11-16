@@ -71,6 +71,11 @@ their own port phase.
 | P5 | Perf: 3 runs at `fa22418` (all pass; medians archive 89, copy 88, draw 86, parse 94, write 86%). Interleaved A/B against master (P4 tip), 3 runs each: parse 91% vs 91% (no regression from the StringCategory port); draw master 79-102%, P5 76-96% (overlapping, noise; P5 changed no drawing code) | 2026-11-16 | agent | |
 | P5 | 🧑 Manual smoke checklist (steps 1-18) | **assumed passed** | maintainer | Maintainer instruction 2026-11-16: "assume passed, and we'll correct later". Not actually run; re-check owed (P5 touched preference colours, minifigure lists, overlays, string handling) |
 | P5 | 🧑 Maintainer decisions | 2026-11-16 | maintainer | BUG-035 fixed (ObjC `ArchiveSupport.m` catches the NSUnarchiver exception; corrupt colour → nil). BUG-036 crash half fixed (nameless first [LSYNTH] line skipped); stale-name half stays open |
+| P5 | Merged to master as 4.0.5 (`b88f586`): Debug/Release no new warnings, 247 tests (74 known), UI 5/5 | 2026-11-16 | agent | |
+| P6 | Perf metrics for inline primitives (`f06ab24`): parse, write, copy x4, archive, collect x40, boxTest x3, depthTest x20 of 20000 type 2-5 lines; baseline = median of 3 runs on the unported code | 2026-11-16 | agent | The parts model never reached the primitive classes after warm-up (parts parse once, draw replays display lists), so it could not gate P6a |
+| P6a | Survey: only Triangle, Quadrilateral, ConditionalLine (`color`, `hidden`; `vertex1`/`vertex2`) and LDrawFile (`postsNotifications`) read ancestor ivars; every one has a plain getter. Nothing outside the nine classes reads their ivars. All 24 importers of `Bricksmith-Swift.h` see every P6a superclass (probe subclasses) | 2026-11-16 | agent | Found with `@private` probes and `-IDEBuildingContinueBuildingAfterErrors=YES` (L100) |
+| P6a | Placeholders for the nine classes (`288e01d`); pilot `LDrawComment` → Swift by the integrator | 2026-11-16 | agent | Branch `20261116-p6-model-leaves`. First Swift subclass of an app ObjC class |
+| P6a | Recipe §6 deviation: `respondsToSelector:` (LDrawLSynthDirective) and target/action `performSelector:withObject:` (LDrawDragHandle) are translated directly (`responds(to:)`, `perform(_:with:)` with the result discarded) instead of being removed in ObjC first | 2026-11-16 | agent | Neither can raise or return a retained object; nothing to fix in ObjC |
 | P5 | Header annotation: `StringCategory.h` (all, tool) before its port | 2026-11-16 | agent | `StringCategoryTests` |
 | P4 | 🧑 Manual smoke checklist (TESTING.md steps 1-18, incl. new step 18 for panels and menus) on the P4 Debug build | 2026-11-16 | maintainer | Signed off in conversation |
 | P4 | 🧑 Maintainer decisions at P4 exit | 2026-11-16 | maintainer | BUG-007's wider scope (other paths treat a malformed-ROTSTEP library/peer file as missing): evaluate after the port, P12. `NSDrawer` deprecation's extra declaration site (`LDrawDocument+Private.h`): stays in the baseline; address after the port. Attribution trailers removed from the P4 branch before merge |
@@ -183,7 +188,7 @@ sign-off here:
 | `Bricksmith/Source/Categories/UserDefaultsCategory.m` | 48 | ARC | P5 | **Swift** (`UserDefaultsCategory.swift`; unarchiving through ObjC `ArchiveSupport.m`, BUG-035) |
 | `Bricksmith/Source/Categories/WindowCategory.m` | 60 | ARC | P5 | **Swift** (`WindowCategory.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawColor.m` | 1095 | MRC | P6 | todo |
-| `Bricksmith/Source/LDraw/Commands/LDrawComment.m` | 123 | ARC | P6 | todo |
+| `Bricksmith/Source/LDraw/Commands/LDrawComment.m` | 123 | ARC | P6a | **Swift** (`LDrawComment.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m` | 446 | ARC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawDrawableElement.m` | 511 | ARC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawLSynth.m` | 1487 | MRC | P6 | todo |

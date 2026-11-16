@@ -22,7 +22,6 @@
 #import "LDrawApplication.h"
 #import "LDrawColor.h"
 #import "LDrawColorPanelController.h"
-#import "LDrawComment.h"
 #import "LDrawConditionalLine.h"
 #import "LDrawContainer.h"
 #import "LDrawDirective.h"

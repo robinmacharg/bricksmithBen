@@ -15,14 +15,14 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82, L94 |
-| Agents and review | L17, L18, L75, L85, L93, L97, L99; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
@@ -453,3 +453,14 @@ topics that match your task rather than the whole log.
   (`scripts/dev/port-remove-stubs.rb`, then `p5-remove-ported.rb`, which refuses anything but a stub). Agents never touch `project.pbxproj` or the
   bridging header. Remaining conflicts were only adjacent `#import` lines and parallel KNOWN-BUGS numbers (renumber
   at integration).
+- **L100. Compiler probes beat grep for interop surveys (P6a).**
+  - **Which ancestor ivars does a subclass read?** Insert `@private` at the top of each ancestor's ivar block,
+    build with `xcodebuild … -IDEBuildingContinueBuildingAfterErrors=YES build` (`build.sh` stops at the first
+    failing file), collect the "instance variable 'x' is private" errors, and revert. Check each header for a later
+    `@protected`/`@public`: `LDrawContainer.h` has one for `postsNotifications`, which hid LDrawFile's read.
+  - **`Bricksmith-Swift.h` declares `@interface Foo : ObjCSuper` without importing ObjCSuper's header**, so a `.m`
+    that imports it must already see the superclass, or fails with "cannot find interface declaration". To check
+    in advance, add throwaway `@objc(ProbeX) class ProbeX: ObjCSuper {}` classes and build. In P6a all 24 importers
+    were fine. A failure is a compile error, never silent: fix it by importing the superclass header first.
+  - **The P6 perf workload must reach the class being ported.** The parts model touches line/triangle/quad code
+    only once (parts are parsed once and drawn from display lists); P6 added inline-primitive metrics first.

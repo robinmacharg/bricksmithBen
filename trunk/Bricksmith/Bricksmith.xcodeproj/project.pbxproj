@@ -89,8 +89,6 @@
 		0B7588D90D8DC4DD00357703 /* ColorLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B7588D70D8DC4DD00357703 /* ColorLibrary.m */; };
 		0B76F2F90E74CC1700349D03 /* InspectionStep.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B76F2F70E74CC1700349D03 /* InspectionStep.h */; };
 		0B76F2FA0E74CC1700349D03 /* InspectionStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B76F2F80E74CC1700349D03 /* InspectionStep.m */; };
-		0B83E9B907E3BB0D009C2384 /* LDrawComment.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B83E9B707E3BB0D009C2384 /* LDrawComment.h */; };
-		0B83E9BA07E3BB0D009C2384 /* LDrawComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B83E9B807E3BB0D009C2384 /* LDrawComment.m */; };
 		0B85168F1400CC34009E3776 /* LDrawGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B3B76AB13DB86AE007CCC5D /* LDrawGLRenderer.m */; };
 		0B8C096810BA532F00BEB111 /* OverlayHelperView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B8C096610BA532F00BEB111 /* OverlayHelperView.h */; };
 		0B8C096910BA532F00BEB111 /* OverlayHelperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C096710BA532F00BEB111 /* OverlayHelperView.m */; };
@@ -469,8 +467,6 @@
 		0B7588DB0D8DC4EF00357703 /* LDrawColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawColor.m; sourceTree = "<group>"; };
 		0B76F2F70E74CC1700349D03 /* InspectionStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectionStep.h; sourceTree = "<group>"; };
 		0B76F2F80E74CC1700349D03 /* InspectionStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InspectionStep.m; sourceTree = "<group>"; };
-		0B83E9B707E3BB0D009C2384 /* LDrawComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawComment.h; sourceTree = "<group>"; };
-		0B83E9B807E3BB0D009C2384 /* LDrawComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawComment.m; sourceTree = "<group>"; };
 		0B8C096610BA532F00BEB111 /* OverlayHelperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayHelperView.h; sourceTree = "<group>"; };
 		0B8C096710BA532F00BEB111 /* OverlayHelperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayHelperView.m; sourceTree = "<group>"; };
 		0B8C097110BA550500BEB111 /* OverlayHelperWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayHelperWindow.h; sourceTree = "<group>"; };
@@ -809,8 +805,6 @@
 			children = (
 				0B7588DA0D8DC4EF00357703 /* LDrawColor.h */,
 				0B7588DB0D8DC4EF00357703 /* LDrawColor.m */,
-				0B83E9B707E3BB0D009C2384 /* LDrawComment.h */,
-				0B83E9B807E3BB0D009C2384 /* LDrawComment.m */,
 				0B6F3FA907CB0253007B1075 /* LDrawConditionalLine.h */,
 				0B6F3FAA07CB0253007B1075 /* LDrawConditionalLine.m */,
 				0B6771A8081764E60044A0E0 /* LDrawDrawableElement.h */,
@@ -1286,7 +1280,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B83E9B907E3BB0D009C2384 /* LDrawComment.h in Headers */,
 				9506E0F018A3F4130006CE9C /* SearchPanelController.h in Headers */,
 				0B491DA407F5555B00AC0C10 /* MatrixMath.h in Headers */,
 				0BCD0C6507FD0BA10066A536 /* LDrawContainer.h in Headers */,
@@ -1617,7 +1610,6 @@
 				0B6F3FC007CB0253007B1075 /* LDrawPart.m in Sources */,
 				0B6F3FC207CB0253007B1075 /* LDrawQuadrilateral.m in Sources */,
 				0B6F3FC407CB0253007B1075 /* LDrawTriangle.m in Sources */,
-				0B83E9BA07E3BB0D009C2384 /* LDrawComment.m in Sources */,
 				0B491DA507F5555B00AC0C10 /* MatrixMath.c in Sources */,
 				0BCD0C6607FD0BA10066A536 /* LDrawContainer.m in Sources */,
 				0B6771AB081764E60044A0E0 /* LDrawDrawableElement.m in Sources */,

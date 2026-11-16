@@ -15,7 +15,6 @@
 
 // --- LDraw model (P1 header hygiene: group 1) ---
 #import "LDrawColor.h"
-#import "LDrawComment.h"
 #import "LDrawConditionalLine.h"
 #import "LDrawDrawableElement.h"
 #import "LDrawLSynth.h"

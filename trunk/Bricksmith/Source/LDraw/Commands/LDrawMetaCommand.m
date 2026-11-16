@@ -20,7 +20,7 @@
 #import "LDrawMetaCommand.h"
 
 #import "LDrawColor.h"
-#import "LDrawComment.h"
+#import "Bricksmith-Swift.h"
 #import "LDrawKeywords.h"
 #import "LDrawTexture.h"
 #import "LDrawUtilities.h"
