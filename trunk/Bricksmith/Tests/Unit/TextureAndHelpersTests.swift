@@ -330,6 +330,21 @@ struct TextureCoverageTests {
 		try Golden.check(Data(out.utf8), against: "texture-helpers/selection.txt")
 	}
 
+	/// A file whose last line is a texture START (BUG-P6B-meta-13).
+	nonisolated static let startAsLastLine = "0 Texture case\n0 Name: texcase.ldr\n0 Author: Fixture Author\n"
+		+ "3 16 -10 0 -10 10 0 -10 10 0 10\n0 !TEXMAP START PLANAR -10 0 -10 10 0 -10 -10 0 10 sticker.png\n"
+
+	@Test("BUG-P6B-meta-13: a file whose last line is a !TEXMAP START crashes the parse (zero-length texture range)")
+	func bug_p6b_meta_13_startAsLastLineCrashes() async {
+		// Pins today's crash: LDrawStep's parse loop doesn't advance past the zero-length range and overruns its
+		// buffer. The alarm turns a hang into SIGALRM, which this would also count as a failure.
+		await #expect(processExitsWith: .failure) {
+			alarm(3)
+			_ = LDrawFile.parse(fromFileContents: TextureCoverageTests.startAsLastLine)
+			exit(EXIT_SUCCESS)
+		}
+	}
+
 	@Test("A texture and the geometry it parsed are freed when the texture is released")
 	func textureIsFreed() throws {
 		// The texture is built directly, as LDrawStep builds it: parsed files themselves are not freed in tests
