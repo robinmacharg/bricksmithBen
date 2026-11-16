@@ -253,6 +253,7 @@
 		9F1C14D454CFFAF514B70278 /* ModelLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852F4EEE5381CB836060A724 /* ModelLogicTests.swift */; };
 		AF95CB7016D813469C14BB98 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB8369002EE06CEE9EA9CB5 /* PerformanceTests.swift */; };
 		B45DD4ED811A29D0427C5157 /* MacLDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */; };
+		B9AD9675CFCB6814DEBEBC30 /* LDrawDocument+Outline.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D582C85181B758EA6CFAB28 /* LDrawDocument+Outline.m */; };
 		BBE9FA5F68E37B0B8CC00EB0 /* ParserRobustnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F217FA05779F45EDDDDF9F1F /* ParserRobustnessTests.swift */; };
 		CB7E8E47D480EBCFD16FC5EF /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E03718E631C7CE4B1F41F0 /* ObjC.swift */; };
 		D10C057DCE09D8BBF925479E /* DrawingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2189D181B31A8DD65D2152EF /* DrawingTests.swift */; };
@@ -584,6 +585,7 @@
 		2BF2E3120AB0FCAB0026D5DB /* MLCadIni.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCadIni.m; sourceTree = "<group>"; };
 		2BF2E3130AB0FCAB0026D5DB /* TransformerIntMinus1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformerIntMinus1.h; sourceTree = "<group>"; };
 		2BF2E3140AB0FCAB0026D5DB /* TransformerIntMinus1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformerIntMinus1.m; sourceTree = "<group>"; };
+		2D582C85181B758EA6CFAB28 /* LDrawDocument+Outline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LDrawDocument+Outline.m"; sourceTree = "<group>"; };
 		2E06936AA1D9FF74DAA5F19E /* LDrawDocument+Editing.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LDrawDocument+Editing.m"; sourceTree = "<group>"; };
 		2F5BCDB29827F846AE619974 /* BricksmithBuildConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BricksmithBuildConfig.h; sourceTree = "<group>"; };
 		302E24F4CE18FFFC50278D2A /* BricksmithTestSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BricksmithTestSupport.h; sourceTree = "<group>"; };
@@ -991,6 +993,7 @@
 				2E06936AA1D9FF74DAA5F19E /* LDrawDocument+Editing.m */,
 				21089774D0D91240BD42D0C3 /* LDrawDocument+ModelsMenu.m */,
 				159A8E73EDAC58598A3C6B64 /* LDrawDocument+Undo.m */,
+				2D582C85181B758EA6CFAB28 /* LDrawDocument+Outline.m */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -1703,6 +1706,7 @@
 				2F237C93D0C4AB6978296E11 /* LDrawDocument+Editing.m in Sources */,
 				41398AC3E7F9D645B04C7693 /* LDrawDocument+ModelsMenu.m in Sources */,
 				E3BBF616A473E128CF9D2F9F /* LDrawDocument+Undo.m in Sources */,
+				B9AD9675CFCB6814DEBEBC30 /* LDrawDocument+Outline.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
