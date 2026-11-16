@@ -319,3 +319,19 @@ section. Each entry says what happened and what to do instead.
     first (or delete the keys the run added), then diff against the backup.
   - UI-scripting a click (System Events) on a button inside an `NSApp runModalForWindow:` session did not trigger
     its action here; drive modal dialogs from tests by calling the action directly.
+- **L81. `comm` and `sort` are locale-sensitive.** `build.sh` reported "NEW WARNINGS" that were identical lines: the
+  baseline was sorted in one collation and compared under another. → Pin `LC_ALL=C` on both `sort` and `comm`
+  (`1f4b6b1`). Apply this to any script that compares sorted text.
+- **L82. Read the code and diff it against master before building an A/B harness for a smoke "anomaly".** Two P3
+  reports turned out to be designed behaviour, provable from the source in minutes:
+  - Randomize Colors only shuffles colours already in the selection, so one colour gives no change.
+  - In Steps view, earlier parts shift slightly when a step adds parts further away. `-[LDrawModel boundingBox3]`
+    counts only the steps shown, and `-[LDrawGLCamera tickle]` puts the camera at 6.5 × (bounds radius + 40), so
+    the perspective changes.
+  If `git diff master` shows no logic change in the code involved, the behaviour isn't a port regression. Record it in
+  TESTING.md so the next smoke run doesn't flag it again.
+- **L83. Merging a phase to master.** The phase branch is cut from the previous phase's *branch tip*, so it doesn't
+  contain master's merge commit or its version bump (the branch's `Info.plist` still shows an older version).
+  → `git merge --no-ff --no-commit <branch>` on master; set both `CFBundleShortVersionString` and `CFBundleVersion`
+  in the merge; run `scripts/build.sh`, `scripts/build.sh --release` and `scripts/test.sh --ui` on the merged tree;
+  only then commit, with the gates in the message. Cut the next branch from master, not from the old branch.
