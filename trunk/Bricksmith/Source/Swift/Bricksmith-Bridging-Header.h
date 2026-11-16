@@ -56,7 +56,6 @@
 #import "MacLDraw.h"
 #import "UserDefaultsCategory.h"
 #import "BricksmithUtilities.h"
-#import "MLCadIni.h"
 
 // --- Application classes driven by characterisation tests (group 2) ---
 #import "LDrawApplication.h"
