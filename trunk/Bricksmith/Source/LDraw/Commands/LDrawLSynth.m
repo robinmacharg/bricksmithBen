@@ -19,9 +19,75 @@
 #import "ComputationalGeometry.h"
 #import "MatrixMath.h"
 #import "MacLDraw.h"
-#import "RegexKitLite.h"
 #import "PreferencesDialogController.h"
 #import "UserDefaultsCategory.h"
+
+// Regular expressions (formerly RegexKitLite).
+//
+// RegexKitLite's -isMatchedByRegex: and -arrayOfCaptureComponentsMatchedByRegex: ran the pattern through ICU
+// with no options over the whole string, as an unanchored search. NSRegularExpression with options 0 is the
+// same ICU engine with the same defaults. Compiled patterns are cached, as RegexKitLite did; parsing can run
+// on more than one thread, so the cache is locked.
+
+//---------- LSynthRegex() ----------------------------------------[static]--
+static NSRegularExpression *LSynthRegex(NSString *pattern)
+{
+	static NSMutableDictionary<NSString *, NSRegularExpression *>	*cache	= nil;
+	static dispatch_once_t											once;
+	NSRegularExpression												*regex	= nil;
+	
+	dispatch_once(&once, ^{ cache = [[NSMutableDictionary alloc] init]; });
+	@synchronized(cache)
+	{
+		regex = [cache objectForKey:pattern];
+		if(regex == nil)
+		{
+			regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:NULL];
+			[cache setObject:regex forKey:pattern];
+		}
+	}
+	return regex;
+}
+
+//---------- LSynthIsMatchedByRegex() -----------------------------[static]--
+// Was -[NSString isMatchedByRegex:]: YES if the pattern matches anywhere in the string. (nil -> NO, as
+// messaging nil did.)
+static BOOL LSynthIsMatchedByRegex(NSString *string, NSString *pattern)
+{
+	if(string == nil)
+		return NO;
+	
+	return [LSynthRegex(pattern) rangeOfFirstMatchInString:string
+												   options:0
+													 range:NSMakeRange(0, [string length])].location != NSNotFound;
+}
+
+//---------- LSynthCaptureComponents() ----------------------------[static]--
+// Was -[NSString arrayOfCaptureComponentsMatchedByRegex:]: one array per match, each holding the whole match
+// followed by every capture group; a group that took no part in the match is @"" (RegexKitLite's rule).
+static NSArray<NSArray<NSString *> *> *LSynthCaptureComponents(NSString *string, NSString *pattern)
+{
+	NSMutableArray	*matches	= [NSMutableArray array];
+	
+	if(string == nil)
+		return matches;
+	
+	for(NSTextCheckingResult *match in [LSynthRegex(pattern) matchesInString:string
+																	options:0
+																	  range:NSMakeRange(0, [string length])])
+	{
+		NSMutableArray	*components	= [NSMutableArray arrayWithCapacity:[match numberOfRanges]];
+		NSUInteger		 group		= 0;
+		
+		for(group = 0; group < [match numberOfRanges]; group++)
+		{
+			NSRange range = [match rangeAtIndex:group];
+			[components addObject:(range.location == NSNotFound ? @"" : [string substringWithRange:range])];
+		}
+		[matches addObject:components];
+	}
+	return matches;
+}
 
 @implementation LDrawLSynth
 
@@ -109,10 +175,10 @@
             //
 
             // 0 SYNTH BEGIN <SYNTH_TYPE> <COLOR>
-            if ([currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+BEGIN\\s+(\\S+?)\\s+(\\S+)"] &&
+            if (LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+BEGIN\\s+(\\S+?)\\s+(\\S+)") &&
                 parserState == PARSER_READY_TO_PARSE)  {
 
-                NSArray *paramMatches = [currentLine arrayOfCaptureComponentsMatchedByRegex:@"0\\s+SYNTH\\s+BEGIN\\s+(\\S+?)\\s+(\\S+)"];
+                NSArray *paramMatches = LSynthCaptureComponents(currentLine, @"0\\s+SYNTH\\s+BEGIN\\s+(\\S+?)\\s+(\\S+)");
 
                 NSString *type = [[paramMatches objectAtIndex:0] objectAtIndex:1];
                 NSString *synthColor = [[paramMatches objectAtIndex:0] objectAtIndex:2];
@@ -125,7 +191,7 @@
             }
 
             // 0 SYNTH END - Synthesized parts may or may not be present
-            else if ([currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+END"] &&
+            else if (LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+END") &&
                     (parserState == PARSER_PARSING_CONSTRAINTS ||
                      parserState == PARSER_SYNTHESIZED_FINISHED)) {
                 parserState = PARSER_FINISHED;
@@ -133,19 +199,19 @@
 
             // 0 SYNTH SHOW or
             // 0 SYNTH HIDE
-            else if([currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+(?:SHOW|HIDE)"] &&
+            else if(LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+(?:SHOW|HIDE)") &&
                parserState == PARSER_PARSING_BEGUN) {
                 parserState = PARSER_PARSING_CONSTRAINTS;
             }
 
             // 0 SYNTH SYNTHESIZED BEGIN - start of synthesized constraints
-            else if ([currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+SYNTHESIZED\\s+BEGIN"] &&
+            else if (LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+SYNTHESIZED\\s+BEGIN") &&
                     parserState == PARSER_PARSING_CONSTRAINTS) {
                 parserState = PARSER_PARSING_SYNTHESIZED;
             }
 
             // 0 SYNTH SYNTHESIZED BEGIN - end of synthesized constraints
-            else if ([currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+SYNTHESIZED\\s+END"] &&
+            else if (LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+SYNTHESIZED\\s+END") &&
                     parserState == PARSER_PARSING_SYNTHESIZED) {
                 parserState = PARSER_SYNTHESIZED_FINISHED;
             }
@@ -154,9 +220,9 @@
             // 0 SYNTH OUTSIDE or
             // 0 SYNTH CROSS
             else if (parserState == PARSER_PARSING_CONSTRAINTS &&
-                [currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+(INSIDE|OUTSIDE|CROSS)"]) {
+                LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+(INSIDE|OUTSIDE|CROSS)")) {
 
-                NSString *direction = [[[currentLine arrayOfCaptureComponentsMatchedByRegex:@"(INSIDE|OUTSIDE|CROSS)"] objectAtIndex:0] objectAtIndex:0];
+                NSString *direction = [[LSynthCaptureComponents(currentLine, @"(INSIDE|OUTSIDE|CROSS)") objectAtIndex:0] objectAtIndex:0];
                 LDrawLSynthDirective *directive = [[LDrawLSynthDirective alloc] init];
                 [directive setStringValue:direction];
                 [[self subdirectives] addObject:directive];
@@ -168,7 +234,7 @@
             // '1 XXX' Part directives - constraints or synthesized parts
             //
 
-            else if ([currentLine isMatchedByRegex:@"^1\\s+"] &&
+            else if (LSynthIsMatchedByRegex(currentLine, @"^1\\s+") &&
                      (parserState == PARSER_PARSING_BEGUN ||
                       parserState == PARSER_PARSING_CONSTRAINTS ||
                       parserState == PARSER_PARSING_SYNTHESIZED)) {
@@ -229,7 +295,7 @@
 //==============================================================================
 + (BOOL) lineIsLSynthBeginning:(NSString*)line
 {
-    if ([line isMatchedByRegex:@"0\\s+SYNTH\\s+BEGIN\\s+\\S+?\\s+\\S+"]) {
+    if (LSynthIsMatchedByRegex(line, @"0\\s+SYNTH\\s+BEGIN\\s+\\S+?\\s+\\S+")) {
         return YES;
     }
     return NO;
@@ -243,7 +309,7 @@
 //==============================================================================
 + (BOOL) lineIsLSynthTerminator:(NSString*)line
 {
-    if ([line isMatchedByRegex:@"0\\s+SYNTH\\s+END"]) {
+    if (LSynthIsMatchedByRegex(line, @"0\\s+SYNTH\\s+END")) {
         return YES;
     }
     return NO;
@@ -266,7 +332,7 @@
     NSRange 	synthRange;
 
     currentLine = [lines objectAtIndex:index];
-    if ([currentLine isMatchedByRegex:@"0\\s+SYNTH\\s+BEGIN\\s+\\S+?\\s+\\S+"]) {
+    if (LSynthIsMatchedByRegex(currentLine, @"0\\s+SYNTH\\s+BEGIN\\s+\\S+?\\s+\\S+")) {
 
         // Find the last line in the synth definition: 0 SYNTH END
         for(counter = testRange.location + 1; counter < NSMaxRange(testRange); counter++)
@@ -902,13 +968,13 @@
     NSString       *executablePath = [userDefaults stringForKey:LSYNTH_EXECUTABLE_PATH_KEY];
     NSString       *configPath     = [userDefaults stringForKey:LSYNTH_CONFIGURATION_PATH_KEY];
     NSString       *lsynthPath;
-    if ([executablePath length] == 0 || [executablePath isMatchedByRegex:@"^\\s+$"]) {
+    if ([executablePath length] == 0 || LSynthIsMatchedByRegex(executablePath, @"^\\s+$")) {
         lsynthPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"lsynthcp"];
 
         // The built-in lsynthcp looks for lsynth.mpd beside its executable unless
         // told otherwise. Data files can't live in Contents/MacOS of a signed app,
         // so point it explicitly at the identical copy in Resources.
-        if ([configPath length] == 0 || [configPath isMatchedByRegex:@"^\\s+$"]) {
+        if ([configPath length] == 0 || LSynthIsMatchedByRegex(configPath, @"^\\s+$")) {
             configPath = [[NSBundle mainBundle] pathForResource:@"lsynth" ofType:@"mpd"];
         }
     }
