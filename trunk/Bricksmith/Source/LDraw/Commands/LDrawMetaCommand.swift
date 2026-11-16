@@ -114,7 +114,7 @@ class LDrawMetaCommand: LDrawDirective {
 		var metaLineStart					= 0
 
 		// P6b: ObjC raised here (-objectAtIndex: past the end of the lines); see
-		// KNOWN-BUGS BUG-P6B-meta-1. (A nil array answered a nil line, which
+		// KNOWN-BUGS BUG-056. (A nil array answered a nil line, which
 		// scans as an empty string, as below.)
 		if let lineArray, range.location < 0 || range.location >= lineArray.count {
 			return nil

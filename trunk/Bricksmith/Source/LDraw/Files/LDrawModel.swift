@@ -23,7 +23,7 @@
 //
 //  Where the ObjC raised (and a caller's @try or AppKit swallowed it), the
 //  port has a guard that abandons the operation at the same point, marked
-//  "P6b: ObjC raised here"; see KNOWN-BUGS BUG-P6B-containers-*. The one
+//  "P6b: ObjC raised here"; see KNOWN-BUGS BUG-049..055. The one
 //  exception is -setMaximumStepIndexForStepDisplay:, whose deliberate
 //  NSRangeException is part of its contract (the steps golden records it).
 //==============================================================================
@@ -174,7 +174,7 @@ class LDrawModel: LDrawContainer {
 
 		//Start with a nice blank model.
 		// (No lines at all: super answers nil. The ObjC then wrote an ivar
-		// through nil and crashed; see KNOWN-BUGS BUG-P6B-containers-1.)
+		// through nil and crashed; see KNOWN-BUGS BUG-049.)
 		super.init(lines: lines, in: range, parentGroup: parentGroup)
 		self.cachedBounds = InvalidBox
 
@@ -272,7 +272,7 @@ class LDrawModel: LDrawContainer {
 		// P6b: -setMaximumStepIndexForStepDisplay: raised here when the step
 		// index was past the copy's last step (an index set while the model had
 		// no steps); the copy is returned as it stands, since -copy can't fail;
-		// see KNOWN-BUGS BUG-P6B-containers-6
+		// see KNOWN-BUGS BUG-054
 		let maximumStepIndex = maximumStepIndexForStepDisplay()
 		guard maximumStepIndex <= UInt(bitPattern: (copied.stepsArray()?.count ?? 0) - 1) else {
 			return copied
@@ -303,7 +303,7 @@ class LDrawModel: LDrawContainer {
 		}
 		let maxIndex = maxStepIndexToOutput()
 		// P6b: ObjC raised here (-objectAtIndex: past the last step; a model with
-		// no steps); see KNOWN-BUGS BUG-P6B-containers-6
+		// no steps); see KNOWN-BUGS BUG-054
 		guard maxIndex < UInt(steps.count) else {
 			return nil
 		}
@@ -417,7 +417,7 @@ class LDrawModel: LDrawContainer {
 			let collector = renderer.beginDL()
 			// (-collectSelf:, minus the dispatch.)
 			// P6b: ObjC raised inside -collectSelf: (a model with no steps),
-			// leaving the DL open; see KNOWN-BUGS BUG-P6B-containers-6
+			// leaving the DL open; see KNOWN-BUGS BUG-054
 			guard collectSteps(collector) else {
 				return
 			}
@@ -633,7 +633,7 @@ class LDrawModel: LDrawContainer {
 				// being built with steps in mind anyway.
 				if numberSteps == 1 {
 					// P6b: ObjC raised here (-writeWithStepCommand: sent to a child
-					// that isn't a step); see KNOWN-BUGS BUG-P6B-containers-7
+					// that isn't a step); see KNOWN-BUGS BUG-055
 					guard let step = currentStep as? LDrawStep else {
 						return nil
 					}
@@ -924,7 +924,7 @@ class LDrawModel: LDrawContainer {
 		// Build the rotation stack
 		while counter <= stepNumber && counter < stepCount {
 			// P6b: ObjC raised here (-stepRotationType sent to a child that isn't
-			// a step); see KNOWN-BUGS BUG-P6B-containers-7
+			// a step); see KNOWN-BUGS BUG-055
 			guard let currentStep = steps?.object(at: Int(counter)) as? LDrawStep else {
 				return totalRotation
 			}
@@ -1051,7 +1051,7 @@ class LDrawModel: LDrawContainer {
 		if stepDisplay() == true {
 			let maxIndex = maxStepIndexToOutput()
 			// P6b: ObjC raised here (-objectAtIndex: past the last step; a model
-			// with no steps); see KNOWN-BUGS BUG-P6B-containers-6
+			// with no steps); see KNOWN-BUGS BUG-054
 			guard let steps, maxIndex < UInt(steps.count) else {
 				return nil
 			}
@@ -1312,7 +1312,7 @@ class LDrawModel: LDrawContainer {
 
 		// P6b: ObjC raised here (-objectAtIndex: in LDrawContainer for an index
 		// past the end, after the bookkeeping above); see KNOWN-BUGS
-		// BUG-P6B-containers-5
+		// BUG-053
 		guard idx >= 0, idx < (subdirectives()?.count ?? 0) else {
 			return
 		}
@@ -1325,7 +1325,7 @@ class LDrawModel: LDrawContainer {
 		invalCache([.CacheFlagBounds, .DisplayList])
 		// P6b: ObjC raised here (-[NSMutableArray insertObject:atIndex:] in
 		// LDrawContainer, for a nil directive or an index past the end, before
-		// the insert); see KNOWN-BUGS BUG-P6B-containers-5
+		// the insert); see KNOWN-BUGS BUG-053
 		guard directive != nil, index >= 0, index <= (subdirectives()?.count ?? 0) else {
 			return
 		}
@@ -1412,7 +1412,7 @@ class LDrawModel: LDrawContainer {
 
 		for counter in 0..<(steps?.count ?? 0) {
 			// P6b: ObjC raised here (-subdirectives sent to a child that isn't a
-			// container); see KNOWN-BUGS BUG-P6B-containers-7
+			// container); see KNOWN-BUGS BUG-055
 			guard let currentStep = steps?.object(at: counter) as? LDrawContainer else {
 				return numberElements
 			}

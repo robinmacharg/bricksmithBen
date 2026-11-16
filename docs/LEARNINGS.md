@@ -15,14 +15,14 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87, L91, L92, L95, L97, L98, L100, L101, L102, L103, L104, L106, L107, L109 |
 | ARC | L54, L67, L77, L79, L88 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
 | Performance | L65 (and the noise band in TESTING.md "Rules", performance tests) |
 | UI tests and manual smoke | L34, L68, L80, L82 |
 | Diagnosing a surprise | L30, L39, L41, L44, L48, L50, L56, L69, L82, L94 |
-| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100, L105, L106, L108; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
+| Agents and review | L17, L18, L75, L85, L93, L97, L99, L100, L105, L106, L108, L110; [PARALLEL-AGENTS.md](PARALLEL-AGENTS.md) |
 
 ## Shell and git
 - **L1. A pipe hides failures.** `scripts/build.sh | tail -2 && git commit …` committed after the build had
@@ -534,3 +534,23 @@ topics that match your task rather than the whole log.
   - A guard's return value can turn a crash into a hang: run the reachable input after porting.
 - **L108. `git stash` is shared by all worktrees** (one stack in the common `.git`): two P6b streams saw the main
   checkout's entries. Agents use WIP commits or patch files, never bare `git stash pop`.
+- **L109. Bridging costs that only appear once both sides are Swift (P6b perf):**
+  - An ObjC `NSArray *` parameter imports as `[Any]`, which is *not* bridged verbatim: each ObjC↔Swift crossing
+    converts every element (≈500 µs at 20,000 lines). Per directive that made the model parse O(n²) (643%).
+    `NSArray<NSObject *> *` imports as `[NSObject]` and crosses in O(1) both ways (probe: 0.1-0.2 µs). Watch for
+    `_getNonVerbatimBridgingBuffer` / `bridgeAnythingNonVerbatimToObjectiveC` in profiles. Swift `[String]`
+    literals don't convert to `[NSObject]`: tests use `ldrawLines(_:)`.
+  - Entering a Swift method through its `@objc` thunk retains/releases `self` and each object argument, and boxes an
+    `id` argument into `Any`. In per-child loops, read children with `CFArrayGetValueAtIndex` unretained and call
+    `@nonobjc final` bodies directly for exact Swift classes (`type(of:)` identity; anything else still gets the
+    message).
+  - Forwarding an imported `Any!` (`creditObject`) to ObjC per child copies and re-bridges the existential: convert
+    to `AnyObject?` once.
+  - `as! SwiftClass` on an `Any` (e.g. `super.copy(with:)`) is a slow generic cast; `(x as AnyObject) as! SwiftClass`
+    is a cheap class cast.
+  - Coverage counters don't show in `nm` (private labels): disassemble or `xcrun size -m` (`__llvm_prf_*`). The
+    Perf build instruments both ObjC and Swift, so A/B comparisons are fair.
+- **L110. A Claude session can survive an editor restart** (orphaned, parent PID 1) and keep running its agents
+  against the same checkout as the resumed session. → After a restart, `ps -o pid,ppid,lstart,command` the
+  `claude` processes; one with the session's id and PPID 1 is the stale copy: stop it (and its `xcodebuild`)
+  before resuming agents.

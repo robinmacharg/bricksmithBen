@@ -135,7 +135,7 @@ final class LDrawTexture: LDrawContainer {
 		cachedBounds = InvalidBox
 
 		// P6b: ObjC raised here (-objectAtIndex: past the end of the lines);
-		// see KNOWN-BUGS BUG-P6B-meta-2
+		// see KNOWN-BUGS BUG-057
 		guard rangeLocation < lineCount else {
 			return nil
 		}
@@ -145,7 +145,7 @@ final class LDrawTexture: LDrawContainer {
 		// Parse out the END command
 		if rangeLength > 0 {
 			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines);
-			// see KNOWN-BUGS BUG-P6B-meta-2
+			// see KNOWN-BUGS BUG-057
 			let lastIndex = rangeLocation &+ rangeLength &- 1
 			guard lastIndex < lineCount, lastIndex >= rangeLocation else {
 				return nil
@@ -215,7 +215,7 @@ final class LDrawTexture: LDrawContainer {
 
 			// P6b: ObjC raised here (-addDirective:nil inserts nil: a child that
 			// failed to parse, such as a part whose library file fails to load,
-			// or an unknown line type); see KNOWN-BUGS BUG-P6B-meta-3
+			// or an unknown line type); see KNOWN-BUGS BUG-058
 			guard let newDirective else {
 				return nil
 			}
@@ -334,13 +334,13 @@ final class LDrawTexture: LDrawContainer {
 	// Notes:		The ObjC asked for a nested texture's range with
 	//				maxIndex:NSMaxRange(testRange), one past its own last line, so a
 	//				nested START with no END running to the end of the lines read
-	//				one past them and raised (KNOWN-BUGS BUG-P6B-meta-4). Where it
+	//				one past them and raised (KNOWN-BUGS BUG-059). Where it
 	//				raised, every level now answers "to the end of the lines", as
 	//				the spec has it for a texture with no END. (Answering the count
 	//				so far instead leaves the inner START as the last line of the
 	//				outer texture; its range is then empty, and the outer texture's
 	//				parse loop never advances: the zero-length range of
-	//				BUG-P6B-meta-13.)
+	//				BUG-068.)
 	//
 	//------------------------------------------------------------------------------
 	private class func textureRange(at index: UInt, inLines lines: [NSObject]!, maxIndex: UInt, ranPastEnd: inout Bool) -> NSRange {
@@ -360,7 +360,7 @@ final class LDrawTexture: LDrawContainer {
 
 			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines;
 			// not reachable: the first line is always inside them); see
-			// KNOWN-BUGS BUG-P6B-meta-4
+			// KNOWN-BUGS BUG-059
 			guard testLocation < lineCount else {
 				return NSMakeRange(Int(bitPattern: index), textureLength)
 			}
@@ -395,7 +395,7 @@ final class LDrawTexture: LDrawContainer {
 							// P6b: ObjC raised here (-objectAtIndex: past the end of
 							// the lines: a nested START with no END, whose range is
 							// asked for one line past the outer one); see KNOWN-BUGS
-							// BUG-P6B-meta-4
+							// BUG-059
 							guard counter < lineCount else {
 								ranPastEnd = true
 								return NSMakeRange(Int(bitPattern: index), Int(lineCount &- index))
@@ -660,7 +660,7 @@ final class LDrawTexture: LDrawContainer {
 
 			// Pre-pend the !: meta if it hasn't already been put there. Nesting !:
 			// is illegal.
-			// (-hasPrefix: of nil answered NO; appending nil raised: BUG-P6B-meta-5.)
+			// (-hasPrefix: of nil answered NO; appending nil raised: BUG-060.)
 			if commandString?.hasPrefix(LDRAW_TEXTURE_GEOMETRY) != true {
 				// Note: I make no attempt to remember if the original geometry had
 				//		 the !: meta when parsed. Doing so is far more trouble than
@@ -680,7 +680,7 @@ final class LDrawTexture: LDrawContainer {
 
 			for line in fallback {
 				// P6b: ObjC raised here (-appendString: of a non-string fallback
-				// line; only an archive could hold one); see KNOWN-BUGS BUG-P6B-meta-5
+				// line; only an archive could hold one); see KNOWN-BUGS BUG-060
 				guard let line = line as? String else {
 					return nil
 				}
@@ -910,7 +910,7 @@ final class LDrawTexture: LDrawContainer {
 	override func insert(_ directive: LDrawDirective!, at index: Int) {
 		// P6b: ObjC raised here (-[NSMutableArray insertObject:atIndex:] in
 		// LDrawContainer, with a nil directive or an index past the end, before
-		// anything changed); see KNOWN-BUGS BUG-P6B-meta-6
+		// anything changed); see KNOWN-BUGS BUG-061
 		// (A nil array, only from an archive without children, raised nothing.)
 		let count = subdirectives()?.count ?? Int.max
 		guard directive != nil, index >= 0, index <= count else {
@@ -933,7 +933,7 @@ final class LDrawTexture: LDrawContainer {
 		let commands = subdirectives()
 
 		// P6b: ObjC raised here (-objectAtIndex: past the end, before anything
-		// changed); see KNOWN-BUGS BUG-P6B-meta-6
+		// changed); see KNOWN-BUGS BUG-061
 		// (A nil array, only from an archive without children, raised nothing.)
 		if let commands, index < 0 || index >= commands.count {
 			return

@@ -84,7 +84,7 @@ class LDrawLine: LDrawDrawableElement {
 			return nil
 		}
 		// P6b: ObjC raised here (-objectAtIndex: past the end of the lines); see
-		// KNOWN-BUGS BUG-P6B-drawables-1
+		// KNOWN-BUGS BUG-046
 		guard range.location < lines.count else {
 			return nil
 		}

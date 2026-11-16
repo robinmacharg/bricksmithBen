@@ -157,7 +157,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 			return nil
 		}
 		// P6b: ObjC raised here (-objectAtIndex: past the end of the lines,
-		// outside the @try); see KNOWN-BUGS BUG-P6B-drawables-1
+		// outside the @try); see KNOWN-BUGS BUG-046
 		guard range.location < lines.count else {
 			return nil
 		}
@@ -1321,7 +1321,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 			// P6b: ObjC raised here (-[PartReport registerPart:] ends with
 			// -setObject:forKey: keyed by the part's colour, nil for a part that
 			// never had one, after counting the part); see KNOWN-BUGS
-			// BUG-P6B-drawables-3
+			// BUG-048
 			guard self.lDrawColor() != nil else {
 				return
 			}
@@ -1404,7 +1404,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 			else {
 				// P6b: ObjC raised here (-[LDrawPaths pathForPartName:nil], via
 				// -[PartLibrary modelForName:], for a part with no name); see
-				// KNOWN-BUGS BUG-P6B-drawables-2
+				// KNOWN-BUGS BUG-047
 				guard let referenceName = self.referenceNameStorage else {
 					return
 				}

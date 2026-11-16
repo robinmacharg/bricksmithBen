@@ -223,7 +223,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		let rangeMax: UInt					= lineIndex &+ UInt(bitPattern: range.length)
 
 		// (nil when there are no lines: the ObjC then read its ivars through a
-		// nil self and crashed; see KNOWN-BUGS BUG-P6B-meta-7.)
+		// nil self and crashed; see KNOWN-BUGS BUG-062.)
 		super.init(lines: lines, in: range, parentGroup: parentGroup)
 		registerForNotifications() // Basic initialisation, not related to parsing (the first -init)
 
@@ -231,7 +231,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 
 		while lineIndex < rangeMax {
 			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines);
-			// see KNOWN-BUGS BUG-P6B-meta-7
+			// see KNOWN-BUGS BUG-062
 			guard lineIndex < UInt(lineArray.count) else {
 				return nil
 			}
@@ -324,7 +324,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 				if parserState == .PARSER_PARSING_CONSTRAINTS {
 					newDirective?.setIconName(determineIconName(newDirective))
 					// P6b: ObjC raised here (-addObject:nil: a constraint part that
-					// failed to parse); see KNOWN-BUGS BUG-P6B-meta-8
+					// failed to parse); see KNOWN-BUGS BUG-063
 					guard let newDirective else {
 						return nil
 					}
@@ -333,7 +333,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 
 				else if parserState == .PARSER_PARSING_SYNTHESIZED {
 					// P6b: ObjC raised here (-addObject:nil: a synthesized part
-					// that failed to parse); see KNOWN-BUGS BUG-P6B-meta-8
+					// that failed to parse); see KNOWN-BUGS BUG-063
 					guard let newDirective else {
 						return nil
 					}
@@ -412,7 +412,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		// (Messaging a nil array answered nil, which matches nothing.)
 		if let lineArray {
 			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines);
-			// see KNOWN-BUGS BUG-P6B-meta-9
+			// see KNOWN-BUGS BUG-064
 			guard index < UInt(lineArray.count) else {
 				return NSMakeRange(Int(bitPattern: index), synthLength)
 			}
@@ -423,7 +423,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 				counter = index &+ 1
 				while counter < testMax {
 					// P6b: ObjC raised here (-objectAtIndex: past the end of the
-					// lines: a maxIndex past them); see KNOWN-BUGS BUG-P6B-meta-9
+					// lines: a maxIndex past them); see KNOWN-BUGS BUG-064
 					guard counter < UInt(lineArray.count) else {
 						break
 					}
@@ -534,7 +534,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 
 		// P6b: ObjC raised here (-[NSMutableArray insertObject:atIndex:] in
 		// LDrawContainer, with a nil directive or an index past the end); see
-		// KNOWN-BUGS BUG-P6B-meta-10
+		// KNOWN-BUGS BUG-065
 		// (A nil array, only from an archive without children, raised nothing.)
 		let count = subdirectives()?.count ?? Int.max
 		guard directive != nil, index >= 0, index <= count else {
@@ -593,7 +593,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 			// This is the only place we invoke synthesis.  While it may incur a small delay in drawing
 			// it's lazy (in a good way), and means resynthesis only occurs when we actually need it.
 			if revalCache(.ContainerInvalid) == .ContainerInvalid {
-				// (Stops where the ObjC raised: BUG-P6B-meta-11, BUG-029.)
+				// (Stops where the ObjC raised: BUG-066, BUG-029.)
 				guard synthesizeParts() else {
 					return
 				}
@@ -762,7 +762,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		while counter < numberCommands {
 			let currentCommand = constraints!.object(at: counter) as! LDrawDirective
 			// P6b: ObjC raised here (-appendString:nil: a constraint whose write
-			// is nil); see KNOWN-BUGS BUG-P6B-meta-10
+			// is nil); see KNOWN-BUGS BUG-065
 			guard let commandString = currentCommand.write() else {
 				return nil
 			}
@@ -783,7 +783,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 				// part selection changes, anyway.
 				part.setLDrawColor(color)
 				// P6b: ObjC raised here (-appendString:nil); see KNOWN-BUGS
-				// BUG-P6B-meta-10
+				// BUG-065
 				guard let partString = part.write() else {
 					return nil
 				}
@@ -1092,7 +1092,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		_ = synthesizeParts()
 	}
 
-	/// -synthesize; false where the ObjC raised (BUG-P6B-meta-11), so callers here stop too.
+	/// -synthesize; false where the ObjC raised (BUG-066), so callers here stop too.
 	private func synthesizeParts() -> Bool {
 		//NSLog(@"SYNTHESIZE");
 
@@ -1168,7 +1168,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		task.standardOutput = outPipe
 		task.standardError = errorPipe
 		// P6b: ObjC raised here (-launch with no launch path); see KNOWN-BUGS
-		// BUG-P6B-meta-11
+		// BUG-066
 		guard let lsynthPath else {
 			return false
 		}
@@ -1182,7 +1182,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 
 		// Launch the task
 		// P6b: ObjC raised here (-launch: a path that doesn't exist, isn't
-		// executable, or is a directory); see KNOWN-BUGS BUG-P6B-meta-11.
+		// executable, or is a directory); see KNOWN-BUGS BUG-066.
 		// -run throws instead of raising.
 		do {
 			try task.run()
@@ -1196,7 +1196,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		// -writeData:nil wrote nothing.)
 		// P6b: ObjC raised here (-writeData: or -closeFile on an I/O error, such as
 		// EPIPE when lsynth has exited and SIGPIPE is ignored); see KNOWN-BUGS
-		// BUG-P6B-meta-11. These throw instead of raising.
+		// BUG-066. These throw instead of raising.
 		do {
 			if let data = (input as NSString).data(using: String.Encoding.ascii.rawValue) {
 				try inFile.write(contentsOf: data)
@@ -1214,7 +1214,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 		// Read the synthesized file back in from LSynth's STDOUT
 		// (Was an -availableData loop up to the first empty read, i.e. to the end.)
 		// P6b: ObjC raised here (-availableData on a read error); see KNOWN-BUGS
-		// BUG-P6B-meta-11. -readToEnd throws instead.
+		// BUG-066. -readToEnd throws instead.
 		let data: Data
 		do {
 			data = try outFile.readToEnd() ?? Data()
@@ -1244,7 +1244,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 														   in: NSMakeRange(0, 1),
 														   parentGroup: nil)
 				// P6b: ObjC raised here (-addObject:nil: an output line that didn't
-				// parse); see KNOWN-BUGS BUG-P6B-meta-11
+				// parse); see KNOWN-BUGS BUG-066
 				guard let newDirective else {
 					return false
 				}
@@ -1381,7 +1381,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 
 		// P6b: ObjC raised here (-objectAtIndex:0 of a block with no
 		// constraints, or -transformationMatrix sent to a direction directive,
-		// which doesn't implement it); see KNOWN-BUGS BUG-P6B-meta-12
+		// which doesn't implement it); see KNOWN-BUGS BUG-067
 		guard let constraints = subdirectives(), constraints.count > 0 else {
 			return nil
 		}
@@ -1745,7 +1745,7 @@ final class LDrawLSynth: LDrawContainer, LDrawColorable, LDrawMovableDirective {
 	//==============================================================================
 	@objc(requiresResynthesis:)
 	func requiresResynthesis(_ sender: Any!) {
-		// (Stops where the ObjC raised: BUG-P6B-meta-11, BUG-029.)
+		// (Stops where the ObjC raised: BUG-066, BUG-029.)
 		guard synthesizeParts() else {
 			return
 		}

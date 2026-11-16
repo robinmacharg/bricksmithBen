@@ -31,7 +31,7 @@
 //
 //  Where the ObjC raised (and a caller's @try or AppKit swallowed it), the
 //  port has a guard that abandons the operation at the same point, marked
-//  "P6b: ObjC raised here"; see KNOWN-BUGS BUG-P6B-containers-*.
+//  "P6b: ObjC raised here"; see KNOWN-BUGS BUG-049..055.
 //==============================================================================
 
 import Foundation
@@ -274,7 +274,7 @@ final class LDrawStep: LDrawContainer {
 		var insertIndex							= 0
 
 		// (No lines at all: super answers nil. The ObjC then wrote an ivar
-		// through nil and crashed; see KNOWN-BUGS BUG-P6B-containers-1.)
+		// through nil and crashed; see KNOWN-BUGS BUG-049.)
 		super.init(lines: lines, in: range, parentGroup: parentGroup)
 
 		cachedBounds = InvalidBox
@@ -292,7 +292,7 @@ final class LDrawStep: LDrawContainer {
 		// Parse out the STEP command
 		if rangeLength > 0 {
 			// P6b: ObjC raised here (-objectAtIndex: past the end of the lines,
-			// before anything was parsed); see KNOWN-BUGS BUG-P6B-containers-2
+			// before anything was parsed); see KNOWN-BUGS BUG-050
 			guard rangeLocation < lineCount, rangeLength <= lineCount - rangeLocation else {
 				return nil
 			}
@@ -362,7 +362,7 @@ final class LDrawStep: LDrawContainer {
 			// P6b: ObjC raised here (-addDirective:nil, when a directive's init
 			// answered nil, e.g. a part whose library file fails to parse); the
 			// step fails, as the exception failed the whole parse; see KNOWN-BUGS
-			// BUG-P6B-containers-3
+			// BUG-051
 			guard let currentDirective = directives[counter] else {
 				return nil
 			}
@@ -457,7 +457,7 @@ final class LDrawStep: LDrawContainer {
 			if let lineArray {
 				// P6b: ObjC raised here (-objectAtIndex: past the end of the lines);
 				// the untrimmed range goes back, and the step parse then fails at
-				// its own guard; see KNOWN-BUGS BUG-P6B-containers-2
+				// its own guard; see KNOWN-BUGS BUG-050
 				guard counter < UInt(lineArray.count) else {
 					return NSMakeRange(Int(bitPattern: index), Int(bitPattern: testLength))
 				}
@@ -776,7 +776,7 @@ final class LDrawStep: LDrawContainer {
 		}
 		else {
 			// P6b: ObjC raised here (-steps sent to an enclosing container that
-			// isn't a model); see KNOWN-BUGS BUG-P6B-containers-4
+			// isn't a model); see KNOWN-BUGS BUG-052
 			guard let model = enclosingModel as? LDrawModel else {
 				return nil
 			}
@@ -1089,7 +1089,7 @@ final class LDrawStep: LDrawContainer {
 		invalCache([.CacheFlagBounds, .DisplayList])
 		// P6b: ObjC raised here (-[NSMutableArray insertObject:atIndex:] in
 		// LDrawContainer, for a nil directive or an index past the end, before
-		// the insert); see KNOWN-BUGS BUG-P6B-containers-5
+		// the insert); see KNOWN-BUGS BUG-053
 		guard directive != nil, index >= 0, index <= (subdirectives()?.count ?? 0) else {
 			return
 		}
@@ -1107,7 +1107,7 @@ final class LDrawStep: LDrawContainer {
 	override func removeDirective(at index: Int) {
 		invalCache([.CacheFlagBounds, .DisplayList])
 		// P6b: ObjC raised here (-objectAtIndex: past the end, before the
-		// remove); see KNOWN-BUGS BUG-P6B-containers-5
+		// remove); see KNOWN-BUGS BUG-053
 		guard let steps = subdirectives(), index >= 0, index < steps.count else {
 			return
 		}
@@ -1172,7 +1172,7 @@ final class LDrawStep: LDrawContainer {
 			if let enclosingModel = enclosingDirective() {
 				// P6b: ObjC raised here (-modelName sent to an enclosing container
 				// that isn't an MPD model); the drop is refused; see KNOWN-BUGS
-				// BUG-P6B-containers-4
+				// BUG-052
 				guard enclosingModel.responds(to: #selector(LDrawMPDModel.modelName)) else {
 					return false
 				}
