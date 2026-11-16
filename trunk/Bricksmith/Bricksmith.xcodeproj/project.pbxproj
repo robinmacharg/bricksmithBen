@@ -43,7 +43,6 @@
 		0B0B6CCD2787D87800F6E225 /* PartCatalogBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B0B6CCB2787D87800F6E225 /* PartCatalogBuilder.h */; };
 		0B0B6CCE2787D87800F6E225 /* PartCatalogBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B6CCC2787D87800F6E225 /* PartCatalogBuilder.m */; };
 		0B1DA5A813172DA700E14960 /* LDrawDirective.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B1DA5A213172DA700E14960 /* LDrawDirective.h */; };
-		0B1DA5A913172DA700E14960 /* LDrawDirective.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA5A313172DA700E14960 /* LDrawDirective.m */; };
 		0B1DA5AA13172DA700E14960 /* LDrawUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B1DA5A413172DA700E14960 /* LDrawUtilities.h */; };
 		0B1DA5AB13172DA700E14960 /* LDrawUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DA5A513172DA700E14960 /* LDrawUtilities.m */; };
 		0B25F040093D5F960099D85E /* BricksmithApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B25F03E093D5F960099D85E /* BricksmithApplication.h */; };
@@ -263,7 +262,6 @@
 		D6EDBB4816508D7200B4062B /* LDrawBDPAllocator.m in Sources */ = {isa = PBXBuildFile; fileRef = D6EDBB4616508D7200B4062B /* LDrawBDPAllocator.m */; };
 		D6EDBC251650B9E200B4062B /* LDrawDisplayList.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EDBC231650B9E200B4062B /* LDrawDisplayList.h */; };
 		D6EDBC261650B9E200B4062B /* LDrawDisplayList.m in Sources */ = {isa = PBXBuildFile; fileRef = D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */; };
-		D6FC72131604EBB8005A404E /* LDrawFastSet.h in Headers */ = {isa = PBXBuildFile; fileRef = D6FC72121604EBB8005A404E /* LDrawFastSet.h */; };
 		D808D941792BE8E2F99A9EBC /* AppLogicCoverageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2217C8D18F6DD472E397AD56 /* AppLogicCoverageTests.swift */; };
 		D84F2F24A0EE06FE2ACCE7D3 /* BricksmithTestSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 513E4F7C13E1822C0233049A /* BricksmithTestSupport.m */; };
 		DABC32FD2B1ABDBA096B70E1 /* ColourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19A96774CDADD19C441D18 /* ColourTests.swift */; };
@@ -393,7 +391,6 @@
 		0B0B6CCB2787D87800F6E225 /* PartCatalogBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PartCatalogBuilder.h; sourceTree = "<group>"; };
 		0B0B6CCC2787D87800F6E225 /* PartCatalogBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PartCatalogBuilder.m; sourceTree = "<group>"; };
 		0B1DA5A213172DA700E14960 /* LDrawDirective.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawDirective.h; sourceTree = "<group>"; };
-		0B1DA5A313172DA700E14960 /* LDrawDirective.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawDirective.m; sourceTree = "<group>"; };
 		0B1DA5A413172DA700E14960 /* LDrawUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawUtilities.h; sourceTree = "<group>"; };
 		0B1DA5A513172DA700E14960 /* LDrawUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawUtilities.m; sourceTree = "<group>"; };
 		0B25F03E093D5F960099D85E /* BricksmithApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BricksmithApplication.h; sourceTree = "<group>"; };
@@ -636,7 +633,6 @@
 		D6EDBB4616508D7200B4062B /* LDrawBDPAllocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawBDPAllocator.m; sourceTree = "<group>"; };
 		D6EDBC231650B9E200B4062B /* LDrawDisplayList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawDisplayList.h; sourceTree = "<group>"; };
 		D6EDBC241650B9E200B4062B /* LDrawDisplayList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDrawDisplayList.m; sourceTree = "<group>"; };
-		D6FC72121604EBB8005A404E /* LDrawFastSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDrawFastSet.h; sourceTree = "<group>"; };
 		DAFD372C3BF122BAFD9A4F34 /* MacLDraw.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MacLDraw.m; sourceTree = "<group>"; };
 		E1A20FA82FDF544FEBB7E52E /* LDrawPathNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LDrawPathNames.m; sourceTree = "<group>"; };
 		E96F9A003C945DFFE70306AA /* HarnessExitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessExitTests.swift; sourceTree = "<group>"; };
@@ -712,8 +708,6 @@
 				D6191B9C17F277B600B5DF44 /* GLMatrixMath.c */,
 				D6191B9B17F277B600B5DF44 /* GLMatrixMath.h */,
 				0B1DA5A213172DA700E14960 /* LDrawDirective.h */,
-				0B1DA5A313172DA700E14960 /* LDrawDirective.m */,
-				D6FC72121604EBB8005A404E /* LDrawFastSet.h */,
 				D61912FF17F004A300B5DF44 /* LDrawGLCamera.h */,
 				D619130017F004A300B5DF44 /* LDrawGLCamera.m */,
 				0B3B76AA13DB86AE007CCC5D /* LDrawGLRenderer.h */,
@@ -1299,7 +1293,6 @@
 				0B3B76AC13DB86AE007CCC5D /* LDrawGLRenderer.h in Headers */,
 				D6EC01BE15A54B3B0004CEB8 /* OpenGLUtilities.h in Headers */,
 				D6CB41E015E2AA6C00730E2A /* ModelManager.h in Headers */,
-				D6FC72131604EBB8005A404E /* LDrawFastSet.h in Headers */,
 				95D893B816555F3E00AA055B /* LSynthConfiguration.h in Headers */,
 				95D893CA16569CFD00AA055B /* LDrawLSynth.h in Headers */,
 				D6EDB983164DEB0000B4062B /* LDrawRenderer.h in Headers */,
@@ -1590,7 +1583,6 @@
 				0B04EF3810A6A38E00E201EE /* FocusRingView.m in Sources */,
 				0B8C096910BA532F00BEB111 /* OverlayHelperView.m in Sources */,
 				0B8C097410BA550500BEB111 /* OverlayHelperWindow.m in Sources */,
-				0B1DA5A913172DA700E14960 /* LDrawDirective.m in Sources */,
 				0B1DA5AB13172DA700E14960 /* LDrawUtilities.m in Sources */,
 				0BC7533A136FC878002568B8 /* PartLibrary.m in Sources */,
 				0BDE0EF21371070600FDB8DB /* LDrawPaths.m in Sources */,
