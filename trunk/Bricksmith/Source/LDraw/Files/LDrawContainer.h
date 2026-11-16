@@ -25,11 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LDrawContainer : LDrawDirective <NSCoding, NSCopying, LDrawObserver>
 {
 	@protected
-	BOOL				postsNotifications;
+	BOOL				postsNotifications;	// subclasses (LDrawStep, LDrawFile) read it directly; Swift uses the property
 	
 	@private
 	NSMutableArray		*containedObjects;
 }
+
+// Implemented by -postsNotifications; set with -setPostsNotifications:, which also applies the flag to the children.
+@property (nonatomic, readonly) BOOL postsNotifications;
 
 //Accessors
 - (null_unspecified NSArray *) allEnclosedElements;
