@@ -186,6 +186,9 @@ void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
 //				(i.e., "0 !COLOUR"); now we just have to finish the 
 //				color-command specific syntax. 
 //
+// Returns:		YES on success; NO on a syntax error. On NO, the fields parsed 
+//				before the error are left set on the receiver. 
+//
 //==============================================================================
 - (BOOL) finishParsing:(NSScanner *)scanner
 {
@@ -202,19 +205,19 @@ void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
 	
 	// Color Code
 	if([scanner scanString:LDRAW_COLOR_DEF_CODE intoString:nil] == NO)
-		@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad !COLOUR syntax" userInfo:nil];
+		return NO; // syntax error: fields parsed so far are kept (KNOWN-BUGS S1)
 	if([scanner scanInt:&self->colorCode] == NO)
-		@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad !COLOUR syntax" userInfo:nil];
+		return NO; // syntax error: fields parsed so far are kept (KNOWN-BUGS S1)
 	
 	// Color Components
 	if([scanner scanString:LDRAW_COLOR_DEF_VALUE intoString:nil] == NO)
-		@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad !COLOUR syntax" userInfo:nil];
+		return NO; // syntax error: fields parsed so far are kept (KNOWN-BUGS S1)
 	if([self scanHexString:scanner intoRGB:self->colorRGBA] == NO)
-		@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad !COLOUR syntax" userInfo:nil];
+		return NO; // syntax error: fields parsed so far are kept (KNOWN-BUGS S1)
 		
 	// Edge
 	if([scanner scanString:LDRAW_COLOR_DEF_EDGE intoString:nil] == NO)
-		@throw [NSException exceptionWithName:@"BricksmithParseException" reason:@"Bad !COLOUR syntax" userInfo:nil];
+		return NO; // syntax error: fields parsed so far are kept (KNOWN-BUGS S1)
 	if([self scanHexString:scanner intoRGB:parsedColor] == YES)
 		[self setEdgeColorRGBA:parsedColor];
 	else
