@@ -18,8 +18,9 @@
 //  Created by Allen Smith on 2/19/05.
 //  Copyright (c) 2005. All rights reserved.
 //
-//  Ported to Swift in P6a. The superclass (LDrawDrawableElement) is still ObjC,
-//  so its ivars (color, hidden) are read through -LDrawColor and -isHidden.
+//  Ported to Swift in P6a. The superclass (LDrawDrawableElement) is Swift since
+//  P6c; its colour and hidden flag are read through -LDrawColor, -isHidden and
+//  collectorColor(_:_:).
 //==============================================================================
 
 import Foundation
@@ -238,14 +239,14 @@ final class LDrawTriangle: LDrawDrawableElement {
 		// is what PRIMES our parent model to rebuild DLs as needed.
 		_ = self.revalCache(.DisplayList)
 
-		// One C call reads `hidden` and `color` straight from the ObjC ivars (no getter sends, no
+		// One direct call (collectorColor, P6c) reads `hidden` and `color` (no getter sends, no
 		// retain per primitive; P6a perf). The colour choice is unchanged: 16 -> current, 24 ->
 		// complement, else the RGBA (zeros for a nil colour, where [nil colorCode] was 0).
 		var rgba: (GLfloat, GLfloat, GLfloat, GLfloat) = (0, 0, 0, 0)
 		withUnsafeMutablePointer(to: &rgba) { rp in
 			rp.withMemoryRebound(to: GLfloat.self, capacity: 4) { scratch in
 				var color: UnsafeMutablePointer<GLfloat>? = nil
-				guard LDrawDrawableElementCollectorColor(self, scratch, &color) else { return }
+				guard self.collectorColor(scratch, &color) else { return }
 
 				let (v1, v2, v3) = (self.v1, self.v2, self.v3)
 				var v: (GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat) = (

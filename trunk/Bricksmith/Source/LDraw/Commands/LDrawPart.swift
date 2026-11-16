@@ -19,9 +19,9 @@
 //  Created by Allen Smith on 2/19/05.
 //  Copyright (c) 2005. All rights reserved.
 //
-//  Ported to Swift in P6b. The superclass (LDrawDrawableElement) is still ObjC,
-//  so its ivars (color, hidden) are read through -isHidden, -LDrawColor and the
-//  LDrawDrawableElementCollectorColor() seam. PartTypeT stays in LDrawPart.h.
+//  Ported to Swift in P6b. The superclass (LDrawDrawableElement) is Swift since
+//  P6c; its colour and hidden flag are read through -isHidden, -LDrawColor and
+//  collectorColor(_:_:). PartTypeT stays in LDrawPart.h.
 //
 //  Threads: every part is parsed, resolved and drawn on the thread that opened
 //  the document (all parse groups are NULL since P4; PartLibrary runs its
@@ -327,7 +327,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 	//==========================================================================
 	@objc(drawSelf:)
 	override func drawSelf(_ renderer: (any LDrawRenderer)!) {
-		// One C call reads `hidden` and `color` straight from the ObjC ivars (no
+		// One direct call (collectorColor, P6c) reads `hidden` and `color` (no
 		// getter sends or retains per part per frame), choosing the colour as the
 		// ObjC did: current colour (16) -> no push (LDrawRenderCurrentColor is
 		// NULL), edge colour (24) -> LDrawRenderComplimentColor, else the RGBA.
@@ -337,7 +337,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 		withUnsafeMutablePointer(to: &rgba) { rp in
 			rp.withMemoryRebound(to: GLfloat.self, capacity: 4) { scratch in
 				var color: UnsafeMutablePointer<GLfloat>? = nil
-				guard LDrawDrawableElementCollectorColor(self, scratch, &color) else { return }
+				guard self.collectorColor(scratch, &color) else { return }
 
 				self.resolve()
 

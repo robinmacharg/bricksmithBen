@@ -17,9 +17,9 @@
 //  Created by Allen Smith on 2/19/05.
 //  Copyright (c) 2005. All rights reserved.
 //
-//  Ported to Swift in P6b. The superclass (LDrawDrawableElement) is still ObjC,
-//  so its ivars (color, hidden) are read through -isHidden, -LDrawColor and the
-//  LDrawDrawableElementCollectorColor() seam. LDrawConditionalLine (Swift)
+//  Ported to Swift in P6b. The superclass (LDrawDrawableElement) is Swift since
+//  P6c; its colour and hidden flag are read through -isHidden, -LDrawColor and
+//  collectorColor(_:_:). LDrawConditionalLine (Swift)
 //  subclasses this class, so it is not final.
 //==============================================================================
 
@@ -244,14 +244,14 @@ class LDrawLine: LDrawDrawableElement {
 	@nonobjc final func collectPrimitive(_ renderer: (any LDrawCollector)!) {
 		_ = self.revalCache(.DisplayList)
 
-		// One C call reads `hidden` and `color` straight from the ObjC ivars (no getter sends, no
+		// One direct call (collectorColor, P6c) reads `hidden` and `color` (no getter sends, no
 		// retain per primitive). The colour choice is unchanged: 16 -> current, 24 -> complement,
 		// else the RGBA. (For a nil colour the ObjC passed an uninitialised buffer; zeros here.)
 		var rgba: (GLfloat, GLfloat, GLfloat, GLfloat) = (0, 0, 0, 0)
 		withUnsafeMutablePointer(to: &rgba) { rp in
 			rp.withMemoryRebound(to: GLfloat.self, capacity: 4) { scratch in
 				var color: UnsafeMutablePointer<GLfloat>? = nil
-				guard LDrawDrawableElementCollectorColor(self, scratch, &color) else { return }
+				guard self.collectorColor(scratch, &color) else { return }
 
 				let (v1, v2) = (self.v1, self.v2)
 				var v: (GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat) = (
