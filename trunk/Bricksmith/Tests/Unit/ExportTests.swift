@@ -10,30 +10,48 @@ import Foundation
 import Testing
 @testable import Bricksmith
 
-/// Line-for-line mirror of the save-panel completion block in -[LDrawDocument exportSteps:]
-/// (LDrawDocument.m, "exportSteps:"). The logic is inline in that block and can't be called without the
-/// panel; P4 extracts it so this test can call the real method. Keep in sync until then.
-enum ExportStepsMirror {
+/// Runs the real -[LDrawDocument exportStepsToURL:] (the work of Export Steps once its save panel is accepted) into a
+/// temp folder, and reads the files back in the order the method writes them: one folder per submodel, in the order
+/// of a copy of the file (the method works on copies, so BUG-011 reverses it), and each folder's steps last to first.
+///
+/// The document is given the fixture as parsed by `ObjectModel.load`, the input the goldens were recorded from (by a
+/// line-for-line mirror of the method, until P4 extracted it). Opening the file as a document instead would also run
+/// -doMissingModelnameExtensionCheck:, which appends ".ldr" to a model name without an extension, so the folder and
+/// file names would differ.
+@MainActor
+enum ExportStepsRun {
 	struct Output { let folder: String; let name: String; let text: String }
 
-	static func run(_ document: LDrawFile) -> [Output] {
+	static func run(_ fixture: String) throws -> [Output] {
+		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/\(fixture)"))
+		let doc = LDrawDocument()
+		try ObjC.run { doc.setDocumentContents(file) }
+		let fm = FileManager.default
+		let root = fm.temporaryDirectory.appendingPathComponent("export-steps-\(UUID().uuidString)")
+		defer { try? fm.removeItem(at: root) }
+		// Something already at the destination: the export replaces it.
+		try Data("stale".utf8).write(to: root)
+		try ObjC.run { doc.exportSteps(to: root) }
+		var isDirectory: ObjCBool = false
+		#expect(fm.fileExists(atPath: root.path, isDirectory: &isDirectory) && isDirectory.boolValue,
+				"the existing file at the destination was not replaced by a folder")
+
 		let folderFormat = Bundle.main.localizedString(forKey: "ExportedStepsFolderFormat", value: nil, table: nil)
-		let fileFormat = Bundle.main.localizedString(forKey: "ExportedStepsFileFormat", value: nil, table: nil)
+		let copy = try #require(doc.documentContents().copy() as? LDrawFile)
+		let folders = (copy.submodels() as? [LDrawMPDModel] ?? []).map { String(format: folderFormat, $0.modelName()) }
+		#expect(Set(try fm.contentsOfDirectory(atPath: root.path)) == Set(folders), "unexpected folders")
+
 		var out: [Output] = []
-		let submodelCount = document.submodels()?.count ?? 0
-		for modelCounter in 0..<submodelCount {
-			let fileCopy = document.copy() as! LDrawFile
-			let currentModel = fileCopy.submodels()[modelCounter] as! LDrawMPDModel
-			fileCopy.remove(currentModel as LDrawDirective)
-			fileCopy.insert(currentModel, at: 0)
-			fileCopy.setActiveModel(currentModel)
-			let folder = String(format: folderFormat, currentModel.modelName())
-			var counter = (currentModel.steps()?.count ?? 0) - 1
-			while counter >= 0 {
-				let name = String(format: fileFormat, currentModel.modelName(), counter + 1)
-				out.append(Output(folder: folder, name: name, text: fileCopy.write()))
-				currentModel.removeDirective(at: counter)
-				counter -= 1
+		for folder in folders {
+			let dir = root.appendingPathComponent(folder)
+			let names = try fm.contentsOfDirectory(atPath: dir.path)
+			let numbered = try names.map { name -> (Int, String) in
+				let match = try #require(name.firstMatch(of: /Step (\d+)\.ldr$/), "unexpected file \(folder)/\(name)")
+				return (Int(match.1)!, name)
+			}
+			for (_, name) in numbered.sorted(by: { $0.0 > $1.0 }) {
+				let text = try String(contentsOf: dir.appendingPathComponent(name), encoding: .utf8)
+				out.append(Output(folder: folder, name: name, text: text))
 			}
 		}
 		return out
@@ -47,14 +65,15 @@ enum ExportStepsMirror {
 @Suite("Exports (P2 row 11)", .fixtureLibrary, .serialized)
 struct ExportTests {
 
-	@Test("Export Steps output (mirror of -exportSteps:) matches the golden", arguments: ["04-steps-rotstep.ldr", "05-multipart.mpd"])
+	@MainActor
+	@Test("Export Steps output (-exportStepsToURL:) matches the golden", arguments: ["04-steps-rotstep.ldr", "05-multipart.mpd"])
 	func exportSteps(fixture: String) throws {
-		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/\(fixture)"))
-		let outputs = ExportStepsMirror.run(file)
-		try Golden.check(Data(ExportStepsMirror.describe(outputs).utf8),
+		let outputs = try ExportStepsRun.run(fixture)
+		try Golden.check(Data(ExportStepsRun.describe(outputs).utf8),
 						 against: "export/steps-\((fixture as NSString).deletingPathExtension).txt")
 	}
 
+	@MainActor
 	@Test("Export Steps: the file for step k contains exactly the first k steps of the model")
 	func exportStepsContents() throws {
 		let file = try ObjectModel.load(FixturePaths.fixtures.appendingPathComponent("ldr/04-steps-rotstep.ldr"))
@@ -62,7 +81,7 @@ struct ExportTests {
 		let stepParts: [[String]] = (model.steps() as? [LDrawStep] ?? []).map { step in
 			ObjectModel.all(step).compactMap { ($0 as? LDrawPart)?.write() }
 		}
-		let outputs = ExportStepsMirror.run(file).reversed()   // written last step first
+		let outputs = try ExportStepsRun.run("04-steps-rotstep.ldr").reversed()   // read back last step first
 		withKnownIssue("BUG-011: copy reverses steps, so exported step files contain the wrong steps") {
 			for (k, output) in outputs.enumerated() {
 				let expected = stepParts.prefix(k + 1).flatMap { $0 }

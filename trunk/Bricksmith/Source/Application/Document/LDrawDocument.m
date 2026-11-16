@@ -1586,82 +1586,90 @@ void AppendChoicesToNewItem(
 						completionHandler:
 	 ^(NSInteger returnCode)
 	 {
-		 // Do the save
-		 
-		 NSFileManager	 *fileManager		 = [[NSFileManager alloc] init];
-		 NSURL			 *saveURL			 = nil;
-		 NSString		 *saveName			 = nil;
-		 NSString		 *modelName 		 = nil;
-		 NSString		 *folderName		 = nil;
-		 NSString		 *modelnameFormat	 = NSLocalizedString(@"ExportedStepsFolderFormat", nil);
-		 NSString		 *filenameFormat	 = NSLocalizedString(@"ExportedStepsFileFormat", nil);
-		 NSString		 *fileString		 = nil;
-		 NSData 		 *fileOutputData	 = nil;
-		 NSString		 *outputName		 = nil;
-		 NSString		 *outputPath		 = nil;
-		 
-		 LDrawFile		 *fileCopy			 = nil;
-		 
-		 NSInteger		 modelCounter		 = 0;
-		 NSInteger		 counter			 = 0;
-		 
 		 if(returnCode == NSModalResponseOK)
-		 {
-			 saveURL	= [exportPanel URL];
-			 saveName	= ([saveURL isFileURL] ? [saveURL path] : nil);
-			 
-			 // If we got this far, we need to replace any prexisting file.
-			 if([fileManager fileExistsAtPath:saveName isDirectory:NULL])
-				 [fileManager removeItemAtPath:saveName error:NULL];
-			 
-			 [fileManager createDirectoryAtPath:saveName withIntermediateDirectories:YES attributes:nil error:NULL];
-			 
-			 //Output all the steps for all the submodels.
-			 for(modelCounter = 0; modelCounter < [[[self documentContents] submodels] count]; modelCounter++)
-			 {
-				 fileCopy = [[self documentContents] copy];
-				 
-				 //Move the target model to the top of the file. That way L3P will know to
-				 // render it!
-				 LDrawMPDModel *currentModel = [[fileCopy submodels] objectAtIndex:modelCounter];
-				 [fileCopy removeDirective:currentModel];
-				 [fileCopy insertDirective:currentModel atIndex:0];
-				 [fileCopy setActiveModel:currentModel];
-				 
-				 //Make a new folder for the model's steps.
-				 modelName	= [NSString stringWithFormat:modelnameFormat, [currentModel modelName]];
-				 folderName	= [saveName stringByAppendingPathComponent:modelName];
-				 
-				 [fileManager createDirectoryAtPath:folderName withIntermediateDirectories:YES attributes:nil error:NULL];
-				 
-				 //Write out each step!
-				 for(counter = [[currentModel steps] count]-1; counter >= 0; counter--)
-				 {
-					 fileString		= [fileCopy write];
-					 fileOutputData	= [fileString dataUsingEncoding:NSUTF8StringEncoding];
-					 
-					 outputName = [NSString stringWithFormat: filenameFormat,
-								   [currentModel modelName],
-								   (long)counter+1 ];
-					 outputPath = [folderName stringByAppendingPathComponent:outputName];
-					 [fileManager createFileAtPath:outputPath
-										  contents:fileOutputData
-										attributes:nil ];
-					 
-					 //Remove the step we just wrote, so that the next cycle won't
-					 // include it. We can safely do this because we are working with
-					 // a copy of the file!
-					 [currentModel removeDirectiveAtIndex:counter];
-				 }
-				 
-				 
-				 
-			 }
-			 
-		 }
+			 [self exportStepsToURL:[exportPanel URL]];
 	 }];
 
 }//end exportSteps:
+
+
+//========== exportStepsToURL: =================================================
+//
+// Purpose:		Writes the model as a series of files, one for each progressive
+//				step, into a folder at saveURL (replacing anything already
+//				there): one subfolder per submodel, holding one file per step.
+//				This is the work of Export Steps once the save panel is accepted.
+//
+//==============================================================================
+- (void) exportStepsToURL:(NSURL *)saveURL
+{
+	NSFileManager	 *fileManager		 = [[NSFileManager alloc] init];
+	NSString		 *saveName			 = nil;
+	NSString		 *modelName 		 = nil;
+	NSString		 *folderName		 = nil;
+	NSString		 *modelnameFormat	 = NSLocalizedString(@"ExportedStepsFolderFormat", nil);
+	NSString		 *filenameFormat	 = NSLocalizedString(@"ExportedStepsFileFormat", nil);
+	NSString		 *fileString		 = nil;
+	NSData 		 *fileOutputData	 = nil;
+	NSString		 *outputName		 = nil;
+	NSString		 *outputPath		 = nil;
+	
+	LDrawFile		 *fileCopy			 = nil;
+	
+	NSInteger		 modelCounter		 = 0;
+	NSInteger		 counter			 = 0;
+	
+	saveName	= ([saveURL isFileURL] ? [saveURL path] : nil);
+	
+	// If we got this far, we need to replace any prexisting file.
+	if([fileManager fileExistsAtPath:saveName isDirectory:NULL])
+		[fileManager removeItemAtPath:saveName error:NULL];
+	
+	[fileManager createDirectoryAtPath:saveName withIntermediateDirectories:YES attributes:nil error:NULL];
+	
+	//Output all the steps for all the submodels.
+	for(modelCounter = 0; modelCounter < [[[self documentContents] submodels] count]; modelCounter++)
+	{
+		fileCopy = [[self documentContents] copy];
+		
+		//Move the target model to the top of the file. That way L3P will know to
+		// render it!
+		LDrawMPDModel *currentModel = [[fileCopy submodels] objectAtIndex:modelCounter];
+		[fileCopy removeDirective:currentModel];
+		[fileCopy insertDirective:currentModel atIndex:0];
+		[fileCopy setActiveModel:currentModel];
+		
+		//Make a new folder for the model's steps.
+		modelName	= [NSString stringWithFormat:modelnameFormat, [currentModel modelName]];
+		folderName	= [saveName stringByAppendingPathComponent:modelName];
+		
+		[fileManager createDirectoryAtPath:folderName withIntermediateDirectories:YES attributes:nil error:NULL];
+		
+		//Write out each step!
+		for(counter = [[currentModel steps] count]-1; counter >= 0; counter--)
+		{
+			fileString		= [fileCopy write];
+			fileOutputData	= [fileString dataUsingEncoding:NSUTF8StringEncoding];
+			
+			outputName = [NSString stringWithFormat: filenameFormat,
+							[currentModel modelName],
+							(long)counter+1 ];
+			outputPath = [folderName stringByAppendingPathComponent:outputName];
+			[fileManager createFileAtPath:outputPath
+								 contents:fileOutputData
+							   attributes:nil ];
+			
+			//Remove the step we just wrote, so that the next cycle won't
+			// include it. We can safely do this because we are working with
+			// a copy of the file!
+			[currentModel removeDirectiveAtIndex:counter];
+		}
+		
+		
+		
+	}
+	
+}//end exportStepsToURL:
 
 
 //========== revealInFinder: ===================================================

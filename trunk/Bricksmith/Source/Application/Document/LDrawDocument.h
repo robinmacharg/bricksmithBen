@@ -118,6 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) selectDirective:(null_unspecified LDrawDirective *)directiveToSelect byExtendingSelection:(BOOL)shouldExtend;
 - (void) selectDirectives:(null_unspecified NSArray *)directivesToSelect;
 - (void) setSelectionToHidden:(BOOL)hideFlag;
+- (void) exportStepsToURL:(NSURL *)saveURL;
 - (void) setZoomPercentage:(CGFloat)newPercentage;
 
 // Actions
