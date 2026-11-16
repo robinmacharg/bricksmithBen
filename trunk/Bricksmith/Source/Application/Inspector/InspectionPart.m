@@ -18,6 +18,7 @@
 #import "LDrawPart.h"
 #import "MacLDraw.h"
 #import "PartLibrary.h"
+#import "Bricksmith-Swift.h"
 
 // Data Types
 

@@ -9,6 +9,7 @@
 #import "MacLDraw.h"
 #import "LDrawPart.h"
 #import "LDrawLSynth.h"
+#import "Bricksmith-Swift.h"
 
 @implementation LSynthConfiguration
 

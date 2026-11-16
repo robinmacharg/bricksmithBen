@@ -17,6 +17,7 @@
 #import "LDrawPart.h"
 #import "PartLibrary.h"
 #import "LDrawGLView.h"
+#import "Bricksmith-Swift.h"
 
 @implementation InspectionLSynth
 
