@@ -50,8 +50,9 @@ if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration "$CONFIGURA
 fi
 
 # Normalise: keep only warning lines, make paths repo-relative, drop line:col, de-duplicate.
+# Under /tmp, Xcode logs /tmp/... while ${0:A} resolves to /private/tmp/...: strip both spellings.
 grep -E ': warning: ' "$LOG" \
-	| sed -E -e "s|$REPO_ROOT/||g" -e 's/:[0-9]+:[0-9]+: warning: /: warning: /' \
+	| sed -E -e "s|$REPO_ROOT/||g" -e "s|${REPO_ROOT#/private}/||g" -e 's/:[0-9]+:[0-9]+: warning: /: warning: /' \
 	| LC_ALL=C sort -u >"$CURRENT" || true
 
 COUNT=$(wc -l <"$CURRENT" | tr -d ' ')
