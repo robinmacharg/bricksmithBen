@@ -15,7 +15,7 @@ topics that match your task rather than the whole log.
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
-| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86 |
+| Swift/ObjC interop | L19, L23, L24, L26, L36, L38, L40, L45, L49, L55, L63, L72, L76, L86, L87 |
 | ARC | L54, L67, L77, L79 |
 | Writing tests | L25, L29, L31, L32, L37, L42, L43, L46, L47, L57-L62, L71, L85 |
 | Rendering, GL and snapshots | L64, L70, L73, L78 |
@@ -370,3 +370,9 @@ topics that match your task rather than the whole log.
 - **L86. Adding one nullability annotation to a header outside `NS_ASSUME_NONNULL` triggers
   `-Wnullability-completeness` for the whole header.** Leave new methods unannotated like their neighbours, or
   annotate the whole header in its own commit.
+- **L87. A catch-all `@try` also swallows Foundation raises, so a clean `@throw` grep doesn't mean no NSException can
+  reach Swift.** P4 stream A found calls inside parse-path `@try`s that raise on bad input: `scanQuotableToken:`
+  with no token (`appendString:nil`), `objectAtIndex:` used as control flow in `parseHeaderFromLines:`,
+  `insertObject:nil` when a child init returns nil, `objectAtIndex:0` in `readModelAtPath:`, and
+  `pathForPartName:nil`. → Before removing a `@try`, list every call inside it that can raise, and guard each one
+  explicitly. The §6 recipe grep is necessary, not sufficient.
