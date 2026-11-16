@@ -177,6 +177,27 @@ struct ParserRobustnessTests {
 		#expect(goodParts.first?.partIsMissing() == false, "control part not found: the pin above would prove nothing")
 	}
 
+	@Test("Document read: a library part file with no lines (empty file, or a name that is a directory) is just missing")
+	@MainActor func documentReadOfPartWithNoLines() throws {
+		// Unlike a parse failure, a part file that yields no lines leaves the part unresolved and the document opens
+		// (as before P4). Unique names: PartLibrary caches models for the process.
+		let library = try #require(FixtureLibrary.current)
+		let empty = "p4pin-empty-\(UUID().uuidString.prefix(8)).dat".lowercased()
+		try Data().write(to: library.appendingPathComponent("parts/\(empty)"))
+		let folder = "p4pin-dir-\(UUID().uuidString.prefix(8))".lowercased()
+		try FileManager.default.createDirectory(at: library.appendingPathComponent("parts/\(folder)"), withIntermediateDirectories: false)
+		for name in [empty, folder] {
+			let doc = LDrawDocument()
+			var caught: Error?
+			try ObjC.run {
+				do { try doc.read(from: Data("1 4 0 0 0 1 0 0 0 1 0 0 0 1 \(name)\n".utf8), ofType: "LDraw Document") }
+				catch { caught = error }
+			}
+			#expect(caught == nil, "\(name): \(String(describing: caught))")
+			#expect(DocOps.parts(doc).map { $0.referenceName() } == [name])
+		}
+	}
+
 	// MARK: Crashers, each confirmed IN ISOLATION (heap corruption can surface in a later case).
 
 	@Test("BUG-007 (fixed in P4): a malformed ROTSTEP line does not crash the parser")

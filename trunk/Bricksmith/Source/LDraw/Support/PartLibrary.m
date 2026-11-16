@@ -69,6 +69,10 @@ NSString	*Category_Moved 			= @"Moved";
 NSString	*Category_Primitives		= @"Primitives";
 NSString	*Category_Subparts			= @"Subparts";
 
+@interface PartLibrary ()
+- (LDrawModel *) readModelAtPath:(NSString *)partPath parseFailed:(BOOL *)parseFailed;
+@end
+
 @implementation PartLibrary
 
 static PartLibrary *SharedPartLibrary = nil;
@@ -625,10 +629,11 @@ static PartLibrary *SharedPartLibrary = nil;
 // Purpose:		This is a thread-safe method which causes the model of the given 
 //				name to be loaded out of the LDraw folder. 
 //
-//				Returns NO only when the part's file exists but could not be 
+//				Returns NO only when the part's file has lines that could not be 
 //				parsed (a malformed final ROTSTEP, BUG-007): the caller fails as it 
-//				did when that parse threw. A part that isn't in the library is not 
-//				a failure here; it is drawn as missing. 
+//				did when that parse threw. A part that isn't in the library, or 
+//				whose file yields no lines (empty, unreadable, a directory), is not 
+//				a failure here; it is drawn as missing, as before. 
 //
 //==============================================================================
 - (BOOL) loadModelForName:(NSString *)partName
@@ -650,12 +655,14 @@ static PartLibrary *SharedPartLibrary = nil;
 					NSString    *partPath   = [[LDrawPaths sharedPaths] pathForPartName:partName];
 						
 					// **** Non-multithreaded fallback code ****
-					model = [self readModelAtPath:partPath asynchronously:NO completionHandler:NULL];
+					BOOL	parseFailed	= NO;
+					
+					model = [self readModelAtPath:partPath parseFailed:&parseFailed];
 					if(model != nil)
 					{
 						[self->loadedFiles setObject:model forKey:partName];
 					}
-					else if(partPath != nil)
+					else if(parseFailed)
 					{
 						return NO;
 					}
@@ -1068,6 +1075,23 @@ static PartLibrary *SharedPartLibrary = nil;
 				  asynchronously:(BOOL)asynchronous
 			   completionHandler:(void (^)(LDrawModel *))completionBlock
 {
+	return [self readModelAtPath:partPath parseFailed:NULL];
+	
+}//end readModelAtPath:asynchronously:completionHandler:
+
+
+//========== readModelAtPath:parseFailed: ======================================
+//
+// Purpose:		Parses the model found at the given path and returns it. 
+//
+//				*parseFailed (if given) is YES only when the file had lines that 
+//				could not be parsed (BUG-007's malformed ROTSTEP), as opposed to nil 
+//				for a missing path or a file with no lines. 
+//
+//==============================================================================
+- (LDrawModel *) readModelAtPath:(NSString *)partPath
+					 parseFailed:(BOOL *)parseFailed
+{
 	NSString            *fileContents   = nil;
 	NSArray             *lines          = nil;
 	LDrawFile           *parsedFile     = nil;
@@ -1087,6 +1111,9 @@ static PartLibrary *SharedPartLibrary = nil;
 											   parentGroup:group];
 	}
 	
+	if(parseFailed != NULL)
+		*parseFailed = (parsedFile == nil && [lines count] > 0);
+	
 		[parsedFile optimizeStructure];
 		model = [[parsedFile submodels] objectAtIndex:0];
 		// We are "leaking" the enclosing file, but returning an internal model 
@@ -1098,7 +1125,7 @@ static PartLibrary *SharedPartLibrary = nil;
 	
 	return model;
 	
-}//end readModelAtPath:
+}//end readModelAtPath:parseFailed:
 
 
 #pragma mark -
