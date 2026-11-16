@@ -211,3 +211,70 @@ struct ModelDisplayListTests {
 		#expect(renderer.drawn == [1001])
 	}
 }
+
+
+/// An LDrawLine subclass: a step must message it (not call LDrawLine's body directly), so its override runs.
+final class CollectProbeLine: LDrawLine {
+	nonisolated(unsafe) static var collected = 0
+	override func collectSelf(_ renderer: (any LDrawCollector)!) {
+		Self.collected += 1
+		super.collectSelf(renderer)
+	}
+}
+
+/// A do-nothing KVO observer: registering it isa-swizzles the observed object to an NSKVONotifying_ subclass.
+final class NullKVOObserver: NSObject {
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?,
+							   context: UnsafeMutableRawPointer?) {}
+}
+
+@MainActor
+@Suite("Drawing: a step's direct-dispatch collect (P6b perf follow-up)", .fixtureLibrary, .serialized)
+struct StepDirectCollectTests {
+
+	@Test("A step collects exactly what -collectSelf: sent to each child in turn would, subclass and KVO-observed children included")
+	func stepCollectMatchesPerChildCollect() throws {
+		let text = [
+			"2 24 0 0 0 10 0 0",
+			"5 16 0 0 0 0 10 0 1 0 0 -1 0 0",
+			"3 16 0 0 0 10 0 0 0 10 0",
+			"4 4 0 0 0 10 0 0 10 10 0 0 10 0",
+			"0 a comment",
+			"3 2 0 0 5 10 0 5 0 10 5",			// hidden below
+			"3 14 0 0 9 10 0 9 0 10 9",			// KVO-observed below
+		]
+		let step = try #require(LDrawStep(lines: ldrawLines(text), in: NSRange(location: 0, length: text.count)))
+		let children = try #require(step.subdirectives()).compactMap { $0 as? LDrawDirective }
+		#expect(children.count == text.count)
+
+		(children[5] as! LDrawTriangle).setHidden(true)
+		let probe = try #require(CollectProbeLine(lines: ldrawLines(["2 1 1 2 3 4 5 6"]), in: NSRange(location: 0, length: 1),
+												 parentGroup: nil))
+		step.add(probe)
+
+		let observed = children[6] as! LDrawTriangle
+		let observer = NullKVOObserver()
+		observed.addObserver(observer, forKeyPath: "hidden", options: [], context: nil)
+		defer { observed.removeObserver(observer, forKeyPath: "hidden") }
+		// KVO isa-swizzles the object, but Swift's type(of:) skips the artificial subclass, so the step's
+		// direct dispatch still treats it as an LDrawTriangle (KVO overrides setters only, not collect).
+		#expect(ObjectIdentifier(object_getClass(observed)!) != ObjectIdentifier(LDrawTriangle.self),
+				"KVO did not isa-swizzle the observed triangle; the test no longer covers that case")
+		#expect(ObjectIdentifier(type(of: observed)) == ObjectIdentifier(LDrawTriangle.self))
+
+		CollectProbeLine.collected = 0
+		let viaStep = RecordingRenderer()
+		try ObjC.run { step.collectSelf(viaStep) }
+		#expect(CollectProbeLine.collected == 1, "the subclass's -collectSelf: override was bypassed")
+
+		CollectProbeLine.collected = 0
+		let perChild = RecordingRenderer()
+		let childrenNow = try #require(step.subdirectives()).compactMap { $0 as? LDrawDirective }
+		try ObjC.run { for child in childrenNow { child.collectSelf(perChild) } }
+		#expect(CollectProbeLine.collected == 1)
+
+		#expect(viaStep.log == perChild.log, "\(Golden.firstDifference(Data(perChild.log.joined(separator: "\n").utf8), Data(viaStep.log.joined(separator: "\n").utf8)))")
+		#expect(viaStep.log.count == 6,
+				"line, conditional line, triangle, quad, observed triangle, probe line; hidden and comment collect nothing: \(viaStep.log)")
+	}
+}

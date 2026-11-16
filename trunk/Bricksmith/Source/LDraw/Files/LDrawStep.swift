@@ -123,8 +123,11 @@ func withUnretainedChild<Result>(at index: Int, in array: NSArray, _ body: (AnyO
 //				Swift method through its @objc entry costs a retain/release of
 //				the receiver and of each object argument (and boxes an `id` as
 //				Any), per primitive; the ObjC primitives never paid that. Any
-//				other class, a subclass or a KVO-observed instance included, is
-//				.other and is messaged as before. The same body runs either way.
+//				other class, a subclass included, is .other and is messaged as
+//				before. A KVO-observed primitive is not .other: Swift's
+//				type(of:) skips KVO's artificial subclass (LEARNINGS L111), and
+//				KVO overrides only setters, so the direct call is still right
+//				(StepDirectCollectTests). The same body runs either way.
 //
 //------------------------------------------------------------------------------
 struct SwiftPrimitiveClasses {
