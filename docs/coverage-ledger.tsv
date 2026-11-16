@@ -43,7 +43,7 @@ LDraw/Support/ComputationalGeometry.m	turnWithPoints:P:Q:R:	Dead: only called fr
 LDraw/Support/ComputationalGeometry.m	distanceBetweenPoints:P:Q:	Dead: only called from -[LDrawLSynth doAutoHullOnBand]/-prepareAutoHullData, which are dead (their call is commented out at LDrawLSynth.m:897). The Bridging-Header import is not a caller; no @selector/NSSelectorFromString/xib/Swift use
 LDraw/Support/ComputationalGeometry.m	leftmost:	Dead: only called from -[LDrawLSynth doAutoHullOnBand]/-prepareAutoHullData, which are dead (their call is commented out at LDrawLSynth.m:897). The Bridging-Header import is not a caller; no @selector/NSSelectorFromString/xib/Swift use
 LDraw/Commands/LDrawTexture.m	lineIsTextureFallback:	Dead: no callers (no ObjC call, @selector, xib or Swift use); initWithLines:inRange:parentGroup: parses FALLBACK inline. Candidate for deletion in P4
-Categories/OverlayViewCategory.m	removeOverlayView:	Dead: no callers; LDrawGLView never removes its overlay (OverlayHelperView detaches in -viewWillMoveToWindow:). Candidate for deletion in P4
+Categories/OverlayViewCategory.swift	removeOverlayView:	Dead: no callers; LDrawGLView never removes its overlay (OverlayHelperView detaches in -viewWillMoveToWindow:). Candidate for deletion in P4
 LDraw/Support/PartLibrary.m	modelForPartInternal:	Dead: no callers in Source/Resources/Tests; not declared in PartLibrary.h
 LDraw/Support/PartLibrary.m	optimizedDrawableForPart:color:	Dead: body is assert(!"Not used."); only caller is the fixed-function LDrawPart drawElement: (NEW_RENDERER 1)
 Application/General/RelatedParts.m	dump	Dead: only caller is commented out (LDrawDocument.m, the dump call in the core file); also -[RelatedPart dump]

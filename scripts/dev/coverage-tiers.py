@@ -31,8 +31,8 @@ TIER_A_DIRS = ("LDraw/Commands/", "LDraw/Files/")
 TIER_A_FILES = {"LDraw/Support/LDrawDirective.m", "LDraw/Support/LDrawUtilities.m", "LDraw/Support/ColorLibrary.m",
                 "LDraw/Support/MatrixMath.c", "LDraw/Support/ComputationalGeometry.m"}
 TIER_B_FILES = {"LDraw/Support/LDrawPaths.m", "LDraw/Support/PartLibrary.m", "LDraw/Support/ModelManager.m",
-                "LDraw/Support/PartCatalogBuilder.m", "LDraw/Support/PartReport.m", "Other/MLCadIni.m",
-                "Other/StringUtilities.m",
+                "LDraw/Support/PartCatalogBuilder.m", "LDraw/Support/PartReport.m", "Other/MLCadIni.swift",
+                "Other/StringUtilities.swift",
                 # row 12 app-logic classes
                 "Application/General/RelatedParts.m", "Application/General/LSynthConfiguration.m",
                 "Application/General/PartBrowserDataSource.m", "Application/General/MinifigureDialogController.m"}

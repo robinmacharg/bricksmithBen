@@ -14,7 +14,7 @@
 #import "LDrawKeywords.h"
 #import "LDrawUtilities.h"
 #import "PartLibrary.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 
 
 //---------- QuotableTokenIsMissing() --------------------------------[static]--

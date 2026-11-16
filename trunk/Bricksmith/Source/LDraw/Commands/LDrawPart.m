@@ -32,7 +32,7 @@
 #import "LDrawPaths.h"
 #import "PartReport.h"
 #import "ModelManager.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 
 // This is experimental for now: one way to draw the gaps between lego bricks 
 // without using lines is to simply shrink the entire brick by a tiny amount,

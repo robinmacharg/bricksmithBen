@@ -31,8 +31,7 @@
 #import "LDrawViewerContainer.h"
 #import "MacLDraw.h"
 #import "PartLibrary.h"
-#import "StringCategory.h"
-#import "TableViewCategory.h"
+#import "Bricksmith-Swift.h"
 
 
 @interface PartBrowserDataSource ()

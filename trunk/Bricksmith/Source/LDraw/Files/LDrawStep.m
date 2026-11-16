@@ -33,7 +33,7 @@
 #import "LDrawMPDModel.h"
 #import "LDRawPart.h"
 #import "LDrawUtilities.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 #import "LDrawLSynthDirective.h"
 
 

@@ -27,7 +27,7 @@
 #import "LDrawFile.h"
 #import "LDrawKeywords.h"
 #import "LDrawUtilities.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 
 
 @implementation LDrawMPDModel

@@ -395,6 +395,181 @@ struct StringUtilitiesTests {
 		}
 		#expect(seen == ["main copy.ldr", "main copy 2.ldr", "main copy 3.ldr", "main copy 4.ldr"])
 	}
+
+	@Test("Copy-number edge cases: overflow, signs, whitespace, non-ASCII digits, nil (P5 pre-port)")
+	func copyNameEdgeCases() {
+		// Recorded against the ObjC implementation before the Swift port. The number is read by NSScanner
+		// (scanInteger:, skipping whitespace and newlines), and NSIntegerMax + 1 wraps.
+		let names: [String?] = [
+			"foo copy 9223372036854775807", "foo copy 99999999999999999999", "foo copy -9223372036854775808",
+			"foo copy +3", "foo copy\n4", "foo copy 3 ", "foo copy 3\n", "foo copy\t7", "foo copy 00", "foo copy-1",
+			"foo copy 1.5", "foo copy 0x10", "foo copy \u{0663}", "foo copy \u{FF13}", "foo copy 3 copy",
+			"foo copy copy 2", "\u{1F600} copy 2", "foo copy\u{00A0}5", nil,
+		]
+		let paths: [String?] = ["dir/foo copy 9223372036854775807.ldr", "foo copy +3.ldr", "foo copy\n4.ldr", nil]
+		var out: [String] = []
+		for name in names {
+			out.append("\(name.debugDescription) -> \(StringUtilities.nextCopyName(for: name).debugDescription)")
+		}
+		for path in paths {
+			out.append("\(path.debugDescription) -> \(StringUtilities.nextCopyPath(forFilePath: path).debugDescription)")
+		}
+		let expected = [
+			#"Optional("foo copy 9223372036854775807") -> Optional("foo copy -9223372036854775808")"#,
+			#"Optional("foo copy 99999999999999999999") -> Optional("foo copy -9223372036854775808")"#,
+			#"Optional("foo copy -9223372036854775808") -> Optional("foo copy -9223372036854775808 copy")"#,
+			#"Optional("foo copy +3") -> Optional("foo copy 4")"#,
+			#"Optional("foo copy\n4") -> Optional("foo copy 5")"#,
+			#"Optional("foo copy 3 ") -> Optional("foo copy 4")"#,
+			#"Optional("foo copy 3\n") -> Optional("foo copy 4")"#,
+			#"Optional("foo copy\t7") -> Optional("foo copy 8")"#,
+			#"Optional("foo copy 00") -> Optional("foo copy 00 copy")"#,
+			#"Optional("foo copy-1") -> Optional("foo copy-1 copy")"#,
+			#"Optional("foo copy 1.5") -> Optional("foo copy 1.5 copy")"#,
+			#"Optional("foo copy 0x10") -> Optional("foo copy 0x10 copy")"#,
+			#"Optional("foo copy ٣") -> Optional("foo copy 4")"#,   // NSScanner reads any Unicode decimal digit
+			#"Optional("foo copy ３") -> Optional("foo copy 4")"#,
+			#"Optional("foo copy 3 copy") -> Optional("foo copy 3 copy 2")"#,
+			#"Optional("foo copy copy 2") -> Optional("foo copy copy 3")"#,
+			#"Optional("😀 copy 2") -> Optional("😀 copy 3")"#,
+			"Optional(\"foo copy\u{00A0}5\") -> Optional(\"foo copy 6\")",
+			#"nil -> nil"#,
+			#"Optional("dir/foo copy 9223372036854775807.ldr") -> Optional("dir/foo copy -9223372036854775808.ldr")"#,
+			#"Optional("foo copy +3.ldr") -> Optional("foo copy 4.ldr")"#,
+			#"Optional("foo copy\n4.ldr") -> Optional("foo copy 5.ldr")"#,
+			#"nil -> nil"#,
+		]
+		#expect(out == expected, "\(Golden.firstDifference(Data(expected.joined(separator: "\n").utf8), Data(out.joined(separator: "\n").utf8)))")
+	}
+}
+
+// MARK: - StringCategory
+
+@Suite("StringCategory: NSString helpers (P5 pre-port)")
+struct StringCategoryTests {
+
+	@Test("The ObjC selectors exist under their original names (xibs sort with numericCompare:)")
+	func selectorsKept() {
+		for name in ["ams_containsString:options:", "numericCompare:", "separateByLine", "ams_stringByRemovingWhitespace"] {
+			#expect(NSString.instancesRespond(to: NSSelectorFromString(name)), "-[NSString \(name)] missing")
+		}
+		#expect(NSString.responds(to: NSSelectorFromString("CRLF")), "+[NSString CRLF] missing")
+		for name in ["nextCopyNameForString:", "nextCopyPathForFilePath:"] {
+			#expect(StringUtilities.responds(to: NSSelectorFromString(name)), "+[StringUtilities \(name)] missing")
+		}
+		#expect(NSStringFromClass(StringUtilities.self) == "StringUtilities")
+	}
+
+	@Test("+CRLF is carriage return, line feed")
+	func crlf() {
+		let crlf: String = NSString.crlf()
+		#expect(Array(crlf.utf16) == [13, 10])
+	}
+
+	@Test("-separateByLine splits on every line terminator NSString knows, and drops a final terminator")
+	func separateByLine() {
+		let cases: [(String, [String])] = [
+			("", []),
+			("a", ["a"]),
+			("a\n", ["a"]),
+			("a\nb", ["a", "b"]),
+			("a\r\nb\r\n", ["a", "b"]),
+			("a\rb", ["a", "b"]),
+			("a\n\rb", ["a", "", "b"]),
+			("\n\n", ["", ""]),
+			("\r", [""]),
+			("a\r\n\r\nb", ["a", "", "b"]),
+			("a\r\r\nb", ["a", "", "b"]),
+			("a\u{2028}b\u{2029}c\u{0085}d", ["a", "b", "c", "d"]),
+			("a\u{000C}b\u{000B}c", ["a\u{000C}b\u{000B}c"]),
+			("\u{1F600}\n\u{1F600}x", ["\u{1F600}", "\u{1F600}x"]),
+			(" \t x \t\r\n", [" \t x \t"]),
+		]
+		for (input, expected) in cases {
+			let lines = (input as NSString).separateByLine() as? [String]
+			#expect(lines == expected, "\(input.debugDescription) -> \(String(describing: lines))")
+		}
+	}
+
+	@Test("-separateByLine returns NSString elements and handles a large CRLF file")
+	func separateByLineBulk() throws {
+		let body = (0..<2000).map { "1 16 0 0 \($0) 1 0 0 0 1 0 0 0 1 3001.dat" }
+		let lines = try #require((body.joined(separator: "\r\n") as NSString).separateByLine())
+		#expect(lines.count == 2000)
+		#expect(lines.allSatisfy { $0 is NSString })
+		#expect((lines as? [String]) == body)
+	}
+
+	@Test("-ams_stringByRemovingWhitespace removes whitespaceCharacterSet members only, per UTF-16 unit")
+	func removingWhitespace() {
+		let cases: [(String, String)] = [
+			("", ""),
+			(" a b\tc ", "abc"),
+			("a\nb\rc", "a\nb\rc"),                            // newlines are not in whitespaceCharacterSet
+			("a\u{00A0}b\u{3000}c\u{2003}d", "abcd"),           // Zs separators are
+			("a\u{200B}b", "ab"),                               // so is U+200B zero-width space (Cf), in Apple's set
+			("\u{1F600} \u{1F600}", "\u{1F600}\u{1F600}"),
+			("Brick 2 x 2", "Brick2x2"),
+		]
+		for (input, expected) in cases {
+			let result: String? = (input as NSString).ams_stringByRemovingWhitespace()
+			#expect(result == expected, "\(input.debugDescription) -> \(result.debugDescription)")
+		}
+		// A lone surrogate survives (the loop works on UTF-16 units).
+		let lone = NSString(characters: [0xD800, 0x20, 0x41], length: 3)
+		let stripped: NSString = lone.ams_stringByRemovingWhitespace()! as NSString
+		var units = [unichar](repeating: 0, count: stripped.length)
+		stripped.getCharacters(&units, range: NSRange(location: 0, length: stripped.length))
+		#expect(units == [0xD800, 0x41])
+	}
+
+	@Test("-ams_containsString:options: treats the empty string as a substring of everything")
+	func containsString() {
+		let caseless = NSString.CompareOptions.caseInsensitive.rawValue
+		let anchored = NSString.CompareOptions.anchored.rawValue
+		let cases: [(String, String, UInt, Bool)] = [
+			("abc", "", 0, true),
+			("", "", 0, true),
+			("", "a", 0, false),
+			("abc", "b", 0, true),
+			("abc", "B", 0, false),
+			("abc", "B", caseless, true),
+			("abc", "abcd", 0, false),
+			("abc", "bc", anchored, false),
+			("abc", "ab", anchored, true),
+			("ab c", " ", 0, true),
+			("3001.dat", "3001", caseless, true),
+		]
+		for (receiver, substring, mask, expected) in cases {
+			let found = (receiver as NSString).ams_contains(substring, options: mask)
+			#expect(found == expected, "\(receiver.debugDescription) contains \(substring.debugDescription) options \(mask)")
+		}
+	}
+
+	@Test("-numericCompare: is compare:options:NSNumericSearch, and a nil argument sorts first")
+	func numericCompare() {
+		let cases: [(String, String?, ComparisonResult)] = [
+			("2", "10", .orderedAscending),
+			("10", "2", .orderedDescending),
+			("a9", "a10", .orderedAscending),
+			("x 2.ldr", "x 10.ldr", .orderedAscending),
+			("abc", "abc", .orderedSame),
+			("A", "a", .orderedAscending),
+			("007", "7", .orderedSame),
+			("a", "", .orderedDescending),
+			("", "", .orderedSame),
+			("a", nil, .orderedDescending),
+			("", nil, .orderedDescending),
+		]
+		for (receiver, argument, expected) in cases {
+			let result = (receiver as NSString).numericCompare(argument)
+			#expect(result == expected, "\(receiver.debugDescription) vs \(argument.debugDescription): \(result.rawValue)")
+		}
+		// As the xibs use it: a sort descriptor with selector numericCompare:.
+		let descriptor = NSSortDescriptor(key: "self", ascending: true, selector: NSSelectorFromString("numericCompare:"))
+		let sorted = (["10", "9", "1", "3001b", "3001a", "300"] as NSArray).sortedArray(using: [descriptor]) as? [String]
+		#expect(sorted == ["1", "9", "10", "300", "3001a", "3001b"])
+	}
 }
 
 // MARK: - AppKit categories
@@ -529,5 +704,110 @@ struct AppKitCategoryTests {
 		RunLoop.main.run(until: Date().addingTimeInterval(0.1))
 		#expect(window.childWindows?.isEmpty ?? true, "overlay window still attached")
 		child.orderOut(nil)
+	}
+
+	// MARK: P5 pins (before the categories move to Swift)
+
+	@Test("frameRectForContentSize: is the frame plus the content-size difference, growing downwards")
+	func frameRectArithmetic() {
+		let window = Self.makeWindow()
+		defer { window.close() }
+		let frame = window.frame
+		let content = window.contentView!.frame.size
+		for size in [NSSize(width: 10, height: 10), NSSize(width: 1000, height: 20), NSSize(width: 0, height: 0)] {
+			let result = window.frameRect(forContentSize: size)
+			let expected = NSRect(x: frame.minX, y: frame.minY - (size.height - content.height),
+								  width: frame.width + size.width - content.width,
+								  height: frame.height + size.height - content.height)
+			#expect(result == expected, "\(size): \(result) vs \(expected)")
+		}
+		#expect(window.frame == frame, "frameRectForContentSize: must not move the window")
+	}
+
+	@Test("resizeToSize:animate:YES ends at the same frame as animate:NO")
+	func resizeAnimated() {
+		let window = Self.makeWindow()
+		defer { window.close() }
+		let topLeft = NSPoint(x: window.frame.minX, y: window.frame.maxY)
+		window.resize(to: NSSize(width: 420, height: 330), animate: true)
+		#expect(window.frame == NSRect(x: topLeft.x, y: topLeft.y - 330, width: 420, height: 330), "\(window.frame)")
+	}
+
+	@Test("scrollRowToCenter: on a table outside a scroll view does nothing and does not raise")
+	func scrollRowToCenterWithoutScrollView() throws {
+		let rows = Rows()
+		let table = NSTableView(frame: NSRect(x: 0, y: 0, width: 200, height: 1700))
+		table.addTableColumn(NSTableColumn(identifier: NSUserInterfaceItemIdentifier("c")))
+		table.rowHeight = 17
+		table.intercellSpacing = NSSize(width: 0, height: 0)
+		table.style = .plain
+		table.dataSource = rows
+		table.reloadData()
+		let before = table.visibleRect
+		try ObjC.run { table.scrollRow(toCenter: 50) }
+		#expect(table.visibleRect == before)
+		withExtendedLifetime(rows) {}
+	}
+
+	@Test("The four overlay hooks are declared but not implemented: a plain NSView does not respond to them")
+	func overlayHooksUnimplemented() {
+		for name in ["viewWillBecomeOverlay", "viewDidBecomeOverlay", "viewWillResignOverlay", "viewDidResignOverlay"] {
+			#expect(!NSView().responds(to: NSSelectorFromString(name)), "\(name)")
+			#expect(!NSView.instancesRespond(to: NSSelectorFromString(name)), "\(name)")
+		}
+	}
+
+	/// Counts setNeedsDisplay:YES (AppKit may clear needsDisplay again before a test can read it).
+	final class DirtyRecordingView: NSView {
+		var markedDirty = 0
+		override var needsDisplay: Bool {
+			get { super.needsDisplay }
+			set { if newValue { markedDirty += 1 }; super.needsDisplay = newValue }
+		}
+	}
+
+	@Test("removeOverlayView: removes only the helper that manages the given overlay, and marks the view dirty")
+	func removeOverlay() throws {
+		let window = NSWindow(contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
+							  styleMask: [.borderless], backing: .buffered, defer: false)
+		window.isReleasedWhenClosed = false
+		window.alphaValue = 0
+		let host = DirtyRecordingView(frame: NSRect(x: 20, y: 30, width: 200, height: 100))
+		window.contentView?.addSubview(host)
+		let plain = NSView(frame: NSRect(x: 0, y: 0, width: 10, height: 10))
+		host.addSubview(plain)
+		window.orderFront(nil)
+		defer { window.orderOut(nil); window.close() }
+
+		let first = NSView(frame: .zero)
+		let second = NSView(frame: .zero)
+		try ObjC.run {
+			_ = host.perform(NSSelectorFromString("addOverlayView:"), with: first)
+			_ = host.perform(NSSelectorFromString("addOverlayView:"), with: second)
+		}
+		RunLoop.main.run(until: Date().addingTimeInterval(0.2))
+		#expect(host.subviews.count == 3)
+		let helpers = host.subviews.filter { String(describing: type(of: $0)) == "OverlayHelperView" }
+		#expect(helpers.count == 2)
+
+		// An overlay that isn't attached: nothing is removed, but the view is still marked dirty.
+		host.markedDirty = 0
+		try ObjC.run { _ = host.perform(NSSelectorFromString("removeOverlayView:"), with: NSView(frame: .zero)) }
+		#expect(host.subviews.count == 3)
+		#expect(host.markedDirty == 1)
+
+		host.markedDirty = 0
+		try ObjC.run { _ = host.perform(NSSelectorFromString("removeOverlayView:"), with: first) }
+		#expect(host.subviews.count == 2)
+		#expect(host.subviews.first === plain, "the plain subview must stay")
+		let remaining = host.subviews.filter { String(describing: type(of: $0)) == "OverlayHelperView" }
+		#expect(remaining.count == 1)
+		#expect((remaining.first?.value(forKey: "overlayView") as AnyObject?) === second)
+		#expect(host.markedDirty == 1)
+
+		try ObjC.run { _ = host.perform(NSSelectorFromString("removeOverlayView:"), with: second) }
+		RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+		#expect(host.subviews == [plain])
+		#expect(window.childWindows?.isEmpty ?? true, "overlay windows still attached")
 	}
 }

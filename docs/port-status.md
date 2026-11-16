@@ -65,6 +65,13 @@ their own port phase.
 | P4 | Ivars → properties: all 27 `LDrawDocument` outlets and state (`@synthesize name = name`, ownership kept); `LDrawContainer.postsNotifications` readonly; `DocumentToolbarController.h`, `LDrawFileOutlineView.h` added to the bridging header (L91) | 2026-11-16 | agent | Outside readers found mechanically (L92). `documentContents` stays an ivar behind its accessors (a property would change the tests' `documentContents()` spelling). **P6 note:** `color`/`hidden` (`LDrawDrawableElement`) and `vertex1`/`vertex2` (`LDrawLine`) stay `@protected` ivars; Swift reads them through the existing getters, so the ported leaves' collect/draw/hit-test loops become message sends: perf-gate them. Agent's perf runs were on a loaded machine, inconclusive; P4 exit reruns on a quiet one |
 | P4 | S37 confirmed through a real TEXMAP parse → **BUG-034** (hang; `6fb7f1c`); exit-test pair plus an in-process control | 2026-11-16 | agent | 211 tests, **73** known issues (BUG-034 added, after BUG-007's removal) |
 | P4 | `LDrawDocument.m` split into a core and 8 categories with `LDrawDocument+Private.h` (`3fda126`..`666cf1c`, 10 commits) | 2026-11-16 | agent | Verbatim checker: 0 missing lines, 206 boilerplate; `nm` symbol list identical to before. Warnings re-recorded only for moved ones, plus one new declaration site of the existing `NSDrawer` deprecation (explicit ivar in the private header) |
+| P4 | Merged to master as 4.0.4 (`7467fc9`) | 2026-11-16 | agent | |
+| P5 | Placeholder `.swift` files registered for the ten P5 classes (`6f4c7bd`); four parallel streams in `build/worktrees/`: A StringCategory + StringUtilities; B MLCadIni; C UserDefaults/Window/TableView/BezierPath/OverlayView categories; D BricksmithUtilities + TransformerIntMinus1 | 2026-11-16 | agent | Branch `20261116-p5-leaf-utilities`. Agents empty the old .h/.m; integration deletes them and their bridging-header lines. UI suite at the end (maintainer busy) |
+| P5 | All ten classes ported and integrated: TransformerIntMinus1, BricksmithUtilities (header kept, enum-only), StringCategory, StringUtilities, MLCadIni, and the Window, TableView, BezierPath, OverlayView, UserDefaults categories | 2026-11-16 | agent | 247 tests, 74 known issues. No test file changed by a port commit (tests added first). OverlayView hooks moved to a declaration-only category (`5057583`) |
+| P5 | Perf: 3 runs at `fa22418` (all pass; medians archive 89, copy 88, draw 86, parse 94, write 86%). Interleaved A/B against master (P4 tip), 3 runs each: parse 91% vs 91% (no regression from the StringCategory port); draw master 79-102%, P5 76-96% (overlapping, noise; P5 changed no drawing code) | 2026-11-16 | agent | |
+| P5 | 🧑 Manual smoke checklist (steps 1-18) | **assumed passed** | maintainer | Maintainer instruction 2026-11-16: "assume passed, and we'll correct later". Not actually run; re-check owed (P5 touched preference colours, minifigure lists, overlays, string handling) |
+| P5 | 🧑 Maintainer decisions | 2026-11-16 | maintainer | BUG-035 fixed (ObjC `ArchiveSupport.m` catches the NSUnarchiver exception; corrupt colour → nil). BUG-036 crash half fixed (nameless first [LSYNTH] line skipped); stale-name half stays open |
+| P5 | Header annotation: `StringCategory.h` (all, tool) before its port | 2026-11-16 | agent | `StringCategoryTests` |
 | P4 | 🧑 Manual smoke checklist (TESTING.md steps 1-18, incl. new step 18 for panels and menus) on the P4 Debug build | 2026-11-16 | maintainer | Signed off in conversation |
 | P4 | 🧑 Maintainer decisions at P4 exit | 2026-11-16 | maintainer | BUG-007's wider scope (other paths treat a malformed-ROTSTEP library/peer file as missing): evaluate after the port, P12. `NSDrawer` deprecation's extra declaration site (`LDrawDocument+Private.h`): stays in the baseline; address after the port. Attribution trailers removed from the P4 branch before merge |
 | P4 | UI smoke on the P4 tip (`scripts/test.sh --ui-only` at `d89f4c2`): 5/5 passed; real and Debug defaults unchanged | 2026-11-16 | agent | |
@@ -169,12 +176,12 @@ sign-off here:
 | `Bricksmith/Source/Application/Inspector/InspectionUnknownCommand.m` | 96 | ARC | P9 | todo |
 | `Bricksmith/Source/Application/Inspector/Inspector.m` | 268 | MRC | P9 | todo |
 | `Bricksmith/Source/Application/Inspector/ObjectInspectionController.m` | 261 | ARC | P9 | todo |
-| `Bricksmith/Source/Categories/BezierPathCategory.m` | 77 | ARC | P5 | todo |
-| `Bricksmith/Source/Categories/OverlayViewCategory.m` | 113 | ARC | P5 | todo |
-| `Bricksmith/Source/Categories/StringCategory.m` | 163 | ARC | P5 | todo |
-| `Bricksmith/Source/Categories/TableViewCategory.m` | 42 | ARC | P5 | todo |
-| `Bricksmith/Source/Categories/UserDefaultsCategory.m` | 48 | ARC | P5 | todo |
-| `Bricksmith/Source/Categories/WindowCategory.m` | 60 | ARC | P5 | todo |
+| `Bricksmith/Source/Categories/BezierPathCategory.m` | 77 | ARC | P5 | **Swift** (`BezierPathCategory.swift`) |
+| `Bricksmith/Source/Categories/OverlayViewCategory.m` | 113 | ARC | P5 | **Swift** (`OverlayViewCategory.swift`; hooks declared in `OverlayHelperWindow.m`) |
+| `Bricksmith/Source/Categories/StringCategory.m` | 163 | ARC | P5 | **Swift** (`StringCategory.swift`) |
+| `Bricksmith/Source/Categories/TableViewCategory.m` | 42 | ARC | P5 | **Swift** (`TableViewCategory.swift`) |
+| `Bricksmith/Source/Categories/UserDefaultsCategory.m` | 48 | ARC | P5 | **Swift** (`UserDefaultsCategory.swift`; unarchiving through ObjC `ArchiveSupport.m`, BUG-035) |
+| `Bricksmith/Source/Categories/WindowCategory.m` | 60 | ARC | P5 | **Swift** (`WindowCategory.swift`) |
 | `Bricksmith/Source/LDraw/Commands/LDrawColor.m` | 1095 | MRC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawComment.m` | 123 | ARC | P6 | todo |
 | `Bricksmith/Source/LDraw/Commands/LDrawConditionalLine.m` | 446 | ARC | P6 | todo |
@@ -213,11 +220,11 @@ sign-off here:
 | `Bricksmith/Source/LDraw/Support/PartCatalogBuilder.m` | 553 | MRC | P7 | todo |
 | `Bricksmith/Source/LDraw/Support/PartLibrary.m` | 1322 | MRC | P7 | todo |
 | `Bricksmith/Source/LDraw/Support/PartReport.m` | 415 | MRC | P7 | todo |
-| `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | todo |
-| `Bricksmith/Source/Other/MLCadIni.m` | 666 | ARC | P5 | todo |
+| `Bricksmith/Source/Other/BricksmithUtilities.m` | 100 | ARC | P5 | **Swift** (`BricksmithUtilities.swift`; `BricksmithUtilities.h` stays as an enum-only header for ObjC headers) |
+| `Bricksmith/Source/Other/MLCadIni.m` | 666 | ARC | P5 | **Swift** (`MLCadIni.swift`) |
 | `Bricksmith/Source/Other/RegexKitLite.m` | 2636 | MRC | P4 (delete → NSRegularExpression) | **deleted** (P4; users moved to NSRegularExpression in stream B, `libicucore` link removed) |
-| `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | todo |
-| `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | todo |
+| `Bricksmith/Source/Other/StringUtilities.m` | 136 | ARC | P5 | **Swift** (`StringUtilities.swift`) |
+| `Bricksmith/Source/Other/TransformerIntMinus1.m` | 54 | ARC | P5 | **Swift** (`TransformerIntMinus1.swift`) |
 | `Bricksmith/Source/Other/main.m` | 15 | ARC | P10 | todo |
 | `Bricksmith/Source/Widgets/BackgroundColorView.m` | 75 | ARC | P9 | todo |
 | `Bricksmith/Source/Widgets/DialogPanel.m` | 112 | MRC | P9 | todo |

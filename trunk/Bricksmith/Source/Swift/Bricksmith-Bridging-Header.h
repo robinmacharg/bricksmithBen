@@ -12,7 +12,6 @@
 //
 //==============================================================================
 
-#import "TransformerIntMinus1.h"
 
 // --- LDraw model (P1 header hygiene: group 1) ---
 #import "LDrawColor.h"
@@ -55,14 +54,7 @@
 
 // --- Constants, categories and utilities (group 2) ---
 #import "MacLDraw.h"
-#import "BezierPathCategory.h"
-#import "StringCategory.h"
-#import "TableViewCategory.h"
-#import "UserDefaultsCategory.h"
-#import "WindowCategory.h"
 #import "BricksmithUtilities.h"
-#import "MLCadIni.h"
-#import "StringUtilities.h"
 
 // --- Application classes driven by characterisation tests (group 2) ---
 #import "LDrawApplication.h"
@@ -79,6 +71,8 @@
 #import "LDrawColorWell.h"
 #import "LDrawColorBar.h"
 #import "BackgroundColorView.h"
+#import "ArchiveSupport.h"	// ObjC-only exception catching for Swift callers (P5, BUG-035)
+#import "OverlayHelperView.h"	// for OverlayViewCategory.swift (P5)
 
 // --- Test support (group 3) ---
 #import "BricksmithTestSupport.h"

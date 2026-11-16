@@ -20,7 +20,7 @@
 #import "LDrawPart.h"
 #import "LDrawUtilities.h"
 #import "PartReport.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 #import "LDrawLSynthDirective.h"
 
 

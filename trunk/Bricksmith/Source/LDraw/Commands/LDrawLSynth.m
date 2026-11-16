@@ -12,7 +12,7 @@
 #import "LSynthConfiguration.h"
 #import "LDrawPart.h"
 #import "LDrawUtilities.h"
-#import "StringCategory.h"
+#import "Bricksmith-Swift.h"
 #import "LDrawKeywords.h"
 #import "LDrawApplication.h"
 #import "LDrawLSynthDirective.h"
@@ -20,7 +20,7 @@
 #import "MatrixMath.h"
 #import "MacLDraw.h"
 #import "PreferencesDialogController.h"
-#import "UserDefaultsCategory.h"
+#import "Bricksmith-Swift.h"
 
 // Regular expressions (formerly RegexKitLite).
 //

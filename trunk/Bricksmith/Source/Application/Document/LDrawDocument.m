@@ -18,6 +18,7 @@
 //==============================================================================
 #import "LDrawDocument.h"
 #import "LDrawDocument+Private.h"
+#import "Bricksmith-Swift.h"
 
 
 
