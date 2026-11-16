@@ -86,63 +86,54 @@ static NSInteger sort_by_role(id a, id b, void * ref)
 	NSCharacterSet	*whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
 
 	NSString	*parsedField = nil;
-	NSString	*orig=line;
 	self = [super init];
 	
-	@try {
-		// Skip color
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	// Skip color
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
 
-		// Matrix XYZ
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[12] = [parsedField floatValue] - offset[0];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[13] = [parsedField floatValue] - offset[1];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[14] = [parsedField floatValue] - offset[2];
-		
-		// Matrix rotation 3x3.  LDraw format is transpose of what we are
-		// used to from OpenGL.
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[0] = [parsedField floatValue];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[4] = [parsedField floatValue];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[8] = [parsedField floatValue];
-
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[1] = [parsedField floatValue];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[5] = [parsedField floatValue];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[9] = [parsedField floatValue];
-
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[2] = [parsedField floatValue];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[6] = [parsedField floatValue];
-		parsedField = [LDrawUtilities readNextField:line remainder:&line];
-		transform[10] = [parsedField floatValue];
-		
-		transform[3]  = 0.0f;
-		transform[7]  = 0.0f;
-		transform[11] = 0.0f;		
-		transform[15] = 1.0f;
-
-		self->child = [line stringByTrimmingCharactersInSet:whitespaceCharacterSet];
-		
-		self->childName = [[PartLibrary sharedPartLibrary] descriptionForPartName:self->child];
-		
-		self->role = relation;
-		
-		self->parent = parentName;
-	}
-	@catch (NSException * e) {
-		NSLog(@"a related part line '%@' was fatally invalid", orig);
-		NSLog(@" raised exception %@", [e name]);
-		self = nil;
+	// Matrix XYZ
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[12] = [parsedField floatValue] - offset[0];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[13] = [parsedField floatValue] - offset[1];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[14] = [parsedField floatValue] - offset[2];
 	
-	}
+	// Matrix rotation 3x3.  LDraw format is transpose of what we are
+	// used to from OpenGL.
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[0] = [parsedField floatValue];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[4] = [parsedField floatValue];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[8] = [parsedField floatValue];
+
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[1] = [parsedField floatValue];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[5] = [parsedField floatValue];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[9] = [parsedField floatValue];
+
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[2] = [parsedField floatValue];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[6] = [parsedField floatValue];
+	parsedField = [LDrawUtilities readNextField:line remainder:&line];
+	transform[10] = [parsedField floatValue];
+	
+	transform[3]  = 0.0f;
+	transform[7]  = 0.0f;
+	transform[11] = 0.0f;		
+	transform[15] = 1.0f;
+
+	self->child = [line stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+	
+	self->childName = [[PartLibrary sharedPartLibrary] descriptionForPartName:self->child];
+	
+	self->role = relation;
+	
+	self->parent = parentName;
 	return self;
 }//end initWithParent:offset:relation:childLine:
 
