@@ -59,6 +59,11 @@
 #import "WindowCategory.h"
 
 @interface PreferencesDialogController ()
+{
+	// The nib's top-level objects (the window and the tab and accessory views). -loadNibNamed:owner:topLevelObjects:
+	// doesn't retain them and the outlets are __unsafe_unretained, so this keeps them for the controller's lifetime.
+	NSArray *nibTopLevelObjects;
+}
 
 // General Tab
 @property (nonatomic, unsafe_unretained) IBOutlet NSTextField*			gridSpacingFineField;
@@ -159,7 +164,9 @@ static BOOL IsWhitespaceOnly(NSString *string)
 {
 	self = [super init];
 	
-	[NSBundle loadNibNamed:@"Preferences" owner:self];
+	NSArray *topLevelObjects = nil;
+	[[NSBundle bundleForClass:[self class]] loadNibNamed:@"Preferences" owner:self topLevelObjects:&topLevelObjects];
+	self->nibTopLevelObjects = topLevelObjects;
 	
 	return self;
 	
