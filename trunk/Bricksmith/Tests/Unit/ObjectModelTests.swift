@@ -335,6 +335,66 @@ struct P6bPartPinTests {
 		#expect(!latin.partIsMissing())
 	}
 
+	@Test("Every malformed-input case of the parser robustness suite, as the contents of a referenced library part")
+	func robustnessCasesAsLibraryParts() throws {
+		// -[LDrawPart initWithLines:] parses the referenced library file (-[PartLibrary loadModelForName:inGroup:]),
+		// so its catch-all @try covered the whole parser. Each case (except the known crashers) gives a part or nil.
+		var out: [String] = []
+		for c in Robustness.cases where !Robustness.crashing.contains(c.name) {
+			let name = P6bPart.uniqueName("case")
+			try P6bPart.writePart(name, c.input)
+			let part = try ObjC.run { P6bPart.make("1 16 0 0 0 1 0 0 0 1 0 0 0 1 \(name)") }
+			out.append("\(c.name): \(part.map { "part, missing \($0.partIsMissing())" } ?? "nil")")
+		}
+		let expected: [String] = [
+			"empty file: part, missing true",
+			"whitespace only: part, missing false",
+			"single 0: part, missing false",
+			"leading whitespace before line type: part, missing false",
+			"lower-case step: part, missing false",
+			"type 1 missing part name: part, missing false",
+			"type 1 with too few fields: part, missing false",
+			"type 1 non-numeric fields: part, missing false",
+			"type 1 extra fields (part name with spaces): part, missing false",
+			"type 2 truncated (S2): part, missing false",
+			"type 3 truncated: part, missing false",
+			"type 4 truncated: part, missing false",
+			"type 5 truncated: part, missing false",
+			"type 2 bare: part, missing false",
+			"colour code non-numeric: part, missing false",
+			"negative colour code: part, missing false",
+			"malformed !COLOUR missing CODE value (S1): part, missing false",
+			"malformed !COLOUR missing VALUE (S1): part, missing false",
+			"malformed !COLOUR bad hex: part, missing false",
+			"0 FILE without name: part, missing false",
+			"MPD missing NOFILE: part, missing false",
+			"MPD reference to missing submodel: part, missing false",
+			"TEXMAP START without END: part, missing false",
+			"SYNTH BEGIN without END: part, missing false",
+			"very long comment line: part, missing false",
+			"NUL byte in comment: part, missing false",
+		]
+		#expect(out == expected, "\(out.joined(separator: "\n"))")
+	}
+
+	@Test("Names use NSString semantics: -lowercaseString (final sigma) and a literal compare in containsReferenceTo:")
+	func nameSemantics() throws {
+		let part = LDrawPart()
+		part.setDisplayName("ΣΑΣ.DAT")
+		#expect(part.referenceName() == "σας.dat", "\(part.referenceName().debugDescription)")
+		let precomposed = "caf\u{E9}.dat", decomposed = "cafe\u{301}.dat"
+		part.setDisplayName(precomposed)
+		#expect(part.containsReference(to: precomposed))
+		#expect(!part.containsReference(to: decomposed), "isEqualToString: does not normalise")
+		#expect(!part.containsReference(to: nil))
+		// A nil name: written as "(null)", no reference matches, and the browsing description is nil.
+		part.setDisplayName(nil)
+		#expect(part.displayName() == nil && part.referenceName() == nil)
+		#expect(P6bPart.write(part).hasSuffix(" (null)"), "\(P6bPart.write(part))")
+		#expect(!part.containsReference(to: "") && !part.containsReference(to: nil))
+		#expect(part.browsingDescription() == nil)
+	}
+
 	@Test("A fresh part, its icon, inspector and class defaults")
 	func defaults() throws {
 		let part = LDrawPart()
