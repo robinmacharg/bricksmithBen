@@ -11,7 +11,7 @@ topics that match your task rather than the whole log.
 
 | Topic | Entries |
 |---|---|
-| Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84, L89 |
+| Shell, git, scripts | L1-L4, L22, L51, L74, L81, L83, L84, L89, L96 |
 | Build and warnings | L5-L10, L20, L21, L66, L84, L86, L90 |
 | Xcode project editing | L11, L12 |
 | App facts, preferences, LDraw library | L13-L16, L27, L28, L33, L35, L53 |
@@ -359,7 +359,7 @@ topics that match your task rather than the whole log.
   in the merge; run `scripts/build.sh`, `scripts/build.sh --release` and `scripts/test.sh --ui` on the merged tree;
   only then commit, with the gates in the message. Cut the next branch from master, not from the old branch.
 - **L84. In a worktree under `/tmp`, Xcode logs `/tmp/...` paths but `${0:A}` resolves to `/private/tmp/...`.**
-  `build.sh` then reported every warning as new (fixed in `e66adfa` by stripping both spellings). → When a script
+  `build.sh` then reported every warning as new (fixed in `e368875` by stripping both spellings). → When a script
   compares tool output against paths it computed, normalise symlinked prefixes on both sides.
 - **L85. Agent lessons from P4 stream C:**
   - Check a value-transformer registration through `NSValueTransformer.valueTransformerNames()` in a fresh child
@@ -402,7 +402,7 @@ topics that match your task rather than the whole log.
   `build/` (`build/worktrees/`, `build/test.lock`), and have agents commit each gated step at once.
 - **L94. When converting "throws" to "returns nil", nil usually already meant something else.** The BUG-007
   conversion treated any nil model from an existing part file as a parse failure. A zero-byte file, an unreadable
-  file or a directory also give nil, so those documents stopped opening (fixed in `75ebcc6`; found by adversarial
+  file or a directory also give nil, so those documents stopped opening (fixed in `4e4fce2`; found by adversarial
   review, not by tests). The pin tests had covered only the failing input and a good control. → Before giving nil a
   new meaning, list every existing way to get nil there, and pin each one. Carry an explicit flag
   (`parseFailed:`) rather than inferring failure from nil.
@@ -417,3 +417,8 @@ topics that match your task rather than the whole log.
   - Prove the move: compare the multiset of non-blank lines before and after, and diff `nm` method symbols (strip
     category names and block numbering, which the compiler renumbers).
   - L90 has a second form: a log line cut at its end rather than its path.
+- **L96. Rewriting history breaks every commit hash the docs and messages cite.** Removing attribution trailers
+  from the P4 branch renumbered all 67 commits. → Rewrite in one `filter-branch --msg-filter` pass that also maps
+  quoted hashes through `map` (`build/msgfilter.sh` pattern), then update the tip's docs from an old→new table
+  built by pairing `rev-list --reverse` of the backup and the rewritten branch (check the subjects match). Keep a
+  backup branch until the merge.

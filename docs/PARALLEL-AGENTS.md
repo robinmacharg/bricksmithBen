@@ -66,7 +66,7 @@ The brief is all the agent knows. Every brief states:
 ## Troubleshooting
 
 - **`build.sh` reports every warning as new in a worktree:** the `/tmp` vs `/private/tmp` path spelling (L84,
-  fixed in `e66adfa`). A worktree cut from an older base still has the old script; cut from a newer base.
+  fixed in `e368875`). A worktree cut from an older base still has the old script; cut from a newer base.
 - **`.git/index.lock` exists:** a git process in the *main* checkout died (worktrees have their own index). Check
   that no git process is running there, then remove the lock.
 - **A cherry-pick conflicts:** the scope split was wrong. Resolve by hand, re-run the full gate, and note it in

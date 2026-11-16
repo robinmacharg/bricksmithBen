@@ -120,7 +120,7 @@ isn't present.
     `BRICKSMITH_PERF`. Debug timings are meaningless for comparing Swift with ObjC.
   - Each metric is the best of 15 runs after 2 warm-ups, on a 20,000-part synthetic model (L65).
   - The baseline belongs to the machine recorded in it; comparisons on other machines fail with a message.
-  - **Noise band** (Mac15,7, five back-to-back runs on a quiet machine, commit `0af1bc4`, 2026-11-16), as % of
+  - **Noise band** (Mac15,7, five back-to-back runs on a quiet machine, commit `1ee0869`, 2026-11-16), as % of
     baseline:
 
     | Metric | Runs | Spread | Coefficient of variation |
