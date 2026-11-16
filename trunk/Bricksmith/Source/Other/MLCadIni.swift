@@ -308,7 +308,8 @@ class MLCadIni: NSObject {
 	//				BUG-036: a line with nothing after SYNTH BEGIN repeats the
 	//				previous type name (NSScanner left its out-parameter alone). If
 	//				there is no previous name, the ObjC code inserted nil and
-	//				Foundation raised; Swift can't raise, so it traps instead.
+	//				Foundation raised; since P5 (maintainer decision) that line is
+	//				logged and skipped.
 	//
 	//==============================================================================
 	private func lsynthTypesFromLines(_ lines: NSArray?) -> NSArray {
@@ -327,7 +328,8 @@ class MLCadIni: NSObject {
 						actualName = name
 					}
 					guard let name = actualName else {
-						fatalError("MLCad.ini [LSYNTH]: \"\(currentLine)\" has no type name after SYNTH BEGIN (BUG-036)")
+						NSLog("MLCad.ini [LSYNTH]: skipping \"%@\", which has no type name after SYNTH BEGIN", currentLine)
+						continue
 					}
 					namesInList.add(name)
 				}

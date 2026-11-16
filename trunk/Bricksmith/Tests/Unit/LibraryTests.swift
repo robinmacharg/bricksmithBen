@@ -412,23 +412,11 @@ struct MLCadIniParsingTests {
 		}
 	}
 
-	/// Child-process body for `bug036FirstLSynthLineWithoutNameFails`: parses an [LSYNTH] section whose first
-	/// type line has no type name (there is no earlier name to repeat).
-	static func parseFirstLSynthLineWithoutName() {
-		let url = FileManager.default.temporaryDirectory.appendingPathComponent("MLCad-\(UUID().uuidString).ini")
-		try? Data("[LSYNTH]\n01 - NONAME = SYNTH BEGIN\n".utf8).write(to: url)
-		MLCadIni().parse(fromPath: url.path)
-		try? FileManager.default.removeItem(at: url)
-	}
-
-	@Test("BUG-036: the same line as the first [LSYNTH] type line does not finish today (nil inserted into an array)")
-	func bug036FirstLSynthLineWithoutNameFails() async {
-		// The child arms an alarm first, so a hang (an NSException swallowed on a test thread, L57) also ends.
-		await #expect(processExitsWith: .failure) {
-			alarm(5)
-			MLCadIniParsingTests.parseFirstLSynthLineWithoutName()
-			exit(EXIT_SUCCESS)
-		}
+	@Test("BUG-036 (crash half fixed in P5): a first [LSYNTH] type line with no type name is skipped")
+	func bug036FirstLSynthLineWithoutNameSkipped() throws {
+		// Before P5 there was no earlier name to repeat, so nil went into an array and Foundation raised.
+		let ini = try Self.parse("[LSYNTH]\n01 - NONAME = SYNTH BEGIN\n02 - B = SYNTH BEGIN B_TYPE 16\n")
+		#expect(ini.lsynthVisibleTypes() as? [String] == ["B_TYPE"])
 	}
 
 	@Test("Arm angle: mechanical torsos get no rotation, every other name the regular torso angle")
