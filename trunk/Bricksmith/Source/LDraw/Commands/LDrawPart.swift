@@ -299,7 +299,7 @@ final class LDrawPart: LDrawDrawableElement, LDrawObserver {
 	//==========================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied			= (super.copy(with: zone) as AnyObject) as! LDrawPart	// (a class cast: `as!` from Any is a slow existential cast)
+		let copied			= unsafeDowncast(drawableElementCopy(with: zone), to: LDrawPart.self)	// (super.copy(with:), typed: P6c perf)
 		var transformation	= self.transformationMatrix()
 
 		// As -setDisplayName:, with the reference name carried over rather than

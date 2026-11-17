@@ -191,7 +191,7 @@ class LDrawContainer: LDrawDirective, LDrawObserver {
 	//==============================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copiedContainer	= (super.copy(with: zone) as AnyObject) as! LDrawContainer	// (a class cast: `as!` from Any is a slow existential cast)
+		let copiedContainer	= unsafeDowncast(directiveCopy(with: zone), to: LDrawContainer.self)	// (super.copy(with:), typed: P6c perf)
 		let counter			= 0	// never incremented, as in the ObjC: the copies come out reversed (BUG-011)
 
 		// Copy each subdirective and transfer it into the copied container.

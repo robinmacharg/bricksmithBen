@@ -212,6 +212,20 @@ class LDrawDirective: NSObject, NSCoding, NSCopying, LDrawObservable {
 	//==============================================================================
 	@objc(copyWithZone:)
 	func copy(with zone: NSZone? = nil) -> Any {
+		return directiveCopy(with: zone)
+	}
+
+
+	//---------- directiveCopy(with:) ---------------------------------------------
+	//
+	// Purpose:		The body of -copyWithZone:, typed. Direct subclasses call it
+	//				where they called super.copy(with:) (the same body: a super
+	//				call is statically dispatched), so the copy doesn't come back
+	//				as Any to be bridged and cast at every level (P6c perf).
+	//
+	//------------------------------------------------------------------------------
+	@nonobjc
+	final func directiveCopy(with zone: NSZone?) -> LDrawDirective {
 		//Allocate a new instance because we don't inherit -copy: from anybody.
 		// Note the code to ensure that the correct subclass is allocated!
 		// Since LDrawDirective is the root LDraw class, all [subclass copy]
@@ -224,7 +238,7 @@ class LDrawDirective: NSObject, NSCoding, NSCopying, LDrawObservable {
 
 		return copied
 
-	}//end copyWithZone:
+	}//end directiveCopy(with:)
 
 
 	// MARK: -

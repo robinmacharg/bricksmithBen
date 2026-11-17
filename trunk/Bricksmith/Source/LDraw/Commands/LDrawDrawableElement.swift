@@ -129,7 +129,19 @@ class LDrawDrawableElement: LDrawDirective, LDrawColorable, LDrawMovableDirectiv
 	//==========================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied = (super.copy(with: zone) as AnyObject) as! LDrawDrawableElement	// (a class cast: `as!` from Any is a slow existential cast)
+		return drawableElementCopy(with: zone)
+	}
+
+
+	//---------- drawableElementCopy(with:) --------------------------------------
+	//
+	// Purpose:		The body of -copyWithZone:, typed, for the subclasses' copies
+	//				(see LDrawDirective.directiveCopy(with:)).
+	//
+	//--------------------------------------------------------------------------
+	@nonobjc
+	final func drawableElementCopy(with zone: NSZone?) -> LDrawDrawableElement {
+		let copied = unsafeDowncast(directiveCopy(with: zone), to: LDrawDrawableElement.self)	// (super.copy(with:), typed)
 
 		// Colors are references, so they don't get copied
 		copied.setLDrawColor(self.lDrawColor())

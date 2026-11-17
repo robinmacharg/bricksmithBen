@@ -172,7 +172,7 @@ final class LDrawTriangle: LDrawDrawableElement {
 	//==========================================================================
 	@objc(copyWithZone:)
 	override func copy(with zone: NSZone? = nil) -> Any {
-		let copied = (super.copy(with: zone) as AnyObject) as! LDrawTriangle	// (a class cast: `as!` from Any is a slow existential cast)
+		let copied = unsafeDowncast(drawableElementCopy(with: zone), to: LDrawTriangle.self)	// (super.copy(with:), typed: P6c perf)
 
 		copied.setVertex1(self.vertex1())
 		copied.setVertex2(self.vertex2())
