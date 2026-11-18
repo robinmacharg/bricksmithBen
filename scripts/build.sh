@@ -51,7 +51,10 @@ fi
 
 # Normalise: keep only warning lines, make paths repo-relative, drop line:col, de-duplicate.
 # Under /tmp, Xcode logs /tmp/... while ${0:A} resolves to /private/tmp/...: strip both spellings.
-grep -E ': warning: ' "$LOG" \
+# Parallel compiler output can push a warning's message onto the next log line (L90): rejoin a line that ends at
+# "warning:" with the line after it.
+awk '/: warning: *$/ { held = $0; if ((getline nxt) > 0) $0 = held nxt; else $0 = held } { print }' "$LOG" \
+	| grep -E ': warning: ' \
 	| sed -E -e "s|$REPO_ROOT/||g" -e "s|${REPO_ROOT#/private}/||g" -e 's/:[0-9]+:[0-9]+: warning: /: warning: /' \
 	| LC_ALL=C sort -u >"$CURRENT" || true
 

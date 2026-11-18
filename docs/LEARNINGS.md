@@ -416,7 +416,9 @@ topics that match your task rather than the whole log.
     warns where the synthesized one didn't.
   - Prove the move: compare the multiset of non-blank lines before and after, and diff `nm` method symbols (strip
     category names and block numbering, which the compiler renumbers).
-  - L90 has a second form: a log line cut at its end rather than its path.
+  - L90 has a second form: a log line cut at its end rather than its path. It reached the maintainer's build on
+    2026-11-18 (`LDrawGLView.m: warning:` with the message on the next line), so `build.sh` now rejoins a line ending
+    at `warning:` with the next one. The first form (a cut-off path prefix) is still possible: rerun.
 - **L96. Rewriting history breaks every commit hash the docs and messages cite.** Removing attribution trailers
   from the P4 branch renumbered all 67 commits. → Rewrite in one `filter-branch --msg-filter` pass that also maps
   quoted hashes through `map` (`build/msgfilter.sh` pattern), then update the tip's docs from an old→new table
