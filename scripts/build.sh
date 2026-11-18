@@ -49,11 +49,30 @@ if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration "$CONFIGURA
 	exit 1
 fi
 
+# Say where the app is as the last line, whatever the warning check decides (the app is built either way).
+APP="$BUILD_DIR/DerivedData/Build/Products/$CONFIGURATION/$SCHEME.app"
+trap 'print "Built app: $APP"' EXIT
+
 # Normalise: keep only warning lines, make paths repo-relative, drop line:col, de-duplicate.
 # Under /tmp, Xcode logs /tmp/... while ${0:A} resolves to /private/tmp/...: strip both spellings.
-# Parallel compiler output can push a warning's message onto the next log line (L90): rejoin a line that ends at
-# "warning:" with the line after it.
-awk '/: warning: *$/ { held = $0; if ((getline nxt) > 0) $0 = held nxt; else $0 = held } { print }' "$LOG" \
+# xcodebuild's log sometimes splits a clang warning across two lines (L90), at any word boundary, even right after
+# "warning:". A complete clang warning ends with its "[-W...]" flag, so a clang (non-Swift) warning line without one
+# is joined with the next line when that line looks like a continuation: non-blank, and not a path, source excerpt,
+# include note or another tool's output. (A few warnings, e.g. NSDrawer, have no flag; a blank line follows them.)
+awk '
+	{ line[NR] = $0 }
+	END {
+		for (i = 1; i <= NR; i++) {
+			cur = line[i]
+			if (cur ~ /: warning: / && cur !~ /\.swift:[0-9]+:[0-9]+: warning: / && cur !~ /\]$/ && i < NR) {
+				nxt = line[i + 1]
+				if (nxt ~ /^[^\/ \t]/ && nxt !~ /^(In file included|ld: |note: |warning: |error: |\*\*|Command |cd |export )/) {
+					cur = cur nxt; i++
+				}
+			}
+			print cur
+		}
+	}' "$LOG" \
 	| grep -E ': warning: ' \
 	| sed -E -e "s|$REPO_ROOT/||g" -e "s|${REPO_ROOT#/private}/||g" -e 's/:[0-9]+:[0-9]+: warning: /: warning: /' \
 	| LC_ALL=C sort -u >"$CURRENT" || true
